@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104143303) do
+ActiveRecord::Schema.define(version: 20161104145904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,4 +22,15 @@ ActiveRecord::Schema.define(version: 20161104143303) do
     t.string "comments"
   end
 
+  create_table "lookups", force: :cascade do |t|
+    t.string  "value"
+    t.string  "description"
+    t.float   "rank"
+    t.string  "comments"
+    t.integer "lookup_type_id"
+  end
+
+  add_index "lookups", ["lookup_type_id"], name: "index_lookups_on_lookup_type_id", using: :btree
+
+  add_foreign_key "lookups", "lookup_types"
 end
