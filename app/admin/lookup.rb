@@ -16,15 +16,17 @@ ActiveAdmin.register Lookup do
 
   permit_params :value, :description, :rank, :comments, :lookup_type_id
 
+  config.sort_order = 'lookup_type_id_asc_and_rank_asc'
+
   index do
     selectable_column
     column :id
-    column 'Type', sortable: 'lookup_type.name' do |caller|
-      caller.lookup_type.name
-    end
     column :value
     column :description
     column :rank
+    column 'Type', sortable: 'lookup_type.name' do |caller|
+      caller.lookup_type.name
+    end
     actions defaults: true, dropdown: true
   end
 
