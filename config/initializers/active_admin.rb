@@ -4,7 +4,7 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  config.site_title = "Xray Backend"
+  config.site_title = "Xray"
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
@@ -222,6 +222,12 @@ ActiveAdmin.setup do |config|
   #       menu.add label: "My Great Website", url: "http://www.mygreatwebsite.com", html_options: { target: :blank }
   #     end
   #   end
+  config.namespace :admin do |admin|
+    admin.build_menu :default do |menu|
+      menu.add label: "Masters", :priority => 90
+      menu.add label: "Security", :priority => 100
+    end
+  end
 
   # == Download Links
   #
