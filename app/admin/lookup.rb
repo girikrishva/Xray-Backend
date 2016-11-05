@@ -38,6 +38,7 @@ ActiveAdmin.register Lookup do
     column :value
     column :description
     column :rank
+    column :comments
     actions defaults: true, dropdown: true
   end
 
