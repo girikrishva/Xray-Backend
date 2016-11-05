@@ -3,6 +3,8 @@ ActiveAdmin.register AdminUser do
 
   permit_params :email, :password, :password_confirmation
 
+  config.sort_order = 'email_asc'
+
   index do
     selectable_column
     column :id
