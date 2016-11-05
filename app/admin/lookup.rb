@@ -44,7 +44,8 @@ ActiveAdmin.register Lookup do
   controller do
     before_filter only: :index do
       # if filter button wasn't clicked
-      if params[:commit].blank? && params[:q].blank?
+      # if params[:commit].blank? && params[:q].blank?
+      if params[:q].blank?
         # use default parameters
         extra_params = {"q" => {"lookup_type_id_eq" => params[:lookup_type_id]}}
 
