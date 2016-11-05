@@ -28,12 +28,20 @@ ActiveAdmin.register Lookup do
     actions defaults: true, dropdown: true
   end
 
-  filter :lookup_type, label: 'Type'
-  filter :value
-  filter :description
-  filter :rank
-
   controller do
+    before_filter only: :index do
+
+      # if filter button wasn't clicked
+      if params[:commit].blank? && params[:q].blank?
+
+        # use default parameters
+        extra_params = {"q" => {"lookup_type_id_eq" => params[:lookup_type_id]}}
+
+        # make sure data is filtered and filters show correctly
+        params.merge! extra_params
+      end
+    end
+
     def create
       super do |format|
         redirect_to collection_url and return if resource.valid?
@@ -46,4 +54,9 @@ ActiveAdmin.register Lookup do
       end
     end
   end
+
+  filter :lookup_type, label: 'Type'
+  filter :value
+  filter :description
+  filter :rank
 end

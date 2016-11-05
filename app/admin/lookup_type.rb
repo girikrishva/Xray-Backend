@@ -24,7 +24,9 @@ ActiveAdmin.register LookupType do
     column :name
     column :description
     column :comments
-    actions defaults: true, dropdown: true
+    actions defaults: true  , dropdown: true do |resource|
+      item "Lookups", admin_lookups_path(lookup_type_id: resource)
+    end
   end
 
   filter :name
