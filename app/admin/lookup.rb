@@ -21,7 +21,7 @@ ActiveAdmin.register Lookup do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_lookup_path
+    link_to "New", new_admin_lookup_path(lookup_type_id: params[:lookup_type_id])
   end
 
   action_item only: :index do |resource|
@@ -74,4 +74,16 @@ ActiveAdmin.register Lookup do
   filter :value
   filter :description
   filter :rank
+  filter :comments
+
+  form do |f|
+    f.inputs do
+      f.input :lookup_type
+      f.input :value
+      f.input :description
+      f.input :rank
+      f.input :comments
+    end
+    f.actions
+  end
 end
