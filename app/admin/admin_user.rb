@@ -1,6 +1,12 @@
 ActiveAdmin.register AdminUser do
   menu label: 'Users', parent: 'Security', priority: 10
 
+  config.clear_action_items!
+
+  action_item only: :index do |resource|
+    link_to "New", new_admin_admin_user_path
+  end
+
   permit_params :email, :password, :password_confirmation
 
   config.sort_order = 'email_asc'

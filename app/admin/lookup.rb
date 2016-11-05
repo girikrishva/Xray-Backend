@@ -18,6 +18,16 @@ ActiveAdmin.register Lookup do
 
   config.sort_order = 'lookup_types.name_asc_and_rank_asc'
 
+  config.clear_action_items!
+
+  action_item only: :index do |resource|
+    link_to "New", new_admin_lookup_path
+  end
+
+  action_item only: :index do |resource|
+    link_to "Back", admin_lookup_types_path
+  end
+
   index do
     selectable_column
     column :id
@@ -32,7 +42,6 @@ ActiveAdmin.register Lookup do
 
   controller do
     before_filter only: :index do
-
       # if filter button wasn't clicked
       if params[:commit].blank? && params[:q].blank?
 
