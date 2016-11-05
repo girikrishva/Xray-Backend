@@ -31,6 +31,7 @@ ActiveAdmin.register Lookup do
   index do
     selectable_column
     column :id
+    # column :lookup_type
     column 'Type', sortable: 'lookup_type.name' do |caller|
       caller.lookup_type.name
     end
@@ -44,7 +45,6 @@ ActiveAdmin.register Lookup do
     before_filter only: :index do
       # if filter button wasn't clicked
       if params[:commit].blank? && params[:q].blank?
-
         # use default parameters
         extra_params = {"q" => {"lookup_type_id_eq" => params[:lookup_type_id]}}
 
@@ -77,6 +77,9 @@ ActiveAdmin.register Lookup do
   filter :comments
 
   form do |f|
+    if params.has_key?(:lookup_type_id)
+      f.object.lookup_type_id = params[:lookup_type_id]
+    end
     f.inputs do
       f.input :lookup_type
       f.input :value
