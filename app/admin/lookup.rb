@@ -16,17 +16,17 @@ ActiveAdmin.register Lookup do
 
   permit_params :value, :description, :rank, :comments, :lookup_type_id
 
-  config.sort_order = 'lookup_type_id_asc_and_rank_asc'
+  config.sort_order = 'lookup_types.name_asc_and_rank_asc'
 
   index do
     selectable_column
     column :id
-    column :value
-    column :description
-    column :rank
     column 'Type', sortable: 'lookup_type.name' do |caller|
       caller.lookup_type.name
     end
+    column :value
+    column :description
+    column :rank
     actions defaults: true, dropdown: true
   end
 
@@ -42,6 +42,10 @@ ActiveAdmin.register Lookup do
         # make sure data is filtered and filters show correctly
         params.merge! extra_params
       end
+    end
+
+    def scoped_collection
+      Lookup.includes [:lookup_type]
     end
 
     def create
