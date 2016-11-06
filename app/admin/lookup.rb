@@ -30,7 +30,9 @@ ActiveAdmin.register Lookup do
   index do
     selectable_column
     column :id
-    column :lookup_type
+    column 'Type', :lookup_type, sortable: 'lookup_types.name' do |caller|
+      caller.lookup_type.name
+    end
     column :value
     column :description
     column :rank
@@ -40,15 +42,17 @@ ActiveAdmin.register Lookup do
 
   controller do
     before_filter only: :index do |resource|
+      session[:lookup_type_id] = params[:lookup_type_id]
       # if filter button wasn't clicked
       if params[:commit].blank? && params[:q].blank?
-        if !session.has_key?(:lookup_type_id)
-          session[:lookup_type_id] = params[:lookup_type_id]
-        end
         extra_params = {"q" => {"lookup_type_id_eq" => session[:lookup_type_id]}}
         # make sure data is filtered and filters show correctly
         params.merge! extra_params
       end
+    end
+
+    def scoped_collection
+      resource_class.includes(:lookup_type)
     end
 
     def create
@@ -74,7 +78,7 @@ ActiveAdmin.register Lookup do
       f.object.lookup_type_id = session[:lookup_type_id]
     end
     f.inputs do
-      f.input :lookup_type, label: "Type", input_html: { disabled: :true }
+      f.input :lookup_type, label: "Type", input_html: {disabled: :true}
       f.input :lookup_type_id, as: :hidden
       f.input :value
       f.input :description
