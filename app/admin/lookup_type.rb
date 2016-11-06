@@ -1,5 +1,5 @@
 ActiveAdmin.register LookupType do
-  menu label: 'Lookup Types', parent: 'Masters', priority: 10
+  menu label: 'Manage Lookups', parent: 'Masters', priority: 10
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -31,7 +31,7 @@ ActiveAdmin.register LookupType do
     column :description
     column :comments
     actions defaults: true  , dropdown: true do |resource|
-      item "Lookups", admin_lookups_path(lookup_type_id: resource)
+      item "Lookups", admin_lookups_path(lookup_type: resource)
     end
   end
 
