@@ -42,7 +42,9 @@ ActiveAdmin.register Lookup do
 
   controller do
     before_filter only: :index do |resource|
-      session[:lookup_type_id] = params[:lookup_type_id]
+      if params.has_key?(:lookup_type_id)
+        session[:lookup_type_id] = params[:lookup_type_id]
+      end
       # if filter button wasn't clicked
       if params[:commit].blank? && params[:q].blank?
         extra_params = {"q" => {"lookup_type_id_eq" => session[:lookup_type_id]}}
@@ -78,7 +80,7 @@ ActiveAdmin.register Lookup do
       f.object.lookup_type_id = session[:lookup_type_id]
     end
     f.inputs do
-      f.input :lookup_type, label: "Type", input_html: {disabled: :true}
+      f.input :lookup_type, label: "Type", input_html: { disabled: :true }
       f.input :lookup_type_id, as: :hidden
       f.input :value
       f.input :description
