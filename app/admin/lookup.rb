@@ -15,25 +15,22 @@ ActiveAdmin.register Lookup do
 
   permit_params :value, :description, :rank, :comments, :lookup_type_id
 
-  config.sort_order = 'lookup_types.name_asc_and_rank_asc'
+  config.sort_order = 'rank_asc'
 
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_lookup_path(lookup_type: params[:lookup_type]) if params.has_key?(:lookup_type)
+    link_to "New", new_admin_lookup_path(lookup_type_id: session[:lookup_type_id]) if session.has_key?(:lookup_type_id)
   end
 
   action_item only: :index do |resource|
-    link_to "Back", admin_lookup_types_path(lookup_type: nil)
+    link_to "Back", admin_lookup_types_path(lookup_type_id: nil)
   end
 
   index do
     selectable_column
     column :id
-    # column :lookup_type
-    column 'Type', sortable: 'lookup_type.name' do |caller|
-      caller.lookup_type.name
-    end
+    column :lookup_type
     column :value
     column :description
     column :rank
@@ -45,28 +42,24 @@ ActiveAdmin.register Lookup do
     before_filter only: :index do |resource|
       # if filter button wasn't clicked
       if params[:commit].blank? && params[:q].blank?
-        # use default parameters
-
-        extra_params = {"q" => {"lookup_type_id_eq" => params[:lookup_type]}}
-
+        if !session.has_key?(:lookup_type_id)
+          session[:lookup_type_id] = params[:lookup_type_id]
+        end
+        extra_params = {"q" => {"lookup_type_id_eq" => session[:lookup_type_id]}}
         # make sure data is filtered and filters show correctly
         params.merge! extra_params
       end
     end
 
-    def scoped_collection
-      Lookup.includes [:lookup_type]
-    end
-
     def create
       super do |format|
-        redirect_to collection_url(lookup_type: resource.lookup_type_id) and return if resource.valid?
+        redirect_to collection_url(lookup_type_id: session[:lookup_type_id]) and return if resource.valid?
       end
     end
 
     def update
       super do |format|
-        redirect_to collection_url(lookup_type: resource.lookup_type_id) and return if resource.valid?
+        redirect_to collection_url(lookup_type_id: session[:lookup_type_id]) and return if resource.valid?
       end
     end
   end
@@ -78,11 +71,12 @@ ActiveAdmin.register Lookup do
   filter :comments
 
   form do |f|
-    if params.has_key?(:lookup_type)
-      f.object.lookup_type_id = params[:lookup_type]
+    if session.has_key?(:lookup_type_id)
+      f.object.lookup_type_id = session[:lookup_type_id]
     end
     f.inputs do
-      f.input :lookup_type, input_html: { disabled: :true }
+      f.input :lookup_type, label: "Type", input_html: { disabled: :true }
+      f.input :lookup_type_id, as: :hidden
       f.input :value
       f.input :description
       f.input :rank
