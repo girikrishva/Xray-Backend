@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104153229) do
+ActiveRecord::Schema.define(version: 20161106130255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,17 +50,17 @@ ActiveRecord::Schema.define(version: 20161104153229) do
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "lookup_types", force: :cascade do |t|
-    t.string "name"
+    t.string "name",        null: false
     t.string "description"
     t.string "comments"
   end
 
   create_table "lookups", force: :cascade do |t|
-    t.string  "value"
+    t.string  "value",          null: false
     t.string  "description"
-    t.float   "rank"
+    t.float   "rank",           null: false
     t.string  "comments"
-    t.integer "lookup_type_id"
+    t.integer "lookup_type_id", null: false
   end
 
   add_index "lookups", ["lookup_type_id"], name: "index_lookups_on_lookup_type_id", using: :btree
