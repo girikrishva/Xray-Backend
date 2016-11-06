@@ -28,7 +28,11 @@ ActiveAdmin.register AdminUser do
 
   form do |f|
     f.inputs "Admin Details" do
-      f.input :email
+      if !f.object.new_record?
+        f.input :email, input_html: {readonly: true}
+      else
+        f.input :email
+      end
       f.input :password
       f.input :password_confirmation
     end
