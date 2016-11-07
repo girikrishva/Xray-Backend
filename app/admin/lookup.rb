@@ -30,10 +30,10 @@ ActiveAdmin.register Lookup do
   index do
     selectable_column
     column :id
+    column :value
     column 'Type', :lookup_type, sortable: 'lookup_types.name' do |caller|
       caller.lookup_type.name
     end
-    column :value
     column :description
     column :rank
     column :comments
