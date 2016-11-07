@@ -56,4 +56,18 @@ ActiveAdmin.register VacationReason do
       end
     end
   end
+
+  form do |f|
+    f.object.as_on = Date.today
+    f.object.paid =   false
+    f.inputs do
+      f.input :code
+      f.input :description
+      f.input :as_on, as: :datepicker
+      f.input :paid, as: :select
+      f.input :days_allowed
+      f.input :comments
+    end
+    f.actions
+  end
 end
