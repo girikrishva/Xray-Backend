@@ -70,9 +70,10 @@ ActiveAdmin.register VacationReason do
     end
     f.inputs do
       if f.object.lookup.blank?
-        f.input :lookup
+        f.input :lookup, label: 'Business Unit'
       else
-        f.input :lookup, input_html: {readonly: :false}
+        f.input :lookup, input_html: {disabled: :true}
+        f.input :lookup, label: 'Business Unit', as: :hidden
       end
       if f.object.code.blank?
         f.input :code

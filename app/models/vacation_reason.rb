@@ -4,7 +4,7 @@ class VacationReason < ActiveRecord::Base
   validates :code, presence: true
   validates :as_on, presence: true
   validates :days_allowed, presence: true
-  validates :lookup_id, presence: true
+  validates :lookup, presence: true
 
   before_create :lookup_id_is_a_business_unit
 
