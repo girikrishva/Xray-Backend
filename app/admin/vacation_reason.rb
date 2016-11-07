@@ -68,7 +68,7 @@ ActiveAdmin.register VacationReason do
       f.input :code
       f.input :description
       f.input :as_on, as: :datepicker
-      f.input :paid, as: :select
+      f.input :paid
       f.input :days_allowed
       f.input :comments
     end
