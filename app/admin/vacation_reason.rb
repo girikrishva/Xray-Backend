@@ -14,7 +14,7 @@ ActiveAdmin.register VacationReason do
 #   permitted
 # end
 
-  permit_params  :code, :description, :as_on, :paid, :days_allowed, :comments
+  permit_params :code, :description, :as_on, :paid, :days_allowed, :comments
 
   config.sort_order = 'as_on_desc_and_code_asc'
 
@@ -33,7 +33,7 @@ ActiveAdmin.register VacationReason do
     column :paid
     column :days_allowed
     column :comments
-    actions defaults: true  , dropdown: true
+    actions defaults: true, dropdown: true
   end
 
   filter :code
@@ -58,8 +58,12 @@ ActiveAdmin.register VacationReason do
   end
 
   form do |f|
-    f.object.as_on = Date.today
-    f.object.paid =   false
+    if f.object.as_on.blank?
+      f.object.as_on = Date.today
+    end
+    if f.object.paid.blank?
+      f.object.paid = false
+    end
     f.inputs do
       f.input :code
       f.input :description
