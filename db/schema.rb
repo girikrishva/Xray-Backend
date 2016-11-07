@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161107083732) do
+ActiveRecord::Schema.define(version: 20161107101512) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,7 +72,11 @@ ActiveRecord::Schema.define(version: 20161107083732) do
     t.boolean "paid",         null: false
     t.float   "days_allowed", null: false
     t.string  "comments"
+    t.integer "lookup_id",    null: false
   end
 
+  add_index "vacation_reasons", ["lookup_id"], name: "index_vacation_reasons_on_lookup_id", using: :btree
+
   add_foreign_key "lookups", "lookup_types"
+  add_foreign_key "vacation_reasons", "lookups"
 end
