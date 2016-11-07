@@ -14,7 +14,7 @@ ActiveAdmin.register VacationReason do
 #   permitted
 # end
 
-  permit_params :code, :description, :as_on, :paid, :days_allowed, :comments
+  permit_params :code, :description, :as_on, :paid, :days_allowed, :comments, :lookup_id
 
   config.sort_order = 'as_on_desc_and_code_asc'
 
@@ -27,6 +27,9 @@ ActiveAdmin.register VacationReason do
   index do
     selectable_column
     column :id
+    column 'Business Unit', :lookup do |resource|
+      resource.lookup.value
+    end
     column :code
     column :description
     column :as_on
@@ -36,6 +39,7 @@ ActiveAdmin.register VacationReason do
     actions defaults: true, dropdown: true
   end
 
+  filter :lookup
   filter :code
   filter :description
   filter :as_on
@@ -65,6 +69,11 @@ ActiveAdmin.register VacationReason do
       f.object.paid = false
     end
     f.inputs do
+      if f.object.lookup.blank?
+        f.input :lookup
+      else
+        f.input :lookup, input_html: {readonly: :false}
+      end
       if f.object.code.blank?
         f.input :code
       else
