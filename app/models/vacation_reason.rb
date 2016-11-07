@@ -11,7 +11,7 @@ class VacationReason < ActiveRecord::Base
   validates_uniqueness_of :code, scope: [:as_on]
 
   def lookup_id_is_a_business_unit
-    if !LookupType.find(Lookup.find(:lookup_id)).name = 'Business Units'
+    if !LookupType.find(Lookup.find(self.lookup_id).lookup_type_id).name = 'Business Units'
       false
     else
       true

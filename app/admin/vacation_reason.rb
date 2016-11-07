@@ -27,10 +27,10 @@ ActiveAdmin.register VacationReason do
   index do
     selectable_column
     column :id
+    column :code
     column 'Business Unit', :lookup do |resource|
       resource.lookup.value
     end
-    column :code
     column :description
     column :as_on
     column :paid
@@ -39,8 +39,10 @@ ActiveAdmin.register VacationReason do
     actions defaults: true, dropdown: true
   end
 
-  filter :lookup
+
   filter :code
+  filter :lookup, label: 'Business Unit', collection:
+                    proc { Lookup.where(lookup_type_id: LookupType.where(name: 'Business Units').first.id) }
   filter :description
   filter :as_on
   filter :paid
@@ -70,7 +72,8 @@ ActiveAdmin.register VacationReason do
     end
     f.inputs do
       if f.object.lookup.blank?
-        f.input :lookup, label: 'Business Unit'
+        f.input :lookup, label: 'Business Unit', as: :select, collection:
+                           Lookup.where(lookup_type_id: LookupType.where(name: 'Business Units').first.id)
       else
         f.input :lookup, input_html: {disabled: :true}
         f.input :lookup, label: 'Business Unit', as: :hidden
