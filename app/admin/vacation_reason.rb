@@ -65,7 +65,11 @@ ActiveAdmin.register VacationReason do
       f.object.paid = false
     end
     f.inputs do
-      f.input :code
+      if f.object.code.blank?
+        f.input :code
+      else
+        f.input :code, input_html: {readonly: :false}
+      end
       f.input :description
       f.input :as_on, as: :datepicker
       f.input :paid
