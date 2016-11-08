@@ -13,7 +13,7 @@ ActiveAdmin.register Lookup do
 #   permitted
 # end
 
-  permit_params :value, :description, :rank, :comments, :lookup_type_id
+  permit_params :name, :description, :rank, :comments, :lookup_type_id
 
   config.sort_order = 'rank_asc'
 
@@ -30,7 +30,7 @@ ActiveAdmin.register Lookup do
   index do
     selectable_column
     column :id
-    column :value
+    column :name
     column 'Type', :lookup_type, sortable: 'lookup_types.name' do |caller|
       caller.lookup_type.name
     end
@@ -70,7 +70,7 @@ ActiveAdmin.register Lookup do
     end
   end
 
-  filter :value
+  filter :name
   filter :description
   filter :rank
   filter :comments
@@ -82,7 +82,7 @@ ActiveAdmin.register Lookup do
     f.inputs do
       f.input :lookup_type, label: "Type", input_html: { disabled: :true }
       f.input :lookup_type_id, as: :hidden
-      f.input :value
+      f.input :name
       f.input :description
       f.input :rank
       f.input :comments

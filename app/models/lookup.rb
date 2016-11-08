@@ -1,12 +1,13 @@
 class Lookup < ActiveRecord::Base
   belongs_to :lookup_type, :class_name => 'LookupType', :foreign_key => :lookup_type_id
 
-  has_many :vacation_reasons, :class_name => 'VacationReason'
+  has_many :vacation_codes, :class_name => 'VacationPolicy', foreign_key: :vacation_code_id
+  has_many :business_units, :class_name => 'VacationPolicy', foreign_key: :business_unit_id
 
-  validates :value, presence: true
+  validates :name, presence: true
   validates :rank, presence: true
   validates :lookup_type_id, presence: true
 
-  validates_uniqueness_of :value, scope: [:lookup_type_id]
+  validates_uniqueness_of :name, scope: [:lookup_type_id]
   validates_uniqueness_of :rank, scope: [:lookup_type_id]
 end

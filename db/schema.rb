@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161107101512) do
+ActiveRecord::Schema.define(version: 20161108041804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20161107101512) do
   end
 
   create_table "lookups", force: :cascade do |t|
-    t.string  "value",          null: false
+    t.string  "name",           null: false
     t.string  "description"
     t.float   "rank",           null: false
     t.string  "comments"
@@ -65,18 +65,20 @@ ActiveRecord::Schema.define(version: 20161107101512) do
 
   add_index "lookups", ["lookup_type_id"], name: "index_lookups_on_lookup_type_id", using: :btree
 
-  create_table "vacation_reasons", force: :cascade do |t|
-    t.string  "code",         null: false
+  create_table "vacation_policies", force: :cascade do |t|
     t.string  "description"
-    t.date    "as_on",        null: false
-    t.boolean "paid",         null: false
-    t.float   "days_allowed", null: false
+    t.date    "as_on",            null: false
+    t.boolean "paid",             null: false
+    t.float   "days_allowed",     null: false
     t.string  "comments"
-    t.integer "lookup_id",    null: false
+    t.integer "business_unit_id", null: false
+    t.integer "vacation_code_id", null: false
   end
 
-  add_index "vacation_reasons", ["lookup_id"], name: "index_vacation_reasons_on_lookup_id", using: :btree
+  add_index "vacation_policies", ["business_unit_id"], name: "index_vacation_policies_on_business_unit", using: :btree
+  add_index "vacation_policies", ["vacation_code_id"], name: "index_vacation_policies_on_vacation_code_id", using: :btree
 
   add_foreign_key "lookups", "lookup_types"
-  add_foreign_key "vacation_reasons", "lookups"
+  add_foreign_key "vacation_policies", "lookups", column: "business_unit_id"
+  add_foreign_key "vacation_policies", "lookups", column: "vacation_code_id"
 end
