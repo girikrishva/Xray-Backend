@@ -27,10 +27,10 @@ ActiveAdmin.register VacationPolicy do
   index do
     selectable_column
     column :id
-    column :vacation_code do |resource|
+    column :vacation_code, sortable: 'vacation_code.name' do |resource|
       resource.vacation_code.name
     end
-    column :business_unit do |resource|
+    column :business_unit, sortable: 'business_unit.name' do |resource|
       resource.business_unit.name
     end
     column :description
@@ -43,9 +43,10 @@ ActiveAdmin.register VacationPolicy do
 
 
   filter :vacation_code, collection:
-                           proc { Lookup.where(lookup_type_id: LookupType.where(name: 'Business Units').first.id) }
-  filter :business_unit, collection:
                            proc { Lookup.where(lookup_type_id: LookupType.where(name: 'Vacation Codes').first.id) }
+
+  filter :business_unit, collection:
+                           proc { Lookup.where(lookup_type_id: LookupType.where(name: 'Business Units').first.id) }
   filter :description
   filter :as_on
   filter :paid
