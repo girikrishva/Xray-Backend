@@ -82,7 +82,7 @@ ActiveAdmin.register VacationPolicy do
     f.inputs do
       if f.object.business_unit_id.blank?
         f.input :business_unit, as: :select, collection:
-                                  Lookup.where(lookup_type_id: LookupType.where(name: 'Business Units').first.id)
+                                  Lookup.lookups_for_name('Business Units')
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :business_unit, input_html: {disabled: :true}
@@ -90,7 +90,7 @@ ActiveAdmin.register VacationPolicy do
       end
       if f.object.vacation_code_id.blank?
         f.input :vacation_code, as: :select, collection:
-                                  Lookup.where(lookup_type_id: LookupType.where(name: 'Vacation Codes').first.id)
+                                  Lookup.lookups_for_name('Vacation Codes')
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :vacation_code, input_html: {disabled: :true}

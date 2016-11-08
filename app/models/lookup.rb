@@ -10,4 +10,8 @@ class Lookup < ActiveRecord::Base
 
   validates_uniqueness_of :name, scope: [:lookup_type_id]
   validates_uniqueness_of :rank, scope: [:lookup_type_id]
+
+  def self.lookups_for_name(lookup_type_name)
+    Lookup.where(lookup_type_id: LookupType.where(name: lookup_type_name).first.id)
+  end
 end
