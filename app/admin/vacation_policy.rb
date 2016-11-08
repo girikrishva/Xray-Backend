@@ -14,7 +14,7 @@ ActiveAdmin.register VacationPolicy do
 #   permitted
 # end
 
-  permit_params :vacation_code, :description, :as_on, :paid, :days_allowed, :comments, :business_unit
+  permit_params :vacation_code_id, :description, :as_on, :paid, :days_allowed, :comments, :business_unit_id
 
   config.sort_order = 'as_on_desc_and_business_unit_id_asc_and_vacation_code_id_asc'
 
