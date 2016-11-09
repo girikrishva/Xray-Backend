@@ -16,7 +16,7 @@ ActiveAdmin.register VacationPolicy do
 
   permit_params :vacation_code_id, :description, :as_on, :paid, :days_allowed, :comments, :business_unit_id
 
-  config.sort_order = 'as_on_desc_and_business_unit_id_asc_and_vacation_code_id_asc'
+  config.sort_order = 'as_on_desc'
 
   config.clear_action_items!
 
@@ -27,10 +27,10 @@ ActiveAdmin.register VacationPolicy do
   index do
     selectable_column
     column :id
-    column :vacation_code, sortable: 'vacation_code.name' do |resource|
+    column :vacation_code do |resource|
       resource.vacation_code.name
     end
-    column :business_unit, sortable: 'business_unit.name' do |resource|
+    column :business_unit do |resource|
       resource.business_unit.name
     end
     column :description

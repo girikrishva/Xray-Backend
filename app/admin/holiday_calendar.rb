@@ -16,7 +16,7 @@ ActiveAdmin.register HolidayCalendar do
 
   permit_params :name, :as_on, :description, :comments, :business_unit_id
 
-  config.sort_order = 'as_on_desc_and_lookups.name_asc_and_name_asc'
+  config.sort_order = 'as_on_desc'
 
   config.clear_action_items!
 
@@ -28,7 +28,7 @@ ActiveAdmin.register HolidayCalendar do
     selectable_column
     column :id
     column :name
-    column :business_unit, sortable: 'business_unit.name' do |resource|
+    column :business_unit do |resource|
       resource.business_unit.name
     end
     column :description

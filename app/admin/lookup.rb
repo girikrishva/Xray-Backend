@@ -31,7 +31,7 @@ ActiveAdmin.register Lookup do
     selectable_column
     column :id
     column :name
-    column 'Type', :lookup_type, sortable: 'lookup_types.name' do |caller|
+    column 'Type', :lookup_type do |caller|
       caller.lookup_type.name
     end
     column :description
