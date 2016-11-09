@@ -102,6 +102,9 @@ ActiveAdmin.register VacationPolicy do
       f.input :days_allowed
       f.input :comments
     end
-    f.actions
+    f.actions do
+      f.action(:submit, label: 'Save')
+      f.cancel_link
+    end
   end
 end

@@ -80,13 +80,16 @@ ActiveAdmin.register Lookup do
       f.object.lookup_type_id = session[:lookup_type_id]
     end
     f.inputs do
-      f.input :lookup_type, label: "Type", input_html: { disabled: :true }
+      f.input :lookup_type, label: "Type", input_html: {disabled: :true}
       f.input :lookup_type_id, as: :hidden
       f.input :name
       f.input :description
       f.input :rank
       f.input :comments
     end
-    f.actions
+    f.actions do
+      f.action(:submit, label: 'Save')
+      f.cancel_link
+    end
   end
 end

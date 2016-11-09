@@ -52,4 +52,12 @@ ActiveAdmin.register LookupType do
       end
     end
   end
+
+  form do |f|
+    f.inputs
+    f.actions do
+      f.action(:submit, label: 'Save')
+      f.cancel_link
+    end
+  end
 end
