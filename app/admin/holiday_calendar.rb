@@ -16,7 +16,7 @@ ActiveAdmin.register HolidayCalendar do
 
   permit_params :name, :as_on, :description, :comments, :business_unit_id
 
-  config.sort_order = 'as_on_desc_and_business_unit_id_asc_and_name_asc'
+  config.sort_order = 'as_on_desc_and_lookups.name_asc_and_name_asc'
 
   config.clear_action_items!
 
@@ -47,7 +47,7 @@ ActiveAdmin.register HolidayCalendar do
 
   controller do
     def scoped_collection
-      resource_class.includes(:business_unit)
+      HolidayCalendar.includes(:business_unit)
     end
 
     def create
