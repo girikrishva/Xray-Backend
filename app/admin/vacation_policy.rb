@@ -43,10 +43,10 @@ ActiveAdmin.register VacationPolicy do
 
 
   filter :vacation_code, collection:
-                           proc { Lookup.where(lookup_type_id: LookupType.where(name: 'Vacation Codes').first.id) }
+                           proc { Lookup.lookups_for_name('Vacation Codes') }
 
   filter :business_unit, collection:
-                           proc { Lookup.where(lookup_type_id: LookupType.where(name: 'Business Units').first.id) }
+                           proc { Lookup.lookups_for_name('Business Units') }
   filter :description
   filter :as_on
   filter :paid
