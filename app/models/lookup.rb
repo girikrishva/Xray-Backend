@@ -3,6 +3,7 @@ class Lookup < ActiveRecord::Base
 
   has_many :vacation_codes, :class_name => 'VacationPolicy', foreign_key: :vacation_code_id
   has_many :business_units, :class_name => 'VacationPolicy', foreign_key: :business_unit_id
+  has_many :business_units, :class_name => 'HolidayCalendar', foreign_key: :business_unit_id
 
   validates :name, presence: true
   validates :rank, presence: true
