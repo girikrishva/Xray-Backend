@@ -243,6 +243,9 @@ GEM
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    seed_dump (3.2.4)
+      activerecord (>= 4)
+      activesupport (>= 4)
     spring (2.0.0)
       activesupport (>= 4.2)
     sprockets (3.7.0)
@@ -287,6 +290,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   schema_plus
   sdoc (~> 0.4.0)
+  seed_dump
   spring
   turbolinks
   uglifier (>= 1.3.0)
