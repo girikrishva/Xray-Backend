@@ -27,6 +27,10 @@ ActiveAdmin.register Lookup do
     link_to "Back", admin_lookup_types_path(lookup_type_id: nil)
   end
 
+  action_item only: :show do |resource|
+    link_to "Back", admin_lookups_path(lookup_type_id: session[:lookup_type_id]) if session.has_key?(:lookup_type_id)
+  end
+
   index do
     selectable_column
     column :id
