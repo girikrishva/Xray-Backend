@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161110062510) do
+ActiveRecord::Schema.define(version: 20161110071035) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,7 @@ SELECT lookups.id,
     t.string  "comments"
     t.integer "business_unit_id",     :null=>false, :index=>{:name=>"fk__project_types_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_project_types_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer "project_type_code_id", :null=>false, :index=>{:name=>"fk__project_types_project_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_project_types_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string  "description"
   end
   add_index "project_types", ["business_unit_id"], :name=>"index_project_types_on_business_unit_id"
   add_index "project_types", ["project_type_code_id"], :name=>"index_project_types_on_project_type_id"

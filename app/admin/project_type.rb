@@ -14,7 +14,7 @@ ActiveAdmin.register ProjectType do
 #   permitted
 # end
 
-  permit_params :business_unit_id, :project_type_code_id, :billed, :comments
+  permit_params :business_unit_id, :project_type_code_id, :description, :billed, :comments
 
   config.sort_order = 'business_units.name_asc_and_project_type_codes.name_asc'
 
@@ -37,6 +37,7 @@ ActiveAdmin.register ProjectType do
     column :project_type_code, sortable: 'project_type_codes.name' do |resource|
       resource.project_type_code.name
     end
+    column :description
     column :billed
     column :comments
     actions defaults: true, dropdown: true
@@ -46,6 +47,7 @@ ActiveAdmin.register ProjectType do
                            proc { Lookup.lookups_for_name('Business Units') }
   filter :project_type_code, collection:
                            proc { Lookup.lookups_for_name('Project Types') }
+  filter :description
   filter :billed
   filter :comments
 
@@ -88,7 +90,7 @@ ActiveAdmin.register ProjectType do
         f.input :project_type_code, input_html: {disabled: :true}
         f.input :project_type_code_id, as: :hidden
       end
-      # f.input :description
+      f.input :description
       f.input :billed
       f.input :comments
     end

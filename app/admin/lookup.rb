@@ -83,7 +83,7 @@ ActiveAdmin.register Lookup do
     if session.has_key?(:lookup_type_id)
       f.object.lookup_type_id = session[:lookup_type_id]
       if f.object.rank.blank?
-        f.object.rank = Lookup.max_rank_for_name(session[:lookup_type_id])
+        f.object.rank = Lookup.max_rank_for_lookup_type(session[:lookup_type_id])
       end
     end
     f.inputs do
