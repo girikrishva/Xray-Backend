@@ -1,5 +1,5 @@
 ActiveAdmin.register AdminUser do
-  menu label: 'Manage Users', parent: 'Security', priority: 10
+  menu label: 'Define Users', parent: 'Security', priority: 10
 
   config.clear_action_items!
 

@@ -1,5 +1,5 @@
 ActiveAdmin.register_page 'Profile' do
-  menu label: 'Manage Profile', parent: 'Security', priority: 20
+  menu label: 'Edit Profile', parent: 'Security', priority: 20
 
   controller do
     before_filter do
