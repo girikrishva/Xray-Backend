@@ -69,8 +69,8 @@ ActiveAdmin.register ProjectType do
     end
 
     def description_for_lookup
-      project_type_code_id = params[:project_type_code_id]
-      description = Lookup.description_for_lookup(project_type_code_id)
+      lookup_id = params[:lookup_id]
+      description = Lookup.description_for_lookup(lookup_id)
       render json: '{"description": "' + description + '"}'
     end
   end

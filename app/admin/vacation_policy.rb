@@ -71,6 +71,12 @@ ActiveAdmin.register VacationPolicy do
         redirect_to collection_url and return if resource.valid?
       end
     end
+
+    def description_for_lookup
+      lookup_id = params[:lookup_id]
+      description = Lookup.description_for_lookup(lookup_id)
+      render json: '{"description": "' + description + '"}'
+    end
   end
 
   form do |f|
