@@ -27,10 +27,10 @@ ActiveAdmin.register HolidayCalendar do
   index do
     selectable_column
     column :id
-    column :name
-    column :business_unit do |resource|
+    column :business_unit, sortable: 'business_units.name' do |resource|
       resource.business_unit.name
     end
+    column :name
     column :description
     column :as_on
     column :comments
@@ -38,9 +38,9 @@ ActiveAdmin.register HolidayCalendar do
   end
 
 
-  filter :name
   filter :business_unit, collection:
                            proc { Lookup.lookups_for_name('Business Units') }
+  filter :name
   filter :as_on
   filter :description
   filter :comments

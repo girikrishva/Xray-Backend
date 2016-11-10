@@ -1,5 +1,5 @@
 class HolidayCalendar < ActiveRecord::Base
-  belongs_to :business_unit, :class_name => 'Lookup', :foreign_key => :business_unit_id
+  belongs_to :business_unit, :class_name => 'BusinessUnit', :foreign_key => :business_unit_id
 
   validates :name, presence: true
   validates :as_on, presence: true
