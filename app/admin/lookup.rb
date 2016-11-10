@@ -82,6 +82,9 @@ ActiveAdmin.register Lookup do
   form do |f|
     if session.has_key?(:lookup_type_id)
       f.object.lookup_type_id = session[:lookup_type_id]
+      if f.object.rank.blank?
+        f.object.rank = Lookup.max_rank_for_name(session[:lookup_type_id])
+      end
     end
     f.inputs do
       f.input :lookup_type, label: "Type", input_html: {disabled: :true}
