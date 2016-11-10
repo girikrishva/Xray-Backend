@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161109025059) do
+ActiveRecord::Schema.define(version: 20161110062510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,18 @@ ActiveRecord::Schema.define(version: 20161109025059) do
     t.integer "lookup_type_id", :null=>false, :index=>{:name=>"index_lookups_on_lookup_type_id"}, :foreign_key=>{:references=>"lookup_types", :name=>"fk_rails_ac503ee932", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
+  create_view "business_units", <<-'END_VIEW_BUSINESS_UNITS', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Business Units'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  END_VIEW_BUSINESS_UNITS
+
   create_table "holiday_calendars", force: :cascade do |t|
     t.string  "name"
     t.date    "as_on"
@@ -64,6 +76,39 @@ ActiveRecord::Schema.define(version: 20161109025059) do
     t.integer "business_unit_id", :null=>false, :index=>{:name=>"fk__holiday_calendars_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_holiday_calendars_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
   add_index "holiday_calendars", ["business_unit_id"], :name=>"index_holiday_calendars_on_business_unit_id"
+
+  create_view "project_type_codes", <<-'END_VIEW_PROJECT_TYPE_CODES', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Project Types'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  END_VIEW_PROJECT_TYPE_CODES
+
+  create_table "project_types", force: :cascade do |t|
+    t.boolean "billed"
+    t.string  "comments"
+    t.integer "business_unit_id",     :null=>false, :index=>{:name=>"fk__project_types_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_project_types_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer "project_type_code_id", :null=>false, :index=>{:name=>"fk__project_types_project_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_project_types_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
+  add_index "project_types", ["business_unit_id"], :name=>"index_project_types_on_business_unit_id"
+  add_index "project_types", ["project_type_code_id"], :name=>"index_project_types_on_project_type_id"
+
+  create_view "vacation_codes", <<-'END_VIEW_VACATION_CODES', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Vacation Codes'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  END_VIEW_VACATION_CODES
 
   create_table "vacation_policies", force: :cascade do |t|
     t.string  "description"
