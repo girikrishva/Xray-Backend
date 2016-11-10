@@ -34,10 +34,10 @@ ActiveAdmin.register Lookup do
   index do
     selectable_column
     column :id
-    column :name
     column 'Type', :lookup_type do |caller|
       caller.lookup_type.name
     end
+    column :name
     column :description
     column :rank
     column :comments
