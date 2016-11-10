@@ -55,4 +55,6 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+      match '/admin/api/project_type_description' => 'admin/project_types#description_for_lookup', via: [:get]
 end

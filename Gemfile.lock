@@ -278,6 +278,7 @@ DEPENDENCIES
   activeadmin!
   byebug
   coffee-rails (~> 4.1.0)
+  coffee-script-source
   devise
   jbuilder (~> 2.0)
   jquery-rails

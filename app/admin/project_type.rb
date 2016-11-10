@@ -67,6 +67,12 @@ ActiveAdmin.register ProjectType do
         redirect_to collection_url and return if resource.valid?
       end
     end
+
+    def description_for_lookup
+      project_type_code_id = params[:project_type_code_id]
+      description = Lookup.description_for_lookup(project_type_code_id)
+      render json: '{"description": "' + description + '"}'
+    end
   end
 
   form do |f|

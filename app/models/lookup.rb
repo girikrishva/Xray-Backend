@@ -16,4 +16,8 @@ class Lookup < ActiveRecord::Base
   def self.max_rank_for_lookup_type(lookup_type_id)
     Lookup.where(lookup_type_id: lookup_type_id).order(:rank).last.rank + 1
   end
+
+  def self.description_for_lookup(lookup_id)
+    Lookup.find(lookup_id).description
+  end
 end
