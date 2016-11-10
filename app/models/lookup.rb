@@ -10,14 +10,14 @@ class Lookup < ActiveRecord::Base
   validates_uniqueness_of :rank, scope: [:lookup_type_id]
 
   def self.lookups_for_name(lookup_type_name)
-    Lookup.where(lookup_type_id: LookupType.where(name: lookup_type_name).first.id)
+    Lookup.where(lookup_type_id: LookupType.where(name: lookup_type_name).first.id) rescue nil
   end
 
   def self.max_rank_for_lookup_type(lookup_type_id)
-    Lookup.where(lookup_type_id: lookup_type_id).order(:rank).last.rank + 1
+    Lookup.where(lookup_type_id: lookup_type_id).order(:rank).last.rank + 1 rescue 1
   end
 
   def self.description_for_lookup(lookup_id)
-    Lookup.find(lookup_id).description
+    Lookup.find(lookup_id).description rescue nil
   end
 end
