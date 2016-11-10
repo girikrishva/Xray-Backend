@@ -7,6 +7,10 @@ ActiveAdmin.register AdminUser do
     link_to "New", new_admin_admin_user_path
   end
 
+  action_item only: :show do |resource|
+    link_to "Back", admin_admin_users_path
+  end
+
   permit_params :email, :password, :password_confirmation
 
   config.sort_order = 'email_asc'

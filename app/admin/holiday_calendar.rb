@@ -24,6 +24,10 @@ ActiveAdmin.register HolidayCalendar do
     link_to "New", new_admin_holiday_calendar_path
   end
 
+  action_item only: :show do |resource|
+    link_to "Back", admin_holiday_calendars_path
+  end
+
   index do
     selectable_column
     column :id

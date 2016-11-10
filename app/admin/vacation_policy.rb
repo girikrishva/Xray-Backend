@@ -24,6 +24,10 @@ ActiveAdmin.register VacationPolicy do
     link_to "New", new_admin_vacation_policy_path
   end
 
+  action_item only: :show do |resource|
+    link_to "Back", admin_vacation_policies_path
+  end
+
   index do
     selectable_column
     column :id

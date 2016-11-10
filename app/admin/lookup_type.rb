@@ -24,6 +24,10 @@ ActiveAdmin.register LookupType do
     link_to "New", new_admin_lookup_type_path
   end
 
+  action_item only: :show do |resource|
+    link_to "Back", admin_lookup_types_path(lookup_type_id: nil)
+  end
+
   index do
     selectable_column
     column :id
