@@ -44,7 +44,7 @@ ActiveAdmin.register ProjectType do
 
   filter :business_unit, collection:
                            proc { Lookup.lookups_for_name('Business Units') }
-  filter :project_type_code_id, collection:
+  filter :project_type_code, collection:
                            proc { Lookup.lookups_for_name('Project Types') }
   filter :billed
   filter :comments
