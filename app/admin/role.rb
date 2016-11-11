@@ -14,7 +14,7 @@ ActiveAdmin.register Role do
 #   permitted
 # end
 
-  permit_params  :name, :description, :rank, :comments
+  permit_params  :name, :description, :rank, :comments, :super_admin
 
   config.sort_order = 'rank_asc'
 
@@ -32,6 +32,7 @@ ActiveAdmin.register Role do
     selectable_column
     column :id
     column :name
+    column :super_admin
     column :description
     column :rank
     column :comments
@@ -41,6 +42,7 @@ ActiveAdmin.register Role do
 
   filter :name
   filter :description
+  filter :super_admin
   filter :rank
   filter :comments
 
@@ -62,7 +64,13 @@ ActiveAdmin.register Role do
     if f.object.rank.blank?
       f.object.rank = Role.generate_next_rank
     end
-    f.inputs
+    f.inputs do
+      f.input :name
+      f.input :description
+      f.input :super_admin
+      f.input :rank
+      f.input :comments
+    end
     f.actions do
       f.action(:submit, label: 'Save')
       f.cancel_link

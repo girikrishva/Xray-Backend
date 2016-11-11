@@ -11,7 +11,7 @@ ActiveAdmin.register AdminUser do
     link_to "Back", admin_admin_users_path
   end
 
-  permit_params :email, :password, :password_confirmation, :role_id, :super_admin
+  permit_params :email, :password, :password_confirmation, :role_id
 
   config.sort_order = 'email_asc'
 
@@ -22,7 +22,6 @@ ActiveAdmin.register AdminUser do
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
     end
-    column :super_admin
     column :current_sign_in_at
     column :sign_in_count
     column :created_at
@@ -51,7 +50,6 @@ ActiveAdmin.register AdminUser do
 
   filter :email
   filter :role
-  filter :super_admin
   filter :current_sign_in_at
   filter :sign_in_count
   filter :created_at
@@ -63,19 +61,11 @@ ActiveAdmin.register AdminUser do
       else
         f.input :email
       end
-      if !params[:suppress_password]
+      if params.has_key?(:suppress_password) and params[:suppress_password]
+        f.input :role
+      else
         f.input :password
         f.input :password_confirmation
-      else
-        f.input :role
-        f.input :super_admin
-      end
-      if !f.object.new_record?
-        f.input :role, as: :hidden
-        f.input :super_admin, as: :hidden
-      else
-        f.input :role
-        f.input :super_admin
       end
     end
     f.actions do
