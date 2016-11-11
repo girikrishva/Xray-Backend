@@ -14,7 +14,7 @@ ActiveAdmin.register Role do
 #   permitted
 # end
 
-  permit_params  :name, :description, :rank, :comments, :super_admin
+  permit_params :name, :description, :rank, :comments, :super_admin
 
   config.sort_order = 'rank_asc'
 
@@ -36,7 +36,7 @@ ActiveAdmin.register Role do
     column :description
     column :rank
     column :comments
-    actions defaults: true  , dropdown: true do |resource|
+    actions defaults: true, dropdown: true do |resource|
     end
   end
 
@@ -56,15 +56,6 @@ ActiveAdmin.register Role do
     def update
       super do |format|
         redirect_to collection_url and return if resource.valid?
-      end
-    end
-
-    def destroy
-      destroy! do |success, failure|
-        failure.html do
-          flash[:error] = "[" + resource.errors.full_messages.to_sentence + "]"
-          render action: :index
-        end
       end
     end
   end
