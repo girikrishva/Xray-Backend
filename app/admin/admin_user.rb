@@ -11,7 +11,7 @@ ActiveAdmin.register AdminUser do
     link_to "Back", admin_admin_users_path
   end
 
-  permit_params :email, :password, :password_confirmation
+  permit_params :email, :password, :password_confirmation, :role_id
 
   config.sort_order = 'email_asc'
 
@@ -19,13 +19,23 @@ ActiveAdmin.register AdminUser do
     selectable_column
     column :id
     column :email
+    column :role, sortable: 'roles.name' do |resource|
+      resource.role.name
+    end
     column :current_sign_in_at
     column :sign_in_count
     column :created_at
     actions defaults: true, dropdown: true
   end
 
+  controller do
+    def scoped_action
+      AdminUser.includes(:role)
+    end
+  end
+
   filter :email
+  filter :role
   filter :current_sign_in_at
   filter :sign_in_count
   filter :created_at
@@ -39,6 +49,7 @@ ActiveAdmin.register AdminUser do
       end
       f.input :password
       f.input :password_confirmation
+      f.input :role
     end
     f.actions do
       f.action(:submit, label: 'Save')

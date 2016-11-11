@@ -1,5 +1,5 @@
 AdminUser.create!([
-  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 12, current_sign_in_at: "2016-11-09 13:17:23", last_sign_in_at: "2016-11-09 06:43:08", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1"}
+  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: "2016-11-11 01:21:07", sign_in_count: 19, current_sign_in_at: "2016-11-11 01:21:07", last_sign_in_at: "2016-11-11 01:09:14", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1"}
 ])
 HolidayCalendar.create!([
   {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "", business_unit_id: 1},

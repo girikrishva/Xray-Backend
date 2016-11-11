@@ -4,5 +4,5 @@ class AdminUser < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-
+  belongs_to :role, class_name: 'Role', foreign_key: :role_id
 end

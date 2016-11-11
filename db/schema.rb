@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20161111013843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,13 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at"
   end
 
+  create_table "roles", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.float  "rank"
+    t.string "comments"
+  end
+
   create_table "admin_users", force: :cascade do |t|
     t.string   "email",                  :default=>"", :null=>false, :index=>{:name=>"index_admin_users_on_email", :unique=>true}
     t.string   "encrypted_password",     :default=>"", :null=>false
@@ -40,6 +47,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at",             :null=>false
     t.datetime "updated_at",             :null=>false
+    t.integer  "role_id",                :index=>{:name=>"index_admin_users_on_role_id"}, :foreign_key=>{:references=>"roles", :name=>"fk_admin_users_role_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_table "lookup_types", force: :cascade do |t|
@@ -98,18 +106,6 @@ SELECT lookups.id,
   end
   add_index "project_types", ["business_unit_id"], :name=>"index_project_types_on_business_unit_id"
   add_index "project_types", ["project_type_code_id"], :name=>"index_project_types_on_project_type_id"
-
-  create_view "roles", <<-'END_VIEW_ROLES', :force => true
-SELECT lookups.id,
-    lookups.name,
-    lookups.description,
-    lookups.rank,
-    lookups.comments,
-    lookups.lookup_type_id
-   FROM lookups,
-    lookup_types
-  WHERE (((lookup_types.name)::text = 'Roles'::text) AND (lookups.lookup_type_id = lookup_types.id))
-  END_VIEW_ROLES
 
   create_view "vacation_codes", <<-'END_VIEW_VACATION_CODES', :force => true
 SELECT lookups.id,
