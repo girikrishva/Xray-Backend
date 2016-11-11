@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20161111070443) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at",             :null=>false
     t.datetime "updated_at",             :null=>false
-    t.integer  "role_id",                :null=>false, :index=>{:name=>"index_admin_users_on_role_id"}, :foreign_key=>{:references=>"roles", :name=>"fk_admin_users_role_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "role_id",                :null=>false, :index=>{:name=>"fki_admin_users_to_roles_fk"}, :foreign_key=>{:references=>"roles", :name=>"admin_users_to_roles_fk", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_table "lookup_types", force: :cascade do |t|

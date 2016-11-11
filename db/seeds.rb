@@ -1,5 +1,5 @@
 AdminUser.create!([
-  {email: "admin@example.com", encrypted_password: "$2a$11$6omMW43f8e8wa6Pn0TMJqu8MtYcukmXI1NRoo2z2drcCd9irg.Lnq", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: "2016-11-11 01:21:07", sign_in_count: 21, current_sign_in_at: "2016-11-11 12:16:47", last_sign_in_at: "2016-11-11 03:07:49", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1}
+  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: "2016-11-11 12:43:48", sign_in_count: 15, current_sign_in_at: "2016-11-11 12:43:48", last_sign_in_at: "2016-11-10 15:50:42", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1}
 ])
 HolidayCalendar.create!([
   {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "", business_unit_id: 1},
@@ -101,9 +101,9 @@ ProjectType.create!([
 Role.create!([
   {name: "User", description: "User", rank: 2.0, comments: "", super_admin: nil},
   {name: "Director", description: "Director", rank: 4.0, comments: "", super_admin: nil},
+  {name: "Executive", description: "Executive", rank: 5.0, comments: "", super_admin: nil},
   {name: "Manager", description: "Manager", rank: 3.0, comments: "", super_admin: nil},
-  {name: "Administrator", description: "Administrator", rank: 1.0, comments: "", super_admin: true},
-  {name: "Executive", description: "Executive", rank: 5.0, comments: "", super_admin: false}
+  {name: "Administrator", description: "Administrator", rank: 1.0, comments: "", super_admin: true}
 ])
 VacationPolicy.create!([
   {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 15.0, comments: "", business_unit_id: 1, vacation_code_id: 71},
