@@ -66,6 +66,7 @@ ActiveAdmin.register AdminUser do
       else
         f.input :password
         f.input :password_confirmation
+        f.input :role
       end
     end
     f.actions do
