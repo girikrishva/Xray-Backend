@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161110071035) do
+ActiveRecord::Schema.define(version: 0) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,6 +98,18 @@ SELECT lookups.id,
   end
   add_index "project_types", ["business_unit_id"], :name=>"index_project_types_on_business_unit_id"
   add_index "project_types", ["project_type_code_id"], :name=>"index_project_types_on_project_type_id"
+
+  create_view "roles", <<-'END_VIEW_ROLES', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Roles'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  END_VIEW_ROLES
 
   create_view "vacation_codes", <<-'END_VIEW_VACATION_CODES', :force => true
 SELECT lookups.id,
