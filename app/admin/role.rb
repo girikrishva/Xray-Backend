@@ -58,6 +58,15 @@ ActiveAdmin.register Role do
         redirect_to collection_url and return if resource.valid?
       end
     end
+
+    def destroy
+      destroy! do |success, failure|
+        failure.html do
+          flash[:error] = "[" + resource.errors.full_messages.to_sentence + "]"
+          render action: :index
+        end
+      end
+    end
   end
 
   form do |f|

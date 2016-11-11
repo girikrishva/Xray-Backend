@@ -17,7 +17,8 @@ class Role < ActiveRecord::Base
   def cannot_destroy_last_super_admin
     super_admin_count = Role.where(super_admin: true).count
     if super_admin_count == 1
-      raise "Cannot destroy last super_admin in application."
+      errors.add(:base, "Must have at least one super_admin in application.")
+      return false
     end
   end
 end
