@@ -17,6 +17,10 @@ class Role < ActiveRecord::Base
     Role.all.order(:rank).last.rank + 1
   end
 
+  def immediate_parent
+    Role.find(parent_id).name if !parent_id.blank?
+  end
+
   def cannot_have_more_than_one_super_admin
     super_admin_count = Role.where(super_admin: true).count
     if super_admin_count == 1 and self.super_admin
