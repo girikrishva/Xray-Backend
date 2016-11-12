@@ -1,5 +1,5 @@
 ActiveAdmin.register VacationPolicy do
-  menu label: 'Vacation Policies', parent: 'Setup', priority: 20
+  menu if: proc { is_authorized? ["Executive"] }, label: 'Vacation Policies', parent: 'Setup', priority: 20
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters

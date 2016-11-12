@@ -1,5 +1,5 @@
 ActiveAdmin.register HolidayCalendar do
-  menu label: 'Holiday Calendar', parent: 'Setup', priority: 30
+  menu if: proc { is_authorized? ["Executive"] }, label: 'Holiday Calendar', parent: 'Setup', priority: 30
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters

@@ -6,20 +6,18 @@ module ActiveAdminHelper
   end
 
   def is_authorized?(allowed_roles)
-    current_role = Role.find(current_admin_user.role_id).name
-    if allowed_roles.blank? or allowed_roles.include?(current_role)
+    if allowed_roles.blank?
       return true
-    else
-      return false
     end
-  end
-
-  def is_not_authorized?(disallowed_roles)
-    current_role = Role.find(current_admin_user.role_id).name
-    if disallowed_roles.blank? or !disallowed_roles.include?(current_role)
-      return true
-    else
-      return false
+    allowed_roles.each do |allowed_role|
+      if Role.where(name: allowed_role).first.id == current_admin_user.role_id
+        return true
+      end
+      allowed_role_ancestry = Role.where(name: allowed_role).first.ancestor_ids
+      if allowed_role_ancestry.include?(current_admin_user.role_id)
+        return true
+      end
     end
+    return false
   end
 end

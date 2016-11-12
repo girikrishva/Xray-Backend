@@ -1,5 +1,5 @@
 ActiveAdmin.register AdminUser do
-  menu if: proc { is_not_authorized? ["User"] }, label: 'Define Users', parent: 'Security', priority: 10
+  menu if: proc { is_authorized? ["Administrator"] }, label: 'Define Users', parent: 'Security', priority: 10
 
   config.clear_action_items!
 
@@ -62,11 +62,15 @@ ActiveAdmin.register AdminUser do
         f.input :email
       end
       if params.has_key?(:suppress_password) and params[:suppress_password]
-        f.input :role
+        if is_authorized?(["Administrator"])
+          f.input :role
+        end
       else
         f.input :password
         f.input :password_confirmation
-        f.input :role
+        if is_authorized?(["Administrator"])
+          f.input :role
+        end
       end
     end
     f.actions do
