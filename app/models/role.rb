@@ -1,4 +1,6 @@
 class Role < ActiveRecord::Base
+  has_ancestry
+
   has_many :admin_users, class_name: 'AdminUser'
 
   validates :name, presence: true

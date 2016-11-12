@@ -14,7 +14,7 @@ ActiveAdmin.register Role do
 #   permitted
 # end
 
-  permit_params :name, :description, :rank, :comments, :super_admin
+  permit_params :name, :description, :rank, :comments, :super_admin, :parent
 
   config.sort_order = 'rank_asc'
 
@@ -35,6 +35,7 @@ ActiveAdmin.register Role do
     column :super_admin
     column :description
     column :rank
+    column :parent
     column :comments
     actions defaults: true, dropdown: true do |resource|
     end
@@ -69,6 +70,8 @@ ActiveAdmin.register Role do
       f.input :description
       f.input :super_admin
       f.input :rank
+      f.input :parent_id, as: :select, collection:
+          Role.all.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
     end
     f.actions do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161111070443) do
+ActiveRecord::Schema.define(version: 20161112110947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20161111070443) do
     t.float   "rank"
     t.string  "comments"
     t.boolean "super_admin"
+    t.string  "ancestry",    :index=>{:name=>"index_roles_on_ancestry"}
   end
 
   create_table "admin_users", force: :cascade do |t|
