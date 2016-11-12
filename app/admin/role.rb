@@ -35,7 +35,7 @@ ActiveAdmin.register Role do
     column :super_admin
     column :description
     column :rank
-    column :ancestry
+    column 'Parent', :immediate_parent
     column :comments
     actions defaults: true, dropdown: true do |resource|
     end

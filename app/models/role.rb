@@ -18,7 +18,7 @@ class Role < ActiveRecord::Base
   end
 
   def immediate_parent
-    Role.find(parent_id).name if !parent_id.blank?
+    '['+ parent_id.to_s + '] ' + Role.find(parent_id).name if !parent_id.blank?
   end
 
   def cannot_have_more_than_one_super_admin
