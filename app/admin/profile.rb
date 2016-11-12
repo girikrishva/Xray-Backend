@@ -1,5 +1,5 @@
 ActiveAdmin.register_page 'Profile' do
-  menu label: 'Edit Profile', parent: 'Security', priority: 20
+  menu if: proc { is_authorized? ["User"] }, label: 'Edit Profile', parent: 'Security', priority: 20
 
   controller do
     before_filter do
