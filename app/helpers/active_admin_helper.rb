@@ -13,4 +13,13 @@ module ActiveAdminHelper
       return false
     end
   end
+
+  def is_not_authorized?(disallowed_roles)
+    current_role = Role.find(current_admin_user.role_id).name
+    if disallowed_roles.blank? or !disallowed_roles.include?(current_role)
+      return true
+    else
+      return false
+    end
+  end
 end

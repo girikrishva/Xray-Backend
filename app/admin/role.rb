@@ -1,5 +1,5 @@
 ActiveAdmin.register Role do
-  menu label: 'Define Roles', parent: 'Security', priority: 30
+  menu if: proc { is_not_authorized? ["User"] }, label: 'Define Roles', parent: 'Security', priority: 30
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters

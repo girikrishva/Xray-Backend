@@ -1,5 +1,5 @@
 ActiveAdmin.register AdminUser do
-  menu label: 'Define Users', parent: 'Security', priority: 10
+  menu if: proc { is_not_authorized? ["User"] }, label: 'Define Users', parent: 'Security', priority: 10
 
   config.clear_action_items!
 
