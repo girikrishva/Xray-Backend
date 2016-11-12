@@ -26,7 +26,9 @@ ActiveAdmin.register AdminUser do
     column :sign_in_count
     column :created_at
     actions defaults: true, dropdown: true do |resource|
-      item "Assign Role", edit_admin_admin_user_path(id: resource.id, suppress_password: true)
+      if can? :edit, AdminUser
+        item "Assign Role", edit_admin_admin_user_path(id: resource.id, suppress_password: true)
+      end
     end
   end
 

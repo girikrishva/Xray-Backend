@@ -36,5 +36,12 @@ class AccessPolicy
     #  can :read, Post
     #  can :read, Comment
     # end
+
+    role :Administrator do
+      can :edit, AdminUser
+    end
+
+    role :User do
+    end
   end
 end

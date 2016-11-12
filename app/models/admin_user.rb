@@ -11,8 +11,8 @@ class AdminUser < ActiveRecord::Base
 
   def at_least_one_user_must_be_super_admin
     role_id_for_super_admin = Role.where(super_admin: true).first.id
-    super_admin_user_count = AdminUser.where(role_id: role_id_for_super_admin).count
-    if super_admin_user_count == 1 and self.role_id != role_id_for_super_admin
+    super_admin_user_count = AdminUser.where(role_id: role_id_for_super_admin).where.not(id: self.id).count
+    if super_admin_user_count == 0 and self.role_id != role_id_for_super_admin
       raise "At least one user must be a super_admin."
     end
   end
