@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161113015426) do
+ActiveRecord::Schema.define(version: 20161113084646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,24 @@ ActiveRecord::Schema.define(version: 20161113015426) do
     t.datetime "created_at",             :null=>false
     t.datetime "updated_at",             :null=>false
     t.integer  "role_id",                :null=>false, :index=>{:name=>"fki_admin_users_to_roles_fk"}, :foreign_key=>{:references=>"roles", :name=>"admin_users_to_roles_fk", :on_update=>:no_action, :on_delete=>:no_action}
+  end
+
+  create_table "admin_users_audits", force: :cascade do |t|
+    t.string   "email"
+    t.string   "encrypted_password"
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count"
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet     "current_sign_in_ip"
+    t.inet     "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "role_id"
+    t.integer  "admin_user_id",          :null=>false, :index=>{:name=>"index_admin_users_audit_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_admin_users_audit_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "ancestry",               :index=>{:name=>"index_admin_users_audits_on_ancestry"}
   end
 
   create_table "lookup_types", force: :cascade do |t|

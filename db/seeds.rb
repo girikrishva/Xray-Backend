@@ -1,5 +1,9 @@
 AdminUser.create!([
-  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: "2016-11-11 12:43:48", sign_in_count: 15, current_sign_in_at: "2016-11-11 12:43:48", last_sign_in_at: "2016-11-10 15:50:42", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1}
+  {email: "sam@example.com", encrypted_password: "$2a$11$ATRcJPuNeKkXfqPhclNOAuPxrJJo5c259QYdJstBkEMCY.toN8Ou2", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 14, current_sign_in_at: "2016-11-12 17:21:11", last_sign_in_at: "2016-11-12 16:46:32", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 2},
+  {email: "don@example.com", encrypted_password: "$2a$11$jALlOCpqSK0U71/yUoFzk.l6JpO5ZCAVk0sD68MAWDAjk6SszisiC", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 3, current_sign_in_at: "2016-11-13 02:19:10", last_sign_in_at: "2016-11-12 17:11:51", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 5},
+  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 28, current_sign_in_at: "2016-11-13 07:44:28", last_sign_in_at: "2016-11-13 02:20:06", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1},
+  {email: "bob@example.com", encrypted_password: "$2a$11$PF65wOrnmozdpGu4P8INlepYlghWPceE8sA.u2hbhTnCSNECMK3uO", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 2, current_sign_in_at: "2016-11-12 17:15:46", last_sign_in_at: "2016-11-12 17:04:37", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 3},
+  {email: "ray@example.com", encrypted_password: "$2a$11$Q/RDL0EzUjC0wIFm6pCTW.wzhOIf8dBmfp.zGizpvVHGFkyciPkRS", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 1, current_sign_in_at: "2016-11-12 17:17:03", last_sign_in_at: "2016-11-12 17:17:03", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 4}
 ])
 HolidayCalendar.create!([
   {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "", business_unit_id: 1},
@@ -99,11 +103,13 @@ ProjectType.create!([
   {billed: true, comments: "", business_unit_id: 4, project_type_code_id: 96, description: "Fixed Bid"}
 ])
 Role.create!([
-  {name: "User", description: "User", rank: 2.0, comments: "", super_admin: nil},
-  {name: "Director", description: "Director", rank: 4.0, comments: "", super_admin: nil},
-  {name: "Executive", description: "Executive", rank: 5.0, comments: "", super_admin: nil},
-  {name: "Manager", description: "Manager", rank: 3.0, comments: "", super_admin: nil},
-  {name: "Administrator", description: "Administrator", rank: 1.0, comments: "", super_admin: true}
+  {name: "Administrator", description: "Administrator", rank: 1.0, comments: "", super_admin: true, ancestry: nil, parent_name: nil},
+  {name: "User", description: "User", rank: 2.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager"},
+  {name: "Manager", description: "Manager", rank: 3.0, comments: "", super_admin: false, ancestry: "1/5/4", parent_name: "Director"},
+  {name: "Director", description: "Director", rank: 4.0, comments: "", super_admin: false, ancestry: "1/5", parent_name: "Executive"},
+  {name: "Executive", description: "Executive", rank: 5.0, comments: "", super_admin: false, ancestry: "1", parent_name: "Administrator"},
+  {name: "Lead", description: "Lead", rank: 7.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager"},
+  {name: "Consultant", description: "Consultant", rank: 8.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager"}
 ])
 VacationPolicy.create!([
   {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 15.0, comments: "", business_unit_id: 1, vacation_code_id: 71},

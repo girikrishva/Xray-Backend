@@ -6,6 +6,8 @@ class AdminUser < ActiveRecord::Base
 
   belongs_to :role, class_name: 'Role', foreign_key: :role_id
 
+  has_many :admin_users_audits, class_name: 'AdminUsersAudit'
+
   before_update :at_least_one_user_must_be_super_admin
   before_destroy :cannot_destroy_last_super_admin_user
 
