@@ -19,7 +19,7 @@ AdminUsersAudit.create!([
   {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 31, current_sign_in_at: "2016-11-13 10:47:31", last_sign_in_at: "2016-11-13 10:45:13", current_sign_in_ip: "127.0.0.1/32", last_sign_in_ip: "127.0.0.1/32", role_id: 1, admin_user_id: 1}
 ])
 HolidayCalendar.create!([
-  {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "", business_unit_id: 1},
+  {name: "Diwali", as_on: "2016-10-31", description: "Diwali", comments: "", business_unit_id: 1},
   {name: "Christmas", as_on: "2016-12-25", description: "Christmas", comments: "", business_unit_id: 4},
   {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", business_unit_id: 1},
   {name: "Easter", as_on: "2016-09-17", description: "Easter", comments: "", business_unit_id: 4}
