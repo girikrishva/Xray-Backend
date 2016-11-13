@@ -48,6 +48,8 @@ ActiveAdmin.register Lookup do
     before_filter only: :index do |resource|
       if params.has_key?(:lookup_type_id)
         session[:lookup_type_id] = params[:lookup_type_id]
+      else
+        redirect_to admin_lookup_types_path
       end
       # if filter button wasn't clicked
       if params[:commit].blank? && params[:q].blank?

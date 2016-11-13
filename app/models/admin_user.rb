@@ -8,7 +8,9 @@ class AdminUser < ActiveRecord::Base
 
   has_many :admin_users_audits, class_name: 'AdminUsersAudit'
 
+  after_create :create_audit_record
   before_update :at_least_one_user_must_be_super_admin
+  after_update :create_audit_record
   before_destroy :cannot_destroy_last_super_admin_user
 
   def at_least_one_user_must_be_super_admin
@@ -25,5 +27,19 @@ class AdminUser < ActiveRecord::Base
     if super_admin_user_count == 1 and self.role_id == role_id_for_super_admin
       raise "Cannot destroy last super_admin user."
     end
+  end
+
+  def create_audit_record
+    audit_record = AdminUsersAudit.new
+    audit_record.email = self.email
+    audit_record.encrypted_password = self.encrypted_password
+    audit_record.sign_in_count = self.sign_in_count
+    audit_record.current_sign_in_at = self.current_sign_in_at
+    audit_record.current_sign_in_ip = self.current_sign_in_ip.to_s
+    audit_record.last_sign_in_at = self.last_sign_in_at
+    audit_record.last_sign_in_ip = self.last_sign_in_ip.to_s
+    audit_record.role_id = self.role_id
+    audit_record.admin_user_id = self.id
+    audit_record.save
   end
 end

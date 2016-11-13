@@ -62,13 +62,12 @@ ActiveRecord::Schema.define(version: 20161113084646) do
     t.integer  "sign_in_count"
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.inet     "current_sign_in_ip"
-    t.inet     "last_sign_in_ip"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "role_id"
     t.integer  "admin_user_id",          :null=>false, :index=>{:name=>"index_admin_users_audit_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_admin_users_audit_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.string   "ancestry",               :index=>{:name=>"index_admin_users_audits_on_ancestry"}
   end
 
   create_table "lookup_types", force: :cascade do |t|

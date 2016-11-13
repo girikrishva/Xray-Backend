@@ -2,6 +2,7 @@ class Role < ActiveRecord::Base
   has_ancestry
 
   has_many :admin_users, class_name: 'AdminUser'
+  has_many :admin_users_audits, class_name: 'AdminUsersAudit'
 
   validates :name, presence: true
   validates :rank, presence: true

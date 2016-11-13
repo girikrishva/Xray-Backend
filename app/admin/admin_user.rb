@@ -27,6 +27,7 @@ ActiveAdmin.register AdminUser do
     column :created_at
     actions defaults: true, dropdown: true do |resource|
       item "Assign Role", edit_admin_admin_user_path(id: resource.id, suppress_password: true)
+      item "Audit Trail", admin_admin_users_audits_path(admin_user_id: resource.id)
     end
   end
 
