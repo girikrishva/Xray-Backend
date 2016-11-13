@@ -62,15 +62,11 @@ ActiveAdmin.register AdminUser do
         f.input :email
       end
       if params.has_key?(:suppress_password) and params[:suppress_password]
-        if is_authorized?(["Administrator"])
-          f.input :role
-        end
+        f.input :role
       else
         f.input :password
         f.input :password_confirmation
-        if is_authorized?(["Administrator"])
-          f.input :role
-        end
+        f.input :role
       end
     end
     f.actions do
