@@ -14,7 +14,7 @@ ActiveAdmin.register Role do
 #   permitted
 # end
 
-  permit_params :name, :description, :rank, :comments, :super_admin, :parent_id
+  permit_params :name, :description, :rank, :comments, :super_admin, :parent_id, :parent_name
 
   config.sort_order = 'rank_asc'
 
@@ -35,7 +35,7 @@ ActiveAdmin.register Role do
     column :super_admin
     column :description
     column :rank
-    column 'Parent', :immediate_parent
+    column :parent_name
     column :comments
     actions defaults: true, dropdown: true do |resource|
     end
@@ -45,7 +45,8 @@ ActiveAdmin.register Role do
   filter :description
   filter :super_admin
   filter :rank
-  filter :ancestry
+  filter :parent_name, as: :select, collection:
+                         proc { Role.all.pluck(:name) }
   filter :comments
 
   controller do

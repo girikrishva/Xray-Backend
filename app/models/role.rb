@@ -9,16 +9,13 @@ class Role < ActiveRecord::Base
   validates_uniqueness_of :name
   validates_uniqueness_of :rank
 
-  before_create :cannot_have_more_than_one_super_admin
-  before_update :cannot_have_more_than_one_super_admin
+  before_create :cannot_have_more_than_one_super_admin, :populate_parent_name
+  before_update :cannot_have_more_than_one_super_admin, :populate_parent_name
   before_destroy :cannot_destroy_last_super_admin
+
 
   def self.generate_next_rank
     Role.all.order(:rank).last.rank + 1
-  end
-
-  def immediate_parent
-    '['+ parent_id.to_s + '] ' + Role.find(parent_id).name if !parent_id.blank?
   end
 
   def cannot_have_more_than_one_super_admin
@@ -33,5 +30,9 @@ class Role < ActiveRecord::Base
     if super_admin_count == 1 and self.super_admin
       raise "Must have at least one super_admin in application."
     end
+  end
+
+  def populate_parent_name
+    self.parent_name = Role.find(self.parent_id).name
   end
 end
