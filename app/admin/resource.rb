@@ -79,20 +79,6 @@ ActiveAdmin.register Resource do
       row :cost_rate do
         number_with_precision r.cost_rate, precision: 2, delimiter: ','
       end
-
-      # row :service_rate do
-      #   sr.service_rate.skill_designation
-      # end
-      # row :as_on
-      # row I18n.t('active_admin.in') do |asr|
-      #   asr.bu_currency
-      # end
-      # row :billing_rate do
-      #   number_with_precision sr.billing_rate, precision: 2, delimiter: ','
-      # end
-      # row :cost_rate do
-      #   number_with_precision sr.cost_rate, precision: 2, delimiter: ','
-      # end
       row :comments
     end
   end
