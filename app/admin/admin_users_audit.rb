@@ -13,6 +13,7 @@ ActiveAdmin.register AdminUsersAudit do
     selectable_column
     column :id
     column :email
+    column :active
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
     end
@@ -24,9 +25,6 @@ ActiveAdmin.register AdminUsersAudit do
     end
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
-    end
-    column :current_sign_in_at, sortable: 'admin_users_audits.current_sign_in_at' do |resource|
-      resource.current_sign_in_at.strftime( "%Y-%m-%d %H:%M:%S")
     end
   end
 
@@ -43,14 +41,14 @@ ActiveAdmin.register AdminUsersAudit do
     end
 
     def scoped_action
-      AdminUser.includes [:admin_users_audit,:role, :business_unit, :department, :designation]
+      AdminUser.includes [:role, :business_unit, :department, :designation]
     end
   end
 
   filter :email
+  filter :active
   filter :role
   filter :business_unit
   filter :department
   filter :designation
-  filter :current_sign_in_at
 end

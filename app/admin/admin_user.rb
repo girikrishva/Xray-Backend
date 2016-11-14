@@ -11,7 +11,25 @@ ActiveAdmin.register AdminUser do
     link_to "Back", admin_admin_users_path
   end
 
-  permit_params :email, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id
+  batch_action :activate do |ids|
+    ids.each do |id|
+      admin_user = AdminUser.find(id)
+      admin_user.active = true
+      admin_user.save
+    end
+    redirect_to collection_url
+  end
+
+  batch_action :deactivate do |ids|
+    ids.each do |id|
+      admin_user = AdminUser.find(id)
+      admin_user.active = false
+      admin_user.save
+    end
+    redirect_to collection_url
+  end
+
+  permit_params :email, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active
 
   config.sort_order = 'email_asc'
 
@@ -19,6 +37,7 @@ ActiveAdmin.register AdminUser do
     selectable_column
     column :id
     column :email
+    column :active
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
     end
@@ -30,9 +49,6 @@ ActiveAdmin.register AdminUser do
     end
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
-    end
-    column :current_sign_in_at, sortable: 'admin_users.current_sign_in_at' do |resource|
-      resource.current_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
     end
     actions defaults: true, dropdown: true do |resource|
       item "Change Qualifiers", edit_admin_admin_user_path(id: resource.id, suppress_password: true)
@@ -63,11 +79,11 @@ ActiveAdmin.register AdminUser do
   end
 
   filter :email
+  filter :active
   filter :role
   filter :business_unit
   filter :department
   filter :designation
-  filter :current_sign_in_at
 
   form do |f|
     f.inputs "Admin Details" do
@@ -77,6 +93,7 @@ ActiveAdmin.register AdminUser do
         f.input :email
       end
       if params.has_key?(:suppress_password) and params[:suppress_password]
+        f.input :active
         f.input :role
         f.input :business_unit
         f.input :department
@@ -85,6 +102,7 @@ ActiveAdmin.register AdminUser do
         f.input :password
         f.input :password_confirmation
         if f.object.new_record?
+          f.input :active
           f.input :role
           f.input :business_unit
           f.input :department

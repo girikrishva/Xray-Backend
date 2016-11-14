@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20161114092655) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "business_unit_id",       :null=>false, :index=>{:name=>"index_admin_users_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "department_id",          :null=>false, :index=>{:name=>"index_admin_users_on_department_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_department_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "designation_id",         :null=>false, :index=>{:name=>"index_admin_users_on_designation_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_designation_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.boolean  "active"
   end
 
   create_table "admin_users_audits", force: :cascade do |t|
@@ -88,6 +89,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "business_unit_id",       :null=>false, :index=>{:name=>"index_admin_users_audits_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_audits_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "department_id",          :null=>false, :index=>{:name=>"index_admin_users_audits_on_department_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_audits_department_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "designation_id",         :null=>false, :index=>{:name=>"index_admin_users_audits_on_designation"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_audits_designation_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.boolean  "active"
   end
 
   create_view "business_units", <<-'END_VIEW_BUSINESS_UNITS', :force => true
