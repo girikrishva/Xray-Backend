@@ -5,6 +5,9 @@ class AdminUser < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   belongs_to :role, class_name: 'Role', foreign_key: :role_id
+  belongs_to :business_unit, class_name: 'BusinessUnit', foreign_key: :business_unit_id
+  belongs_to :department, class_name: 'Department', foreign_key: :department_id
+  belongs_to :designation, class_name: 'Designation', foreign_key: :designation_id
 
   has_many :admin_users_audits, class_name: 'AdminUsersAudit'
 

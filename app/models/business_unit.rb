@@ -4,4 +4,5 @@ class BusinessUnit < ActiveRecord::Base
   has_many :vacation_policies, class_name: 'VacationPolicy'
   has_many :holiday_calendars, class_name: 'HolidayCalendar'
   has_many :project_types, class_name: 'ProjectType'
+  has_many :admin_users, class_name: 'AdminUser'
 end
