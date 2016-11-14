@@ -1,5 +1,5 @@
 ActiveAdmin.register AdminUser, as: 'Profile' do
-  menu if: proc { is_menu_authorized? ["User"] }, label: 'Edit Profile', parent: 'Security', url: '/admin/profiles/7/edit', priority: 20
+  menu if: proc { is_menu_authorized? ["User"] }, label: 'Edit Profile', parent: 'Security', url: proc { '/admin/profiles/' + current_active_admin_user.id.to_s + '/edit' }, priority: 20
 
   config.clear_action_items!
 
