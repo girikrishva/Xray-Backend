@@ -32,7 +32,7 @@ ActiveAdmin.register AdminUser do
       resource.designation.name
     end
     column :current_sign_in_at, sortable: 'admin_users.current_sign_in_at' do |resource|
-      resource.current_sign_in_at.strftime( "%Y-%m-%d %H:%M:%S")
+      resource.current_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
     end
     actions defaults: true, dropdown: true do |resource|
       item "Change Qualifiers", edit_admin_admin_user_path(id: resource.id, suppress_password: true)
@@ -84,10 +84,12 @@ ActiveAdmin.register AdminUser do
       else
         f.input :password
         f.input :password_confirmation
-        f.input :role
-        f.input :business_unit
-        f.input :department
-        f.input :designation
+        if f.object.new_record?
+          f.input :role
+          f.input :business_unit
+          f.input :department
+          f.input :designation
+        end
       end
     end
     f.actions do
