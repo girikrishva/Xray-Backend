@@ -50,6 +50,10 @@ ActiveAdmin.register HolidayCalendar do
   filter :comments
 
   controller do
+    before_filter do |c|
+      c.send(:is_resource_authorized?, ["Executive"])
+    end
+
     def scoped_collection
       HolidayCalendar.includes(:business_unit)
     end

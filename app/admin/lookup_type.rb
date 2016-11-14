@@ -44,6 +44,10 @@ ActiveAdmin.register LookupType do
   filter :comments
 
   controller do
+    before_filter do |c|
+      c.send(:is_resource_authorized?, ["Director"])
+    end
+
     def create
       super do |format|
         redirect_to collection_url and return if resource.valid?

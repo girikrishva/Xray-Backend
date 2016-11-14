@@ -52,6 +52,10 @@ ActiveAdmin.register Lookup do
   end
 
   controller do
+    before_filter do |c|
+      c.send(:is_resource_authorized?, ["Director"])
+    end
+
     before_filter only: :index do |resource|
       if params.has_key?(:lookup_type_id)
         session[:lookup_type_id] = params[:lookup_type_id]

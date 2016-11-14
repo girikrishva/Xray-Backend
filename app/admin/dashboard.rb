@@ -29,4 +29,10 @@ ActiveAdmin.register_page "Dashboard" do
     #   end
     # end
   end # content
+
+  controller do
+    before_filter do |c|
+      c.send(:is_resource_authorized?, ["User"])
+    end
+  end
 end

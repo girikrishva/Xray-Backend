@@ -56,6 +56,10 @@ ActiveAdmin.register VacationPolicy do
   filter :comments
 
   controller do
+    before_filter do |c|
+      c.send(:is_resource_authorized?, ["Executive"])
+    end
+
     def scoped_collection
       VacationPolicy.includes  [:vacation_code, :business_unit]
     end

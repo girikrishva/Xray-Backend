@@ -29,6 +29,10 @@ ActiveAdmin.register AdminUsersAudit do
   end
 
   controller do
+    before_filter do |c|
+      c.send(:is_resource_authorized?, ["Administrator"])
+    end
+
     before_filter only: :index do |resource|
       if !params.has_key?(:admin_user_id)
         redirect_to admin_admin_users_path

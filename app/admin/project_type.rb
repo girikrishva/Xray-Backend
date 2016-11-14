@@ -52,6 +52,10 @@ ActiveAdmin.register ProjectType do
   filter :comments
 
   controller do
+    before_filter do |c|
+      c.send(:is_resource_authorized?, ["Executive"])
+    end
+
     def scoped_collection
       ProjectType.includes  [:project_type_code, :business_unit]
     end

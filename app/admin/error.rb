@@ -11,4 +11,10 @@ ActiveAdmin.register_page "Error" do
       end
     end
   end
+
+  controller do
+    before_filter do |c|
+      c.send(:is_resource_authorized?, ["User"])
+    end
+  end
 end
