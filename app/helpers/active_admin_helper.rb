@@ -23,7 +23,7 @@ module ActiveAdminHelper
 
   def is_resource_authorized?(allowed_roles, disallowed_roles = [])
     if !is_resource_authorized_boolean(allowed_roles, disallowed_roles)
-      redirect_to admin_error_path, flash: {error: 'You are not allowed to access this resource [' + request.env['PATH_INFO'] + '].'}
+      redirect_to admin_error_path, flash: {error: 'You are not allowed access to the requested resource.'}
     end
     return true
   end
