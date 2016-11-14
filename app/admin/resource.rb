@@ -39,8 +39,16 @@ ActiveAdmin.register Resource do
     end
     column :as_on
     column :primary_skill
-    column :bill_rate
-    column :cost_rate
+    column :bill_rate, :sortable => 'bill_rate' do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.bill_rate, precision: 2 #, delimiter: ','
+      end
+    end
+    column :cost_rate, :sortable => 'cost_rate' do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.cost_rate, precision: 2 #, delimiter: ','
+      end
+    end
     column :comments
     actions defaults: true, dropdown: true
   end
