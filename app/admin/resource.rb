@@ -41,12 +41,12 @@ ActiveAdmin.register Resource do
     column :primary_skill
     column :bill_rate, :sortable => 'bill_rate' do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.bill_rate, precision: 2 #, delimiter: ','
+        number_with_precision element.bill_rate, precision: 2, delimiter: ','
       end
     end
     column :cost_rate, :sortable => 'cost_rate' do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.cost_rate, precision: 2 #, delimiter: ','
+        number_with_precision element.cost_rate, precision: 2, delimiter: ','
       end
     end
     column :comments
@@ -55,12 +55,47 @@ ActiveAdmin.register Resource do
 
   filter :admin_user, label: 'User'
   filter :skill, collection:
-                           proc { Lookup.lookups_for_name('Skills') }
+                   proc { Lookup.lookups_for_name('Skills') }
   filter :as_on
   filter :primary_skill
   filter :bill_rate
   filter :cost_rate
   filter :comments
+
+  show do |r|
+    attributes_table_for r do
+      row :id
+      row 'User', :admin_user do
+        r.admin_user.name
+      end
+      row :skill do
+        r.skill.name
+      end
+      row :as_on
+      row :primary_skill
+      row :bill_rate do
+        number_with_precision r.bill_rate, precision: 2, delimiter: ','
+      end
+      row :cost_rate do
+        number_with_precision r.cost_rate, precision: 2, delimiter: ','
+      end
+
+      # row :service_rate do
+      #   sr.service_rate.skill_designation
+      # end
+      # row :as_on
+      # row I18n.t('active_admin.in') do |asr|
+      #   asr.bu_currency
+      # end
+      # row :billing_rate do
+      #   number_with_precision sr.billing_rate, precision: 2, delimiter: ','
+      # end
+      # row :cost_rate do
+      #   number_with_precision sr.cost_rate, precision: 2, delimiter: ','
+      # end
+      row :comments
+    end
+  end
 
   controller do
     before_filter do |c|
@@ -68,7 +103,7 @@ ActiveAdmin.register Resource do
     end
 
     def scoped_collection
-      Resource.includes  [:admin_user, :skill]
+      Resource.includes [:admin_user, :skill]
     end
 
     def create
@@ -99,8 +134,8 @@ ActiveAdmin.register Resource do
       end
       if f.object.skill_id.blank?
         f.input :skill, as: :select, collection:
-                                  Lookup.lookups_for_name('Skills')
-                                      .map { |a| [a.name, a.id] }, include_blank: true
+                          Lookup.lookups_for_name('Skills')
+                              .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :skill, input_html: {disabled: :true}
         f.input :skill_id, as: :hidden
