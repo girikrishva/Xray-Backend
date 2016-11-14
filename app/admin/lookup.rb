@@ -31,6 +31,13 @@ ActiveAdmin.register Lookup do
     link_to "Back", admin_lookups_path(lookup_type_id: session[:lookup_type_id]) if session.has_key?(:lookup_type_id)
   end
 
+  batch_action :destroy do |ids|
+    ids.each do |id|
+      Lookup.delete(id)
+    end
+    redirect_to collection_url(lookup_type_id: session[:lookup_type_id])
+  end
+
   index do
     selectable_column
     column :id
@@ -65,13 +72,19 @@ ActiveAdmin.register Lookup do
 
     def create
       super do |format|
-        redirect_to collection_url and return if resource.valid?
+        redirect_to collection_url(lookup_type_id: session[:lookup_type_id]) and return if resource.valid?
       end
     end
 
     def update
       super do |format|
-        redirect_to collection_url and return if resource.valid?
+        redirect_to collection_url(lookup_type_id: session[:lookup_type_id]) and return if resource.valid?
+      end
+    end
+
+    def destroy
+      super do |format|
+        redirect_to collection_url(lookup_type_id: session[:lookup_type_id]) and return if resource.valid?
       end
     end
   end
