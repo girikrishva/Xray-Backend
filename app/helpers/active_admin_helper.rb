@@ -23,7 +23,7 @@ module ActiveAdminHelper
 
   def is_resource_authorized?(allowed_roles, disallowed_roles = [])
     if !is_logged_in_user_active
-      redirect_to admin_error_path(back_path: 'destroy_admin_user_session_path'), flash: {error: 'Please contact administrator for access.'}
+      redirect_to destroy_admin_user_session_path
     end
     if !is_resource_authorized_boolean(allowed_roles, disallowed_roles)
       redirect_to admin_error_path, flash: {error: 'You are not allowed access to the requested resource.'}
