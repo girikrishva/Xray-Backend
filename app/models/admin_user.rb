@@ -48,6 +48,7 @@ class AdminUser < ActiveRecord::Base
     audit_record.designation_id = self.designation_id
     audit_record.admin_user_id = self.id
     audit_record.active = self.active
+    audit_record.name = self.name
     audit_record.save
   end
 

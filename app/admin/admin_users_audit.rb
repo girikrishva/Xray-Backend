@@ -13,6 +13,7 @@ ActiveAdmin.register AdminUsersAudit do
     selectable_column
     column :id
     column :email
+    column :name
     column :active
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
@@ -50,6 +51,7 @@ ActiveAdmin.register AdminUsersAudit do
   end
 
   filter :email
+  filter :name
   filter :active
   filter :role
   filter :business_unit

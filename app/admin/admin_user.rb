@@ -37,6 +37,7 @@ ActiveAdmin.register AdminUser do
     selectable_column
     column :id
     column :email
+    column :name
     column :active
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
@@ -79,6 +80,7 @@ ActiveAdmin.register AdminUser do
   end
 
   filter :email
+  filter :name
   filter :active
   filter :role
   filter :business_unit
@@ -93,6 +95,7 @@ ActiveAdmin.register AdminUser do
         f.input :email
       end
       if params.has_key?(:suppress_password) and params[:suppress_password]
+        f.input :name
         f.input :active
         f.input :role
         f.input :business_unit
@@ -102,6 +105,7 @@ ActiveAdmin.register AdminUser do
         f.input :password
         f.input :password_confirmation
         if f.object.new_record?
+          f.input :name
           f.input :active
           f.input :role
           f.input :business_unit

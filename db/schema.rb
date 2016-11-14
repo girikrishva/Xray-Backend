@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161114092655) do
+ActiveRecord::Schema.define(version: 20161114122155) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 20161114092655) do
     t.integer  "department_id",          :null=>false, :index=>{:name=>"index_admin_users_on_department_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_department_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "designation_id",         :null=>false, :index=>{:name=>"index_admin_users_on_designation_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_designation_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.boolean  "active"
+    t.string   "name",                   :null=>false
   end
 
   create_table "admin_users_audits", force: :cascade do |t|
@@ -90,6 +91,7 @@ ActiveRecord::Schema.define(version: 20161114092655) do
     t.integer  "department_id",          :null=>false, :index=>{:name=>"index_admin_users_audits_on_department_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_audits_department_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "designation_id",         :null=>false, :index=>{:name=>"index_admin_users_audits_on_designation"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_audits_designation_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.boolean  "active"
+    t.string   "name",                   :null=>false
   end
 
   create_view "business_units", <<-'END_VIEW_BUSINESS_UNITS', :force => true
@@ -158,6 +160,28 @@ SELECT lookups.id,
   end
   add_index "project_types", ["business_unit_id"], :name=>"index_project_types_on_business_unit_id"
   add_index "project_types", ["project_type_code_id"], :name=>"index_project_types_on_project_type_id"
+
+  create_table "resources", force: :cascade do |t|
+    t.boolean "primary_skill"
+    t.date    "as_on",         :null=>false
+    t.float   "bill_rate",     :null=>false
+    t.float   "cost_rate",     :null=>false
+    t.string  "comments"
+    t.integer "admin_user_id", :null=>false, :index=>{:name=>"index_resources_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_resources_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer "skill_id",      :null=>false, :index=>{:name=>"index_resources_on_lookup_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_resources_skill_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
+
+  create_view "skills", <<-'END_VIEW_SKILLS', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Skills'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  END_VIEW_SKILLS
 
   create_view "vacation_codes", <<-'END_VIEW_VACATION_CODES', :force => true
 SELECT lookups.id,
