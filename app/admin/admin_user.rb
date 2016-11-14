@@ -1,5 +1,5 @@
 ActiveAdmin.register AdminUser do
-  menu if: proc { is_authorized? ["Administrator"] }, label: 'Define Users', parent: 'Security', priority: 10
+  menu if: proc { is_menu_authorized? ["Administrator"] }, label: 'Define Users', parent: 'Security', priority: 10
 
   config.clear_action_items!
 
@@ -41,6 +41,10 @@ ActiveAdmin.register AdminUser do
   end
 
   controller do
+    before_filter do |c|
+      c.send(:is_resource_authorized?, ["Administrator"])
+    end
+
     def scoped_action
       AdminUser.includes [:role, :business_unit, :department, :designation]
     end

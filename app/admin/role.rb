@@ -1,5 +1,5 @@
 ActiveAdmin.register Role do
-  menu if: proc { is_authorized? ["Administrator"] }, label: 'Define Roles', parent: 'Security', priority: 30
+  menu if: proc { is_menu_authorized? ["Administrator"] }, label: 'Define Roles', parent: 'Security', priority: 30
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
