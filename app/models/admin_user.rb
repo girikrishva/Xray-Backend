@@ -11,8 +11,9 @@ class AdminUser < ActiveRecord::Base
 
   has_many :admin_users_audits, class_name: 'AdminUsersAudit'
 
+  before_create :super_admin_cannot_be_inactive
   after_create :create_audit_record
-  before_update :at_least_one_user_must_be_super_admin
+  before_update :at_least_one_user_must_be_super_admin, :super_admin_cannot_be_inactive
   after_update :create_audit_record
   before_destroy :cannot_destroy_last_super_admin_user
 
@@ -48,5 +49,11 @@ class AdminUser < ActiveRecord::Base
     audit_record.admin_user_id = self.id
     audit_record.active = self.active
     audit_record.save
+  end
+
+  def super_admin_cannot_be_inactive
+    if Role.find(self.role_id).super_admin and !self.active
+      raise "super_admin cannot be inactive."
+    end
   end
 end
