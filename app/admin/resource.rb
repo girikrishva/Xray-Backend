@@ -82,11 +82,11 @@ ActiveAdmin.register Resource do
     end
     f.inputs do
       if f.object.admin_user_id.blank?
-        f.input :admin_user, as: :select, collection:
+        f.input :admin_user, label: 'User', as: :select, collection:
                                AdminUser.all
                                    .map { |a| [a.name, a.id] }, include_blank: true
       else
-        f.input :admin_user, input_html: {disabled: :true}
+        f.input :admin_user, label: 'User', input_html: {disabled: :true}
         f.input :admin_user_id, as: :hidden
       end
       if f.object.skill_id.blank?
@@ -97,10 +97,28 @@ ActiveAdmin.register Resource do
         f.input :skill, input_html: {disabled: :true}
         f.input :skill_id, as: :hidden
       end
-      f.input :as_on, as: :datepicker
-      f.input :primary_skill
-      f.input :bill_rate
-      f.input :cost_rate
+      if !f.object.new_record?
+        f.input :as_on, as: :datepicker, input_html: {disabled: :true}
+        f.input :as_on, as: :hidden
+      else
+        f.input :as_on, as: :datepicker
+      end
+      if !f.object.new_record?
+        f.input :primary_skill, input_html: {disabled: :true}
+        f.input :primary_skill, as: :hidden
+      else
+        f.input :primary_skill
+      end
+      if !f.object.new_record?
+        f.input :bill_rate, input_html: {readonly: true}
+      else
+        f.input :bill_rate
+      end
+      if !f.object.new_record?
+        f.input :cost_rate, input_html: {readonly: true}
+      else
+        f.input :cost_rate
+      end
       f.input :comments
     end
     f.actions do
