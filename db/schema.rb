@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161114020228) do
+ActiveRecord::Schema.define(version: 0) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,9 @@ ActiveRecord::Schema.define(version: 20161114020228) do
     t.datetime "updated_at"
     t.integer  "role_id"
     t.integer  "admin_user_id",          :null=>false, :index=>{:name=>"index_admin_users_audit_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_admin_users_audit_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "business_unit_id",       :null=>false, :index=>{:name=>"index_admin_users_audits_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_audits_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "department_id",          :null=>false, :index=>{:name=>"index_admin_users_audits_on_department_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_audits_department_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "designation_id",         :null=>false, :index=>{:name=>"index_admin_users_audits_on_designation"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_audits_designation_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_view "business_units", <<-'END_VIEW_BUSINESS_UNITS', :force => true
@@ -98,6 +101,30 @@ SELECT lookups.id,
     lookup_types
   WHERE (((lookup_types.name)::text = 'Business Units'::text) AND (lookups.lookup_type_id = lookup_types.id))
   END_VIEW_BUSINESS_UNITS
+
+  create_view "departments", <<-'END_VIEW_DEPARTMENTS', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Departments'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  END_VIEW_DEPARTMENTS
+
+  create_view "designations", <<-'END_VIEW_DESIGNATIONS', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Designations'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  END_VIEW_DESIGNATIONS
 
   create_table "holiday_calendars", force: :cascade do |t|
     t.string  "name"

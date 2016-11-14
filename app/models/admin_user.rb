@@ -42,6 +42,9 @@ class AdminUser < ActiveRecord::Base
     audit_record.last_sign_in_at = self.last_sign_in_at
     audit_record.last_sign_in_ip = self.last_sign_in_ip.to_s
     audit_record.role_id = self.role_id
+    audit_record.business_unit_id = self.business_unit_id
+    audit_record.department_id = self.department_id
+    audit_record.designation_id = self.designation_id
     audit_record.admin_user_id = self.id
     audit_record.save
   end

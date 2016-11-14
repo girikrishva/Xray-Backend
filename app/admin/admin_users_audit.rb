@@ -16,13 +16,17 @@ ActiveAdmin.register AdminUsersAudit do
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
     end
-    column :sign_in_count
+    column :business_unit, sortable: 'business_units.name' do |resource|
+      resource.business_unit.name
+    end
+    column :department, sortable: 'departments.name' do |resource|
+      resource.department.name
+    end
+    column :designation, sortable: 'designations.name' do |resource|
+      resource.designation.name
+    end
     column :current_sign_in_at, sortable: 'admin_users_audits.current_sign_in_at' do |resource|
       resource.current_sign_in_at.strftime( "%Y-%m-%d %H:%M:%S")
-    end
-    column "Last IP From", :last_sign_in_ip
-    column :updated_at, sortable: 'admin_users_audits.updated_at' do |resource|
-      resource.updated_at.strftime( "%Y-%m-%d %H:%M:%S")
     end
   end
 
@@ -39,13 +43,14 @@ ActiveAdmin.register AdminUsersAudit do
     end
 
     def scoped_action
-      AdminUser.includes [:role, :admin_users_audit]
+      AdminUser.includes [:admin_users_audit,:role, :business_unit, :department, :designation]
     end
   end
 
+  filter :email
   filter :role
-  filter :sign_in_count
+  filter :business_unit
+  filter :department
+  filter :designation
   filter :current_sign_in_at
-  filter :last_sign_in_ip, label: "Last IP From"
-  filter :updated_at
 end
