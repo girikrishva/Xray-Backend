@@ -57,4 +57,8 @@ class AdminUser < ActiveRecord::Base
       raise "super_admin cannot be inactive."
     end
   end
+
+  def active_for_authentication?
+    super && self.active
+  end
 end
