@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161114122155) do
+ActiveRecord::Schema.define(version: 20161115141517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -169,6 +169,7 @@ SELECT lookups.id,
     t.string  "comments"
     t.integer "admin_user_id", :null=>false, :index=>{:name=>"index_resources_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_resources_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer "skill_id",      :null=>false, :index=>{:name=>"index_resources_on_lookup_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_resources_skill_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.boolean "is_latest"
   end
 
   create_view "skills", <<-'END_VIEW_SKILLS', :force => true

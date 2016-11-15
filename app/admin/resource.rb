@@ -14,7 +14,7 @@ ActiveAdmin.register Resource do
 #   permitted
 # end
 
-  permit_params :primary_skill, :as_on, :bill_rate, :cost_rate, :comments, :admin_user_id, :skill_id, :skill_name
+  permit_params :primary_skill, :as_on, :bill_rate, :cost_rate, :comments, :admin_user_id, :skill_id, :skill_name, :is_latest
 
   config.sort_order = 'admin_users.name_asc_and_skills.name_asc_and_as_on_desc'
 
@@ -39,7 +39,7 @@ ActiveAdmin.register Resource do
       resource.skill.name
     end
     column :as_on
-    column :primary_skill
+    column :is_latest
     column :bill_rate, :sortable => 'bill_rate' do |element|
       div :style => "text-align: right;" do
         number_with_precision element.bill_rate, precision: 2, delimiter: ','
@@ -50,6 +50,7 @@ ActiveAdmin.register Resource do
         number_with_precision element.cost_rate, precision: 2, delimiter: ','
       end
     end
+    column :primary_skill
     column :comments
     actions defaults: true, dropdown: true
   end
@@ -58,9 +59,10 @@ ActiveAdmin.register Resource do
   filter :skill, collection:
                    proc { Lookup.lookups_for_name('Skills') }
   filter :as_on
-  filter :primary_skill
+  filter :is_latest
   filter :bill_rate
   filter :cost_rate
+  filter :primary_skill
   filter :comments
 
   show do |r|
@@ -73,13 +75,14 @@ ActiveAdmin.register Resource do
         r.skill.name
       end
       row :as_on
-      row :primary_skill
+      row :is_latest
       row :bill_rate do
         number_with_precision r.bill_rate, precision: 2, delimiter: ','
       end
       row :cost_rate do
         number_with_precision r.cost_rate, precision: 2, delimiter: ','
       end
+      row :primary_skill
       row :comments
     end
   end
@@ -134,12 +137,6 @@ ActiveAdmin.register Resource do
         f.input :as_on, as: :datepicker
       end
       if !f.object.new_record?
-        f.input :primary_skill, input_html: {disabled: :true}
-        f.input :primary_skill, as: :hidden
-      else
-        f.input :primary_skill
-      end
-      if !f.object.new_record?
         f.input :bill_rate, input_html: {readonly: true}
       else
         f.input :bill_rate
@@ -148,6 +145,12 @@ ActiveAdmin.register Resource do
         f.input :cost_rate, input_html: {readonly: true}
       else
         f.input :cost_rate
+      end
+      if !f.object.new_record?
+        f.input :primary_skill, input_html: {disabled: :true}
+        f.input :primary_skill, as: :hidden
+      else
+        f.input :primary_skill
       end
       f.input :comments
     end
