@@ -14,7 +14,7 @@ ActiveAdmin.register Resource do
 #   permitted
 # end
 
-  permit_params :primary_skill, :as_on, :bill_rate, :cost_rate, :comments, :admin_user_id, :skill_id
+  permit_params :primary_skill, :as_on, :bill_rate, :cost_rate, :comments, :admin_user_id, :skill_id, :skill_name
 
   config.sort_order = 'admin_users.name_asc_and_skills.name_asc_and_as_on_desc'
 
@@ -29,6 +29,7 @@ ActiveAdmin.register Resource do
   end
 
   index do
+#   index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
     column :id
     column 'User', :admin_user, sortable: 'admin_users.name' do |resource|

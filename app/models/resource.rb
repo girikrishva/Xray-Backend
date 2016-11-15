@@ -13,4 +13,8 @@ class Resource < ActiveRecord::Base
   validates_uniqueness_of :as_on, scope: [:admin_user_id, :skill_id, :as_on]
   validates_uniqueness_of :admin_user_id, scope: [:admin_user_id, :primary_skill]
   validates_uniqueness_of :primary_skill, scope: [:admin_user_id, :primary_skill]
+
+  def skill_name
+    Skill.find(self.skill_id).name
+  end
 end
