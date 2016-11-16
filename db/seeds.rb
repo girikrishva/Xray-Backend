@@ -127,7 +127,8 @@ AdminUsersAudit.create!([
 Client.create!([
   {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "", business_unit_id: 1},
   {name: "Snapbizz", contact_name: "Yash Prakash", contact_email: "", contact_phone: "", comments: "", business_unit_id: 3},
-  {name: "Wishcloud", contact_name: "Mary Como", contact_email: "", contact_phone: "", comments: "", business_unit_id: 4}
+  {name: "Wishcloud", contact_name: "Mary Como", contact_email: "", contact_phone: "", comments: "", business_unit_id: 4},
+  {name: "Dell", contact_name: "Shankar Menon", contact_email: "", contact_phone: "", comments: "", business_unit_id: 1}
 ])
 HolidayCalendar.create!([
   {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "", business_unit_id: 1},
