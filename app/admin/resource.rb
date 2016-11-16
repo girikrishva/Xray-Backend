@@ -1,5 +1,5 @@
 ActiveAdmin.register Resource do
-  menu if: proc { is_menu_authorized? ["Executive"] }, label: 'Resources', parent: 'Operations', priority: 10
+  menu if: proc { is_menu_authorized? ["Executive"] }, label: 'Resources', parent: 'Masters', priority: 10
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
