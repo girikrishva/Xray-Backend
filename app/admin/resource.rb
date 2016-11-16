@@ -28,11 +28,11 @@ ActiveAdmin.register Resource do
     link_to "Back", admin_resources_path
   end
 
-  scope :all, default: true
-  scope :latest do |resources| resources.latest end
+  scope :latest, default: true do |resources| resources.latest end
+  scope :all
 
-  index do
-  # index as: :grouped_table, group_by_attribute: :is_latest do
+  # index do
+  index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
     column :id
     column 'User', :admin_user, sortable: 'admin_users.name' do |resource|
