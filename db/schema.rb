@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161116103441) do
+ActiveRecord::Schema.define(version: 20161116112633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,15 @@ SELECT lookups.id,
   WHERE (((lookup_types.name)::text = 'Business Units'::text) AND (lookups.lookup_type_id = lookup_types.id))
   END_VIEW_BUSINESS_UNITS
 
+  create_table "clients", force: :cascade do |t|
+    t.string  "name",             :null=>false
+    t.string  "contact_name"
+    t.string  "contact_email"
+    t.string  "contact_phone"
+    t.string  "comments"
+    t.integer "business_unit_id", :null=>false, :index=>{:name=>"index_clients_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_clients_lookup_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
+
   create_view "cost_adder_types", <<-'END_VIEW_COST_ADDER_TYPES', :force => true
 SELECT lookups.id,
     lookups.name,
@@ -152,8 +161,8 @@ SELECT lookups.id,
   add_index "holiday_calendars", ["business_unit_id"], :name=>"index_holiday_calendars_on_business_unit_id"
 
   create_table "overheads", force: :cascade do |t|
-    t.date    "amount_date"
-    t.float   "amount"
+    t.date    "amount_date",        :null=>false
+    t.float   "amount",             :null=>false
     t.string  "comments"
     t.integer "business_unit_id",   :null=>false, :index=>{:name=>"index_overheads_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer "department_id",      :null=>false, :index=>{:name=>"index_overheads_on_department_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_department_id", :on_update=>:no_action, :on_delete=>:no_action}

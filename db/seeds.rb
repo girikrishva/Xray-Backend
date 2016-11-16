@@ -124,6 +124,11 @@ AdminUsersAudit.create!([
   {email: "bob@example.com", encrypted_password: "$2a$11$PF65wOrnmozdpGu4P8INlepYlghWPceE8sA.u2hbhTnCSNECMK3uO", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 27, current_sign_in_at: "2016-11-15 11:03:23", last_sign_in_at: "2016-11-15 11:02:06", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 3, admin_user_id: 8, business_unit_id: 1, department_id: 5, designation_id: 131, active: false, name: "Robert Ludlow"},
   {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 51, current_sign_in_at: "2016-11-15 15:24:59", last_sign_in_at: "2016-11-15 11:22:41", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, admin_user_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"}
 ])
+Client.create!([
+  {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "", business_unit_id: 1},
+  {name: "Snapbizz", contact_name: "Yash Prakash", contact_email: "", contact_phone: "", comments: "", business_unit_id: 3},
+  {name: "Wishcloud", contact_name: "Mary Como", contact_email: "", contact_phone: "", comments: "", business_unit_id: 4}
+])
 HolidayCalendar.create!([
   {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "", business_unit_id: 1},
   {name: "Christmas", as_on: "2016-12-25", description: "Christmas", comments: "", business_unit_id: 4},

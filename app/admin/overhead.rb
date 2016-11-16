@@ -16,7 +16,7 @@ ActiveAdmin.register Overhead do
 
   permit_params :business_unit_id, :department_id, :cost_adder_type_id, :amount_date, :amount, :comments
 
-# config.sort_order = 'admin_users.name_asc_and_skills.name_asc_and_as_on_desc'
+  config.sort_order = 'business_units.name_asc_and_departments.name_asc_and_cost_adder_types.name_asc'
 
   config.clear_action_items!
 
