@@ -28,8 +28,11 @@ ActiveAdmin.register Resource do
     link_to "Back", admin_resources_path
   end
 
+  scope :all, default: true
+  scope :latest do |resources| resources.latest end
+
   index do
-#   index as: :grouped_table, group_by_attribute: :skill_name do
+  # index as: :grouped_table, group_by_attribute: :is_latest do
     selectable_column
     column :id
     column 'User', :admin_user, sortable: 'admin_users.name' do |resource|
@@ -39,7 +42,9 @@ ActiveAdmin.register Resource do
       resource.skill.name
     end
     column :as_on
-    column :is_latest
+    column "Latest", (:is_latest) do |resource|
+      resource.is_latest ? status_tag( "yes", :ok ) : status_tag( "no" )
+    end
     column :bill_rate, :sortable => 'bill_rate' do |element|
       div :style => "text-align: right;" do
         number_with_precision element.bill_rate, precision: 2, delimiter: ','
@@ -59,7 +64,6 @@ ActiveAdmin.register Resource do
   filter :skill, collection:
                    proc { Lookup.lookups_for_name('Skills') }
   filter :as_on
-  filter :is_latest
   filter :bill_rate
   filter :cost_rate
   filter :primary_skill
