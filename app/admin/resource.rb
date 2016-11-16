@@ -38,9 +38,9 @@ ActiveAdmin.register Resource do
     column 'User', :admin_user, sortable: 'admin_users.name' do |resource|
       resource.admin_user.name
     end
-    column :skill, sortable: 'skills.name' do |resource|
-      resource.skill.name
-    end
+    # column :skill, sortable: 'skills.name' do |resource|
+    #   resource.skill.name
+    # end
     column :as_on
     column "Latest", (:is_latest) do |resource|
       resource.is_latest ? status_tag( "yes", :ok ) : status_tag( "no" )
@@ -60,9 +60,9 @@ ActiveAdmin.register Resource do
     actions defaults: true, dropdown: true
   end
 
-  filter :admin_user, label: 'User'
   filter :skill, collection:
                    proc { Lookup.lookups_for_name('Skills') }
+  filter :admin_user, label: 'User'
   filter :as_on
   filter :bill_rate
   filter :cost_rate
@@ -72,11 +72,11 @@ ActiveAdmin.register Resource do
   show do |r|
     attributes_table_for r do
       row :id
-      row 'User', :admin_user do
-        r.admin_user.name
-      end
       row :skill do
         r.skill.name
+      end
+      row 'User', :admin_user do
+        r.admin_user.name
       end
       row :as_on
       row :is_latest
@@ -118,14 +118,6 @@ ActiveAdmin.register Resource do
       f.object.as_on = Date.today
     end
     f.inputs do
-      if f.object.admin_user_id.blank?
-        f.input :admin_user, label: 'User', as: :select, collection:
-                               AdminUser.all
-                                   .map { |a| [a.name, a.id] }, include_blank: true
-      else
-        f.input :admin_user, label: 'User', input_html: {disabled: :true}
-        f.input :admin_user_id, as: :hidden
-      end
       if f.object.skill_id.blank?
         f.input :skill, as: :select, collection:
                           Lookup.lookups_for_name('Skills')
@@ -133,6 +125,14 @@ ActiveAdmin.register Resource do
       else
         f.input :skill, input_html: {disabled: :true}
         f.input :skill_id, as: :hidden
+      end
+      if f.object.admin_user_id.blank?
+        f.input :admin_user, label: 'User', as: :select, collection:
+                               AdminUser.all
+                                   .map { |a| [a.name, a.id] }, include_blank: true
+      else
+        f.input :admin_user, label: 'User', input_html: {disabled: :true}
+        f.input :admin_user_id, as: :hidden
       end
       if !f.object.new_record?
         f.input :as_on, as: :datepicker, input_html: {disabled: :true}

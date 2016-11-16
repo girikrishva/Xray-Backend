@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161115141517) do
+ActiveRecord::Schema.define(version: 20161116103441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,18 @@ SELECT lookups.id,
   WHERE (((lookup_types.name)::text = 'Business Units'::text) AND (lookups.lookup_type_id = lookup_types.id))
   END_VIEW_BUSINESS_UNITS
 
+  create_view "cost_adder_types", <<-'END_VIEW_COST_ADDER_TYPES', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Cost Adder Types'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  END_VIEW_COST_ADDER_TYPES
+
   create_view "departments", <<-'END_VIEW_DEPARTMENTS', :force => true
 SELECT lookups.id,
     lookups.name,
@@ -138,6 +150,15 @@ SELECT lookups.id,
     t.integer "business_unit_id", :null=>false, :index=>{:name=>"fk__holiday_calendars_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_holiday_calendars_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
   add_index "holiday_calendars", ["business_unit_id"], :name=>"index_holiday_calendars_on_business_unit_id"
+
+  create_table "overheads", force: :cascade do |t|
+    t.date    "amount_date"
+    t.float   "amount"
+    t.string  "comments"
+    t.integer "business_unit_id",   :null=>false, :index=>{:name=>"index_overheads_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer "department_id",      :null=>false, :index=>{:name=>"index_overheads_on_department_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_department_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer "cost_adder_type_id", :null=>false, :index=>{:name=>"index_overheads_on_cost_adder_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_cost_adder_type_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
 
   create_view "project_type_codes", <<-'END_VIEW_PROJECT_TYPE_CODES', :force => true
 SELECT lookups.id,
