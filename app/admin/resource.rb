@@ -47,12 +47,12 @@ ActiveAdmin.register Resource do
     end
     column :bill_rate, :sortable => 'bill_rate' do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.bill_rate, precision: 2, delimiter: ','
+        number_with_precision element.bill_rate, precision: 0, delimiter: ','
       end
     end
     column :cost_rate, :sortable => 'cost_rate' do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.cost_rate, precision: 2, delimiter: ','
+        number_with_precision element.cost_rate, precision: 0, delimiter: ','
       end
     end
     column :primary_skill
@@ -81,10 +81,10 @@ ActiveAdmin.register Resource do
       row :as_on
       row :is_latest
       row :bill_rate do
-        number_with_precision r.bill_rate, precision: 2, delimiter: ','
+        number_with_precision r.bill_rate, precision: 0, delimiter: ','
       end
       row :cost_rate do
-        number_with_precision r.cost_rate, precision: 2, delimiter: ','
+        number_with_precision r.cost_rate, precision: 0, delimiter: ','
       end
       row :primary_skill
       row :comments

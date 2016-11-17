@@ -226,6 +226,7 @@ ActiveAdmin.setup do |config|
   #   end
   config.namespace :admin do |admin|
     admin.build_menu :default do |menu|
+      menu.add label: "Operations", :priority => 70
       menu.add label: "Masters", :priority => 80
       menu.add label: "Setup", :priority => 90
       menu.add label: "Security", :priority => 100

@@ -1,6 +1,8 @@
 class Client < ActiveRecord::Base
   belongs_to :business_unit, class_name: 'BusinessUnit', foreign_key: :business_unit_id
 
+  has_many :pipelines, class_name: 'Pipeline'
+
   validates :business_unit_id, presence: true
   validates :name, presence: true
 
@@ -9,5 +11,9 @@ class Client < ActiveRecord::Base
 
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name
+  end
+
+  def self.ordered_lookup
+    Client.all.order(:name)
   end
 end

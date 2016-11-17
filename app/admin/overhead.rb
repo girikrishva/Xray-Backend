@@ -44,7 +44,7 @@ ActiveAdmin.register Overhead do
     column :amount_date
     column :amount do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.amount, precision: 2, delimiter: ','
+        number_with_precision element.amount, precision: 0, delimiter: ','
       end
     end
     column :comments
@@ -76,7 +76,7 @@ ActiveAdmin.register Overhead do
       row :amount_date
       row :amount do |element|
         div :style => "text-align: right;" do
-          number_with_precision element.amount, precision: 2, delimiter: ','
+          number_with_precision element.amount, precision: 0, delimiter: ','
         end
       end
       row :comments
