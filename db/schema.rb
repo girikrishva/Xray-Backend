@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161117054130) do
+ActiveRecord::Schema.define(version: 20161118013957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,27 +28,33 @@ ActiveRecord::Schema.define(version: 20161117054130) do
   end
 
   create_table "lookup_types", force: :cascade do |t|
-    t.string "name",        :null=>false
-    t.string "description"
-    t.string "comments"
+    t.string   "name",        :null=>false
+    t.string   "description"
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "lookups", force: :cascade do |t|
-    t.string  "name",           :null=>false
-    t.string  "description"
-    t.float   "rank",           :null=>false
-    t.string  "comments"
-    t.integer "lookup_type_id", :null=>false, :index=>{:name=>"index_lookups_on_lookup_type_id"}, :foreign_key=>{:references=>"lookup_types", :name=>"fk_rails_ac503ee932", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "name",           :null=>false
+    t.string   "description"
+    t.float    "rank",           :null=>false
+    t.string   "comments"
+    t.integer  "lookup_type_id", :null=>false, :index=>{:name=>"index_lookups_on_lookup_type_id"}, :foreign_key=>{:references=>"lookup_types", :name=>"fk_rails_ac503ee932", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "roles", force: :cascade do |t|
-    t.string  "name"
-    t.string  "description"
-    t.float   "rank"
-    t.string  "comments"
-    t.boolean "super_admin"
-    t.string  "ancestry",    :index=>{:name=>"index_roles_on_ancestry"}
-    t.string  "parent_name"
+    t.string   "name"
+    t.string   "description"
+    t.float    "rank"
+    t.string   "comments"
+    t.boolean  "super_admin"
+    t.string   "ancestry",    :index=>{:name=>"index_roles_on_ancestry"}
+    t.string   "parent_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -108,12 +114,14 @@ SELECT lookups.id,
   END_VIEW_BUSINESS_UNITS
 
   create_table "clients", force: :cascade do |t|
-    t.string  "name",             :null=>false
-    t.string  "contact_name"
-    t.string  "contact_email"
-    t.string  "contact_phone"
-    t.string  "comments"
-    t.integer "business_unit_id", :null=>false, :index=>{:name=>"index_clients_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_clients_lookup_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "name",             :null=>false
+    t.string   "contact_name"
+    t.string   "contact_email"
+    t.string   "contact_phone"
+    t.string   "comments"
+    t.integer  "business_unit_id", :null=>false, :index=>{:name=>"index_clients_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_clients_lookup_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_view "cost_adder_types", <<-'END_VIEW_COST_ADDER_TYPES', :force => true
@@ -156,21 +164,25 @@ SELECT lookups.id,
   END_VIEW_DESIGNATIONS
 
   create_table "holiday_calendars", force: :cascade do |t|
-    t.string  "name"
-    t.date    "as_on"
-    t.string  "description"
-    t.string  "comments"
-    t.integer "business_unit_id", :null=>false, :index=>{:name=>"fk__holiday_calendars_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_holiday_calendars_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "name"
+    t.date     "as_on"
+    t.string   "description"
+    t.string   "comments"
+    t.integer  "business_unit_id", :null=>false, :index=>{:name=>"fk__holiday_calendars_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_holiday_calendars_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
   add_index "holiday_calendars", ["business_unit_id"], :name=>"index_holiday_calendars_on_business_unit_id"
 
   create_table "overheads", force: :cascade do |t|
-    t.date    "amount_date",        :null=>false
-    t.float   "amount",             :null=>false
-    t.string  "comments"
-    t.integer "business_unit_id",   :null=>false, :index=>{:name=>"index_overheads_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "department_id",      :null=>false, :index=>{:name=>"index_overheads_on_department_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_department_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "cost_adder_type_id", :null=>false, :index=>{:name=>"index_overheads_on_cost_adder_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_cost_adder_type_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.date     "amount_date",        :null=>false
+    t.float    "amount",             :null=>false
+    t.string   "comments"
+    t.integer  "business_unit_id",   :null=>false, :index=>{:name=>"index_overheads_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "department_id",      :null=>false, :index=>{:name=>"index_overheads_on_department_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_department_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "cost_adder_type_id", :null=>false, :index=>{:name=>"index_overheads_on_cost_adder_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_cost_adder_type_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_view "pipeline_statuses", <<-'END_VIEW_PIPELINE_STATUSES', :force => true
@@ -187,28 +199,32 @@ SELECT lookups.id,
   END_VIEW_PIPELINE_STATUSES
 
   create_table "pipelines", force: :cascade do |t|
-    t.string  "name",                 :null=>false
-    t.date    "expected_start",       :null=>false
-    t.date    "expected_end",         :null=>false
-    t.float   "expected_value",       :null=>false
-    t.string  "comments"
-    t.integer "business_unit_id",     :null=>false, :index=>{:name=>"index_pipelines_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "client_id",            :null=>false, :index=>{:name=>"index_pipelines_on_client_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_client_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "project_type_code_id", :null=>false, :index=>{:name=>"index_pipelines_on_project_type_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "pipeline_status_id",   :null=>false, :index=>{:name=>"index_pipelines_on_pipeline_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_pipeline_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "name",                 :null=>false
+    t.date     "expected_start",       :null=>false
+    t.date     "expected_end",         :null=>false
+    t.float    "expected_value",       :null=>false
+    t.string   "comments"
+    t.integer  "business_unit_id",     :null=>false, :index=>{:name=>"index_pipelines_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "client_id",            :null=>false, :index=>{:name=>"index_pipelines_on_client_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "project_type_code_id", :null=>false, :index=>{:name=>"index_pipelines_on_project_type_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "pipeline_status_id",   :null=>false, :index=>{:name=>"index_pipelines_on_pipeline_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_pipeline_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "pipelines_audits", force: :cascade do |t|
-    t.string  "name",                 :null=>false
-    t.date    "expected_start",       :null=>false
-    t.date    "expected_end",         :null=>false
-    t.float   "expected_value",       :null=>false
-    t.string  "comments"
-    t.integer "business_unit_id",     :null=>false, :index=>{:name=>"index_pipelines_audits_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_audits_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "pipeline_status_id",   :null=>false, :index=>{:name=>"index_pipelines_audits_on_pipeline_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_audits_pipeline_status_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "project_type_code_id", :null=>false, :index=>{:name=>"index_pipelines_audits_on_project_type_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_audits_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "client_id",            :null=>false, :index=>{:name=>"index_pipelines_audits_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_pipelines_audits_client_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "pipeline_id",          :null=>false, :index=>{:name=>"index_pipelines_audits_on_pipeline_id"}, :foreign_key=>{:references=>"pipelines", :name=>"fk_pipelines_audits_pipeline_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "name",                 :null=>false
+    t.date     "expected_start",       :null=>false
+    t.date     "expected_end",         :null=>false
+    t.float    "expected_value",       :null=>false
+    t.string   "comments"
+    t.integer  "business_unit_id",     :null=>false, :index=>{:name=>"index_pipelines_audits_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_audits_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "pipeline_status_id",   :null=>false, :index=>{:name=>"index_pipelines_audits_on_pipeline_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_audits_pipeline_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "project_type_code_id", :null=>false, :index=>{:name=>"index_pipelines_audits_on_project_type_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_audits_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "client_id",            :null=>false, :index=>{:name=>"index_pipelines_audits_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_pipelines_audits_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "pipeline_id",          :null=>false, :index=>{:name=>"index_pipelines_audits_on_pipeline_id"}, :foreign_key=>{:references=>"pipelines", :name=>"fk_pipelines_audits_pipeline_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_view "project_type_codes", <<-'END_VIEW_PROJECT_TYPE_CODES', :force => true
@@ -225,23 +241,27 @@ SELECT lookups.id,
   END_VIEW_PROJECT_TYPE_CODES
 
   create_table "project_types", force: :cascade do |t|
-    t.boolean "billed"
-    t.string  "comments"
-    t.integer "business_unit_id",     :null=>false, :index=>{:name=>"fk__project_types_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_project_types_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "project_type_code_id", :null=>false, :index=>{:name=>"fk__project_types_project_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_project_types_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.string  "description"
+    t.boolean  "billed"
+    t.string   "comments"
+    t.integer  "business_unit_id",     :null=>false, :index=>{:name=>"fk__project_types_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_project_types_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "project_type_code_id", :null=>false, :index=>{:name=>"fk__project_types_project_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_project_types_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
   add_index "project_types", ["business_unit_id"], :name=>"index_project_types_on_business_unit_id"
   add_index "project_types", ["project_type_code_id"], :name=>"index_project_types_on_project_type_id"
 
   create_table "resources", force: :cascade do |t|
-    t.boolean "primary_skill"
-    t.date    "as_on",         :null=>false
-    t.float   "bill_rate",     :null=>false
-    t.float   "cost_rate",     :null=>false
-    t.string  "comments"
-    t.integer "admin_user_id", :null=>false, :index=>{:name=>"index_resources_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_resources_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "skill_id",      :null=>false, :index=>{:name=>"index_resources_on_lookup_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_resources_skill_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.boolean  "primary_skill"
+    t.date     "as_on",         :null=>false
+    t.float    "bill_rate",     :null=>false
+    t.float    "cost_rate",     :null=>false
+    t.string   "comments"
+    t.integer  "admin_user_id", :null=>false, :index=>{:name=>"index_resources_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_resources_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "skill_id",      :null=>false, :index=>{:name=>"index_resources_on_lookup_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_resources_skill_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_view "skills", <<-'END_VIEW_SKILLS', :force => true
@@ -271,13 +291,15 @@ SELECT lookups.id,
   END_VIEW_VACATION_CODES
 
   create_table "vacation_policies", force: :cascade do |t|
-    t.string  "description"
-    t.date    "as_on",            :null=>false
-    t.boolean "paid",             :null=>false
-    t.float   "days_allowed",     :null=>false
-    t.string  "comments"
-    t.integer "business_unit_id", :null=>false, :index=>{:name=>"index_vacation_policies_on_business_unit"}, :foreign_key=>{:references=>"lookups", :name=>"fk_rails_392ec43fe8", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer "vacation_code_id", :null=>false, :index=>{:name=>"index_vacation_policies_on_vacation_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_rails_392ec43fd8", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "description"
+    t.date     "as_on",            :null=>false
+    t.boolean  "paid",             :null=>false
+    t.float    "days_allowed",     :null=>false
+    t.string   "comments"
+    t.integer  "business_unit_id", :null=>false, :index=>{:name=>"index_vacation_policies_on_business_unit"}, :foreign_key=>{:references=>"lookups", :name=>"fk_rails_392ec43fe8", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "vacation_code_id", :null=>false, :index=>{:name=>"index_vacation_policies_on_vacation_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_rails_392ec43fd8", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
