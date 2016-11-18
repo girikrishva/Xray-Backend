@@ -3,6 +3,7 @@ class Pipeline < ActiveRecord::Base
   belongs_to :client, class_name: 'Client', foreign_key: :client_id
   belongs_to :pipeline_status, class_name: 'PipelineStatus', foreign_key: :pipeline_status_id
   belongs_to :project_type_code, class_name: 'ProjectTypeCode', foreign_key: :project_type_code_id
+  belongs_to :sales_person, class_name: 'AdminUser', foreign_key: :sales_person_id
 
   has_many :pipelines_audits, class_name: 'PipelinesAudit'
 
@@ -14,6 +15,7 @@ class Pipeline < ActiveRecord::Base
   validates :expected_start, presence: true
   validates :expected_end, presence: true
   validates :expected_value, presence: true
+  validates :sales_person_id, presence: true
 
   validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :client_id]
   validates_uniqueness_of :client_id, scope: [:business_unit_id, :client_id]
@@ -37,6 +39,7 @@ class Pipeline < ActiveRecord::Base
     audit_record.expected_value = self.expected_value
     audit_record.comments = self.comments
     audit_record.pipeline_id = self.id
+    audit_record.sales_person_id = self.sales_person_id
     audit_record.save
   end
 end

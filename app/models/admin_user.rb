@@ -10,6 +10,9 @@ class AdminUser < ActiveRecord::Base
   belongs_to :designation, class_name: 'Designation', foreign_key: :designation_id
 
   has_many :admin_users_audits, class_name: 'AdminUsersAudit'
+  has_many :resources, class_name: 'Resource'
+  has_many :pipelines, class_name: 'Pipeline'
+  has_many :pipelines_audits, class_name: 'PipelinesAudit'
 
   before_create :super_admin_cannot_be_inactive
   after_create :create_audit_record
@@ -60,5 +63,9 @@ class AdminUser < ActiveRecord::Base
 
   def active_for_authentication?
     super && self.active
+  end
+
+  def self.ordered_lookup
+    AdminUser.all.order(:name)
   end
 end

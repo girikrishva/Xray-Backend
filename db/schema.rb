@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161118013957) do
+ActiveRecord::Schema.define(version: 20161118064454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -210,6 +210,7 @@ SELECT lookups.id,
     t.integer  "pipeline_status_id",   :null=>false, :index=>{:name=>"index_pipelines_on_pipeline_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_pipeline_status_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "sales_person_id",      :null=>false, :index=>{:name=>"index_pipelines_on_sales_person_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_sales_person_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_table "pipelines_audits", force: :cascade do |t|
@@ -225,6 +226,7 @@ SELECT lookups.id,
     t.integer  "pipeline_id",          :null=>false, :index=>{:name=>"index_pipelines_audits_on_pipeline_id"}, :foreign_key=>{:references=>"pipelines", :name=>"fk_pipelines_audits_pipeline_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "sales_person_id",      :null=>false, :index=>{:name=>"index_pipelines_audits_on_sales_person_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_sales_person_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_view "project_type_codes", <<-'END_VIEW_PROJECT_TYPE_CODES', :force => true
@@ -251,6 +253,16 @@ SELECT lookups.id,
   end
   add_index "project_types", ["business_unit_id"], :name=>"index_project_types_on_business_unit_id"
   add_index "project_types", ["project_type_code_id"], :name=>"index_project_types_on_project_type_id"
+
+  create_table "projects", force: :cascade do |t|
+    t.string   "description"
+    t.date     "start_date",    :null=>false
+    t.date     "end_date",      :null=>false
+    t.float    "booking_value", :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "resources", force: :cascade do |t|
     t.boolean  "primary_skill"
