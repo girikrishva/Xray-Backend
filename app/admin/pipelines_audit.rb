@@ -1,37 +1,29 @@
-ActiveAdmin.register Pipeline do
-  menu if: proc { is_menu_authorized? ["Manager"] }, label: 'Pipelines', parent: 'Operations', priority: 10
+ActiveAdmin.register PipelinesAudit do
+  menu false
 
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
-
-  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments
+  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :pipeline_id
 
   config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
 
   config.clear_action_items!
 
+  # action_item only: :index do |resource|
+  #   link_to "New", new_admin_pipeline_path
+  # end
+
   action_item only: :index do |resource|
-    link_to "New", new_admin_pipeline_path
+    link_to "Back", admin_pipelines_path
   end
 
   action_item only: :show do |resource|
     link_to "Back", admin_pipelines_path
   end
 
-# index do
-  index as: :grouped_table, group_by_attribute: :business_unit_name do
+  index do
+    # index as: :grouped_table, group_by_attribute: :name do
     selectable_column
     column :id
+    column :business_unit
     column :client, sortable: 'clients.name' do |resource|
       resource.client.name
     end
@@ -50,9 +42,7 @@ ActiveAdmin.register Pipeline do
       resource.pipeline_status.name
     end
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item "Audit Trail", admin_pipelines_audits_path(pipeline_id: resource.id)
-    end
+    column :created_at
   end
 
   filter :business_unit, collection:
@@ -95,41 +85,52 @@ ActiveAdmin.register Pipeline do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Executive"])
+      c.send(:is_resource_authorized?, ["Manager"])
+    end
+
+    before_filter only: :index do |resource|
+      if !params.has_key?(:pipeline_id)
+        redirect_to admin_pipelines_path
+      end
+      if params[:commit].blank? && params[:q].blank?
+        extra_params = {"q" => {"pipeline_id_eq" => params[:pipeline_id]}}
+        # make sure data is filtered and filters show correctly
+        params.merge! extra_params
+      end
     end
 
     def scoped_collection
-      Pipeline.includes [:business_unit, :client, :pipeline_status, :project_type_code]
+      PipelinesAudit.includes [:business_unit, :client, :pipeline_status, :project_type_code, :pipeline]
     end
 
-    def create
-      super do |format|
-        redirect_to collection_url and return if resource.valid?
-      end
-    end
-
-    def update
-      super do |format|
-        redirect_to collection_url and return if resource.valid?
-      end
-    end
+    # def create
+    #   super do |format|
+    #     redirect_to collection_url and return if resource.valid?
+    #   end
+    # end
+    #
+    # def update
+    #   super do |format|
+    #     redirect_to collection_url and return if resource.valid?
+    #   end
+    # end
   end
 
-  form do |f|
-    f.inputs do
-      f.input :business_unit
-      f.input :client
-      f.input :name
-      f.input :expected_start, as: :datepicker
-      f.input :expected_end, as: :datepicker
-      f.input :expected_value
-      f.input :project_type_code
-      f.input :pipeline_status
-      f.input :comments
-    end
-    f.actions do
-      f.action(:submit, label: 'Save')
-      f.cancel_link
-    end
-  end
+  # form do |f|
+  #   f.inputs do
+  #     f.input :business_unit
+  #     f.input :client
+  #     f.input :name
+  #     f.input :expected_start, as: :datepicker
+  #     f.input :expected_end, as: :datepicker
+  #     f.input :expected_value
+  #     f.input :project_type_code
+  #     f.input :pipeline_status
+  #     f.input :comments
+  #   end
+  #   f.actions do
+  #     f.action(:submit, label: 'Save')
+  #     f.cancel_link
+  #   end
+  # end
 end

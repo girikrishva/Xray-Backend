@@ -27,6 +27,7 @@ ActiveAdmin.register AdminUsersAudit do
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
     end
+    column :created_at
   end
 
   controller do

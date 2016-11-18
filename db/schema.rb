@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161116144319) do
+ActiveRecord::Schema.define(version: 20161117054130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -196,6 +196,19 @@ SELECT lookups.id,
     t.integer "client_id",            :null=>false, :index=>{:name=>"index_pipelines_on_client_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_client_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer "project_type_code_id", :null=>false, :index=>{:name=>"index_pipelines_on_project_type_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer "pipeline_status_id",   :null=>false, :index=>{:name=>"index_pipelines_on_pipeline_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_pipeline_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
+
+  create_table "pipelines_audits", force: :cascade do |t|
+    t.string  "name",                 :null=>false
+    t.date    "expected_start",       :null=>false
+    t.date    "expected_end",         :null=>false
+    t.float   "expected_value",       :null=>false
+    t.string  "comments"
+    t.integer "business_unit_id",     :null=>false, :index=>{:name=>"index_pipelines_audits_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_audits_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer "pipeline_status_id",   :null=>false, :index=>{:name=>"index_pipelines_audits_on_pipeline_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_audits_pipeline_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer "project_type_code_id", :null=>false, :index=>{:name=>"index_pipelines_audits_on_project_type_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_audits_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer "client_id",            :null=>false, :index=>{:name=>"index_pipelines_audits_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_pipelines_audits_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer "pipeline_id",          :null=>false, :index=>{:name=>"index_pipelines_audits_on_pipeline_id"}, :foreign_key=>{:references=>"pipelines", :name=>"fk_pipelines_audits_pipeline_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_view "project_type_codes", <<-'END_VIEW_PROJECT_TYPE_CODES', :force => true
