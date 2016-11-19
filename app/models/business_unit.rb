@@ -7,4 +7,6 @@ class BusinessUnit < ActiveRecord::Base
   has_many :admin_users, class_name: 'AdminUser'
   has_many :admin_users_audits, class_name: 'AdminUserAudit'
   has_many :pipelines, class_name: 'Pipeline'
+  has_many :pipelines_audits, class_name: 'PipelinesAudit'
+  has_many :projects, class_name: 'Project'
 end

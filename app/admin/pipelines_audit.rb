@@ -39,15 +39,15 @@ ActiveAdmin.register PipelinesAudit do
     column :sales_person, sortable: 'admin_users.name' do |resource|
       resource.sales_person.name
     end
-    # column :estimator, sortable: 'admin_users.name' do |resource|
-    #   resource.estimator.name
-    # end
-    # column :engagement_manager, sortable: 'admin_users.name' do |resource|
-    #   resource.engagement_manager.name rescue nil
-    # end
-    # column :delivery_manager, sortable: 'admin_users.name' do |resource|
-    #   resource.delivery_manager.name rescue nil
-    # end
+    column :estimator, sortable: 'admin_users.name' do |resource|
+      resource.estimator.name
+    end
+    column :engagement_manager, sortable: 'admin_users.name' do |resource|
+      resource.engagement_manager.name rescue nil
+    end
+    column :delivery_manager, sortable: 'admin_users.name' do |resource|
+      resource.delivery_manager.name rescue nil
+    end
     column :comments
     column :created_at
     actions defaults: false, dropdown: true do |resource|
@@ -68,12 +68,12 @@ ActiveAdmin.register PipelinesAudit do
   filter :pipeline_status, label: 'Status'
   filter :sales_person, collection:
                           proc { AdminUser.ordered_lookup }
-  # filter :estimator, collection:
-  #                      proc { AdminUser.ordered_lookup }
-  # filter :engagement_manager, collection:
-  #                               proc { AdminUser.ordered_lookup }
-  # filter :delivery_manager, collection:
-  #                             proc { AdminUser.ordered_lookup }
+  filter :estimator, collection:
+                       proc { AdminUser.ordered_lookup }
+  filter :engagement_manager, collection:
+                                proc { AdminUser.ordered_lookup }
+  filter :delivery_manager, collection:
+                              proc { AdminUser.ordered_lookup }
   filter :comments
 
   show do |r|

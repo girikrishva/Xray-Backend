@@ -1,5 +1,5 @@
-ActiveAdmin.register Pipeline do
-  menu if: proc { is_menu_authorized? ["Manager"] }, label: 'Pipelines', parent: 'Operations', priority: 20
+ActiveAdmin.register Project do
+  menu if: proc { is_menu_authorized? ["Manager"] }, label: 'Projects', parent: 'Operations', priority: 10
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -14,18 +14,18 @@ ActiveAdmin.register Pipeline do
 #   permitted
 # end
 
-  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id
+  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id
 
   config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
 
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_pipeline_path
+    link_to "New", new_admin_project_path
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_pipelines_path
+    link_to "Back", admin_projects_path
   end
 
 # index do
@@ -36,18 +36,18 @@ ActiveAdmin.register Pipeline do
       resource.client.name
     end
     column "Project", :name
-    column "Start", :expected_start
-    column "End", :expected_end
-    column "Value", :expected_value do |element|
+    column "Start", :start_date
+    column "End", :end_date
+    column "Value", :booking_value do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.expected_value, precision: 0, delimiter: ','
+        number_with_precision element.booking_value, precision: 0, delimiter: ','
       end
     end
     column "Type", :project_type_code, sortable: 'project_type_codes.name' do |resource|
       resource.project_type_code.name
     end
-    column "Status", :pipeline_status, sortable: 'pipeline_statuses.name' do |resource|
-      resource.pipeline_status.name
+    column "Status", :project_status, sortable: 'project_statuses.name' do |resource|
+      resource.project_status.name
     end
     column :sales_person, sortable: 'admin_users.name' do |resource|
       resource.sales_person.name
@@ -63,7 +63,7 @@ ActiveAdmin.register Pipeline do
     end
     column :comments
     actions defaults: true, dropdown: true do |resource|
-      item "Audit Trail", admin_pipelines_audits_path(pipeline_id: resource.id)
+      # item "Audit Trail", admin_projects_audits_path(project_id: resource.id)
     end
   end
 
@@ -72,12 +72,12 @@ ActiveAdmin.register Pipeline do
   filter :client, collection:
                     proc { Client.ordered_lookup }
   filter :name, label: 'Project'
-  filter :expected_start, label: 'Start'
-  filter :expected_end, label: 'End'
-  filter :expected_value, label: 'Value'
+  filter :start_date, label: 'Start'
+  filter :end_date, label: 'End'
+  filter :booking_value, label: 'Value'
   filter :project_type_code, label: 'Type', collection:
                                proc { Lookup.lookups_for_name('Project Code Types') }
-  filter :pipeline_status, label: 'Status'
+  filter :project_status, label: 'Status'
   filter :sales_person, collection:
                           proc { AdminUser.ordered_lookup }
   filter :estimator, collection:
@@ -98,21 +98,22 @@ ActiveAdmin.register Pipeline do
         r.client.name
       end
       row :name
-      row :expected_start
-      row :expected_end
-      row :expected_value do |element|
+      row :start_date
+      row :end_date
+      row :booking_value do |element|
         div :style => "text-align: right;" do
-          number_with_precision element.expected_value, precision: 0, delimiter: ','
+          number_with_precision element.booking_value, precision: 0, delimiter: ','
         end
       end
       row :project_type_code do
         r.project_type_code.name
       end
-      row :pipeline_status
+      row :project_status
       row :sales_person
       row :estimator
       row :engagement_manager
       row :delivery_manager
+      row :pipeline
       row :comments
     end
   end

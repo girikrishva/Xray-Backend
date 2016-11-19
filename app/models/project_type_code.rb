@@ -3,4 +3,6 @@ class ProjectTypeCode < ActiveRecord::Base
 
   has_many :project_types, class_name: 'ProjectType'
   has_many :pipelines, class_name: 'Pipeline'
+  has_many :pipelines_audits, class_name: 'PipelinesAudit'
+  has_many :projects, class_name: 'Project'
 end

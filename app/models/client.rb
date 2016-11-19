@@ -2,6 +2,8 @@ class Client < ActiveRecord::Base
   belongs_to :business_unit, class_name: 'BusinessUnit', foreign_key: :business_unit_id
 
   has_many :pipelines, class_name: 'Pipeline'
+  has_many :pipelines_audits, class_name: 'PipelinesAudit'
+  has_many :projects, class_name: 'Project'
 
   validates :business_unit_id, presence: true
   validates :name, presence: true
