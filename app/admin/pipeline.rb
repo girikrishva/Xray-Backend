@@ -80,12 +80,12 @@ ActiveAdmin.register Pipeline do
   filter :pipeline_status, label: 'Status'
   filter :sales_person, collection:
                           proc { AdminUser.ordered_lookup }
-  filter :estimator, collection:
-                          proc { AdminUser.ordered_lookup }
-  filter :engagement_manager, collection:
-                          proc { AdminUser.ordered_lookup }
-  filter :delivery_manager, collection:
-                       proc { AdminUser.ordered_lookup }
+  # filter :estimator, collection:
+  #                         proc { AdminUser.ordered_lookup }
+  # filter :engagement_manager, collection:
+  #                         proc { AdminUser.ordered_lookup }
+  # filter :delivery_manager, collection:
+  #                      proc { AdminUser.ordered_lookup }
   filter :comments
 
   show do |r|
