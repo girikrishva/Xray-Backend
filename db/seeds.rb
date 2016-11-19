@@ -243,13 +243,13 @@ Overhead.create!([
   {amount_date: "2016-11-18", amount: 54000.0, comments: "", business_unit_id: 1, department_id: 10, cost_adder_type_id: 81}
 ])
 Pipeline.create!([
-  {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, client_id: 3, project_type_code_id: 96, pipeline_status_id: 102, sales_person_id: 9, estimator_id: 9}
+  {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, client_id: 3, project_type_code_id: 96, pipeline_status_id: 102, sales_person_id: 9, estimator_id: 9, engagement_manager_id: nil, delivery_manager_id: nil}
 ])
 PipelinesAudit.create!([
-  {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, pipeline_status_id: 100, project_type_code_id: 96, client_id: 3, pipeline_id: 9, sales_person_id: 7, estimator_id: 7},
-  {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, pipeline_status_id: 101, project_type_code_id: 96, client_id: 3, pipeline_id: 9, sales_person_id: 7, estimator_id: 7},
-  {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, pipeline_status_id: 101, project_type_code_id: 96, client_id: 3, pipeline_id: 9, sales_person_id: 9, estimator_id: 9},
-  {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, pipeline_status_id: 102, project_type_code_id: 96, client_id: 3, pipeline_id: 9, sales_person_id: 9, estimator_id: 9}
+  {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, pipeline_status_id: 100, project_type_code_id: 96, client_id: 3, pipeline_id: 9, sales_person_id: 7, estimator_id: 7, engagement_manager_id: nil, delivery_manager_id: nil},
+  {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, pipeline_status_id: 101, project_type_code_id: 96, client_id: 3, pipeline_id: 9, sales_person_id: 7, estimator_id: 7, engagement_manager_id: nil, delivery_manager_id: nil},
+  {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, pipeline_status_id: 101, project_type_code_id: 96, client_id: 3, pipeline_id: 9, sales_person_id: 9, estimator_id: 9, engagement_manager_id: nil, delivery_manager_id: nil},
+  {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, pipeline_status_id: 102, project_type_code_id: 96, client_id: 3, pipeline_id: 9, sales_person_id: 9, estimator_id: 9, engagement_manager_id: nil, delivery_manager_id: nil}
 ])
 ProjectType.create!([
   {billed: true, comments: "", business_unit_id: 1, project_type_code_id: 97, description: "Time and Material"},

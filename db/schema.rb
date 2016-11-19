@@ -232,7 +232,7 @@ SELECT lookups.id,
     t.integer  "sales_person_id",       :null=>false, :index=>{:name=>"index_pipelines_audits_on_sales_person_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_sales_person_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "estimator_id",          :null=>false, :index=>{:name=>"index_pipelines_audits_on_estimator_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_estimator_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "engagement_manager_id", :index=>{:name=>"index_pipelines_audits_on_engagement_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_engagement_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer  "delivery_manager_id",   :index=>{:name=>"index_pipelines_audits_on_delivery_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "delivery_manager_id",   :index=>{:name=>"index_pipelines_audits_on_delivery_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_delivery_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_view "project_statuses", <<-'END_VIEW_PROJECT_STATUSES', :force => true
