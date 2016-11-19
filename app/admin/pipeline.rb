@@ -14,7 +14,7 @@ ActiveAdmin.register Pipeline do
 #   permitted
 # end
 
-  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :sales_person_id, :estimator_id
+  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id
 
   config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
 
@@ -55,6 +55,12 @@ ActiveAdmin.register Pipeline do
     column :estimator, sortable: 'admin_users.name' do |resource|
       resource.estimator.name
     end
+    column :engagement_manager, sortable: 'admin_users.name' do |resource|
+      resource.engagement_manager.name rescue nil
+    end
+    column :delivery_manager, sortable: 'admin_users.name' do |resource|
+      resource.delivery_manager.name rescue nil
+    end
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item "Audit Trail", admin_pipelines_audits_path(pipeline_id: resource.id)
@@ -76,6 +82,10 @@ ActiveAdmin.register Pipeline do
                           proc { AdminUser.ordered_lookup }
   filter :estimator, collection:
                           proc { AdminUser.ordered_lookup }
+  filter :engagement_manager, collection:
+                          proc { AdminUser.ordered_lookup }
+  filter :delivery_manager, collection:
+                       proc { AdminUser.ordered_lookup }
   filter :comments
 
   show do |r|
@@ -101,6 +111,8 @@ ActiveAdmin.register Pipeline do
       row :pipeline_status
       row :sales_person
       row :estimator
+      row :engagement_manager
+      row :delivery_manager
       row :comments
     end
   end
@@ -111,7 +123,7 @@ ActiveAdmin.register Pipeline do
     end
 
     def scoped_collection
-      Pipeline.includes [:business_unit, :client, :pipeline_status, :project_type_code, :sales_person, :estimator]
+      Pipeline.includes [:business_unit, :client, :pipeline_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager]
     end
 
     def create
@@ -145,6 +157,10 @@ ActiveAdmin.register Pipeline do
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :estimator, as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
+      f.input :engagement_manager, as: :select, collection:
+                            AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
+      f.input :delivery_manager, as: :select, collection:
+                            AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
     end
     f.actions do

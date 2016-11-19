@@ -5,6 +5,8 @@ class Pipeline < ActiveRecord::Base
   belongs_to :project_type_code, class_name: 'ProjectTypeCode', foreign_key: :project_type_code_id
   belongs_to :sales_person, class_name: 'AdminUser', foreign_key: :sales_person_id
   belongs_to :estimator, class_name: 'AdminUser', foreign_key: :estimator_id
+  belongs_to :engagement_manager, class_name: 'AdminUser', foreign_key: :engagement_manager_id
+  belongs_to :delivery_manager, class_name: 'AdminUser', foreign_key: :delivery_manager_id
 
   has_many :pipelines_audits, class_name: 'PipelinesAudit'
 

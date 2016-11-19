@@ -38,6 +38,12 @@ ActiveAdmin.register PipelinesAudit do
     column :estimator, sortable: 'admin_users.name' do |resource|
       resource.estimator.name
     end
+    column :engagement_manager, sortable: 'admin_users.name' do |resource|
+      resource.engagement_manager.name rescue nil
+    end
+    column :delivery_manager, sortable: 'admin_users.name' do |resource|
+      resource.delivery_manager.name rescue nil
+    end
     column :comments
     column :created_at
   end
@@ -53,8 +59,14 @@ ActiveAdmin.register PipelinesAudit do
   filter :project_type_code, label: 'Type', collection:
                                proc { Lookup.lookups_for_name('Project Code Types') }
   filter :pipeline_status, label: 'Status'
-  filter :sales_person
-  filter :estimator
+  filter :sales_person, collection:
+                          proc { AdminUser.ordered_lookup }
+  filter :estimator, collection:
+                       proc { AdminUser.ordered_lookup }
+  filter :engagement_manager, collection:
+                                proc { AdminUser.ordered_lookup }
+  filter :delivery_manager, collection:
+                              proc { AdminUser.ordered_lookup }
   filter :comments
 
   controller do
@@ -74,7 +86,7 @@ ActiveAdmin.register PipelinesAudit do
     end
 
     def scoped_collection
-      PipelinesAudit.includes [:business_unit, :client, :pipeline_status, :project_type_code, :pipeline, :sales_person, :estimator]
+      PipelinesAudit.includes [:business_unit, :client, :pipeline_status, :project_type_code, :pipeline, :sales_person, :estimator, :engagement_manager, :delivery_manager]
     end
   end
 end

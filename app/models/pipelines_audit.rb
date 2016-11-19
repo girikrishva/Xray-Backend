@@ -6,6 +6,8 @@ class PipelinesAudit < ActiveRecord::Base
   belongs_to :pipeline, class_name: 'Pipeline', foreign_key: :pipeline_id
   belongs_to :sales_person, class_name: 'AdminUser', foreign_key: :sales_person_id
   belongs_to :estimator, class_name: 'AdminUser', foreign_key: :estimator_id
+  belongs_to :engagement_manager, class_name: 'AdminUser', foreign_key: :engagement_manager_id
+  belongs_to :delivery_manager, class_name: 'AdminUser', foreign_key: :delivery_manager_id
 
   validates :business_unit_id, presence: true
   validates :client_id, presence: true
