@@ -52,9 +52,9 @@ ActiveAdmin.register Pipeline do
     column :sales_person, sortable: 'admin_users.name' do |resource|
       resource.sales_person.name
     end
-    column :estimator, sortable: 'admin_users.name' do |resource|
-      resource.estimator.name
-    end
+    # column :estimator, sortable: 'admin_users.name' do |resource|
+    #   resource.estimator.name
+    # end
     # column :engagement_manager, sortable: 'admin_users.name' do |resource|
     #   resource.engagement_manager.name rescue nil
     # end
