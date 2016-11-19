@@ -20,10 +20,6 @@ ActiveAdmin.register Project do
 
   config.clear_action_items!
 
-  action_item only: :index do |resource|
-    link_to "New", new_admin_project_path
-  end
-
   action_item only: :show do |resource|
     link_to "Back", admin_projects_path
   end
