@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161118064454) do
+ActiveRecord::Schema.define(version: 20161119073404) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -211,6 +211,7 @@ SELECT lookups.id,
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "sales_person_id",      :null=>false, :index=>{:name=>"index_pipelines_on_sales_person_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_sales_person_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "estimator_id",         :null=>false, :index=>{:name=>"index_pipelines_on_estimator_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_table "pipelines_audits", force: :cascade do |t|
@@ -227,7 +228,23 @@ SELECT lookups.id,
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "sales_person_id",      :null=>false, :index=>{:name=>"index_pipelines_audits_on_sales_person_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_sales_person_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "estimator_id",         :null=>false, :index=>{:name=>"index_pipelines_audits_on_estimator_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
+
+  create_view "project_statuses", <<-'END_VIEW_PROJECT_STATUSES', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id,
+    lookups.created_at,
+    lookups.updated_at
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Project Statuses'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  ORDER BY lookups.rank
+  END_VIEW_PROJECT_STATUSES
 
   create_view "project_type_codes", <<-'END_VIEW_PROJECT_TYPE_CODES', :force => true
 SELECT lookups.id,
@@ -256,12 +273,20 @@ SELECT lookups.id,
 
   create_table "projects", force: :cascade do |t|
     t.string   "description"
-    t.date     "start_date",    :null=>false
-    t.date     "end_date",      :null=>false
-    t.float    "booking_value", :null=>false
+    t.date     "start_date",            :null=>false
+    t.date     "end_date",              :null=>false
+    t.float    "booking_value",         :null=>false
     t.string   "comments"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "client_id",             :null=>false, :index=>{:name=>"index_projects_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_projects_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "project_type_code_id",  :null=>false, :index=>{:name=>"index_projects_on_project_type_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_projects_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "project_status_id",     :null=>false, :index=>{:name=>"index_projects_on_project_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_projects_project_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "business_unit_id",      :null=>false, :index=>{:name=>"index_projects_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_projects_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "estimator_id",          :null=>false, :index=>{:name=>"index_projects_on_estimator_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_estimator_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "engagement_manager_id", :null=>false, :index=>{:name=>"index_projects_on_engagement_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_engagement_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "delivery_manager_id",   :null=>false, :index=>{:name=>"index_projects_on_delivery_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_delivery_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "pipeline_id",           :null=>false, :index=>{:name=>"index_projects_on_pipeline_id"}, :foreign_key=>{:references=>"pipelines", :name=>"fk_projects_pipeline_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_table "resources", force: :cascade do |t|

@@ -14,7 +14,7 @@ ActiveAdmin.register Pipeline do
 #   permitted
 # end
 
-  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :sales_person_id
+  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :sales_person_id, :estimator_id
 
   config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
 
@@ -52,6 +52,9 @@ ActiveAdmin.register Pipeline do
     column :sales_person, sortable: 'admin_users.name' do |resource|
       resource.sales_person.name
     end
+    column :estimator, sortable: 'admin_users.name' do |resource|
+      resource.estimator.name
+    end
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item "Audit Trail", admin_pipelines_audits_path(pipeline_id: resource.id)
@@ -70,6 +73,8 @@ ActiveAdmin.register Pipeline do
                                proc { Lookup.lookups_for_name('Project Code Types') }
   filter :pipeline_status, label: 'Status'
   filter :sales_person, collection:
+                          proc { AdminUser.ordered_lookup }
+  filter :estimator, collection:
                           proc { AdminUser.ordered_lookup }
   filter :comments
 
@@ -95,6 +100,7 @@ ActiveAdmin.register Pipeline do
       end
       row :pipeline_status
       row :sales_person
+      row :estimator
       row :comments
     end
   end
@@ -105,7 +111,7 @@ ActiveAdmin.register Pipeline do
     end
 
     def scoped_collection
-      Pipeline.includes [:business_unit, :client, :pipeline_status, :project_type_code, :sales_person]
+      Pipeline.includes [:business_unit, :client, :pipeline_status, :project_type_code, :sales_person, :estimator]
     end
 
     def create
@@ -136,6 +142,8 @@ ActiveAdmin.register Pipeline do
       f.input :project_type_code
       f.input :pipeline_status
       f.input :sales_person, as: :select, collection:
+                               AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
+      f.input :estimator, as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
     end

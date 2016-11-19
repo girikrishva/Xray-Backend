@@ -1,7 +1,7 @@
 ActiveAdmin.register PipelinesAudit do
   menu false
 
-  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :pipeline_id, :sales_person_id
+  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :pipeline_id, :sales_person_id, :estimator_id
 
   config.sort_order = 'id_desc'
 
@@ -35,6 +35,9 @@ ActiveAdmin.register PipelinesAudit do
     column :sales_person, sortable: 'admin_users.name' do |resource|
       resource.sales_person.name
     end
+    column :estimator, sortable: 'admin_users.name' do |resource|
+      resource.estimator.name
+    end
     column :comments
     column :created_at
   end
@@ -51,6 +54,7 @@ ActiveAdmin.register PipelinesAudit do
                                proc { Lookup.lookups_for_name('Project Code Types') }
   filter :pipeline_status, label: 'Status'
   filter :sales_person
+  filter :estimator
   filter :comments
 
   controller do
@@ -70,7 +74,7 @@ ActiveAdmin.register PipelinesAudit do
     end
 
     def scoped_collection
-      PipelinesAudit.includes [:business_unit, :client, :pipeline_status, :project_type_code, :pipeline, :sales_person]
+      PipelinesAudit.includes [:business_unit, :client, :pipeline_status, :project_type_code, :pipeline, :sales_person, :estimator]
     end
   end
 end
