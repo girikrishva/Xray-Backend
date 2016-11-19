@@ -55,12 +55,12 @@ ActiveAdmin.register Pipeline do
     column :estimator, sortable: 'admin_users.name' do |resource|
       resource.estimator.name
     end
-    column :engagement_manager, sortable: 'admin_users.name' do |resource|
-      resource.engagement_manager.name rescue nil
-    end
-    column :delivery_manager, sortable: 'admin_users.name' do |resource|
-      resource.delivery_manager.name rescue nil
-    end
+    # column :engagement_manager, sortable: 'admin_users.name' do |resource|
+    #   resource.engagement_manager.name rescue nil
+    # end
+    # column :delivery_manager, sortable: 'admin_users.name' do |resource|
+    #   resource.delivery_manager.name rescue nil
+    # end
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item "Audit Trail", admin_pipelines_audits_path(pipeline_id: resource.id)

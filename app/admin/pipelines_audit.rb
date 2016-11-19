@@ -11,6 +11,10 @@ ActiveAdmin.register PipelinesAudit do
     link_to "Back", admin_pipelines_path
   end
 
+  action_item only: :show do |resource|
+    link_to "Back", :back
+  end
+
   # index do
   index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
@@ -38,14 +42,17 @@ ActiveAdmin.register PipelinesAudit do
     column :estimator, sortable: 'admin_users.name' do |resource|
       resource.estimator.name
     end
-    column :engagement_manager, sortable: 'admin_users.name' do |resource|
-      resource.engagement_manager.name rescue nil
-    end
-    column :delivery_manager, sortable: 'admin_users.name' do |resource|
-      resource.delivery_manager.name rescue nil
-    end
+    # column :engagement_manager, sortable: 'admin_users.name' do |resource|
+    #   resource.engagement_manager.name rescue nil
+    # end
+    # column :delivery_manager, sortable: 'admin_users.name' do |resource|
+    #   resource.delivery_manager.name rescue nil
+    # end
     column :comments
     column :created_at
+    actions defaults: false, dropdown: true do |resource|
+      item "View", admin_pipelines_audit_path(resource.id)
+    end
   end
 
   filter :business_unit, collection:
@@ -63,11 +70,40 @@ ActiveAdmin.register PipelinesAudit do
                           proc { AdminUser.ordered_lookup }
   filter :estimator, collection:
                        proc { AdminUser.ordered_lookup }
-  filter :engagement_manager, collection:
-                                proc { AdminUser.ordered_lookup }
-  filter :delivery_manager, collection:
-                              proc { AdminUser.ordered_lookup }
+  # filter :engagement_manager, collection:
+  #                               proc { AdminUser.ordered_lookup }
+  # filter :delivery_manager, collection:
+  #                             proc { AdminUser.ordered_lookup }
   filter :comments
+
+  show do |r|
+    attributes_table_for r do
+      row :id
+      row :business_unit do
+        r.business_unit.name
+      end
+      row :client do
+        r.client.name
+      end
+      row :name
+      row :expected_start
+      row :expected_end
+      row :expected_value do |element|
+        div :style => "text-align: right;" do
+          number_with_precision element.expected_value, precision: 0, delimiter: ','
+        end
+      end
+      row :project_type_code do
+        r.project_type_code.name
+      end
+      row :pipeline_status
+      row :sales_person
+      row :estimator
+      row :engagement_manager
+      row :delivery_manager
+      row :comments
+    end
+  end
 
   controller do
     before_filter do |c|
