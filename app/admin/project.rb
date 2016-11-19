@@ -124,7 +124,7 @@ ActiveAdmin.register Project do
     end
 
     def scoped_collection
-      Pipeline.includes [:business_unit, :client, :pipeline_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager]
+      Project.includes [:business_unit, :client, :project_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager, :pipeline]
     end
 
     def create
@@ -149,11 +149,11 @@ ActiveAdmin.register Project do
       f.input :client, as: :select, collection:
                          Client.all.order('name asc').map { |a| [a.name, a.id] }, include_blank: true
       f.input :name
-      f.input :expected_start, as: :datepicker
-      f.input :expected_end, as: :datepicker
-      f.input :expected_value
+      f.input :start_date, as: :datepicker
+      f.input :end_date, as: :datepicker
+      f.input :booking_value
       f.input :project_type_code
-      f.input :pipeline_status
+      f.input :project_status
       f.input :sales_person, as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :estimator, as: :select, collection:

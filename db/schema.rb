@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161119074556) do
+ActiveRecord::Schema.define(version: 20161119123829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -291,6 +291,7 @@ SELECT lookups.id,
     t.integer  "engagement_manager_id", :null=>false, :index=>{:name=>"index_projects_on_engagement_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_engagement_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "delivery_manager_id",   :null=>false, :index=>{:name=>"index_projects_on_delivery_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_delivery_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "pipeline_id",           :null=>false, :index=>{:name=>"index_projects_on_pipeline_id"}, :foreign_key=>{:references=>"pipelines", :name=>"fk_projects_pipeline_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "sales_person_id",       :null=>false, :index=>{:name=>"index_projects_on_sales_person_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_table "resources", force: :cascade do |t|
