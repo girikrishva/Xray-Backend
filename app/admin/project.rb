@@ -53,19 +53,19 @@ ActiveAdmin.register Project do
     column "Status", :project_status, sortable: 'project_statuses.name' do |resource|
       resource.project_status.name
     end
-    column :sales_person, sortable: 'admin_users.name' do |resource|
+    column "Sales By", :sales_person, sortable: 'admin_users.name' do |resource|
       resource.sales_person.name
     end
     if params[:scope] == 'sales_view'
-      column :estimator, sortable: 'admin_users.name' do |resource|
+      column "Estimated By", :estimator, sortable: 'admin_users.name' do |resource|
         resource.estimator.name
       end
-      column :engagement_manager, sortable: 'admin_users.name' do |resource|
+      column "Engagement By", :engagement_manager, sortable: 'admin_users.name' do |resource|
         resource.engagement_manager.name rescue nil
       end
     end
     if !params.has_key?('scope') || params[:scope] == 'delivery_view'
-      column :delivery_manager, sortable: 'admin_users.name' do |resource|
+      column "Delivery By", :delivery_manager, sortable: 'admin_users.name' do |resource|
         resource.delivery_manager.name rescue nil
       end
       column :comments
@@ -86,13 +86,13 @@ ActiveAdmin.register Project do
   filter :project_type_code, label: 'Type', collection:
                                proc { Lookup.lookups_for_name('Project Code Types') }
   filter :project_status, label: 'Status'
-  filter :sales_person, collection:
+  filter :sales_person, label: 'Sales By', collection:
                           proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'sales_view' }
-  filter :estimator, collection:
+  filter :estimator, label: 'Estimated By', collection:
                        proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'sales_view' }
-  filter :engagement_manager, collection:
+  filter :engagement_manager, label: 'Engagement By', collection:
                                 proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
-  filter :delivery_manager, collection:
+  filter :delivery_manager, label: 'Delivery By', collection:
                               proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
   filter :comments
 
@@ -117,10 +117,10 @@ ActiveAdmin.register Project do
         r.project_type_code.name
       end
       row :project_status
-      row :sales_person
-      row :estimator
-      row :engagement_manager
-      row :delivery_manager
+      row "Sales By", :sales_person
+      row "Estimated By", :estimator
+      row "Engagement By", :engagement_manager
+      row "Delivery By", :delivery_manager
       row :pipeline
       row :comments
     end
@@ -162,13 +162,13 @@ ActiveAdmin.register Project do
       f.input :booking_value
       f.input :project_type_code
       f.input :project_status
-      f.input :sales_person, as: :select, collection:
+      f.input :sales_person, label: 'Sales By', as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :estimator, as: :select, collection:
+      f.input :estimator, label: 'Estimated By', as: :select, collection:
                             AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :engagement_manager, as: :select, collection:
+      f.input :engagement_manager, label: 'Engagement By', as: :select, collection:
                                      AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :delivery_manager, as: :select, collection:
+      f.input :delivery_manager, label: 'Delivery By', as: :select, collection:
                                    AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
     end

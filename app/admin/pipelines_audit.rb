@@ -44,18 +44,18 @@ ActiveAdmin.register PipelinesAudit do
       resource.pipeline_status.name
     end
     if !params.has_key?('scope') || params[:scope] == 'sales_view'
-      column :sales_person, sortable: 'admin_users.name' do |resource|
+      column "Sales By", :sales_person, sortable: 'admin_users.name' do |resource|
         resource.sales_person.name
       end
-      column :estimator, sortable: 'admin_users.name' do |resource|
+      column "Estimated By", :estimator, sortable: 'admin_users.name' do |resource|
         resource.estimator.name
       end
     end
     if params[:scope] == 'delivery_view'
-      column :engagement_manager, sortable: 'admin_users.name' do |resource|
+      column "Engagement By", :engagement_manager, sortable: 'admin_users.name' do |resource|
         resource.engagement_manager.name rescue nil
       end
-      column :delivery_manager, sortable: 'admin_users.name' do |resource|
+      column "Delivery By", :delivery_manager, sortable: 'admin_users.name' do |resource|
         resource.delivery_manager.name rescue nil
       end
     end
@@ -77,13 +77,13 @@ ActiveAdmin.register PipelinesAudit do
   filter :project_type_code, label: 'Type', collection:
                                proc { Lookup.lookups_for_name('Project Code Types') }
   filter :pipeline_status, label: 'Status'
-  filter :sales_person, collection:
+  filter :sales_person, label: 'Sales By', collection:
                           proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'sales_view' }
-  filter :estimator, collection:
+  filter :estimator, label: 'Estimated By', collection:
                        proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'sales_view' }
-  filter :engagement_manager, collection:
+  filter :engagement_manager, label: 'Engagement By', collection:
                                 proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'delivery_view' }
-  filter :delivery_manager, collection:
+  filter :delivery_manager, label: 'Delivery By', collection:
                               proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'delivery_view' }
   filter :comments
 
@@ -108,10 +108,10 @@ ActiveAdmin.register PipelinesAudit do
         r.project_type_code.name
       end
       row :pipeline_status
-      row :sales_person
-      row :estimator
-      row :engagement_manager
-      row :delivery_manager
+      row 'Sales By', :sales_person
+      row 'Estimated By', :estimator
+      row 'Engagement By', :engagement_manager
+      row 'Delivery By', :delivery_manager
       row :comments
     end
   end
