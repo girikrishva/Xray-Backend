@@ -28,10 +28,10 @@ ActiveAdmin.register Pipeline do
     link_to I18n.t('label.back'), admin_pipelines_path
   end
 
-  scope I18n.t('label.sales_view'), default: true do |pipelines|
+  scope I18n.t('label.sales_view'), :sales_view, default: true do |pipelines|
     Pipeline.all
   end
-  scope I18n.t('label.delivery_view'), default: false do |pipelines|
+  scope I18n.t('label.delivery_view'), :delivery_view, default: false do |pipelines|
     Pipeline.all
   end
 
@@ -56,7 +56,7 @@ ActiveAdmin.register Pipeline do
     column I18n.t('label.status'), :pipeline_status, sortable: 'pipeline_statuses.name' do |resource|
       resource.pipeline_status.name
     end
-    if !params.has_key?('scope') || params[:scope] == I18n.t('label.sales_view')
+    if !params.has_key?('scope') || params[:scope] == 'sales_view'
       column I18n.t('label.sales_by'), :sales_person, sortable: 'admin_users.name' do |resource|
         resource.sales_person.name
       end
@@ -64,7 +64,7 @@ ActiveAdmin.register Pipeline do
         resource.estimator.name
       end
     end
-    if params[:scope] == I18n.t('label.delivery_view')
+    if params[:scope] == 'delivery_view'
       column I18n.t('label.engagement_by'), :engagement_manager, sortable: 'admin_users.name' do |resource|
         resource.engagement_manager.name rescue nil
       end
@@ -90,13 +90,13 @@ ActiveAdmin.register Pipeline do
                                proc { Lookup.lookups_for_name(I18n.t('models.project_code_types')) }
   filter :pipeline_status, label: I18n.t('label.status')
   filter :sales_person, label: I18n.t('label.sales_by'), collection:
-                          proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == I18n.t('label.sales_view') }
+                          proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'sales_view' }
   filter :estimator, label: I18n.t('label.estimated_by'), collection:
-                       proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == I18n.t('label.sales_view') }
+                       proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'sales_view' }
   filter :engagement_manager, label: I18n.t('label.engagement_by'), collection:
-                                proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == I18n.t('label.delivery_view') }
+                                proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'delivery_view' }
   filter :delivery_manager, label: I18n.t('label.delivery_by'), collection:
-                              proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == I18n.t('label.delivery_view') }
+                              proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'delivery_view' }
   filter :comments
 
   show do |r|
