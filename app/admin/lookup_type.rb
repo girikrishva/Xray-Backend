@@ -1,5 +1,5 @@
 ActiveAdmin.register LookupType do
-  menu if: proc { is_menu_authorized? ["Director"] }, label: 'Define Lookups', parent: 'Setup', priority: 10
+  menu if: proc { is_menu_authorized? [I18n.t('role.director')] }, label: I18n.t('menu.define_lookups'), parent: I18n.t('menu.setup'), priority: 10
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -21,11 +21,11 @@ ActiveAdmin.register LookupType do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_lookup_type_path
+    link_to I18n.t('label.new'), new_admin_lookup_type_path
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_lookup_types_path(lookup_type_id: nil)
+    link_to I18n.t('label.back'), admin_lookup_types_path(lookup_type_id: nil)
   end
 
   index do
@@ -35,7 +35,7 @@ ActiveAdmin.register LookupType do
     column :description
     column :comments
     actions defaults: true  , dropdown: true do |resource|
-      item "Lookups", admin_lookups_path(lookup_type_id: resource)
+      item I18n.t('actions.lookups'), admin_lookups_path(lookup_type_id: resource)
     end
   end
 
@@ -45,7 +45,7 @@ ActiveAdmin.register LookupType do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Director"])
+      c.send(:is_resource_authorized?, [I18n.t('role.director')])
     end
 
     def create
@@ -64,7 +64,7 @@ ActiveAdmin.register LookupType do
   form do |f|
     f.inputs
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end

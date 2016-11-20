@@ -1,5 +1,5 @@
 ActiveAdmin.register Role do
-  menu if: proc { is_menu_authorized? ["Administrator"] }, label: 'Define Roles', parent: 'Security', priority: 30
+  menu if: proc { is_menu_authorized? [I18n.t('role.administrator')] }, label: I18n.t('menu.define_roles'), parent: I18n.t('menu.security'), priority: 30
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -21,11 +21,11 @@ ActiveAdmin.register Role do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_role_path
+    link_to I18n.t('label.new'), new_admin_role_path
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_roles_path
+    link_to I18n.t('label.back'), admin_roles_path
   end
 
   index do
@@ -51,7 +51,7 @@ ActiveAdmin.register Role do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Executive"])
+      c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
 
     def create
@@ -81,7 +81,7 @@ ActiveAdmin.register Role do
       f.input :comments
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end

@@ -1,5 +1,5 @@
 ActiveAdmin.register Resource do
-  menu if: proc { is_menu_authorized? ["Executive"] }, label: 'Resources', parent: 'Masters', priority: 10
+  menu if: proc { is_menu_authorized? [I18n.t('role.executive')] }, label: I18n.t('menu.resources'), parent: I18n.t('menu.masters'), priority: 10
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -21,11 +21,11 @@ ActiveAdmin.register Resource do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_resource_path
+    link_to I18n.t('label.new'), new_admin_resource_path
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_resources_path
+    link_to I18n.t('label.back'), admin_resources_path
   end
 
   scope :latest, default: true do |resources| resources.latest end
@@ -35,15 +35,15 @@ ActiveAdmin.register Resource do
   index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
     column :id
-    column 'User', :admin_user, sortable: 'admin_users.name' do |resource|
+    column I18n.t('label.user'), :admin_user, sortable: 'admin_users.name' do |resource|
       resource.admin_user.name
     end
     # column :skill, sortable: 'skills.name' do |resource|
     #   resource.skill.name
     # end
     column :as_on
-    column "Latest", (:is_latest) do |resource|
-      resource.is_latest ? status_tag( "yes", :ok ) : status_tag( "no" )
+    column I18n.t('label.latest'), (:is_latest) do |resource|
+      resource.is_latest ? status_tag( I18n.t('label.yes'), :ok ) : status_tag( I18n.t('label.no') )
     end
     column :bill_rate, :sortable => 'bill_rate' do |element|
       div :style => "text-align: right;" do
@@ -61,7 +61,7 @@ ActiveAdmin.register Resource do
   end
 
   filter :skill, collection:
-                   proc { Lookup.lookups_for_name('Skills') }
+                   proc { Lookup.lookups_for_name(I18n.t('models.skills')) }
   filter :admin_user, label: 'User'
   filter :as_on
   filter :bill_rate
@@ -75,7 +75,7 @@ ActiveAdmin.register Resource do
       row :skill do
         r.skill.name
       end
-      row 'User', :admin_user do
+      row I18n.t('label.user'), :admin_user do
         r.admin_user.name
       end
       row :as_on
@@ -93,7 +93,7 @@ ActiveAdmin.register Resource do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Executive"])
+      c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
 
     def scoped_collection
@@ -120,18 +120,18 @@ ActiveAdmin.register Resource do
     f.inputs do
       if f.object.skill_id.blank?
         f.input :skill, as: :select, collection:
-                          Lookup.lookups_for_name('Skills')
+                          Lookup.lookups_for_name(I18n.t('models.skills'))
                               .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :skill, input_html: {disabled: :true}
         f.input :skill_id, as: :hidden
       end
       if f.object.admin_user_id.blank?
-        f.input :admin_user, label: 'User', as: :select, collection:
+        f.input :admin_user, label: I18n.t('label.user'), as: :select, collection:
                                AdminUser.all
                                    .map { |a| [a.name, a.id] }, include_blank: true
       else
-        f.input :admin_user, label: 'User', input_html: {disabled: :true}
+        f.input :admin_user, label: I18n.t('label.user'), input_html: {disabled: :true}
         f.input :admin_user_id, as: :hidden
       end
       if !f.object.new_record?
@@ -159,7 +159,7 @@ ActiveAdmin.register Resource do
       f.input :comments
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end

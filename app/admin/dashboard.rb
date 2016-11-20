@@ -1,5 +1,5 @@
-ActiveAdmin.register_page "Dashboard" do
-  menu if: proc { is_menu_authorized? ["User"] }, priority: 1, label: proc{ I18n.t("active_admin.dashboard") }
+ActiveAdmin.register_page I18n.t('menu.dashboard') do
+  menu if: proc { is_menu_authorized? [I18n.t('role.user')] }, priority: 1, label: proc{ I18n.t("active_admin.dashboard") }
 
   content title: proc{ I18n.t("active_admin.dashboard") } do
     div class: "blank_slate_container", id: "dashboard_default_message" do
@@ -32,7 +32,7 @@ ActiveAdmin.register_page "Dashboard" do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["User"])
+      c.send(:is_resource_authorized?, [I18n.t('role.user')])
     end
   end
 end

@@ -4,7 +4,7 @@ ActiveAdmin.register AdminUsersAudit do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "Back", admin_admin_users_path
+    link_to I18n.t('label.back'), admin_admin_users_path
   end
 
   config.sort_order = 'id_desc'

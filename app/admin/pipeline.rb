@@ -1,5 +1,5 @@
 ActiveAdmin.register Pipeline do
-  menu if: proc { is_menu_authorized? ["Manager"] }, label: 'Pipelines', parent: 'Operations', priority: 20
+  menu if: proc { is_menu_authorized? [I18n.t('role.manager')] }, label: I18n.t('menu.pipelines'), parent: I18n.t('menu.operations'), priority: 20
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -21,17 +21,17 @@ ActiveAdmin.register Pipeline do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_pipeline_path
+    link_to I18n.t('label.new'), new_admin_pipeline_path
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_pipelines_path
+    link_to I18n.t('label.back'), admin_pipelines_path
   end
 
-  scope :sales_view, default: true do |pipelines|
+  scope I18n.t('label.sales_view'), default: true do |pipelines|
     Pipeline.all
   end
-  scope :delivery_view, default: false do |pipelines|
+  scope I18n.t('label.delivery_view'), default: false do |pipelines|
     Pipeline.all
   end
 
@@ -42,61 +42,61 @@ ActiveAdmin.register Pipeline do
     column :client, sortable: 'clients.name' do |resource|
       resource.client.name
     end
-    column "Project", :name
-    column "Start", :expected_start
-    column "End", :expected_end
-    column "Value", :expected_value do |element|
+    column I18n.t('label.project'), :name
+    column I18n.t('label.start'), :expected_start
+    column I18n.t('label.end'), :expected_end
+    column I18n.t('label.value'), :expected_value do |element|
       div :style => "text-align: right;" do
         number_with_precision element.expected_value, precision: 0, delimiter: ','
       end
     end
-    column "Type", :project_type_code, sortable: 'project_type_codes.name' do |resource|
+    column I18n.t('label.type'), :project_type_code, sortable: 'project_type_codes.name' do |resource|
       resource.project_type_code.name
     end
-    column "Status", :pipeline_status, sortable: 'pipeline_statuses.name' do |resource|
+    column I18n.t('label.status'), :pipeline_status, sortable: 'pipeline_statuses.name' do |resource|
       resource.pipeline_status.name
     end
-    if !params.has_key?('scope') || params[:scope] == 'sales_view'
-      column "Sales By", :sales_person, sortable: 'admin_users.name' do |resource|
+    if !params.has_key?('scope') || params[:scope] == I18n.t('label.sales_view')
+      column I18n.t('label.sales_by'), :sales_person, sortable: 'admin_users.name' do |resource|
         resource.sales_person.name
       end
-      column "Estimated By", :estimator, sortable: 'admin_users.name' do |resource|
+      column I18n.t('label.estimated_by'), :estimator, sortable: 'admin_users.name' do |resource|
         resource.estimator.name
       end
     end
-    if params[:scope] == 'delivery_view'
-      column "Engagement By", :engagement_manager, sortable: 'admin_users.name' do |resource|
+    if params[:scope] == I18n.t('label.delivery_view')
+      column I18n.t('label.engagement_by'), :engagement_manager, sortable: 'admin_users.name' do |resource|
         resource.engagement_manager.name rescue nil
       end
-      column "Delivery By", :delivery_manager, sortable: 'admin_users.name' do |resource|
+      column I18n.t('label.delivery_by'), :delivery_manager, sortable: 'admin_users.name' do |resource|
         resource.delivery_manager.name rescue nil
       end
     end
     column :comments
     actions defaults: true, dropdown: true do |resource|
-      item "Audit Trail", admin_pipelines_audits_path(pipeline_id: resource.id)
+      item I18n.t('actions.audit_trail'), admin_pipelines_audits_path(pipeline_id: resource.id)
     end
   end
 
   filter :business_unit, collection:
-                           proc { Lookup.lookups_for_name('Business Units') }
+                           proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
   filter :client, collection:
                     proc { Client.ordered_lookup }
-  filter :name, label: 'Project'
-  filter :expected_start, label: 'Start'
-  filter :expected_end, label: 'End'
-  filter :expected_value, label: 'Value'
+  filter :name, label: I18n.t('label.project')
+  filter :expected_start, label: I18n.t('label.start')
+  filter :expected_end, label: I18n.t('label.end')
+  filter :expected_value, label: I18n.t('label.value')
   filter :project_type_code, label: 'Type', collection:
-                               proc { Lookup.lookups_for_name('Project Code Types') }
-  filter :pipeline_status, label: 'Status'
-  filter :sales_person, label: 'Sales By', collection:
-                          proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'sales_view' }
-  filter :estimator, label: 'Estimated By', collection:
-                       proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'sales_view' }
-  filter :engagement_manager, label: 'Engagement By', collection:
-                                proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'delivery_view' }
-  filter :delivery_manager, label: 'Delivery By', collection:
-                              proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'delivery_view' }
+                               proc { Lookup.lookups_for_name(I18n.t('models.project_code_types')) }
+  filter :pipeline_status, label: I18n.t('label.status')
+  filter :sales_person, label: I18n.t('label.sales_by'), collection:
+                          proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == I18n.t('label.sales_view') }
+  filter :estimator, label: I18n.t('label.estimated_by'), collection:
+                       proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == I18n.t('label.sales_view') }
+  filter :engagement_manager, label: I18n.t('label.engagement_by'), collection:
+                                proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == I18n.t('label.delivery_view') }
+  filter :delivery_manager, label: I18n.t('label.delivery_by'), collection:
+                              proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == I18n.t('label.delivery_view') }
   filter :comments
 
   show do |r|
@@ -120,17 +120,17 @@ ActiveAdmin.register Pipeline do
         r.project_type_code.name
       end
       row :pipeline_status
-      row 'Sales By', :sales_person
-      row 'Estimated By', :estimator
-      row 'Engagement By', :engagement_manager
-      row 'Delivery By', :delivery_manager
+      row I18n.t('label.sales_by'), :sales_person
+      row I18n.t('label.estimated_by'), :estimator
+      row I18n.t('label.engagement_by'), :engagement_manager
+      row I18n.t('label.delivery_by'), :delivery_manager
       row :comments
     end
   end
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Executive"])
+      c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
 
     def scoped_collection
@@ -152,7 +152,7 @@ ActiveAdmin.register Pipeline do
 
   form do |f|
     if f.object.pipeline_status_id.blank?
-      f.object.pipeline_status_id = PipelineStatus.where(name: 'New').first.id
+      f.object.pipeline_status_id = PipelineStatus.where(name: I18n.t('label.new')).first.id
     end
     f.inputs do
       f.input :business_unit
@@ -164,18 +164,18 @@ ActiveAdmin.register Pipeline do
       f.input :expected_value
       f.input :project_type_code
       f.input :pipeline_status
-      f.input :sales_person, label: 'Sales By', as: :select, collection:
+      f.input :sales_person, label: I18n.t('label.sales_by'), as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :estimator, label: 'Estimated By', as: :select, collection:
+      f.input :estimator, label: I18n.t('label.estimated_by'), as: :select, collection:
                             AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :engagement_manager, label: 'Engagement By', as: :select, collection:
+      f.input :engagement_manager, label: I18n.t('label.engagement_by'), as: :select, collection:
                                      AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :delivery_manager, label: 'Delivery By', as: :select, collection:
+      f.input :delivery_manager, label: I18n.t('label.delivery_by'), as: :select, collection:
                                    AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end

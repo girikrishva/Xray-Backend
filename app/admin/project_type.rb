@@ -1,5 +1,5 @@
 ActiveAdmin.register ProjectType do
-  menu if: proc { is_menu_authorized? ["Executive"] }, label: 'Project Types', parent: 'Setup', priority: 40
+  menu if: proc { is_menu_authorized? [I18n.t('role.executive')] }, label: I18n.t('menu.project_types'), parent: I18n.t('menu.setup'), priority: 40
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -21,11 +21,11 @@ ActiveAdmin.register ProjectType do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_project_type_path
+    link_to I18n.t('label.new'), new_admin_project_type_path
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_project_types_path
+    link_to I18n.t('label.back'), admin_project_types_path
   end
 
   index do
@@ -44,16 +44,16 @@ ActiveAdmin.register ProjectType do
   end
 
   filter :business_unit, collection:
-                           proc { Lookup.lookups_for_name('Business Units') }
+                           proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
   filter :project_type_code, collection:
-                           proc { Lookup.lookups_for_name('Project Types') }
+                           proc { Lookup.lookups_for_name(I18n.t('models.project_code_types')) }
   filter :description
   filter :billed
   filter :comments
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Executive"])
+      c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
 
     def scoped_collection
@@ -86,7 +86,7 @@ ActiveAdmin.register ProjectType do
     f.inputs do
       if f.object.business_unit_id.blank?
         f.input :business_unit, as: :select, collection:
-                                  Lookup.lookups_for_name('Business Units')
+                                  Lookup.lookups_for_name(I18n.t('models.business_units'))
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :business_unit, input_html: {disabled: :true}
@@ -94,7 +94,7 @@ ActiveAdmin.register ProjectType do
       end
       if f.object.project_type_code_id.blank?
         f.input :project_type_code, as: :select, collection:
-                                  Lookup.lookups_for_name('Project Types')
+                                  Lookup.lookups_for_name(I18n.t('models.project_code_types'))
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :project_type_code, input_html: {disabled: :true}
@@ -105,7 +105,7 @@ ActiveAdmin.register ProjectType do
       f.input :comments
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end

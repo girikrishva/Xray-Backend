@@ -1,5 +1,5 @@
 ActiveAdmin.register Overhead do
-  menu if: proc { is_menu_authorized? ["Executive"] }, label: 'Overheads', parent: 'Masters', priority: 20
+  menu if: proc { is_menu_authorized? [I18n.t('role.executive')] }, label: I18n.t('menu.overheads'), parent: I18n.t('menu.masters'), priority: 20
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -21,11 +21,11 @@ ActiveAdmin.register Overhead do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_overhead_path
+    link_to I18n.t('label.new'), new_admin_overhead_path
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_overheads_path
+    link_to I18n.t('label.back'), admin_overheads_path
   end
 
 # index do
@@ -52,11 +52,11 @@ ActiveAdmin.register Overhead do
   end
 
   filter :business_unit, collection:
-                           proc { Lookup.lookups_for_name('Business Units') }
+                           proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
   filter :department, collection:
-                        proc { Lookup.lookups_for_name('Departments') }
+                        proc { Lookup.lookups_for_name(I18n.t('models.departments')) }
   filter :cost_adder_type, collection:
-                             proc { Lookup.lookups_for_name('Cost Adder Types') }
+                             proc { Lookup.lookups_for_name(I18n.t('models.cost_adder_types')) }
   filter :amount_date
   filter :amount
   filter :comments
@@ -85,7 +85,7 @@ ActiveAdmin.register Overhead do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Executive"])
+      c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
 
     def scoped_collection
@@ -112,7 +112,7 @@ ActiveAdmin.register Overhead do
     f.inputs do
       if f.object.business_unit_id.blank?
         f.input :business_unit, as: :select, collection:
-                                  Lookup.lookups_for_name('Business Units')
+                                  Lookup.lookups_for_name(I18n.t('models.business_units'))
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :business_unit, input_html: {disabled: :true}
@@ -120,7 +120,7 @@ ActiveAdmin.register Overhead do
       end
       if f.object.department_id.blank?
         f.input :department, as: :select, collection:
-                               Lookup.lookups_for_name('Departments')
+                               Lookup.lookups_for_name(I18n.t('models.departments'))
                                    .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :department, input_html: {disabled: :true}
@@ -128,7 +128,7 @@ ActiveAdmin.register Overhead do
       end
       if f.object.cost_adder_type_id.blank?
         f.input :cost_adder_type, as: :select, collection:
-                                    Lookup.lookups_for_name('Cost Adder Types')
+                                    Lookup.lookups_for_name(I18n.t('models.cost_adder_types'))
                                         .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :cost_adder_type, input_html: {disabled: :true}
@@ -148,7 +148,7 @@ ActiveAdmin.register Overhead do
       f.input :comments
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end

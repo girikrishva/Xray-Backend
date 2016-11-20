@@ -1,5 +1,5 @@
 ActiveAdmin.register HolidayCalendar do
-  menu if: proc { is_menu_authorized? ["Executive"] }, label: 'Holiday Calendar', parent: 'Setup', priority: 30
+  menu if: proc { is_menu_authorized? [I18n.t('role.executive')] }, label: I18n.t('menu.holiday_calendar'), parent: I18n.t('menu.setup'), priority: 30
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -21,11 +21,11 @@ ActiveAdmin.register HolidayCalendar do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_holiday_calendar_path
+    link_to I18n.t('label.new'), new_admin_holiday_calendar_path
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_holiday_calendars_path
+    link_to I18n.t('label.back'), admin_holiday_calendars_path
   end
 
   index do
@@ -43,7 +43,7 @@ ActiveAdmin.register HolidayCalendar do
 
 
   filter :business_unit, collection:
-                           proc { Lookup.lookups_for_name('Business Units') }
+                           proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
   filter :name
   filter :as_on
   filter :description
@@ -51,7 +51,7 @@ ActiveAdmin.register HolidayCalendar do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Executive"])
+      c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
 
     def scoped_collection
@@ -78,7 +78,7 @@ ActiveAdmin.register HolidayCalendar do
     f.inputs do
       if f.object.business_unit_id.blank?
         f.input :business_unit, as: :select, collection:
-                                  Lookup.lookups_for_name('Business Units')
+                                  Lookup.lookups_for_name(I18n.t('models.business_units'))
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :business_unit, input_html: {disabled: :true}
@@ -95,7 +95,7 @@ ActiveAdmin.register HolidayCalendar do
       f.input :comments
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end

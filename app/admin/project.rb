@@ -1,5 +1,5 @@
 ActiveAdmin.register Project do
-  menu if: proc { is_menu_authorized? ["Manager"] }, label: 'Projects', parent: 'Operations', priority: 10
+  menu if: proc { is_menu_authorized? [I18n.t('role.manager')] }, label: I18n.t('menu.projects'), parent: I18n.t('menu.operations'), priority: 10
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -21,7 +21,7 @@ ActiveAdmin.register Project do
   config.clear_action_items!
 
   action_item only: :show do |resource|
-    link_to "Back", admin_projects_path
+    link_to I18n.t('label.back'), admin_projects_path
   end
 
   scope :delivery_view, default: true do |pipelines|
@@ -39,33 +39,33 @@ ActiveAdmin.register Project do
     column :client, sortable: 'clients.name' do |resource|
       resource.client.name
     end
-    column "Project", :name
-    column "Start", :start_date
-    column "End", :end_date
-    column "Value", :booking_value do |element|
+    column I18n.t('label.project'), :name
+    column I18n.t('label.start'), :start_date
+    column I18n.t('label.end'), :end_date
+    column I18n.t('label.value'), :booking_value do |element|
       div :style => "text-align: right;" do
         number_with_precision element.booking_value, precision: 0, delimiter: ','
       end
     end
-    column "Type", :project_type_code, sortable: 'project_type_codes.name' do |resource|
+    column I18n.t('label.type'), :project_type_code, sortable: 'project_type_codes.name' do |resource|
       resource.project_type_code.name
     end
-    column "Status", :project_status, sortable: 'project_statuses.name' do |resource|
+    column I18n.t('label.status'), :project_status, sortable: 'project_statuses.name' do |resource|
       resource.project_status.name
     end
-    column "Sales By", :sales_person, sortable: 'admin_users.name' do |resource|
+    column I18n.t('label.sales_by'), :sales_person, sortable: 'admin_users.name' do |resource|
       resource.sales_person.name
     end
-    if params[:scope] == 'sales_view'
-      column "Estimated By", :estimator, sortable: 'admin_users.name' do |resource|
+    if params[:scope] == I18n.t('label.sales_view')
+      column I18n.t('label.estimated_by'), :estimator, sortable: 'admin_users.name' do |resource|
         resource.estimator.name
       end
-      column "Engagement By", :engagement_manager, sortable: 'admin_users.name' do |resource|
+      column I18n.t('label.engagement_by'), :engagement_manager, sortable: 'admin_users.name' do |resource|
         resource.engagement_manager.name rescue nil
       end
     end
-    if !params.has_key?('scope') || params[:scope] == 'delivery_view'
-      column "Delivery By", :delivery_manager, sortable: 'admin_users.name' do |resource|
+    if !params.has_key?('scope') || params[:scope] == I18n.t('label.delivery_view')
+      column I18n.t('label.delivery_by'), :delivery_manager, sortable: 'admin_users.name' do |resource|
         resource.delivery_manager.name rescue nil
       end
       column :comments
@@ -76,24 +76,24 @@ ActiveAdmin.register Project do
   end
 
   filter :business_unit, collection:
-                           proc { Lookup.lookups_for_name('Business Units') }
+                           proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
   filter :client, collection:
                     proc { Client.ordered_lookup }
-  filter :name, label: 'Project'
-  filter :start_date, label: 'Start'
-  filter :end_date, label: 'End'
-  filter :booking_value, label: 'Value'
-  filter :project_type_code, label: 'Type', collection:
-                               proc { Lookup.lookups_for_name('Project Code Types') }
-  filter :project_status, label: 'Status'
-  filter :sales_person, label: 'Sales By', collection:
-                          proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'sales_view' }
-  filter :estimator, label: 'Estimated By', collection:
-                       proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'sales_view' }
-  filter :engagement_manager, label: 'Engagement By', collection:
-                                proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
-  filter :delivery_manager, label: 'Delivery By', collection:
-                              proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
+  filter :name, label: I18n.t('label.project')
+  filter :start_date, label: I18n.t('label.start')
+  filter :end_date, label: I18n.t('label.end')
+  filter :booking_value, label: I18n.t('label.value')
+  filter :project_type_code, label: I18n.t('label.type'), collection:
+                               proc { Lookup.lookups_for_name(I18n.t('models.project_code_types')) }
+  filter :project_status, label: I18n.t('label.status')
+  filter :sales_person, label: I18n.t('label.sales_by'), collection:
+                          proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == I18n.t('label.sales_view') }
+  filter :estimator, label: I18n.t('label.estimated_by'), collection:
+                       proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == I18n.t('label.sales_view') }
+  filter :engagement_manager, label: I18n.t('label.engagement_by'), collection:
+                                proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == I18n.t('label.delivery_view') }
+  filter :delivery_manager, label: I18n.t('label.delivery_by'), collection:
+                              proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == I18n.t('label.delivery_view') }
   filter :comments
 
   show do |r|
@@ -117,10 +117,10 @@ ActiveAdmin.register Project do
         r.project_type_code.name
       end
       row :project_status
-      row "Sales By", :sales_person
-      row "Estimated By", :estimator
-      row "Engagement By", :engagement_manager
-      row "Delivery By", :delivery_manager
+      row I18n.t('label.sales_by'), :sales_person
+      row I18n.t('label.estimated_by'), :estimator
+      row I18n.t('label.engagement_by'), :engagement_manager
+      row I18n.t('label.delivery_by'), :delivery_manager
       row :pipeline
       row :comments
     end
@@ -128,7 +128,7 @@ ActiveAdmin.register Project do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Executive"])
+      c.send(:is_resource_authorized?, [I18n.t('role.manager')])
     end
 
     def scoped_collection
@@ -150,7 +150,7 @@ ActiveAdmin.register Project do
 
   form do |f|
     if f.object.pipeline_status_id.blank?
-      f.object.pipeline_status_id = PipelineStatus.where(name: 'New').first.id
+      f.object.pipeline_status_id = PipelineStatus.where(name: I18n.t('label.new')).first.id
     end
     f.inputs do
       f.input :business_unit
@@ -162,18 +162,18 @@ ActiveAdmin.register Project do
       f.input :booking_value
       f.input :project_type_code
       f.input :project_status
-      f.input :sales_person, label: 'Sales By', as: :select, collection:
+      f.input :sales_person, label: I18n.t('label.sales_by'), as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :estimator, label: 'Estimated By', as: :select, collection:
+      f.input :estimator, label: I18n.t('label.estimated_by'), as: :select, collection:
                             AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :engagement_manager, label: 'Engagement By', as: :select, collection:
+      f.input :engagement_manager, label: I18n.t('label.engagement_by'), as: :select, collection:
                                      AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :delivery_manager, label: 'Delivery By', as: :select, collection:
+      f.input :delivery_manager, label: I18n.t('label.delivery_by'), as: :select, collection:
                                    AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end

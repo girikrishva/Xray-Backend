@@ -1,5 +1,5 @@
 ActiveAdmin.register VacationPolicy do
-  menu if: proc { is_menu_authorized? ["Executive"] }, label: 'Vacation Policies', parent: 'Setup', priority: 20
+  menu if: proc { is_menu_authorized? [I18n.t('role.executive')] }, label: I18n.t('menu.vacation_policies'), parent: I18n.t('menu.setup'), priority: 20
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -21,11 +21,11 @@ ActiveAdmin.register VacationPolicy do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_vacation_policy_path
+    link_to I18n.t('label.new'), new_admin_vacation_policy_path
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_vacation_policies_path
+    link_to I18n.t('label.back'), admin_vacation_policies_path
   end
 
   index do
@@ -46,9 +46,9 @@ ActiveAdmin.register VacationPolicy do
   end
 
   filter :business_unit, collection:
-                           proc { Lookup.lookups_for_name('Business Units') }
+                           proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
   filter :vacation_code, collection:
-                           proc { Lookup.lookups_for_name('Vacation Codes') }
+                           proc { Lookup.lookups_for_name(I18n.t('models.vacation_codes')) }
   filter :description
   filter :as_on
   filter :paid
@@ -57,7 +57,7 @@ ActiveAdmin.register VacationPolicy do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Executive"])
+      c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
 
     def scoped_collection
@@ -93,7 +93,7 @@ ActiveAdmin.register VacationPolicy do
     f.inputs do
       if f.object.business_unit_id.blank?
         f.input :business_unit, as: :select, collection:
-                                  Lookup.lookups_for_name('Business Units')
+                                  Lookup.lookups_for_name(I18n.t('models.business_units'))
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :business_unit, input_html: {disabled: :true}
@@ -101,7 +101,7 @@ ActiveAdmin.register VacationPolicy do
       end
       if f.object.vacation_code_id.blank?
         f.input :vacation_code, as: :select, collection:
-                                  Lookup.lookups_for_name('Vacation Codes')
+                                  Lookup.lookups_for_name(I18n.t('models.vacation_codes'))
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :vacation_code, input_html: {disabled: :true}
@@ -114,7 +114,7 @@ ActiveAdmin.register VacationPolicy do
       f.input :comments
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end

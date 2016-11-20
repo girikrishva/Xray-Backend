@@ -1,5 +1,5 @@
-ActiveAdmin.register AdminUser, as: 'Profile' do
-  menu if: proc { is_menu_authorized? ["User"] }, label: 'Edit Profile', parent: 'Security', url: proc { '/admin/profiles/' + current_active_admin_user.id.to_s + '/edit' }, priority: 20
+ActiveAdmin.register AdminUser, as: I18n.t('menu.profile') do
+  menu if: proc { is_menu_authorized? [I18n.t('role.user')] }, label: I18n.t('menu.edit_profile'), parent: I18n.t('menu.security'), url: proc { '/admin/profiles/' + current_active_admin_user.id.to_s + '/edit' }, priority: 20
 
   config.clear_action_items!
 
@@ -7,7 +7,7 @@ ActiveAdmin.register AdminUser, as: 'Profile' do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["User"])
+      c.send(:is_resource_authorized?, [I18n.t('role.user')])
     end
 
     def update
@@ -18,7 +18,7 @@ ActiveAdmin.register AdminUser, as: 'Profile' do
   end
 
   form do |f|
-    f.inputs "Admin Details" do
+    f.inputs I18n.t('label.admin_details') do
       if !f.object.new_record?
         f.input :email, input_html: {readonly: true}
       else
@@ -28,7 +28,7 @@ ActiveAdmin.register AdminUser, as: 'Profile' do
       f.input :password_confirmation
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link(admin_dashboard_path)
     end
   end

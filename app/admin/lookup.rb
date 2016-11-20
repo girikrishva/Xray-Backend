@@ -20,15 +20,15 @@ ActiveAdmin.register Lookup do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_lookup_path(lookup_type_id: session[:lookup_type_id]) if session.has_key?(:lookup_type_id)
+    link_to I18n.t('label.new'), new_admin_lookup_path(lookup_type_id: session[:lookup_type_id]) if session.has_key?(:lookup_type_id)
   end
 
   action_item only: :index do |resource|
-    link_to "Back", admin_lookup_types_path(lookup_type_id: nil)
+    link_to I18n.t('label.back'), admin_lookup_types_path(lookup_type_id: nil)
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_lookups_path(lookup_type_id: session[:lookup_type_id]) if session.has_key?(:lookup_type_id)
+    link_to I18n.t('label.back'), admin_lookups_path(lookup_type_id: session[:lookup_type_id]) if session.has_key?(:lookup_type_id)
   end
 
   batch_action :destroy do |ids|
@@ -41,7 +41,7 @@ ActiveAdmin.register Lookup do
   index do
     selectable_column
     column :id
-    column 'Type', :lookup_type do |caller|
+    column I18n.t('label.type'), :lookup_type do |caller|
       caller.lookup_type.name
     end
     column :name
@@ -53,7 +53,7 @@ ActiveAdmin.register Lookup do
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Director"])
+      c.send(:is_resource_authorized?, [I18n.t('role.director')])
     end
 
     before_filter only: :index do |resource|
@@ -106,7 +106,7 @@ ActiveAdmin.register Lookup do
       end
     end
     f.inputs do
-      f.input :lookup_type, label: "Type", input_html: {disabled: :true}
+      f.input :lookup_type, label: I18n.t('label.type'), input_html: {disabled: :true}
       f.input :lookup_type_id, as: :hidden
       f.input :name
       f.input :description
@@ -114,7 +114,7 @@ ActiveAdmin.register Lookup do
       f.input :comments
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end

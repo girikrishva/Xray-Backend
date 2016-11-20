@@ -1,14 +1,14 @@
 ActiveAdmin.register AdminUser do
-  menu if: proc { is_menu_authorized? ["Administrator"] }, label: 'Define Users', parent: 'Security', priority: 10
+  menu if: proc { is_menu_authorized? [I18n.t('role.administrator')] }, label: I18n.t('menu.define_users'), parent: I18n.t('menu.security'), priority: 10
 
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to "New", new_admin_admin_user_path
+    link_to I18n.t('label.new'), new_admin_admin_user_path
   end
 
   action_item only: :show do |resource|
-    link_to "Back", admin_admin_users_path
+    link_to I18n.t('label.back'), admin_admin_users_path
   end
 
   batch_action :activate do |ids|
@@ -52,14 +52,14 @@ ActiveAdmin.register AdminUser do
       resource.designation.name
     end
     actions defaults: true, dropdown: true do |resource|
-      item "Change Qualifiers", edit_admin_admin_user_path(id: resource.id, suppress_password: true)
-      item "Audit Trail", admin_admin_users_audits_path(admin_user_id: resource.id)
+      item I18n.t('actions.change_qualifiers'), edit_admin_admin_user_path(id: resource.id, suppress_password: true)
+      item I18n.t('actions.audit_trail'), admin_admin_users_audits_path(admin_user_id: resource.id)
     end
   end
 
   controller do
     before_filter do |c|
-      c.send(:is_resource_authorized?, ["Administrator"])
+      c.send(:is_resource_authorized?, [I18n.t('role.administrator')])
     end
 
     def scoped_action
@@ -88,7 +88,7 @@ ActiveAdmin.register AdminUser do
   filter :designation
 
   form do |f|
-    f.inputs "Admin Details" do
+    f.inputs I18n.t('label.admin_details') do
       if !f.object.new_record?
         f.input :email, input_html: {readonly: true}
       else
@@ -115,7 +115,7 @@ ActiveAdmin.register AdminUser do
       end
     end
     f.actions do
-      f.action(:submit, label: 'Save')
+      f.action(:submit, label: I18n.t('label.save'))
       f.cancel_link
     end
   end
