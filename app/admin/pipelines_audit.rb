@@ -15,6 +15,13 @@ ActiveAdmin.register PipelinesAudit do
     link_to "Back", :back
   end
 
+  scope :sales_view, default: true do |pipelines|
+    PipelinesAudit.all
+  end
+  scope :delivery_view, default: false do |pipelines|
+    PipelinesAudit.all
+  end
+
   # index do
   index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
@@ -36,17 +43,21 @@ ActiveAdmin.register PipelinesAudit do
     column "Status", :pipeline_status, sortable: 'pipeline_statuses.name' do |resource|
       resource.pipeline_status.name
     end
-    column :sales_person, sortable: 'admin_users.name' do |resource|
-      resource.sales_person.name
+    if !params.has_key?('scope') || params[:scope] == 'sales_view'
+      column :sales_person, sortable: 'admin_users.name' do |resource|
+        resource.sales_person.name
+      end
+      column :estimator, sortable: 'admin_users.name' do |resource|
+        resource.estimator.name
+      end
     end
-    column :estimator, sortable: 'admin_users.name' do |resource|
-      resource.estimator.name
-    end
-    column :engagement_manager, sortable: 'admin_users.name' do |resource|
-      resource.engagement_manager.name rescue nil
-    end
-    column :delivery_manager, sortable: 'admin_users.name' do |resource|
-      resource.delivery_manager.name rescue nil
+    if params[:scope] == 'delivery_view'
+      column :engagement_manager, sortable: 'admin_users.name' do |resource|
+        resource.engagement_manager.name rescue nil
+      end
+      column :delivery_manager, sortable: 'admin_users.name' do |resource|
+        resource.delivery_manager.name rescue nil
+      end
     end
     column :comments
     column :created_at
@@ -67,13 +78,13 @@ ActiveAdmin.register PipelinesAudit do
                                proc { Lookup.lookups_for_name('Project Code Types') }
   filter :pipeline_status, label: 'Status'
   filter :sales_person, collection:
-                          proc { AdminUser.ordered_lookup }
+                          proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'sales_view' }
   filter :estimator, collection:
-                       proc { AdminUser.ordered_lookup }
+                       proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'sales_view' }
   filter :engagement_manager, collection:
-                                proc { AdminUser.ordered_lookup }
+                                proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'delivery_view' }
   filter :delivery_manager, collection:
-                              proc { AdminUser.ordered_lookup }
+                              proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'delivery_view' }
   filter :comments
 
   show do |r|

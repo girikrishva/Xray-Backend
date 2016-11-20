@@ -24,6 +24,14 @@ ActiveAdmin.register Project do
     link_to "Back", admin_projects_path
   end
 
+  scope :delivery_view, default: true do |pipelines|
+    Project.all
+  end
+
+  scope :sales_view, default: false do |pipelines|
+    Project.all
+  end
+
 # index do
   index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
@@ -48,18 +56,22 @@ ActiveAdmin.register Project do
     column :sales_person, sortable: 'admin_users.name' do |resource|
       resource.sales_person.name
     end
-    column :estimator, sortable: 'admin_users.name' do |resource|
-      resource.estimator.name
+    if params[:scope] == 'sales_view'
+      column :estimator, sortable: 'admin_users.name' do |resource|
+        resource.estimator.name
+      end
+      column :engagement_manager, sortable: 'admin_users.name' do |resource|
+        resource.engagement_manager.name rescue nil
+      end
     end
-    column :engagement_manager, sortable: 'admin_users.name' do |resource|
-      resource.engagement_manager.name rescue nil
-    end
-    column :delivery_manager, sortable: 'admin_users.name' do |resource|
-      resource.delivery_manager.name rescue nil
-    end
-    column :comments
-    actions defaults: true, dropdown: true do |resource|
-      # item "Audit Trail", admin_projects_audits_path(project_id: resource.id)
+    if !params.has_key?('scope') || params[:scope] == 'delivery_view'
+      column :delivery_manager, sortable: 'admin_users.name' do |resource|
+        resource.delivery_manager.name rescue nil
+      end
+      column :comments
+      actions defaults: true, dropdown: true do |resource|
+        # item "Audit Trail", admin_projects_audits_path(project_id: resource.id)
+      end
     end
   end
 
@@ -75,13 +87,13 @@ ActiveAdmin.register Project do
                                proc { Lookup.lookups_for_name('Project Code Types') }
   filter :project_status, label: 'Status'
   filter :sales_person, collection:
-                          proc { AdminUser.ordered_lookup }
+                          proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'sales_view' }
   filter :estimator, collection:
-                          proc { AdminUser.ordered_lookup }
+                       proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'sales_view' }
   filter :engagement_manager, collection:
-                          proc { AdminUser.ordered_lookup }
+                                proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
   filter :delivery_manager, collection:
-                       proc { AdminUser.ordered_lookup }
+                              proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
   filter :comments
 
   show do |r|
@@ -153,11 +165,11 @@ ActiveAdmin.register Project do
       f.input :sales_person, as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :estimator, as: :select, collection:
-                               AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
+                            AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :engagement_manager, as: :select, collection:
-                            AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
+                                     AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :delivery_manager, as: :select, collection:
-                            AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
+                                   AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
     end
     f.actions do
