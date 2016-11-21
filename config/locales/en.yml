@@ -22,6 +22,9 @@
 en:
   active_admin:
     powered_by: ""
+    blank_slate:
+      content:
+        Projects: ""
   role:
     administrator: "Administrator"
     executive: "Executive"
