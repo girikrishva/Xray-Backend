@@ -28,10 +28,6 @@ ActiveAdmin.register Project do
     Project.all
   end
 
-  action_item only: :index do |resource|
-    link_to I18n.t('label.new'), new_admin_project_path
-  end
-
   scope I18n.t('label.sales_view'), :sales_view, default: false do |pipelines|
     Project.all
   end
