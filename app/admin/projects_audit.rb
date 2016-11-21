@@ -1,5 +1,5 @@
 ActiveAdmin.register Project do
-  menu if: proc { is_menu_authorized? [I18n.t('role.manager')] }, label: I18n.t('menu.projects'), parent: I18n.t('menu.operations'), priority: 10
+  menu false
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -14,7 +14,7 @@ ActiveAdmin.register Project do
 #   permitted
 # end
 
-  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id
+  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id, :project_id
 
   config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
 
@@ -25,11 +25,11 @@ ActiveAdmin.register Project do
   end
 
   scope I18n.t('label.delivery_view'), :delivery_view, default: true do |pipelines|
-    Project.all
+    ProjectsAudit.all
   end
 
   scope I18n.t('label.sales_view'), :sales_view, default: false do |pipelines|
-    Project.all
+    ProjectsAudit.all
   end
 
 # index do
@@ -69,8 +69,9 @@ ActiveAdmin.register Project do
         resource.delivery_manager.name rescue nil
       end
       column :comments
-      actions defaults: true, dropdown: true do |resource|
-        # item "Audit Trail", admin_projects_audits_path(project_id: resource.id)
+      column :created_at
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.view'), admin_projects_audit_path(resource.id)
       end
     end
   end
@@ -131,8 +132,19 @@ ActiveAdmin.register Project do
       c.send(:is_resource_authorized?, [I18n.t('role.manager')])
     end
 
+    before_filter only: :index do |resource|
+      if !params.has_key?(:project_id)
+        redirect_to admin_projects_path
+      end
+      if params[:commit].blank? && params[:q].blank?
+        extra_params = {"q" => {"project_id_eq" => params[:project_id]}}
+        # make sure data is filtered and filters show correctly
+        params.merge! extra_params
+      end
+    end
+
     def scoped_collection
-      Project.includes [:business_unit, :client, :project_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager, :pipeline]
+      ProjectsAudit.includes [:business_unit, :client, :project_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager, :pipeline, :project]
     end
 
     def create
@@ -145,36 +157,6 @@ ActiveAdmin.register Project do
       super do |format|
         redirect_to collection_url and return if resource.valid?
       end
-    end
-  end
-
-  form do |f|
-    if f.object.project_status_id.blank?
-      f.object.project_status_id = ProjectStatus.where(name: I18n.t('label.new')).first.id
-    end
-    f.inputs do
-      f.input :business_unit, required: true
-      f.input :client, required: true, as: :select, collection:
-                         Client.all.order('name asc').map { |a| [a.name, a.id] }, include_blank: true
-      f.input :name
-      f.input :start_date, required: true, label: I18n.t('label.start'), as: :datepicker
-      f.input :end_date, required: true, label: I18n.t('label.end'), as: :datepicker
-      f.input :booking_value, required: true, label: I18n.t('label.value')
-      f.input :project_type_code, required: true
-      f.input :project_status, required: true
-      f.input :sales_person, required: true, label: I18n.t('label.sales_by'), as: :select, collection:
-                               AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :estimator, required: true, label: I18n.t('label.estimated_by'), as: :select, collection:
-                            AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :engagement_manager, required: true, label: I18n.t('label.engagement_by'), as: :select, collection:
-                                     AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :delivery_manager, required: true, label: I18n.t('label.delivery_by'), as: :select, collection:
-                                   AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :comments
-    end
-    f.actions do
-      f.action(:submit, label: I18n.t('label.save'))
-      f.cancel_link
     end
   end
 end
