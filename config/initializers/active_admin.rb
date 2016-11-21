@@ -226,10 +226,10 @@ ActiveAdmin.setup do |config|
   #   end
   config.namespace :admin do |admin|
     admin.build_menu :default do |menu|
-      menu.add label: "Operations", :priority => 70
-      menu.add label: "Masters", :priority => 80
-      menu.add label: "Setup", :priority => 90
-      menu.add label: "Security", :priority => 100
+      menu.add label: I18n.t('menu.operations'), :priority => 70
+      menu.add label: I18n.t('menu.masters'), :priority => 80
+      menu.add label: I18n.t('menu.setup'), :priority => 90
+      menu.add label: I18n.t('menu.security'), :priority => 100
     end
   end
 
