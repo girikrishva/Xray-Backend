@@ -1,4 +1,4 @@
-ActiveAdmin.register Project do
+ActiveAdmin.register ProjectsAudit do
   menu false
 
 # See permitted parameters documentation:

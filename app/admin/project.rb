@@ -70,7 +70,7 @@ ActiveAdmin.register Project do
       end
       column :comments
       actions defaults: true, dropdown: true do |resource|
-        # item "Audit Trail", admin_projects_audits_path(project_id: resource.id)
+        item "Audit Trail", admin_projects_audits_path(project_id: resource.id)
       end
     end
   end
