@@ -28,6 +28,10 @@ ActiveAdmin.register Project do
     Project.all
   end
 
+  action_item only: :index do |resource|
+    link_to I18n.t('label.new'), new_admin_project_path
+  end
+
   scope I18n.t('label.sales_view'), :sales_view, default: false do |pipelines|
     Project.all
   end
@@ -157,9 +161,9 @@ ActiveAdmin.register Project do
       f.input :client, required: true, as: :select, collection:
                          Client.all.order('name asc').map { |a| [a.name, a.id] }, include_blank: true
       # f.input :name
-      f.input :start_date, as: :datepicker
-      f.input :end_date, as: :datepicker
-      f.input :booking_value
+      f.input :start_date, required: true, label: I18n.t('label.start'), as: :datepicker
+      f.input :end_date, required: true, label: I18n.t('label.end'), as: :datepicker
+      f.input :booking_value, required: true, label: I18n.t('label.value')
       f.input :project_type_code, required: true
       f.input :project_status, required: true
       f.input :sales_person, required: true, label: I18n.t('label.sales_by'), as: :select, collection:
