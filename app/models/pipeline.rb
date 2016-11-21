@@ -49,12 +49,30 @@ class Pipeline < ActiveRecord::Base
     audit_record.save
   end
 
-  def convert_pipeline
+  def convert_pipeline(pipeline)
     if self.engagement_manager.blank?
       raise I18n.t('errors.convert_pipeline_engagement_manager_missing')
     end
     if self.delivery_manager.blank?
       raise I18n.t('errors.convert_pipeline_delivery_manager_missing')
     end
+    project = Project.new
+    project.name = pipeline.name
+    project.start_date = pipeline.expected_start
+    project.end_date = pipeline.expected_end
+    project.booking_value = pipeline.expected_value
+    project.comments = pipeline.comments
+    project.client_id = pipeline.client_id
+    project.project_type_code_id = pipeline.project_type_code_id
+    project.project_status_id = ProjectStatus.where(name: I18n.t('label.new')).first.id
+    project.business_unit_id = pipeline.business_unit_id
+    project.estimator_id = pipeline.estimator_id
+    project.engagement_manager_id = pipeline.engagement_manager_id
+    project.delivery_manager_id = pipeline.delivery_manager_id
+    project.pipeline_id = pipeline.id
+    project.sales_person_id = pipeline.sales_person_id
+    project.save
+    pipeline.pipeline_status_id = PipelineStatus.where(name: I18n.t('label.delivery')).first.id
+    pipeline.save
   end
 end

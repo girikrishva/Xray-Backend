@@ -153,7 +153,7 @@ ActiveAdmin.register Pipeline do
     def convert_pipeline
       if params.has_key?(:pipeline_id)
         pipeline = Pipeline.find(params[:pipeline_id])
-        pipeline.convert_pipeline
+        pipeline.convert_pipeline(pipeline)
         redirect_to collection_url
       end
     end

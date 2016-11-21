@@ -12,14 +12,15 @@ class Project < ActiveRecord::Base
   has_many :projects_audits, class_name: 'ProjectAudit'
 
 
+  validates :name, presence: true
   validates :client_id, presence: true
   validates :project_type_code_id, presence: true
   validates :project_status_id, presence: true
   validates :business_unit_id, presence: true
   validates :name, presence: true
-  validates :expected_start, presence: true
-  validates :expected_end, presence: true
-  validates :expected_value, presence: true
+  validates :start_date, presence: true
+  validates :end_date, presence: true
+  validates :booking_value, presence: true
   validates :sales_person_id, presence: true
   validates :estimator_id, presence: true
   validates :engagement_manager_id, presence: true
@@ -28,32 +29,33 @@ class Project < ActiveRecord::Base
   validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :client_id]
   validates_uniqueness_of :client_id, scope: [:business_unit_id, :client_id]
 
-  after_create :create_audit_record
-  after_update :create_audit_record
+  # after_create :create_audit_record
+  # after_update :create_audit_record
 
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name
   end
 
-  def create_audit_record
-    audit_record = ProjectsAudit.new
-    audit_record.description = self.description_for_lookup
-    audit_record.start_date = self.start_date
-    audit_record.end_date = self.end_date
-    audit_record.booking_value = self.booking_value
-    audit_record.comments = self.comments
-    audit_record.created_at = self.created_at
-    audit_record.updated_at = self.updated_at
-    audit_record.client_id = self.client_id
-    audit_record.project_type_code_id = self.project_type_code_id
-    audit_record.project_status = self.project_status_id
-    audit_record.business_unit_id = self.business_unit_id
-    audit_record.estimator_id = self.estimator_id
-    audit_record.engagement_manager_id = self.engagement_manager_id
-    audit_record.delivery_manager_id = self.delivery_manager_id
-    audit_record.pipeline_id = self.pipeline_id
-    audit_record.sales_person_id = self.sales_person_id
-    audit_record.project_id = self.project_id
-    audit_record.save
-  end
+  # def create_audit_record
+  #   audit_record = ProjectsAudit.new
+  #   audit_record.name = self.name
+  #   audit_record.description = self.description_for_lookup
+  #   audit_record.start_date = self.start_date
+  #   audit_record.end_date = self.end_date
+  #   audit_record.booking_value = self.booking_value
+  #   audit_record.comments = self.comments
+  #   audit_record.created_at = self.created_at
+  #   audit_record.updated_at = self.updated_at
+  #   audit_record.client_id = self.client_id
+  #   audit_record.project_type_code_id = self.project_type_code_id
+  #   audit_record.project_status = self.project_status_id
+  #   audit_record.business_unit_id = self.business_unit_id
+  #   audit_record.estimator_id = self.estimator_id
+  #   audit_record.engagement_manager_id = self.engagement_manager_id
+  #   audit_record.delivery_manager_id = self.delivery_manager_id
+  #   audit_record.pipeline_id = self.pipeline_id
+  #   audit_record.sales_person_id = self.sales_person_id
+  #   audit_record.project_id = self.project_id
+  #   audit_record.save
+  # end
 end

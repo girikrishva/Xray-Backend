@@ -73,6 +73,7 @@ en:
     latest: "Latest"
     yes: "yes"
     no: "no"
+    delivery: "Delivery"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"

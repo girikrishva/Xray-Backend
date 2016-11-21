@@ -53,18 +53,18 @@ ActiveAdmin.register Project do
     column I18n.t('label.status'), :project_status, sortable: 'project_statuses.name' do |resource|
       resource.project_status.name
     end
-    column I18n.t('label.sales_by'), :sales_person, sortable: 'admin_users.name' do |resource|
-      resource.sales_person.name
-    end
     if params[:scope] == 'sales_view'
+      column I18n.t('label.sales_by'), :sales_person, sortable: 'admin_users.name' do |resource|
+        resource.sales_person.name
+      end
       column I18n.t('label.estimated_by'), :estimator, sortable: 'admin_users.name' do |resource|
         resource.estimator.name
       end
+    end
+    if !params.has_key?('scope') || params[:scope] == 'delivery_view'
       column I18n.t('label.engagement_by'), :engagement_manager, sortable: 'admin_users.name' do |resource|
         resource.engagement_manager.name rescue nil
       end
-    end
-    if !params.has_key?('scope') || params[:scope] == 'delivery_view'
       column I18n.t('label.delivery_by'), :delivery_manager, sortable: 'admin_users.name' do |resource|
         resource.delivery_manager.name rescue nil
       end
