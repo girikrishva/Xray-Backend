@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161119123829) do
+ActiveRecord::Schema.define(version: 20161121040148) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -292,6 +292,26 @@ SELECT lookups.id,
     t.integer  "delivery_manager_id",   :null=>false, :index=>{:name=>"index_projects_on_delivery_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_delivery_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "pipeline_id",           :null=>false, :index=>{:name=>"index_projects_on_pipeline_id"}, :foreign_key=>{:references=>"pipelines", :name=>"fk_projects_pipeline_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "sales_person_id",       :null=>false, :index=>{:name=>"index_projects_on_sales_person_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
+
+  create_table "projects_audits", force: :cascade do |t|
+    t.string   "description"
+    t.date     "start_date",            :null=>false
+    t.date     "end_date",              :null=>false
+    t.float    "booking_value",         :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "client_id",             :null=>false, :index=>{:name=>"index_projects_audits_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_projects_audits_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "project_type_code_id",  :null=>false, :index=>{:name=>"index_projects_audits_on_project_type_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_projects_audits_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "project_status_id",     :null=>false, :index=>{:name=>"index_projects_audits_on_project_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_projects_audits_project_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "business_unit_id",      :null=>false, :index=>{:name=>"index_projects_audits_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_projects_audits_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "estimator_id",          :null=>false, :index=>{:name=>"index_projects_audits_on_estimator_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_audits_estimator_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "engagement_manager_id", :null=>false, :index=>{:name=>"index_projects_audits_on_engagement_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_audits_engagement_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "delivery_manager_id",   :null=>false, :index=>{:name=>"index_projects_audits_on_delivery_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_audits_delivery_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "pipeline_id",           :null=>false, :index=>{:name=>"index_projects_audits_on_pipeline_id"}, :foreign_key=>{:references=>"pipelines", :name=>"fk_projects_audits_pipeline_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "sales_person_id",       :null=>false, :index=>{:name=>"index_projects_audits_on_sales_person_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_projects_audits_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "project_id",            :null=>false, :index=>{:name=>"index_projects_audits_on_project_id"}, :foreign_key=>{:references=>"projects", :name=>"fk_projects_audits_project_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_table "resources", force: :cascade do |t|
