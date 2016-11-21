@@ -106,7 +106,7 @@ ActiveAdmin.register Lookup do
       end
     end
     f.inputs do
-      f.input :lookup_type, label: I18n.t('label.type') + '*', input_html: {disabled: :true}
+      f.input :lookup_type, required: true, label: I18n.t('label.type') + '*', input_html: {disabled: :true}
       f.input :lookup_type_id, as: :hidden
       f.input :name
       f.input :description

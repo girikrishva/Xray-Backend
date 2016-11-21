@@ -119,19 +119,19 @@ ActiveAdmin.register Resource do
     end
     f.inputs do
       if f.object.skill_id.blank?
-        f.input :skill, as: :select, collection:
+        f.input :skill, required: true, as: :select, collection:
                           Lookup.lookups_for_name(I18n.t('models.skills'))
                               .map { |a| [a.name, a.id] }, include_blank: true
       else
-        f.input :skill, input_html: {disabled: :true}
+        f.input :skill, required: true, input_html: {disabled: :true}
         f.input :skill_id, as: :hidden
       end
       if f.object.admin_user_id.blank?
-        f.input :admin_user, label: I18n.t('label.user') + '*', as: :select, collection:
+        f.input :admin_user, required: true, label: I18n.t('label.user') + '*', as: :select, collection:
                                AdminUser.all
                                    .map { |a| [a.name, a.id] }, include_blank: true
       else
-        f.input :admin_user, label: I18n.t('label.user') + '*', input_html: {disabled: :true}
+        f.input :admin_user, required: true, label: I18n.t('label.user') + '*', input_html: {disabled: :true}
         f.input :admin_user_id, as: :hidden
       end
       if !f.object.new_record?

@@ -149,26 +149,26 @@ ActiveAdmin.register Project do
   end
 
   form do |f|
-    if f.object.pipeline_status_id.blank?
-      f.object.pipeline_status_id = PipelineStatus.where(name: I18n.t('label.new')).first.id
+    if f.object.project_status_id.blank?
+      f.object.project_status_id = ProjectStatus.where(name: I18n.t('label.new')).first.id
     end
     f.inputs do
-      f.input :business_unit
-      f.input :client, as: :select, collection:
+      f.input :business_unit, required: true
+      f.input :client, required: true, as: :select, collection:
                          Client.all.order('name asc').map { |a| [a.name, a.id] }, include_blank: true
-      f.input :name
+      # f.input :name
       f.input :start_date, as: :datepicker
       f.input :end_date, as: :datepicker
       f.input :booking_value
-      f.input :project_type_code
-      f.input :project_status
-      f.input :sales_person, label: I18n.t('label.sales_by') + '*', as: :select, collection:
+      f.input :project_type_code, required: true
+      f.input :project_status, required: true
+      f.input :sales_person, required: true, label: I18n.t('label.sales_by'), as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :estimator, label: I18n.t('label.estimated_by') + '*', as: :select, collection:
+      f.input :estimator, required: true, label: I18n.t('label.estimated_by'), as: :select, collection:
                             AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :engagement_manager, label: I18n.t('label.engagement_by') + '*', as: :select, collection:
+      f.input :engagement_manager, required: true, label: I18n.t('label.engagement_by'), as: :select, collection:
                                      AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :delivery_manager, label: I18n.t('label.delivery_by') + '*', as: :select, collection:
+      f.input :delivery_manager, required: true, label: I18n.t('label.delivery_by'), as: :select, collection:
                                    AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
     end

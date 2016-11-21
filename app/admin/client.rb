@@ -90,11 +90,11 @@ ActiveAdmin.register Client do
   form do |f|
     f.inputs do
       if f.object.business_unit_id.blank?
-        f.input :business_unit, as: :select, collection:
+        f.input :business_unit, required: true, as: :select, collection:
                                   Lookup.lookups_for_name(I18n.t('models.business_units'))
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
-        f.input :business_unit, input_html: {disabled: :true}
+        f.input :business_unit, required: true, input_html: {disabled: :true}
         f.input :business_unit_id, as: :hidden
       end
       if !f.object.new_record?

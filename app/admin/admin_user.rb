@@ -95,22 +95,22 @@ ActiveAdmin.register AdminUser do
         f.input :email
       end
       if params.has_key?(:suppress_password) and params[:suppress_password]
-        f.input :name
-        f.input :active
-        f.input :role
-        f.input :business_unit
-        f.input :department
-        f.input :designation
+        f.input :name, required: true
+        f.input :active, required: true
+        f.input :role, required: true
+        f.input :business_unit, required: true
+        f.input :department, required: true
+        f.input :designation, required: true
       else
         f.input :password
         f.input :password_confirmation
         if f.object.new_record?
-          f.input :name
+          f.input :name, required: true
           f.input :active
-          f.input :role
-          f.input :business_unit
-          f.input :department
-          f.input :designation
+          f.input :role, required: true
+          f.input :business_unit, required: true
+          f.input :department, required: true
+          f.input :designation, required: true
         end
       end
     end

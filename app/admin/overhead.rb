@@ -111,27 +111,27 @@ ActiveAdmin.register Overhead do
     end
     f.inputs do
       if f.object.business_unit_id.blank?
-        f.input :business_unit, as: :select, collection:
+        f.input :business_unit, required: true, as: :select, collection:
                                   Lookup.lookups_for_name(I18n.t('models.business_units'))
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
-        f.input :business_unit, input_html: {disabled: :true}
+        f.input :business_unit, required: true, input_html: {disabled: :true}
         f.input :business_unit_id, as: :hidden
       end
       if f.object.department_id.blank?
-        f.input :department, as: :select, collection:
+        f.input :department, required: true, as: :select, collection:
                                Lookup.lookups_for_name(I18n.t('models.departments'))
                                    .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :department, input_html: {disabled: :true}
-        f.input :department_id, as: :hidden
+        f.input :department_id, required: true, as: :hidden
       end
       if f.object.cost_adder_type_id.blank?
-        f.input :cost_adder_type, as: :select, collection:
+        f.input :cost_adder_type, required: true, as: :select, collection:
                                     Lookup.lookups_for_name(I18n.t('models.cost_adder_types'))
                                         .map { |a| [a.name, a.id] }, include_blank: true
       else
-        f.input :cost_adder_type, input_html: {disabled: :true}
+        f.input :cost_adder_type, required: true, input_html: {disabled: :true}
         f.input :cost_adder_type_id, as: :hidden
       end
       if !f.object.new_record?
