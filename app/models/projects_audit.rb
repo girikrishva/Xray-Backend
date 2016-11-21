@@ -16,9 +16,9 @@ class ProjectsAudit < ActiveRecord::Base
   validates :project_status_id, presence: true
   validates :business_unit_id, presence: true
   validates :name, presence: true
-  validates :expected_start, presence: true
-  validates :expected_end, presence: true
-  validates :expected_value, presence: true
+  validates :start_date, presence: true
+  validates :end_date, presence: true
+  validates :booking_value, presence: true
   validates :sales_person_id, presence: true
   validates :estimator_id, presence: true
   validates :engagement_manager_id, presence: true
