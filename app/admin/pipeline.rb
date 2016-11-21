@@ -164,9 +164,9 @@ ActiveAdmin.register Pipeline do
       f.input :expected_value
       f.input :project_type_code
       f.input :pipeline_status
-      f.input :sales_person, label: I18n.t('label.sales_by'), as: :select, collection:
+      f.input :sales_person, label: I18n.t('label.sales_by') + '*', as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :estimator, label: I18n.t('label.estimated_by'), as: :select, collection:
+      f.input :estimator, label: I18n.t('label.estimated_by') + '*', as: :select, collection:
                             AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :engagement_manager, label: I18n.t('label.engagement_by'), as: :select, collection:
                                      AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true

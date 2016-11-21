@@ -162,13 +162,13 @@ ActiveAdmin.register Project do
       f.input :booking_value
       f.input :project_type_code
       f.input :project_status
-      f.input :sales_person, label: I18n.t('label.sales_by'), as: :select, collection:
+      f.input :sales_person, label: I18n.t('label.sales_by') + '*', as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :estimator, label: I18n.t('label.estimated_by'), as: :select, collection:
+      f.input :estimator, label: I18n.t('label.estimated_by') + '*', as: :select, collection:
                             AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :engagement_manager, label: I18n.t('label.engagement_by'), as: :select, collection:
+      f.input :engagement_manager, label: I18n.t('label.engagement_by') + '*', as: :select, collection:
                                      AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
-      f.input :delivery_manager, label: I18n.t('label.delivery_by'), as: :select, collection:
+      f.input :delivery_manager, label: I18n.t('label.delivery_by') + '*', as: :select, collection:
                                    AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
     end

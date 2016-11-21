@@ -127,11 +127,11 @@ ActiveAdmin.register Resource do
         f.input :skill_id, as: :hidden
       end
       if f.object.admin_user_id.blank?
-        f.input :admin_user, label: I18n.t('label.user'), as: :select, collection:
+        f.input :admin_user, label: I18n.t('label.user') + '*', as: :select, collection:
                                AdminUser.all
                                    .map { |a| [a.name, a.id] }, include_blank: true
       else
-        f.input :admin_user, label: I18n.t('label.user'), input_html: {disabled: :true}
+        f.input :admin_user, label: I18n.t('label.user') + '*', input_html: {disabled: :true}
         f.input :admin_user_id, as: :hidden
       end
       if !f.object.new_record?
