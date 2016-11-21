@@ -75,6 +75,7 @@ ActiveAdmin.register Pipeline do
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.audit_trail'), admin_pipelines_audits_path(pipeline_id: resource.id)
+      item I18n.t('actions.convert_pipeline'), admin_api_convert_pipeline_path(pipeline_id: resource.id), method: :post
     end
   end
 
@@ -146,6 +147,14 @@ ActiveAdmin.register Pipeline do
     def update
       super do |format|
         redirect_to collection_url and return if resource.valid?
+      end
+    end
+
+    def convert_pipeline
+      if params.has_key?(:pipeline_id)
+        pipeline = Pipeline.find(params[:pipeline_id])
+        pipeline.convert_pipeline
+        redirect_to collection_url
       end
     end
   end

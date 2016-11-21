@@ -48,4 +48,13 @@ class Pipeline < ActiveRecord::Base
     audit_record.estimator_id = self.estimator_id
     audit_record.save
   end
+
+  def convert_pipeline
+    if self.engagement_manager.blank?
+      raise I18n.t('errors.convert_pipeline_engagement_manager_missing')
+    end
+    if self.delivery_manager.blank?
+      raise I18n.t('errors.convert_pipeline_delivery_manager_missing')
+    end
+  end
 end

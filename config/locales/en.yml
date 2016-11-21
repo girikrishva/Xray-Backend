@@ -78,6 +78,7 @@ en:
     audit_trail: "Audit Trail"
     lookups: "Lookups"
     view: "View"
+    convert_pipeline: "Convert Pipeline"
   models:
     business_units: "Business Units"
     departments: "Departments"
@@ -85,3 +86,6 @@ en:
     project_code_types: "Project Code Types"
     skills: "Skills"
     vacation_codes: "Vacation Codes"
+  errors:
+    convert_pipeline_engagement_manager_missing: "Engagement manager must be defined before conversion."
+    convert_pipeline_delivery_manager_missing: "Delivery manager must be defined before conversion."

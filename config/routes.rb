@@ -58,4 +58,5 @@ Rails.application.routes.draw do
 
   match '/admin/api/project_type_description' => 'admin/project_types#description_for_lookup', via: [:get]
   match '/admin/api/vacation_policy_description' => 'admin/vacation_policies#description_for_lookup', via: [:get]
+  match '/admin/api/convert_pipeline', to: 'admin/pipelines#convert_pipeline', via: [:post]
 end
