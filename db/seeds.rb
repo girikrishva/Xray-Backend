@@ -304,7 +304,8 @@ Role.create!([
 StaffingRequirement.create!([
   {start_date: "2016-11-22", end_date: "2016-11-30", number_required: 3, hours_per_day: 8.0, fulfilled: nil, pipeline_id: 9, skill_id: 87, designation_id: 133, comments: ""},
   {start_date: "2016-11-22", end_date: "2016-11-25", number_required: 1, hours_per_day: 8.0, fulfilled: nil, pipeline_id: 9, skill_id: 86, designation_id: 133, comments: ""},
-  {start_date: "2016-11-10", end_date: "2016-11-16", number_required: 2, hours_per_day: 8.0, fulfilled: nil, pipeline_id: 9, skill_id: 87, designation_id: 133, comments: ""}
+  {start_date: "2016-11-10", end_date: "2016-11-16", number_required: 2, hours_per_day: 8.0, fulfilled: nil, pipeline_id: 9, skill_id: 87, designation_id: 133, comments: ""},
+  {start_date: "2016-11-22", end_date: "2016-11-22", number_required: 1, hours_per_day: 8.0, fulfilled: nil, pipeline_id: 9, skill_id: 87, designation_id: 133, comments: ""}
 ])
 VacationPolicy.create!([
   {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 15.0, comments: "", business_unit_id: 1, vacation_code_id: 71},
