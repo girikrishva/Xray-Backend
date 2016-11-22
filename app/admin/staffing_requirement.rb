@@ -29,19 +29,16 @@ ActiveAdmin.register StaffingRequirement do
     link_to I18n.t('label.back'), admin_staffing_requirements_path(pipeline_id: nil)
   end
 
-  action_item only: :show do |resource|
+  action_item only: [:show, :edit, :new] do |resource|
     link_to I18n.t('label.back'), admin_staffing_requirements_path(pipeline_id: session[:pipeline_id]) if session.has_key?(:pipeline_id)
   end
 
-  index do
-  # index as: :grouped_table, group_by_attribute: :skill_name do
+  # index do
+  index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
     column :id
     column :pipeline, sortable: 'pipelines.name' do |resource|
       resource.pipeline.name
-    end
-    column :skill, sortable: 'skills.name' do |resource|
-      resource.skill.name
     end
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
@@ -50,17 +47,18 @@ ActiveAdmin.register StaffingRequirement do
     column :hours_per_day
     column :start_date
     column :end_date
+    column :fulfilled
     column :comments
     actions defaults: true, dropdown: true
   end
 
-  filter :pipeline
   filter :skill
   filter :designation
   filter :number_required
   filter :hours_per_day
   filter :start_date
   filter :end_date
+  filter :fulfilled
   filter :comments
 
   show do |r|
@@ -75,6 +73,7 @@ ActiveAdmin.register StaffingRequirement do
       row :hours_per_day
       row :start_date
       row :end_date
+      row :fulfilled
       row :comments
     end
   end
@@ -154,7 +153,6 @@ ActiveAdmin.register StaffingRequirement do
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))
-      f.cancel_link
     end
   end
 end

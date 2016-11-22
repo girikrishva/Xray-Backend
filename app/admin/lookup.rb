@@ -27,7 +27,7 @@ ActiveAdmin.register Lookup do
     link_to I18n.t('label.back'), admin_lookup_types_path(lookup_type_id: nil)
   end
 
-  action_item only: :show do |resource|
+  action_item only: [:show, :edit, :new] do |resource|
     link_to I18n.t('label.back'), admin_lookups_path(lookup_type_id: session[:lookup_type_id]) if session.has_key?(:lookup_type_id)
   end
 
@@ -115,7 +115,6 @@ ActiveAdmin.register Lookup do
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))
-      f.cancel_link
     end
   end
 end

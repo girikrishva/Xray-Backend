@@ -10,4 +10,8 @@ class StaffingRequirement < ActiveRecord::Base
   validates :pipeline_id, presence: true
   validates :skill_id, presence: true
   validates :designation_id, presence: true
+
+  def skill_name
+    Skill.find(self.skill_id).name
+  end
 end
