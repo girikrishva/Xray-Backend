@@ -21,7 +21,7 @@ ActiveAdmin.register ProjectsAudit do
   config.clear_action_items!
 
   action_item only: :show do |resource|
-    link_to I18n.t('label.back'), admin_projects_path
+    link_to I18n.t('label.back'), :back
   end
 
   scope I18n.t('label.delivery_view'), :delivery_view, default: true do |pipelines|
