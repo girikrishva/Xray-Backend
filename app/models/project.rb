@@ -26,6 +26,9 @@ class Project < ActiveRecord::Base
   validates :engagement_manager_id, presence: true
   validates :delivery_manager_id, presence: true
 
+  before_create :date_check
+  before_update :date_check
+
   validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :client_id]
   validates_uniqueness_of :client_id, scope: [:business_unit_id, :client_id]
 
@@ -57,5 +60,11 @@ class Project < ActiveRecord::Base
     audit_record.sales_person_id = self.sales_person_id
     audit_record.project_id = self.id
     audit_record.save
+  end
+
+  def date_check
+    if self.start_date > self.end_date
+      raise I18n.t('errors.date_check')
+    end
   end
 end

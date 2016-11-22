@@ -26,6 +26,9 @@ class Pipeline < ActiveRecord::Base
   validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :client_id]
   validates_uniqueness_of :client_id, scope: [:business_unit_id, :client_id]
 
+  before_create :date_check
+  before_update :date_check
+
   after_create :create_audit_record
   after_update :create_audit_record
 
@@ -75,5 +78,11 @@ class Pipeline < ActiveRecord::Base
     project.save
     pipeline.pipeline_status_id = PipelineStatus.where(name: I18n.t('label.delivery')).first.id
     pipeline.save
+  end
+
+  def date_check
+    if self.expected_start > self.expected_end
+      raise I18n.t('errors.date_check')
+    end
   end
 end

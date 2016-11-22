@@ -17,7 +17,7 @@ ActiveAdmin.register StaffingRequirement do
 
   permit_params :start_date, :end_date, :number_required, :hours_per_day, :fulfilled, :created_at, :updated_at, :pipeline_id, :skill_id, :designation_id, :comments
 
-  # config.sort_order = 'admin_users.name_asc_and_skills.name_asc_and_as_on_desc'
+  config.sort_order = 'skills.name_asc_and_start_date_asc_and_end_date_asc'
 
   config.clear_action_items!
 
@@ -33,7 +33,7 @@ ActiveAdmin.register StaffingRequirement do
     link_to I18n.t('label.back'), admin_staffing_requirements_path(pipeline_id: session[:pipeline_id]) if session.has_key?(:pipeline_id)
   end
 
-  # index do
+# index do
   index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
     column :id
@@ -115,6 +115,12 @@ ActiveAdmin.register StaffingRequirement do
 
   form do |f|
     f.object.pipeline_id = session[:pipeline_id]
+    if f.object.new_record?
+      f.object.number_required = 1
+      f.object.hours_per_day = 8
+      f.object.start_date = Date.today
+      f.object.end_date = Date.today
+    end
     f.inputs do
       f.input :pipeline, required: true, input_html: {disabled: :true}
       f.input :pipeline_id, as: :hidden
@@ -128,14 +134,19 @@ ActiveAdmin.register StaffingRequirement do
       end
       if f.object.designation_id.blank?
         f.input :designation, required: true, as: :select, collection:
-                          Lookup.lookups_for_name(I18n.t('models.designations'))
-                              .map { |a| [a.name, a.id] }, include_blank: true
+                                Lookup.lookups_for_name(I18n.t('models.designations'))
+                                    .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :designation, required: true, input_html: {disabled: :true}
         f.input :designation_id, as: :hidden
       end
-      f.input :number_required
-      f.input :hours_per_day
+      if f.object.new_record?
+        f.input :number_required
+        f.input :hours_per_day
+      else
+        f.input :number_required, required: true, input_html: {readonly: :true}
+        f.input :hours_per_day, required: true, input_html: {readonly: :true}
+      end
       if !f.object.new_record?
         f.input :start_date, label: I18n.t('label.start'), as: :datepicker, input_html: {disabled: :true}
         f.input :start_date, as: :hidden
