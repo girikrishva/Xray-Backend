@@ -51,6 +51,7 @@ en:
     resources: "Resources"
     define_roles: "Define Roles"
     vacation_policies: "Vacation Policies"
+    staffing_requirements: "Staffing Requirements"
   label:
     new: "New"
     back: "Back"
@@ -80,6 +81,7 @@ en:
     lookups: "Lookups"
     view: "View"
     convert_pipeline: "Convert Pipeline"
+    staffing_requirements: "Staffing Requirements"
   models:
     business_units: "Business Units"
     departments: "Departments"
@@ -87,6 +89,7 @@ en:
     project_code_types: "Project Code Types"
     skills: "Skills"
     vacation_codes: "Vacation Codes"
+    designations: "Designations"
   errors:
     convert_pipeline_engagement_manager_missing: "Engagement manager must be defined before conversion."
     convert_pipeline_delivery_manager_missing: "Delivery manager must be defined before conversion."

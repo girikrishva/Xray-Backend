@@ -10,6 +10,7 @@ class Pipeline < ActiveRecord::Base
 
   has_many :pipelines_audits, class_name: 'PipelinesAudit'
   has_many :projects, class_name: 'Project'
+  has_many :staffing_requirements, class_name: 'StaffingRequirement'
 
   validates :business_unit_id, presence: true
   validates :client_id, presence: true

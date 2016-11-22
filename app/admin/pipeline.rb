@@ -75,6 +75,7 @@ ActiveAdmin.register Pipeline do
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.audit_trail'), admin_pipelines_audits_path(pipeline_id: resource.id)
+      item I18n.t('actions.staffing_requirements'), admin_staffing_requirements_path(pipeline_id: resource.id)
       item I18n.t('actions.convert_pipeline'), admin_api_convert_pipeline_path(pipeline_id: resource.id), method: :post
     end
   end
