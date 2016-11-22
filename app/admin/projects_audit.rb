@@ -20,6 +20,10 @@ ActiveAdmin.register ProjectsAudit do
 
   config.clear_action_items!
 
+  action_item only: :index do |resource|
+    link_to I18n.t('label.back'), admin_projects_path
+  end
+
   action_item only: :show do |resource|
     link_to I18n.t('label.back'), :back
   end

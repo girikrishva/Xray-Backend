@@ -24,7 +24,7 @@ ActiveAdmin.register Pipeline do
     link_to I18n.t('label.new'), new_admin_pipeline_path
   end
 
-  action_item only: :show do |resource|
+  action_item only:  [:show, :edit, :new] do |resource|
     link_to I18n.t('label.back'), admin_pipelines_path
   end
 
@@ -186,7 +186,6 @@ ActiveAdmin.register Pipeline do
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))
-      f.cancel_link
     end
   end
 end
