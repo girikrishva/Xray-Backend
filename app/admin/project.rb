@@ -71,6 +71,7 @@ ActiveAdmin.register Project do
       column :comments
       actions defaults: true, dropdown: true do |resource|
         item "Audit Trail", admin_projects_audits_path(project_id: resource.id)
+        item I18n.t('actions.staffing_requirements'), admin_project_staffing_requirements_path(pipeline_id: resource.pipeline_id)
       end
     end
   end
