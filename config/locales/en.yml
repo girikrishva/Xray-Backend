@@ -52,6 +52,7 @@ en:
     define_roles: "Define Roles"
     vacation_policies: "Vacation Policies"
     staffing_requirements: "Staffing Requirements"
+    assigned_resources: "Assigned Resources"
   label:
     new: "New"
     back: "Back"
@@ -75,6 +76,7 @@ en:
     yes: "yes"
     no: "no"
     delivery: "Delivery"
+    as_on: "As On"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"
@@ -82,6 +84,7 @@ en:
     view: "View"
     convert_pipeline: "Convert Pipeline"
     staffing_requirements: "Staffing Requirements"
+    assigned_resources: "Assigned Resources"
   models:
     business_units: "Business Units"
     departments: "Departments"

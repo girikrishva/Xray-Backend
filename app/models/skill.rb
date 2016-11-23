@@ -3,4 +3,5 @@ class Skill < ActiveRecord::Base
 
   has_many :resources, class_name: 'Resource'
   has_many :staffing_requirements, class_name: 'StaffingRequirement'
+  has_many :assigned_resources, class_name: 'AssignedResource'
 end

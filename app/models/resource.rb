@@ -2,6 +2,8 @@ class Resource < ActiveRecord::Base
   belongs_to :admin_user, class_name: 'AdminUser', foreign_key: :admin_user_id
   belongs_to :skill, :class_name => 'Skill', :foreign_key => :skill_id
 
+  has_many :assigned_resources, class_name: 'AssignedResource'
+
   validates :as_on, presence: true
   validates :bill_rate, presence: true
   validates :cost_rate, presence: true

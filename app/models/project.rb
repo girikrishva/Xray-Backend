@@ -10,7 +10,7 @@ class Project < ActiveRecord::Base
   belongs_to :pipeline, class_name: 'Pipeline', foreign_key: :pipeline_id
 
   has_many :projects_audits, class_name: 'ProjectAudit'
-
+  has_many :assigned_resources, class_name: 'AssignedResource'
 
   validates :name, presence: true
   validates :client_id, presence: true

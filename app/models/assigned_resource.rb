@@ -1,17 +1,17 @@
-class StaffingRequirement < ActiveRecord::Base
-  belongs_to :pipeline, class_name: 'Pipeline', foreign_key: :pipeline_id
+class AssignedResource < ActiveRecord::Base
+  belongs_to :project, class_name: 'Project', foreign_key: :project_id
   belongs_to :skill, :class_name => 'Skill', :foreign_key => :skill_id
   belongs_to :designation, :class_name => 'Designation', :foreign_key => :designation_id
-
-  has_many :assigned_resources, class_name: 'AssignedResource'
+  belongs_to :resource, :class_name => 'Resource', :foreign_key => :resource_id
+  belongs_to :staffing_requirement, class_name: 'StaffingRequirement', foreign_key: :staffing_requirement_id
 
   validates :start_date, presence: true
   validates :end_date, presence: true
-  validates :number_required, presence: true
   validates :hours_per_day, presence: true
-  validates :pipeline_id, presence: true
+  validates :project_id, presence: true
   validates :skill_id, presence: true
   validates :designation_id, presence: true
+  validates :resource_id, presence: true
 
   before_create :date_check, :hours_check
   before_update :date_check, :hours_check
