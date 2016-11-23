@@ -92,5 +92,6 @@ en:
     designations: "Designations"
   errors:
     date_check: "Start must be on or before End dates."
+    hours_per_day: "Hours per day must be between 0 and 24."
     convert_pipeline_engagement_manager_missing: "Engagement manager must be defined before conversion."
     convert_pipeline_delivery_manager_missing: "Delivery manager must be defined before conversion."

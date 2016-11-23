@@ -11,8 +11,8 @@ class StaffingRequirement < ActiveRecord::Base
   validates :skill_id, presence: true
   validates :designation_id, presence: true
 
-  before_create :date_check
-  before_update :date_check
+  before_create :date_check, :hours_check
+  before_update :date_check, :hours_check
 
   def skill_name
     Skill.find(self.skill_id).name
@@ -21,6 +21,12 @@ class StaffingRequirement < ActiveRecord::Base
   def date_check
     if self.start_date > self.end_date
       raise I18n.t('errors.date_check')
+    end
+  end
+
+  def hours_check
+    if self.hours_per_day < 0 || self.hours_per_day > 24
+      raise I18n.t('errors.hours_per_day')
     end
   end
 end
