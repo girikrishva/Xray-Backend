@@ -9,7 +9,7 @@ class Resource < ActiveRecord::Base
   validates :cost_rate, presence: true
   validates :admin_user_id, presence: true
   validates :skill_id, presence: true
-  validate   :only_one_primary_skill_allowed_per_user
+  validate :only_one_primary_skill_allowed_per_user
 
   validates_uniqueness_of :admin_user_id, scope: [:admin_user_id, :skill_id, :as_on]
   validates_uniqueness_of :skill_id, scope: [:admin_user_id, :skill_id, :as_on]
@@ -54,7 +54,9 @@ class Resource < ActiveRecord::Base
   def self.resources_for_skill_designation(skill_id, designation_id)
     admin_user_ids = []
     Resource.latest.each do |resource|
-      admin_user_ids << resource.admin_user_id
+      if resource.skill_id == skill_id
+        admin_user_ids << resource.admin_user_id
+      end
     end
     AdminUser.where(id: admin_user_ids, designation_id: designation_id)
   end

@@ -32,3 +32,19 @@ jQuery ->
         $('#assigned_resource_end_date').val(data.end_date)
       error: (xhr, status, err) ->
         console.log(err)
+    url = '/admin/api/start_date_for_staffing?staffing_requirement_id=' + escaped_staffing_requirement_id
+    $.ajax url,
+      success: (data, status, xhr) ->
+        $('#assigned_resource_start_date').val(data.start_date)
+      error: (xhr, status, err) ->
+        console.log(err)
+#    url = '/admin/api/resources_for_skill_designation?skill_id=' + 87 + '+designation_id=' + 113
+#    $.ajax url,
+#      success: (data, status, xhr) ->
+#        $('#assigned_resource_resource_id').empty
+#      error: (xhr, status, err) ->
+#        console.log(err)
+    if staffing_requirement_id == ""
+      $('#assigned_resource_resource_id').attr('disabled', true)
+    else
+      $('#assigned_resource_resource_id').attr('disabled', false)

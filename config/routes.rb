@@ -64,4 +64,5 @@ Rails.application.routes.draw do
   match '/admin/api/end_date_for_staffing' => 'admin/assigned_resources#end_date_for_staffing', via: [:get]
   match '/admin/api/hours_per_day_for_staffing' => 'admin/assigned_resources#hours_per_day_for_staffing', via: [:get]
   match '/admin/api/convert_pipeline', to: 'admin/pipelines#convert_pipeline', via: [:post]
+  match '/admin/api/resources_for_skill_designation' => 'admin/resources#resources_for_skill_designation', via: [:get]
 end

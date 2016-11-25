@@ -175,6 +175,14 @@ ActiveAdmin.register AssignedResource do
       end
       f.input :skill, required: true, input_html: {disabled: :true}
       f.input :designation, required: true, input_html: {disabled: :true}
+      f.input :resource, required: true, input_html: {disabled: :true}
+      # if f.object.resource_id.blank?
+      #   f.input :resource, required: true, as: :select, collection: AdminUser.all
+      #                                                                   .map { |a| [a.name, a.id] }, include_blank: true
+      # else
+      #   f.input :resource, required: true, input_html: {disabled: :true}
+      #   f.input :resource_id, as: :hidden
+      # end
       if f.object.new_record?
         f.input :hours_per_day
       else
@@ -197,14 +205,6 @@ ActiveAdmin.register AssignedResource do
         f.input :as_on, as: :hidden
       else
         f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :datepicker
-      end
-      if f.object.resource_id.blank?
-        f.input :resource, required: true, as: :select, collection:
-                             Resource.resources_for_skill_designation(f.object.skill_id, f.object.designation_id)
-                                 .map { |a| [a.name, a.id] }, include_blank: true
-      else
-        f.input :resource, required: true, input_html: {disabled: :true}
-        f.input :resource_id, as: :hidden
       end
       f.input :delivery_due_alert
       f.input :invoicing_due_alert
