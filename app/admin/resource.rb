@@ -111,6 +111,12 @@ ActiveAdmin.register Resource do
         redirect_to collection_url and return if resource.valid?
       end
     end
+
+    def resources_for_staffing
+      staffing_requirement_id = params[:staffing_requirement_id]
+      resources = Resource.resources_for_staffing(staffing_requirement_id)
+      render json: '{"resources": "' + resources + '"}'
+    end
   end
 
   form do |f|
