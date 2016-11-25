@@ -51,7 +51,11 @@ class Resource < ActiveRecord::Base
     AdminUser.select("resources.id, admin_users.name").joins(:resources)
   end
 
-  def self.resources_for_skill_designation
-
+  def self.resources_for_skill_designation(skill_id, designation_id)
+    admin_user_ids = []
+    Resource.latest.each do |resource|
+      admin_user_ids << resource.admin_user_id
+    end
+    AdminUser.where(id: admin_user_ids, designation_id: designation_id)
   end
 end

@@ -190,7 +190,7 @@ ActiveRecord::Schema.define(version: 20161123101737) do
     t.integer  "skill_id",                :null=>false, :index=>{:name=>"index_assigned_resources_on_skill_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_assigned_resources_skill_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "designation_id",          :null=>false, :index=>{:name=>"index_assigned_resources_on_designation_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_assigned_resources_designation_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "resource_id",             :null=>false, :index=>{:name=>"index_assigned_resources_on_resource_id"}, :foreign_key=>{:references=>"resources", :name=>"fk_assigned_resources_resource_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer  "staffing_requirement_id", :index=>{:name=>"index_assigned_resources_on_staffing_requirement_id"}, :foreign_key=>{:references=>"staffing_requirements", :name=>"fk_assigned_resources_staffing_requirement_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "staffing_requirement_id", :null=>false, :index=>{:name=>"index_assigned_resources_on_staffing_requirement_id"}, :foreign_key=>{:references=>"staffing_requirements", :name=>"fk_assigned_resources_staffing_requirement_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_view "business_units", <<-'END_VIEW_BUSINESS_UNITS', :force => true

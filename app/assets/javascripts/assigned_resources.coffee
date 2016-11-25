@@ -5,14 +5,12 @@ jQuery ->
     url = '/admin/api/skill_for_staffing?staffing_requirement_id=' + escaped_staffing_requirement_id
     $.ajax url,
       success: (data, status, xhr) ->
-        $('#assigned_resource_skill_input').val(data.skill_id)
         $('#assigned_resource_skill_id').val(data.skill_id)
       error: (xhr, status, err) ->
         console.log(err)
     url = '/admin/api/designation_for_staffing?staffing_requirement_id=' + escaped_staffing_requirement_id
     $.ajax url,
       success: (data, status, xhr) ->
-        $('#assigned_resource_designation_input').val(data.designation_id)
         $('#assigned_resource_designation_id').val(data.designation_id)
       error: (xhr, status, err) ->
         console.log(err)

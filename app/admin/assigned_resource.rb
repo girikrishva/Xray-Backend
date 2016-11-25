@@ -174,9 +174,7 @@ ActiveAdmin.register AssignedResource do
         f.input :staffing_requirement_id, as: :hidden
       end
       f.input :skill, required: true, input_html: {disabled: :true}
-      f.input :skill_id, as: :hidden
       f.input :designation, required: true, input_html: {disabled: :true}
-      f.input :designation_id, as: :hidden
       if f.object.new_record?
         f.input :hours_per_day
       else
@@ -202,7 +200,7 @@ ActiveAdmin.register AssignedResource do
       end
       if f.object.resource_id.blank?
         f.input :resource, required: true, as: :select, collection:
-                             AdminUser.all
+                             Resource.resources_for_skill_designation(f.object.skill_id, f.object.designation_id)
                                  .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :resource, required: true, input_html: {disabled: :true}

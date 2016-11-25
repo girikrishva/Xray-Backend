@@ -43,7 +43,7 @@ ActiveAdmin.register Resource do
     # end
     column :as_on
     column I18n.t('label.latest'), (:is_latest) do |resource|
-      resource.is_latest ? status_tag( I18n.t('label.yes'), :ok ) : status_tag( I18n.t('label.no') )
+      resource.is_latest ? status_tag(:yes, :ok ) : status_tag(:no)
     end
     column :bill_rate, :sortable => 'bill_rate' do |element|
       div :style => "text-align: right;" do
