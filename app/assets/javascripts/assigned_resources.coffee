@@ -40,6 +40,7 @@ jQuery ->
       $.ajax url,
         success: (data, status, xhr) ->
           $('#assigned_resource_resource_id').empty
+          $('#assigned_resource_resource_id').add(data)
         error: (xhr, status, err) ->
           $('#assigned_resource_resource_id').empty
           console.log(err)

@@ -52,6 +52,6 @@ class Resource < ActiveRecord::Base
   end
 
   def self.resources_for_staffing(staffing_requirement_id)
-    AdminUser.select("resources.id, admin_users.name").joins(:resources)
+    AdminUser.select("resources.id, admin_users.name").joins(:resources).first
   end
 end
