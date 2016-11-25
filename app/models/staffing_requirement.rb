@@ -31,4 +31,12 @@ class StaffingRequirement < ActiveRecord::Base
       raise I18n.t('errors.hours_per_day')
     end
   end
+
+  def name
+    '[' + self.start_date.to_s + '] [' + self.end_date.to_s + '] ' + self.skill.name + ', ' + self.designation.name + ', ' + self.hours_per_day.to_s + ' hours per day'
+  end
+
+  def self.ordered_lookup(pipeline_id)
+    StaffingRequirement.where(pipeline_id: pipeline_id, fulfilled: nil).order(:start_date, :end_date)
+  end
 end

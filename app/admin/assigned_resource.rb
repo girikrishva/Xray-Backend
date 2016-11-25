@@ -125,41 +125,58 @@ ActiveAdmin.register AssignedResource do
         redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
       end
     end
+
+    def skill_for_staffing
+      staffing_requirement_id = params[:staffing_requirement_id]
+      skill_id = Skill.find(StaffingRequirement.find(staffing_requirement_id).skill_id).id
+      render json: '{"skill_id": "' + skill_id.to_s + '"}'
+    end
+
+    def designation_for_staffing
+      staffing_requirement_id = params[:staffing_requirement_id]
+      designation_id = Designation.find(StaffingRequirement.find(staffing_requirement_id).designation_id).id
+      render json: '{"designation_id": "' + designation_id.to_s + '"}'
+    end
+
+    def start_date_for_staffing
+      staffing_requirement_id = params[:staffing_requirement_id]
+      start_date = StaffingRequirement.find(staffing_requirement_id).start_date
+      render json: '{"start_date": "' + start_date.to_s + '"}'
+    end
+
+    def end_date_for_staffing
+      staffing_requirement_id = params[:staffing_requirement_id]
+      end_date = StaffingRequirement.find(staffing_requirement_id).end_date
+      render json: '{"end_date": "' + end_date.to_s + '"}'
+    end
+
+    def hours_per_day_for_staffing
+      staffing_requirement_id = params[:staffing_requirement_id]
+      hours_per_day = StaffingRequirement.find(staffing_requirement_id).hours_per_day
+      render json: '{"hours_per_day": "' + hours_per_day.to_s + '"}'
+    end
   end
 
   form do |f|
     f.object.project_id = session[:project_id]
     if f.object.new_record?
       f.object.as_on = Date.today
-      f.object.hours_per_day = 8
-      f.object.start_date = Date.today
-      f.object.end_date = Date.today
     end
     f.inputs do
       f.input :project, required: true, input_html: {disabled: :true}
       f.input :project_id, as: :hidden
-      if f.object.skill_id.blank?
-        f.input :skill, required: true, as: :select, collection:
-                          Lookup.lookups_for_name(I18n.t('models.skills'))
-                              .map { |a| [a.name, a.id] }, include_blank: true
+      if f.object.staffing_requirement_id.blank?
+        f.input :staffing_requirement, required: true, as: :select, collection:
+                                         StaffingRequirement.ordered_lookup(f.object.project.pipeline_id)
+                                             .map { |a| [a.name, a.id] }, include_blank: true
       else
-        f.input :skill, required: true, input_html: {disabled: :true}
-        f.input :skill_id, as: :hidden
+        f.input :staffing_requirement, required: true, input_html: {disabled: :true}
+        f.input :staffing_requirement_id, as: :hidden
       end
-      if f.object.designation_id.blank?
-        f.input :designation, required: true, as: :select, collection:
-                                Lookup.lookups_for_name(I18n.t('models.designations'))
-                                    .map { |a| [a.name, a.id] }, include_blank: true
-      else
-        f.input :designation, required: true, input_html: {disabled: :true}
-        f.input :designation_id, as: :hidden
-      end
-      if !f.object.new_record?
-        f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :datepicker, input_html: {disabled: :true}
-        f.input :as_on, as: :hidden
-      else
-        f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :datepicker
-      end
+      f.input :skill, required: true, input_html: {disabled: :true}
+      f.input :skill_id, as: :hidden
+      f.input :designation, required: true, input_html: {disabled: :true}
+      f.input :designation_id, as: :hidden
       if f.object.new_record?
         f.input :hours_per_day
       else
@@ -176,6 +193,20 @@ ActiveAdmin.register AssignedResource do
         f.input :end_date, as: :hidden
       else
         f.input :end_date, label: I18n.t('label.end'), as: :datepicker
+      end
+      if !f.object.new_record?
+        f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :datepicker, input_html: {disabled: :true}
+        f.input :as_on, as: :hidden
+      else
+        f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :datepicker
+      end
+      if f.object.resource_id.blank?
+        f.input :resource, required: true, as: :select, collection:
+                             AdminUser.all
+                                 .map { |a| [a.name, a.id] }, include_blank: true
+      else
+        f.input :resource, required: true, input_html: {disabled: :true}
+        f.input :resource_id, as: :hidden
       end
       f.input :delivery_due_alert
       f.input :invoicing_due_alert

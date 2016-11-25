@@ -58,5 +58,10 @@ Rails.application.routes.draw do
 
   match '/admin/api/project_type_description' => 'admin/project_types#description_for_lookup', via: [:get]
   match '/admin/api/vacation_policy_description' => 'admin/vacation_policies#description_for_lookup', via: [:get]
+  match '/admin/api/skill_for_staffing' => 'admin/assigned_resources#skill_for_staffing', via: [:get]
+  match '/admin/api/designation_for_staffing' => 'admin/assigned_resources#designation_for_staffing', via: [:get]
+  match '/admin/api/start_date_for_staffing' => 'admin/assigned_resources#start_date_for_staffing', via: [:get]
+  match '/admin/api/end_date_for_staffing' => 'admin/assigned_resources#end_date_for_staffing', via: [:get]
+  match '/admin/api/hours_per_day_for_staffing' => 'admin/assigned_resources#hours_per_day_for_staffing', via: [:get]
   match '/admin/api/convert_pipeline', to: 'admin/pipelines#convert_pipeline', via: [:post]
 end

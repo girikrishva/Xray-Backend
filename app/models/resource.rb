@@ -50,4 +50,8 @@ class Resource < ActiveRecord::Base
   def self.ordered_lookup
     AdminUser.select("resources.id, admin_users.name").joins(:resources)
   end
+
+  def self.resources_for_skill_designation
+
+  end
 end

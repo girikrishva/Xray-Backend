@@ -94,7 +94,7 @@ ActiveAdmin.register ProjectType do
       end
       if f.object.project_type_code_id.blank?
         f.input :project_type_code, required: true, as: :select, collection:
-                                  Lookup.lookups_for_name(I18n.t('models.project_code_types'))
+                                  Lookup.lookups_for_name(I18n.t('models.project_types'))
                                       .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :project_type_code, required: true, input_html: {disabled: :true}
