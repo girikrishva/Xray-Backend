@@ -40,7 +40,7 @@ class Resource < ActiveRecord::Base
   def self.latest
     latest_ids = []
     Resource.all.each do |resource|
-      if resource.id == Resource.where(skill_id: resource.skill_id, admin_user_id: resource.admin_user_id).order(:as_on).first.id
+      if resource.id == Resource.where(skill_id: resource.skill_id, admin_user_id: resource.admin_user_id).order(:as_on).last.id
         latest_ids << resource.id
       end
     end
@@ -53,6 +53,21 @@ class Resource < ActiveRecord::Base
 
   def self.resources_for_staffing(staffing_requirement_id)
     staffing_requirement = StaffingRequirement.find(staffing_requirement_id)
-    AdminUser.select("resources.id, admin_users.name").joins(:resources).where('resources.as_on <= ?', staffing_requirement.start_date)
+    resources = Resource.where('skill_id = ? and as_on <= ?', staffing_requirement.skill_id, staffing_requirement.start_date)
+    resource_ids = []
+    resources.each do |resource|
+      if AdminUser.find(resource.admin_user_id).designation_id == staffing_requirement.designation_id
+        resource_ids << resource.id
+      end
+    end
+    resource_ids_for_max_as_on = []
+    resource_ids.each do |resource_id|
+      resource = Resource.find(resource_id)
+      max_as_on = Resource.where('id in (?) and skill_id = ?', resource_ids, resource.skill_id).order(:as_on).last.as_on
+      if resource.as_on == max_as_on
+        resource_ids_for_max_as_on << resource_id
+      end
+    end
+    AdminUser.select("resources.id, admin_users.name").joins(:resources).where('resources.id in (?)', resource_ids_for_max_as_on).order('admin_users.name')
   end
 end
