@@ -63,7 +63,7 @@ class Resource < ActiveRecord::Base
     resource_ids_for_max_as_on = []
     resource_ids.each do |resource_id|
       resource = Resource.find(resource_id)
-      max_as_on = Resource.where('id in (?) and skill_id = ?', resource_ids, resource.skill_id).order(:as_on).last.as_on
+      max_as_on = Resource.where('id in (?) and skill_id = ? and admin_user_id = ?', resource_ids, resource.skill_id, resource.admin_user_id).order(:as_on).last.as_on
       if resource.as_on == max_as_on
         resource_ids_for_max_as_on << resource_id
       end
