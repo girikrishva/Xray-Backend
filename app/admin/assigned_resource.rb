@@ -175,12 +175,6 @@ ActiveAdmin.register AssignedResource do
       end
       f.input :skill, required: true, input_html: {disabled: :true}
       f.input :designation, required: true, input_html: {disabled: :true}
-      if f.object.resource_id.blank?
-        f.input :resource, required: true, as: :select, collection: nil, include_blank: true
-      else
-        f.input :resource, required: true, input_html: {disabled: :true}
-        f.input :resource_id, as: :hidden
-      end
       if f.object.new_record?
         f.input :hours_per_day
       else
@@ -199,11 +193,11 @@ ActiveAdmin.register AssignedResource do
         f.input :end_date, label: I18n.t('label.end'), as: :datepicker
       end
       if !f.object.new_record?
-        f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :datepicker, input_html: {disabled: :true}
-        f.input :as_on, as: :hidden
+        f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :string, input_html: {readonly: :true}
       else
         f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :datepicker
       end
+      f.input :resource, required: true, input_html: {disabled: :true}
       f.input :delivery_due_alert
       f.input :invoicing_due_alert
       f.input :payment_due_alert

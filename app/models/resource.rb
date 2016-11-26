@@ -52,6 +52,7 @@ class Resource < ActiveRecord::Base
   end
 
   def self.resources_for_staffing(staffing_requirement_id)
-    AdminUser.select("resources.id, admin_users.name").joins(:resources).first
+    staffing_requirement = StaffingRequirement.find(staffing_requirement_id)
+    AdminUser.select("resources.id, admin_users.name").joins(:resources).where('resources.as_on <= ?', staffing_requirement.start_date)
   end
 end
