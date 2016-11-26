@@ -1,4 +1,5 @@
 jQuery ->
+  $('#assigned_resource_resource_id').empty()
   $('#assigned_resource_staffing_requirement_input').change ->
     staffing_requirement_id = $('#assigned_resource_staffing_requirement_input :selected').val()
     if staffing_requirement_id != ''
