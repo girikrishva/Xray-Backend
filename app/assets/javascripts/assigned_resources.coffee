@@ -38,13 +38,12 @@ jQuery ->
         $('#assigned_resource_resource_id').attr('disabled', true)
       else
         $('#assigned_resource_resource_id').attr('disabled', false)
-  #      url = '/admin/api/resources_for_staffing?staff_requirement_id=' + escaped_staffing_requirement_id
-  #      $.ajax url,
-  #        success: (data, status, xhr) ->
-  #          alert(data.resources)
-  #        error: (xhr, status, err) ->
-  #          alert(data.resources)
-  #          console.log(err)
+        url = '/admin/api/resources_for_staffing?staff_requirement_id=' + escaped_staffing_requirement_id
+        $.ajax url,
+          success: (data, status, xhr) ->
+            alert(data.resources)
+          error: (xhr, status, err) ->
+            console.log(err)
     else
       $('#assigned_resource_skill_id').val('')
       $('#assigned_resource_designation_id').val('')
