@@ -38,7 +38,7 @@ jQuery ->
         $('#assigned_resource_resource_id').attr('disabled', true)
       else
         $('#assigned_resource_resource_id').attr('disabled', false)
-        url = '/admin/api/resources_for_staffing?staff_requirement_id=' + escaped_staffing_requirement_id
+        url = '/admin/api/resources_for_staffing?staffing_requirement_id=' + escaped_staffing_requirement_id
         $.ajax url,
           success: (data, status, xhr) ->
             alert(data.resources)

@@ -115,7 +115,7 @@ ActiveAdmin.register Resource do
     def resources_for_staffing
       staffing_requirement_id = params[:staffing_requirement_id]
       resources = Resource.resources_for_staffing(staffing_requirement_id)
-      render json: '{"resources": ' + resources.to_json + '}'
+      render json: '{"resources": ' + resources.to_json.to_json + '}'
     end
   end
 
