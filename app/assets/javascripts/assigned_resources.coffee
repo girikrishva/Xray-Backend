@@ -41,7 +41,8 @@ jQuery ->
         url = '/admin/api/resources_for_staffing?staffing_requirement_id=' + escaped_staffing_requirement_id
         $.ajax url,
           success: (data, status, xhr) ->
-            alert(data.resources)
+            result = JSON.parse data.resources
+            console.log result[0].name
           error: (xhr, status, err) ->
             console.log(err)
     else
