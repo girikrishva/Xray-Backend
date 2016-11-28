@@ -41,7 +41,13 @@ jQuery ->
         url = '/admin/api/resources_for_staffing?staffing_requirement_id=' + escaped_staffing_requirement_id
         $.ajax url,
           success: (data, status, xhr) ->
+            $('#assigned_resource_resource_id').empty()
+            $('#assigned_resource_resource_id').append('<option value=""></option>')
             result = JSON.parse data.resources
+            i = 0
+            while i < result.length
+              $('#assigned_resource_resource_id').append('<option value="' + result[i].id + '">' + result[i].name + ' [Bill Rate: ' + result[i].bill_rate + ', Cost Rate: ' + result[i].cost_rate + ']' + '</option>')
+              i++
             console.log result[0].name
           error: (xhr, status, err) ->
             console.log(err)

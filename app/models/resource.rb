@@ -69,7 +69,7 @@ class Resource < ActiveRecord::Base
           resource_ids_for_max_as_on << resource_id
         end
       end
-      AdminUser.select("resources.id, admin_users.name").joins(:resources).where('resources.id in (?)', resource_ids_for_max_as_on).order('admin_users.name')
+      AdminUser.select("resources.id, admin_users.name, resources.bill_rate, resources.cost_rate").joins(:resources).where('resources.id in (?)', resource_ids_for_max_as_on).order('admin_users.name')
     else
       nil
     end
