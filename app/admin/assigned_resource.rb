@@ -15,7 +15,7 @@ ActiveAdmin.register AssignedResource do
 #   permitted
 # end
 
-  permit_params :start_date, :end_date, :number_required, :hours_per_day, :fulfilled, :created_at, :updated_at, :project, :skill_id, :designation_id, :resource_id, :delivery_due_alert, :invoicing_due_alert, :payment_due_alert, :comments, :staffing_requirement_id
+  permit_params :start_date, :end_date, :number_required, :hours_per_day, :fulfilled, :created_at, :updated_at, :project, :skill_id, :designation_id, :resource_id, :delivery_due_alert, :invoicing_due_alert, :payment_due_alert, :comments, :staffing_requirement_id, :project_id, :skill_code, :designation_code, :as_on
 
   config.sort_order = 'skills.name_asc_and_start_date_asc_and_end_date_asc'
 
@@ -41,7 +41,7 @@ ActiveAdmin.register AssignedResource do
       resource.project.name
     end
     column :designation, sortable: 'designations.name' do |resource|
-      resource.designation.name
+      resource.designation_code.name
     end
     column :resource, sortable: 'resources.admin_user.name' do |r|
       r.resource.admin_user.name
@@ -53,13 +53,15 @@ ActiveAdmin.register AssignedResource do
     column :delivery_due_alert
     column :invoicing_due_alert
     column :payment_due_alert
-    column :staffing_requirement
+    column :staffing_requirement, sortable: 'staffing_requirements.name' do |r|
+      r.staffing_requirement.name
+    end
     column :comments
     actions defaults: true, dropdown: true
   end
 
-  filter :skill
-  filter :designation
+  filter :skill_code
+  filter :designation_code
   filter :as_on
   filter :hours_per_day
   filter :start_date
@@ -76,8 +78,8 @@ ActiveAdmin.register AssignedResource do
       row :project do
         r.project.name
       end
-      row :skill
-      row :designation
+      row :skill_code
+      row :designation_code
       row :as_on
       row :hours_per_day
       row :start_date
@@ -111,7 +113,7 @@ ActiveAdmin.register AssignedResource do
     end
 
     def scoped_collection
-      AssignedResource.includes [:project, :skill, :designation, :resource, :staffing_requirement]
+      AssignedResource.includes [:project, :skill_code, :designation_code, :resource, :staffing_requirement]
     end
 
     def create
@@ -173,8 +175,8 @@ ActiveAdmin.register AssignedResource do
         f.input :staffing_requirement, required: true, input_html: {disabled: :true}
         f.input :staffing_requirement_id, as: :hidden
       end
-      f.input :skill, required: true, input_html: {disabled: :true}
-      f.input :designation, required: true, input_html: {disabled: :true}
+      f.input :skill_id, as: :hidden
+      f.input :designation_id, as: :hidden
       if f.object.new_record?
         f.input :hours_per_day
       else

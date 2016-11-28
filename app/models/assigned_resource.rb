@@ -1,7 +1,7 @@
 class AssignedResource < ActiveRecord::Base
   belongs_to :project, class_name: 'Project', foreign_key: :project_id
-  belongs_to :skill, :class_name => 'Skill', :foreign_key => :skill_id
-  belongs_to :designation, :class_name => 'Designation', :foreign_key => :designation_id
+  belongs_to :skill_code, :class_name => 'Skill', :foreign_key => :skill_id
+  belongs_to :designation_code, :class_name => 'Designation', :foreign_key => :designation_id
   belongs_to :resource, :class_name => 'Resource', :foreign_key => :resource_id
   belongs_to :staffing_requirement, class_name: 'StaffingRequirement', foreign_key: :staffing_requirement_id
 
