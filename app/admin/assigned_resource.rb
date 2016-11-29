@@ -33,7 +33,6 @@ ActiveAdmin.register AssignedResource do
     link_to I18n.t('label.back'), admin_assigned_resources_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
 
-# index do
   index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
     column :id
@@ -50,12 +49,6 @@ ActiveAdmin.register AssignedResource do
     column :hours_per_day
     column :start_date
     column :end_date
-    column :delivery_due_alert
-    column :invoicing_due_alert
-    column :payment_due_alert
-    column :staffing_requirement, sortable: 'staffing_requirements.name' do |r|
-      r.staffing_requirement.name
-    end
     column :comments
     actions defaults: true, dropdown: true
   end

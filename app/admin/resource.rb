@@ -31,7 +31,6 @@ ActiveAdmin.register Resource do
   scope :latest, default: true do |resources| resources.latest end
   scope :all
 
-  # index do
   index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
     column :id

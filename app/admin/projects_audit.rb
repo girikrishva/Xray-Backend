@@ -36,7 +36,6 @@ ActiveAdmin.register ProjectsAudit do
     ProjectsAudit.all
   end
 
-# index do
   index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
     column :id

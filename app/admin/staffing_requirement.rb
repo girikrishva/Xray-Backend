@@ -33,7 +33,6 @@ ActiveAdmin.register StaffingRequirement do
     link_to I18n.t('label.back'), admin_staffing_requirements_path(pipeline_id: session[:pipeline_id]) if session.has_key?(:pipeline_id)
   end
 
-# index do
   index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
     column :id
