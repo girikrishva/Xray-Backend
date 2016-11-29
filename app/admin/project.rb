@@ -24,11 +24,11 @@ ActiveAdmin.register Project do
     link_to I18n.t('label.back'), admin_projects_path
   end
 
-  scope I18n.t('label.delivery_view'), :delivery_view, default: true do |pipelines|
+  scope I18n.t('label.delivery_view'), :delivery_view, default: true do |projects|
     Project.all
   end
 
-  scope I18n.t('label.sales_view'), :sales_view, default: false do |pipelines|
+  scope I18n.t('label.sales_view'), :sales_view, default: false do |projects|
     Project.all
   end
 
