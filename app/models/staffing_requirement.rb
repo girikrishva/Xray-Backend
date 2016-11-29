@@ -37,6 +37,6 @@ class StaffingRequirement < ActiveRecord::Base
   end
 
   def self.ordered_lookup(pipeline_id)
-    StaffingRequirement.where(pipeline_id: pipeline_id, fulfilled: nil).order(:start_date, :end_date)
+    StaffingRequirement.where(pipeline_id: pipeline_id).order(:start_date, :end_date)
   end
 end
