@@ -210,7 +210,7 @@ ActiveAdmin.register AssignedResource do
         staffing_requirement = StaffingRequirement.find(staffing_requirement_id)
         staffing_requirement.fulfilled = true
         staffing_requirement.save
-        redirect_to admin_project_staffing_requirement_path(id: staffing_requirement_id)
+        redirect_to admin_assigned_resources_path(project_id: session[:project_id])
       end
     end
   end
