@@ -50,12 +50,12 @@ ActiveAdmin.register AssignedResource do
     column :staffing_requirement, sortable: 'staffing_requirements.name' do |r|
       r.staffing_requirement.name
     end
+    column :fulfilled, sortable: 'staffing_requirements.fulfilled' do |r|
+      r.staffing_requirement.fulfilled ? status_tag(:yes, :ok ) : status_tag(:no)
+    end
     column :id
     column :project, sortable: 'projects.name' do |resource|
       resource.project.name
-    end
-    column :designation, sortable: 'designations.name' do |resource|
-      resource.designation_code.name
     end
     column :resource, sortable: 'resources.admin_user.name' do |r|
       r.resource.admin_user.name
