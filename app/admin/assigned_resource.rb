@@ -33,6 +33,14 @@ ActiveAdmin.register AssignedResource do
     link_to I18n.t('label.back'), admin_assigned_resources_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
 
+  scope "Summary View", :summary_view, default: true do |assigned_resources|
+    AssignedResource.all
+  end
+
+  scope "Detailed View", :detailed_view, default: false do |assigned_resources|
+    AssignedResource.all
+  end
+
   index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
     column :id
@@ -49,6 +57,14 @@ ActiveAdmin.register AssignedResource do
     column :hours_per_day
     column :start_date
     column :end_date
+    if params[:scope] == 'detailed_view'
+      column :delivery_due_alert
+      column :invoicing_due_alert
+      column :payment_due_alert
+      column :staffing_requirement, sortable: 'staffing_requirements.name' do |r|
+        r.staffing_requirement.name
+      end
+    end
     column :comments
     actions defaults: true, dropdown: true
   end
@@ -59,10 +75,10 @@ ActiveAdmin.register AssignedResource do
   filter :hours_per_day
   filter :start_date
   filter :end_date
-  filter :delivery_due_alert
-  filter :invoicing_due_alert
-  filter :payment_due_alert
-  filter :staffing_requirement
+  filter :delivery_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
+  filter :invoicing_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
+  filter :payment_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
+  filter :staffing_requirement, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
   filter :comments
 
   show do |r|
