@@ -43,7 +43,7 @@ ActiveAdmin.register AssignedResource do
   index as: :grouped_table, group_by_attribute: :skill_name, default: :true do
     if params[:scope] == 'detailed_view'
       actions defaults: true, dropdown: true do |resource|
-        item I18n.t('actions.staffing_fulfilled'), admin_api_convert_pipeline_path(pipeline_id: resource.id), method: :post
+        item I18n.t('actions.staffing_fulfilled'), admin_api_staffing_fulfilled_path(staffing_requirement_id: resource.staffing_requirement_id), method: :post
       end
     end
     selectable_column
@@ -81,7 +81,7 @@ ActiveAdmin.register AssignedResource do
     end
     column :comments
     actions defaults: true, dropdown: true do |resource|
-      item I18n.t('actions.staffing_fulfilled'), admin_api_convert_pipeline_path(pipeline_id: resource.id), method: :post
+      item I18n.t('actions.staffing_fulfilled'), admin_api_staffing_fulfilled_path(staffing_requirement_id: resource.staffing_requirement_id), method: :post
     end
   end
 
@@ -202,6 +202,16 @@ ActiveAdmin.register AssignedResource do
       staffing_requirement_id = params[:staffing_requirement_id]
       hours_per_day = StaffingRequirement.find(staffing_requirement_id).hours_per_day
       render json: '{"hours_per_day": "' + hours_per_day.to_s + '"}'
+    end
+
+    def staffing_fulfilled
+      if params.has_key?(:staffing_requirement_id)
+        staffing_requirement_id = params[:staffing_requirement_id]
+        staffing_requirement = StaffingRequirement.find(staffing_requirement_id)
+        staffing_requirement.fulfilled = true
+        staffing_requirement.save
+        redirect_to admin_project_staffing_requirement_path(id: staffing_requirement_id)
+      end
     end
   end
 

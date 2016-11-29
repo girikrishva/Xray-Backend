@@ -66,4 +66,5 @@ Rails.application.routes.draw do
   match '/admin/api/convert_pipeline', to: 'admin/pipelines#convert_pipeline', via: [:post]
   match '/admin/api/resources_for_staffing' => 'admin/resources#resources_for_staffing', via: [:get]
   match '/admin/api/resource_details' => 'admin/resources#resource_details', via: [:get]
+  match '/admin/api/staffing_fulfilled', to: 'admin/assigned_resources#staffing_fulfilled', via: [:post]
 end

@@ -158,7 +158,7 @@ ActiveAdmin.register StaffingRequirement do
       else
         f.input :end_date, label: I18n.t('label.end'), as: :datepicker
       end
-      f.input :fulfilled, input_html: {disabled: true}
+      f.input :fulfilled
       f.input :comments
     end
     f.actions do
