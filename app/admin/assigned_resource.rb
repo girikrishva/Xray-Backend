@@ -1,7 +1,6 @@
 ActiveAdmin.register AssignedResource do
   menu false
 
-
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
@@ -33,15 +32,18 @@ ActiveAdmin.register AssignedResource do
     link_to I18n.t('label.back'), admin_assigned_resources_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
 
-  scope "Summary View", :summary_view, default: true do |assigned_resources|
+  scope I18n.t('label.summary_view'), :summary_view, default: true do |assigned_resources|
     AssignedResource.all
   end
 
-  scope "Detailed View", :detailed_view, default: false do |assigned_resources|
+  scope I18n.t('label.detailed_view'), :detailed_view, default: false do |assigned_resources|
     AssignedResource.all
   end
 
-  index as: :grouped_table, group_by_attribute: :skill_name do
+  index as: :grouped_table, group_by_attribute: :skill_name, default: :true do
+    if params[:scope] == 'detailed_view'
+      actions defaults: true, dropdown: true
+    end
     selectable_column
     column :id
     column :project, sortable: 'projects.name' do |resource|
@@ -90,7 +92,7 @@ ActiveAdmin.register AssignedResource do
   filter :delivery_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
   filter :invoicing_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
   filter :payment_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
-  filter :staffing_requirement, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
+  filter :staffing_requirement, collection: proc { StaffingRequirement.ordered_lookup(Project.find(session[:project_id]).pipeline_id) }, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
   filter :comments
 
   show do |r|
@@ -139,6 +141,7 @@ ActiveAdmin.register AssignedResource do
       end
     end
 
+
     def scoped_collection
       AssignedResource.includes [:project, :skill_code, :designation_code, :resource, :staffing_requirement]
     end
@@ -152,6 +155,18 @@ ActiveAdmin.register AssignedResource do
     def update
       super do |format|
         redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
+      end
+    end
+
+    def group_by_field
+      if params.has_key?(scope)
+        if params[:scope] == 'summary_view'
+          ':skill_name'
+        else
+          ':staffing_requirement'
+        end
+      else
+        ':skill_name'
       end
     end
 

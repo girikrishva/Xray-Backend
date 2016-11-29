@@ -34,4 +34,8 @@ class AssignedResource < ActiveRecord::Base
       raise I18n.t('errors.hours_per_day')
     end
   end
+
+  def staffing_requirement_name
+    StaffingRequirement.find(self.staffing_requirement_id).name
+  end
 end
