@@ -47,10 +47,8 @@ ActiveAdmin.register AssignedResource do
       end
     end
     selectable_column
-    if params[:scope] == 'detailed_view'
-      column :staffing_requirement, sortable: 'staffing_requirements.name' do |r|
-        r.staffing_requirement.name
-      end
+    column :staffing_requirement, sortable: 'staffing_requirements.name' do |r|
+      r.staffing_requirement.name
     end
     column :id
     column :project, sortable: 'projects.name' do |resource|
@@ -82,10 +80,12 @@ ActiveAdmin.register AssignedResource do
       column :payment_due_alert
     end
     column :comments
-    actions defaults: true, dropdown: true
+    actions defaults: true, dropdown: true do |resource|
+      item I18n.t('actions.staffing_fulfilled'), admin_api_convert_pipeline_path(pipeline_id: resource.id), method: :post
+    end
   end
 
-  filter :staffing_requirement, collection: proc { StaffingRequirement.ordered_lookup(Project.find(session[:project_id]).pipeline_id) }, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
+  filter :staffing_requirement, collection: proc { StaffingRequirement.ordered_lookup(Project.find(session[:project_id]).pipeline_id) }
   filter :skill_code
   filter :designation_code
   filter :as_on
