@@ -26,7 +26,7 @@ class Resource < ActiveRecord::Base
   end
 
   def name
-    self.admin_user.name
+    self.admin_user.name + ' [Bill Rate: ' + self.bill_rate.to_s + ', Cost Rate: ' + self.cost_rate.to_s + ']'
   end
 
   def is_latest
