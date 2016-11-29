@@ -42,9 +42,16 @@ ActiveAdmin.register AssignedResource do
 
   index as: :grouped_table, group_by_attribute: :skill_name, default: :true do
     if params[:scope] == 'detailed_view'
-      actions defaults: true, dropdown: true
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.staffing_fulfilled'), admin_api_convert_pipeline_path(pipeline_id: resource.id), method: :post
+      end
     end
     selectable_column
+    if params[:scope] == 'detailed_view'
+      column :staffing_requirement, sortable: 'staffing_requirements.name' do |r|
+        r.staffing_requirement.name
+      end
+    end
     column :id
     column :project, sortable: 'projects.name' do |resource|
       resource.project.name
@@ -73,9 +80,6 @@ ActiveAdmin.register AssignedResource do
       column :delivery_due_alert
       column :invoicing_due_alert
       column :payment_due_alert
-      column :staffing_requirement, sortable: 'staffing_requirements.name' do |r|
-        r.staffing_requirement.name
-      end
     end
     column :comments
     actions defaults: true, dropdown: true

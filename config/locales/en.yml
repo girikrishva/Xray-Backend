@@ -87,6 +87,7 @@ en:
     convert_pipeline: "Convert Pipeline"
     staffing_requirements: "Staffing Requirements"
     assigned_resources: "Assigned Resources"
+    staffing_fulfilled: "Staffing Fulfilled"
   models:
     business_units: "Business Units"
     departments: "Departments"
