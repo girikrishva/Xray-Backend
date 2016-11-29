@@ -1,5 +1,6 @@
 jQuery ->
-  $('#assigned_resource_resource_id').empty()
+  if $('#assigned_resource_resource_id :selected').val() == ''
+    $('#assigned_resource_resource_id').empty()
   $('#assigned_resource_staffing_requirement_input').change ->
     staffing_requirement_id = $('#assigned_resource_staffing_requirement_input :selected').val()
     if staffing_requirement_id != ''
@@ -57,3 +58,15 @@ jQuery ->
       $('#assigned_resource_hours_per_day').val('')
       $('#assigned_resource_start_date').val('')
       $('#assigned_resource_end_date').val('')
+      $('#assigned_resource_bill_rate').val('')
+      $('#assigned_resource_cost_rate').val('')
+  $('#assigned_resource_resource_id').change ->
+    resource_id = $('#assigned_resource_resource_id :selected').val()
+    escaped_resource_id = resource_id.replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g, '\\$1')
+    url = '/admin/api/resource_details?resource_id=' + escaped_resource_id
+    $.ajax url,
+      success: (data, status, xhr) ->
+        $('#assigned_resource_bill_rate').val(data.resource.bill_rate)
+        $('#assigned_resource_cost_rate').val(data.resource.cost_rate)
+      error: (xhr, status, err) ->
+        console.log(err)

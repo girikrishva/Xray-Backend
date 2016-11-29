@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161123101737) do
+ActiveRecord::Schema.define(version: 20161129040105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -191,6 +191,8 @@ ActiveRecord::Schema.define(version: 20161123101737) do
     t.integer  "designation_id",          :null=>false, :index=>{:name=>"index_assigned_resources_on_designation_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_assigned_resources_designation_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "resource_id",             :null=>false, :index=>{:name=>"index_assigned_resources_on_resource_id"}, :foreign_key=>{:references=>"resources", :name=>"fk_assigned_resources_resource_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "staffing_requirement_id", :null=>false, :index=>{:name=>"index_assigned_resources_on_staffing_requirement_id"}, :foreign_key=>{:references=>"staffing_requirements", :name=>"fk_assigned_resources_staffing_requirement_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.float    "bill_rate",               :null=>false
+    t.float    "cost_rate",               :null=>false
   end
 
   create_view "business_units", <<-'END_VIEW_BUSINESS_UNITS', :force => true

@@ -13,6 +13,8 @@ class AssignedResource < ActiveRecord::Base
   validates :designation_id, presence: true
   validates :resource_id, presence: true
   validates :staffing_requirement_id, presence: true
+  validates :bill_rate, presence: true
+  validates :cost_rate, presence: true
 
   before_create :date_check, :hours_check
   before_update :date_check, :hours_check

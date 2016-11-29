@@ -15,7 +15,7 @@ ActiveAdmin.register AssignedResource do
 #   permitted
 # end
 
-  permit_params :start_date, :end_date, :number_required, :hours_per_day, :fulfilled, :created_at, :updated_at, :project, :skill_id, :designation_id, :resource_id, :delivery_due_alert, :invoicing_due_alert, :payment_due_alert, :comments, :staffing_requirement_id, :project_id, :skill_code, :designation_code, :as_on
+  permit_params :start_date, :end_date, :number_required, :hours_per_day, :fulfilled, :created_at, :updated_at, :project, :skill_id, :designation_id, :resource_id, :delivery_due_alert, :invoicing_due_alert, :payment_due_alert, :comments, :staffing_requirement_id, :project_id, :skill_code, :designation_code, :as_on, :bill_rate, :cost_rate
 
   config.sort_order = 'skills.name_asc_and_start_date_asc_and_end_date_asc'
 
@@ -57,6 +57,16 @@ ActiveAdmin.register AssignedResource do
     column :hours_per_day
     column :start_date
     column :end_date
+    column :bill_rate, :sortable => 'bill_rate' do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.bill_rate, precision: 0, delimiter: ','
+      end
+    end
+    column :cost_rate, :sortable => 'cost_rate' do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.cost_rate, precision: 0, delimiter: ','
+      end
+    end
     if params[:scope] == 'detailed_view'
       column :delivery_due_alert
       column :invoicing_due_alert
@@ -75,6 +85,8 @@ ActiveAdmin.register AssignedResource do
   filter :hours_per_day
   filter :start_date
   filter :end_date
+  filter :bill_rate
+  filter :cost_rate
   filter :delivery_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
   filter :invoicing_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
   filter :payment_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
@@ -93,6 +105,12 @@ ActiveAdmin.register AssignedResource do
       row :hours_per_day
       row :start_date
       row :end_date
+      row :bill_rate do
+        number_with_precision r.bill_rate, precision: 0, delimiter: ','
+      end
+      row :cost_rate do
+        number_with_precision r.cost_rate, precision: 0, delimiter: ','
+      end
       row :delivery_due_alert
       row :invoicing_due_alert
       row :payment_due_alert
@@ -209,6 +227,16 @@ ActiveAdmin.register AssignedResource do
         f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :datepicker
       end
       f.input :resource, required: true, input_html: {disabled: :true}
+      if f.object.new_record?
+        f.input :bill_rate
+      else
+        f.input :bill_rate, required: true, input_html: {readonly: :true}
+      end
+      if f.object.new_record?
+        f.input :cost_rate
+      else
+        f.input :cost_rate, required: true, input_html: {readonly: :true}
+      end
       f.input :delivery_due_alert
       f.input :invoicing_due_alert
       f.input :payment_due_alert

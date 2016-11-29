@@ -116,6 +116,12 @@ ActiveAdmin.register Resource do
       resources = Resource.resources_for_staffing(staffing_requirement_id)
       render json: '{"resources": ' + resources.to_json.to_json + '}'
     end
+
+    def resource_details
+      resource_id = params[:resource_id]
+      resource = Resource.find(resource_id)
+      render json: '{"resource": ' + resource.to_json + '}'
+    end
   end
 
   form do |f|
