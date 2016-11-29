@@ -85,6 +85,7 @@ ActiveAdmin.register AssignedResource do
     actions defaults: true, dropdown: true
   end
 
+  filter :staffing_requirement, collection: proc { StaffingRequirement.ordered_lookup(Project.find(session[:project_id]).pipeline_id) }, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
   filter :skill_code
   filter :designation_code
   filter :as_on
@@ -96,7 +97,6 @@ ActiveAdmin.register AssignedResource do
   filter :delivery_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
   filter :invoicing_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
   filter :payment_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
-  filter :staffing_requirement, collection: proc { StaffingRequirement.ordered_lookup(Project.find(session[:project_id]).pipeline_id) }, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
   filter :comments
 
   show do |r|
