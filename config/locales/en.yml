@@ -54,6 +54,7 @@ en:
     staffing_requirements: "Staffing Requirements"
     assigned_resources: "Assigned Resources"
     project_overheads: "Project Overheads"
+    delivery_milestones: "Delivery Milestones"
   label:
     new: "New"
     back: "Back"
@@ -90,6 +91,7 @@ en:
     assigned_resources: "Assigned Resources"
     staffing_fulfilled: "Staffing Fulfilled"
     project_overheads: "Project Overheads"
+    delivery_milestones: "Delivery Milestones"
   models:
     business_units: "Business Units"
     departments: "Departments"
