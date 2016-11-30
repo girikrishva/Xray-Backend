@@ -75,6 +75,7 @@ ActiveAdmin.register Project do
       item I18n.t('actions.assigned_resources'), admin_assigned_resources_path(project_id: resource.id)
       item I18n.t('actions.project_overheads'), admin_project_overheads_path(project_id: resource.id)
       item I18n.t('actions.delivery_milestones'), admin_delivery_milestones_path(project_id: resource.id)
+      item I18n.t('actions.invoicing_milestones'), admin_invoicing_milestones_path(project_id: resource.id)
     end
   end
 

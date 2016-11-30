@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20161130051417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -269,6 +269,19 @@ SELECT lookups.id,
     t.datetime "updated_at"
   end
   add_index "holiday_calendars", ["business_unit_id"], :name=>"index_holiday_calendars_on_business_unit_id"
+
+  create_table "invoicing_milestones", force: :cascade do |t|
+    t.string   "name",               :null=>false
+    t.string   "description"
+    t.date     "due_date",           :null=>false
+    t.date     "last_reminder_date"
+    t.date     "completion_date"
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "project_id",         :null=>false, :index=>{:name=>"index_invoicing_milestones_on_project_id"}, :foreign_key=>{:references=>"projects", :name=>"fk_invoicing_milestones_project_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.float    "amount",             :null=>false
+  end
 
   create_table "overheads", force: :cascade do |t|
     t.date     "amount_date",        :null=>false

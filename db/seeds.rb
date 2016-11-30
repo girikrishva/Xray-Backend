@@ -183,6 +183,10 @@ HolidayCalendar.create!([
   {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", business_unit_id: 1},
   {name: "Easter", as_on: "2016-09-17", description: "Easter", comments: "", business_unit_id: 4}
 ])
+InvoicingMilestone.create!([
+  {name: "Advance Invoice", description: "", due_date: "2016-11-30", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 100000.0},
+  {name: "Final Payment", description: "", due_date: "2016-12-31", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 300000.0}
+])
 Lookup.create!([
   {name: "CCI", description: "Cognitive Clouds India", rank: 3.0, comments: "", lookup_type_id: 2},
   {name: "CCS", description: "Cognitive Clouds Singapore", rank: 1.0, comments: "", lookup_type_id: 2},

@@ -13,6 +13,7 @@ class Project < ActiveRecord::Base
   has_many :assigned_resources, class_name: 'AssignedResource'
   has_many :project_overheads, class_name: 'ProjectOverhead'
   has_many :delivery_milestones, class_name: 'DeliveryMilestone'
+  has_many :invoicing_milestones, class_name: 'InvoicingMilestone'
 
   validates :name, presence: true
   validates :client_id, presence: true
