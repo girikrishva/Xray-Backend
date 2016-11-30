@@ -162,18 +162,6 @@ ActiveAdmin.register AssignedResource do
       end
     end
 
-    def group_by_field
-      if params.has_key?(scope)
-        if params[:scope] == 'summary_view'
-          ':skill_name'
-        else
-          ':staffing_requirement'
-        end
-      else
-        ':skill_name'
-      end
-    end
-
     def skill_for_staffing
       staffing_requirement_id = params[:staffing_requirement_id]
       skill_id = Skill.find(StaffingRequirement.find(staffing_requirement_id).skill_id).id

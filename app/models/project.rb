@@ -11,6 +11,7 @@ class Project < ActiveRecord::Base
 
   has_many :projects_audits, class_name: 'ProjectAudit'
   has_many :assigned_resources, class_name: 'AssignedResource'
+  has_many :project_overheads, class_name: 'ProjectOverhead'
 
   validates :name, presence: true
   validates :client_id, presence: true

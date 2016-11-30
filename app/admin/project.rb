@@ -73,6 +73,7 @@ ActiveAdmin.register Project do
       item "Audit Trail", admin_projects_audits_path(project_id: resource.id)
       item I18n.t('actions.staffing_requirements'), admin_project_staffing_requirements_path(pipeline_id: resource.pipeline_id)
       item I18n.t('actions.assigned_resources'), admin_assigned_resources_path(project_id: resource.id)
+      item I18n.t('actions.project_overheads'), admin_project_overheads_path(project_id: resource.id)
     end
   end
 

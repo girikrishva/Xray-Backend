@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161129040105) do
+ActiveRecord::Schema.define(version: 20161130022543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -299,6 +299,16 @@ SELECT lookups.id,
     t.integer  "estimator_id",          :null=>false, :index=>{:name=>"index_pipelines_audits_on_estimator_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_estimator_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "engagement_manager_id", :index=>{:name=>"index_pipelines_audits_on_engagement_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_engagement_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "delivery_manager_id",   :index=>{:name=>"index_pipelines_audits_on_delivery_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_delivery_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
+
+  create_table "project_overheads", force: :cascade do |t|
+    t.date     "amount_date",        :null=>false
+    t.float    "amount",             :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "cost_adder_type_id", :null=>false, :index=>{:name=>"index_project_overheads_on_cost_adder_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_project_overheads_cost_adder_type_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "project_id",         :null=>false, :index=>{:name=>"index_project_overheads_on_project_id"}, :foreign_key=>{:references=>"projects", :name=>"fk_project_overheads_project_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_view "project_statuses", <<-'END_VIEW_PROJECT_STATUSES', :force => true
