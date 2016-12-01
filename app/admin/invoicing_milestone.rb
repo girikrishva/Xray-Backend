@@ -32,12 +32,9 @@ ActiveAdmin.register InvoicingMilestone do
     link_to I18n.t('label.back'), admin_invoicing_milestones_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
 
-  index do
+  index as: :grouped_table, group_by_attribute: :project_name do
     selectable_column
     column :id
-    column :project, sortable: 'projects.name' do |resource|
-      resource.project.name
-    end
     column :name
     column :description
     column :due_date
@@ -63,12 +60,15 @@ ActiveAdmin.register InvoicingMilestone do
   show do |r|
     attributes_table_for r do
       row :id
+      row :project do
+        r.project.name
+      end
       row :name
       row :description
       row :amount
       row :due_date
       row :last_reminder_date
-      fow :completion_date
+      row :completion_date
       row :comments
     end
   end

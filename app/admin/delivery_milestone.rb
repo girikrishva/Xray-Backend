@@ -32,19 +32,18 @@ ActiveAdmin.register DeliveryMilestone do
     link_to I18n.t('label.back'), admin_delivery_milestones_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
 
-  index do
+  index as: :grouped_table, group_by_attribute: :project_name do
     selectable_column
     column :id
-    column :project, sortable: 'projects.name' do |resource|
-      resource.project.name
-    end
     column :name
     column :description
     column :due_date
     column :last_reminder_date
     column :completion_date
     column :comments
-    actions defaults: true, dropdown: true
+    actions defaults: true, dropdown: true do |resource|
+      item I18n.t('actions.invoicing_milestones'), admin_delivery_invoicing_milestones_path(project_id: session[:project_id], delivery_milestone_id: resource.id)
+    end
   end
 
   filter :name
@@ -57,11 +56,14 @@ ActiveAdmin.register DeliveryMilestone do
   show do |r|
     attributes_table_for r do
       row :id
+      row :project do
+        r.project.name
+      end
       row :name
       row :description
       row :due_date
       row :last_reminder_date
-      fow :completion_date
+      row :completion_date
       row :comments
     end
   end

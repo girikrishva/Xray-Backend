@@ -32,12 +32,9 @@ ActiveAdmin.register ProjectOverhead do
     link_to I18n.t('label.back'), admin_project_overheads_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
 
-  index do
+  index as: :grouped_table, group_by_attribute: :project_name do
     selectable_column
     column :id
-    column :project, sortable: 'projects.name' do |resource|
-      resource.project.name
-    end
     column :cost_adder_type
     column :amount_date
     column :amount do |element|

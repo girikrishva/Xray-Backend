@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161130051417) do
+ActiveRecord::Schema.define(version: 20161201081749) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -233,6 +233,27 @@ SELECT lookups.id,
     t.integer  "project_id",         :null=>false, :index=>{:name=>"index_delivery_milestones_on_project_id"}, :foreign_key=>{:references=>"projects", :name=>"fk_delivery_milestones_project_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
+  create_table "invoicing_milestones", force: :cascade do |t|
+    t.string   "name",               :null=>false
+    t.string   "description"
+    t.date     "due_date",           :null=>false
+    t.date     "last_reminder_date"
+    t.date     "completion_date"
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "project_id",         :null=>false, :index=>{:name=>"index_invoicing_milestones_on_project_id"}, :foreign_key=>{:references=>"projects", :name=>"fk_invoicing_milestones_project_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.float    "amount",             :null=>false
+  end
+
+  create_table "delivery_invoicing_milestones", force: :cascade do |t|
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "delivery_milestone_id",  :null=>false, :index=>{:name=>"index_delivery_invoicing_milestones_on_delivery_milestone_id"}, :foreign_key=>{:references=>"delivery_milestones", :name=>"fk_delivery_invoicing_milestones_delivery_milestone_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoicing_milestone_id", :null=>false, :index=>{:name=>"index_delivery_invoicing_milestones_on_invoicing_milestone_id"}, :foreign_key=>{:references=>"invoicing_milestones", :name=>"fk_delivery_invoicing_milestones_invoicing_milestone_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
+
   create_view "departments", <<-'END_VIEW_DEPARTMENTS', :force => true
 SELECT lookups.id,
     lookups.name,
@@ -269,19 +290,6 @@ SELECT lookups.id,
     t.datetime "updated_at"
   end
   add_index "holiday_calendars", ["business_unit_id"], :name=>"index_holiday_calendars_on_business_unit_id"
-
-  create_table "invoicing_milestones", force: :cascade do |t|
-    t.string   "name",               :null=>false
-    t.string   "description"
-    t.date     "due_date",           :null=>false
-    t.date     "last_reminder_date"
-    t.date     "completion_date"
-    t.string   "comments"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "project_id",         :null=>false, :index=>{:name=>"index_invoicing_milestones_on_project_id"}, :foreign_key=>{:references=>"projects", :name=>"fk_invoicing_milestones_project_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.float    "amount",             :null=>false
-  end
 
   create_table "overheads", force: :cascade do |t|
     t.date     "amount_date",        :null=>false
