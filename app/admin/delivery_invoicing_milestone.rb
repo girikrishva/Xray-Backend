@@ -16,7 +16,7 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
 
   permit_params :delivery_milestone_id, :invoicing_milestone_id, :comments
 
-  config.sort_order = 'delivery_milestones.name_asc_and_invoicing_milestones.name'
+  config.sort_order = 'invoicing_milestones.due_date_desc'
 
   config.clear_action_items!
 
@@ -45,7 +45,7 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
     actions defaults: true, dropdown: true
   end
 
-  filter :invoicing_milestone, collection: proc { InvoicingMilestone.ordered_lookup(session[:project_id]) }
+  filter :invoicing_milestone, collection: proc {InvoicingMilestone.ordered_lookup(session[:project_id]).map { |a| [a.invoicing_milestone_name, a.id] } }
   filter :comments
 
   show do |r|

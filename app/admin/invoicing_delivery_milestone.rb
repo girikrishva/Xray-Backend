@@ -16,7 +16,7 @@ ActiveAdmin.register InvoicingDeliveryMilestone do
 
   permit_params :delivery_milestone_id, :invoicing_milestone_id, :comments
 
-  config.sort_order = 'invoicing_milestones.name_and_delivery_milestones.name_asc'
+  config.sort_order = 'delivery_milestones.due_date_desc'
 
   config.clear_action_items!
 
