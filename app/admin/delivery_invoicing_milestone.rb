@@ -36,10 +36,10 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
     selectable_column
     column :id
     column :delivery_milestone, sortable: 'delivery_milestones.name' do |resource|
-      resource.delivery_milestone.name
+      resource.delivery_milestone.delivery_milestone_name
     end
     column :invoicing_milestone, sortable: 'invoicing_milestones.name' do |resource|
-      resource.invoicing_milestone.name
+      resource.invoicing_milestone.invoicing_milestone_name
     end
     column :comments
     actions defaults: true, dropdown: true
@@ -55,10 +55,10 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
         r.delivery_milestone.project.name
       end
       row :delivery_milestone do
-        r.delivery_milestone.name
+        r.delivery_milestone.delivery_milestone_name
       end
       row :invoicing_milestone do
-        r.invoicing_milestone.name
+        r.invoicing_milestone.invoicing_milestone_name
       end
       row :comments
     end
