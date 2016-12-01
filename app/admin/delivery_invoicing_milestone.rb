@@ -108,11 +108,12 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
   form do |f|
     f.object.delivery_milestone_id = session[:delivery_milestone_id]
     f.inputs do
-      f.input :project_name, as: :select, required: true, input_html: {disabled: :true}, collection: Project.where(id: session[:project_id]).map { |a| [a.name, a.name] }, include_blank: true
-      f.input :delivery_milestone, required: true, input_html: {disabled: :true}
+      f.input :project_name, as: :select, required: true, input_html: {disabled: :true}, collection: Project.where(id: session[:project_id]).map { |a| [a.name, a.name] }
+      f.input :delivery_milestone, required: true, input_html: {disabled: :true}, collection: DeliveryMilestone.where(id: session[:delivery_milestone_id]).map { |a| [a.delivery_milestone_name, a.id] }
       f.input :delivery_milestone_id, as: :hidden
       if f.object.new_record?
-        f.input :invoicing_milestone
+        f.input :invoicing_milestone, required: true, as: :select, collection:
+                                        InvoicingMilestone.ordered_lookup(session[:project_id]).map { |a| [a.invoicing_milestone_name, a.id] }, include_blank: true
       else
         f.input :invoicing_milestone, required: true, input_html: {disabled: :true}
         f.input :invoicing_milestone_id, as: :hidden
