@@ -1,4 +1,4 @@
-ActiveAdmin.register DeliveryInvoicingMilestone do
+ActiveAdmin.register InvoicingDeliveryMilestone do
   menu false
 
 # See permitted parameters documentation:
@@ -16,36 +16,36 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
 
   permit_params :delivery_milestone_id, :invoicing_milestone_id, :comments
 
-  config.sort_order = 'delivery_milestones.name_asc_and_invoicing_milestones.name'
+  config.sort_order = 'invoicing_milestones.name_and_delivery_milestones.name_asc'
 
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to I18n.t('label.new'), new_admin_delivery_invoicing_milestone_path(project_id: session[:project_id], delivery_milestone_id: session[:delivery_milestone_id]) if session.has_key?(:project_id) and session.has_key?(:delivery_milestone_id)
+    link_to I18n.t('label.new'), new_admin_invoicing_delivery_milestone_path(project_id: session[:project_id], invoicing_milestone_id: session[:invoicing_milestone_id]) if session.has_key?(:project_id) and session.has_key?(:invoicing_milestone_id)
   end
 
   action_item only: :index do |resource|
-    link_to I18n.t('label.back'), admin_delivery_milestones_path(project_id: session[:project_id])
+    link_to I18n.t('label.back'), admin_invoicing_milestones_path(project_id: session[:project_id])
   end
 
   action_item only: [:show, :edit, :new] do |resource|
-    link_to I18n.t('label.back'), admin_delivery_invoicing_milestones_path(project_id: session[:project_id], delivery_milestone_id: session[:delivery_milestone_id]) if session.has_key?(:project_id) and session.has_key?(:delivery_milestone_id)
+    link_to I18n.t('label.back'), admin_invoicing_delivery_milestones_path(project_id: session[:project_id],  invoicing_milestone_id: session[:invoicing_milestone_id]) if session.has_key?(:project_id) and session.has_key?(:invoicing_milestone_id)
   end
 
   index as: :grouped_table, group_by_attribute: :project_name do
     selectable_column
     column :id
-    column :delivery_milestone, sortable: 'delivery_milestones.name' do |resource|
-      resource.delivery_milestone.delivery_milestone_name
-    end
     column :invoicing_milestone, sortable: 'invoicing_milestones.name' do |resource|
       resource.invoicing_milestone.invoicing_milestone_name
+    end
+    column :delivery_milestone, sortable: 'delivery_milestones.name' do |resource|
+      resource.delivery_milestone.delivery_milestone_name
     end
     column :comments
     actions defaults: true, dropdown: true
   end
 
-  filter :invoicing_milestone, collection: proc { InvoicingMilestone.ordered_lookup(session[:project_id]) }
+  filter :delivery_milestone, collection: proc { DeliveryMilestone.ordered_lookup(session[:project_id]) }
   filter :comments
 
   show do |r|
@@ -54,11 +54,11 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
       row :project do
         r.delivery_milestone.project.name
       end
-      row :delivery_milestone do
-        r.delivery_milestone.delivery_milestone_name
-      end
       row :invoicing_milestone do
         r.invoicing_milestone.invoicing_milestone_name
+      end
+      row :delivery_milestone do
+        r.delivery_milestone.delivery_milestone_name
       end
       row :comments
     end
@@ -72,16 +72,16 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
     before_filter only: :index do |resource|
       if params.has_key?(:project_id)
         session[:project_id] = params[:project_id]
-        if params.has_key?(:delivery_milestone_id)
-          session[:delivery_milestone_id] = params[:delivery_milestone_id]
+        if params.has_key?(:invoicing_milestone_id)
+          session[:invoicing_milestone_id] = params[:invoicing_milestone_id]
         else
-          admin_delivery_milestones_path(project_id: session[:project_id])
+          admin_invoicing_milestones_path(project_id: session[:project_id])
         end
       else
         redirect_to admin_projects_path
       end
       if params[:commit].blank? && params[:q].blank?
-        extra_params = {"q" => {"project_id_eq" => params[:project_id], "delivery_milestone_id_eq" => params[:delivery_milestone_id]}}
+        extra_params = {"q" => {"project_id_eq" => params[:project_id], "invoicing_milestone_id_eq" => params[:invoicing_milestone_id]}}
         # make sure data is filtered and filters show correctly
         params.merge! extra_params
       end
@@ -89,33 +89,33 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
 
 
     def scoped_collection
-      DeliveryInvoicingMilestone.includes [:delivery_milestone, :invoicing_milestone]
+      InvoicingDeliveryMilestone.includes [:delivery_milestone, :invoicing_milestone]
     end
 
     def create
       super do |format|
-        redirect_to collection_url(project_id: session[:project_id], delivery_milestone_id: session[:delivery_milestone_id]) and return if resource.valid?
+        redirect_to collection_url(project_id: session[:project_id], invoicing_milestone_id: session[:invoicing_milestone_id]) and return if resource.valid?
       end
     end
 
     def update
       super do |format|
-        redirect_to collection_url(project_id: session[:project_id], delivery_milestone_id: session[:delivery_milestone_id]) and return if resource.valid?
+        redirect_to collection_url(project_id: session[:project_id], invoicing_milestone_id: session[:invoicing_milestone_id]) and return if resource.valid?
       end
     end
   end
 
   form do |f|
-    f.object.delivery_milestone_id = session[:delivery_milestone_id]
+    f.object.invoicing_milestone_id = session[:invoicing_milestone_id]
     f.inputs do
       f.input :project_name, as: :select, required: true, input_html: {disabled: :true}, collection: Project.where(id: session[:project_id]).map { |a| [a.name, a.name] }, include_blank: true
-      f.input :delivery_milestone, required: true, input_html: {disabled: :true}
-      f.input :delivery_milestone_id, as: :hidden
+      f.input :invoicing_milestone, required: true, input_html: {disabled: :true}
+      f.input :invoicing_milestone_id, as: :hidden
       if f.object.new_record?
-        f.input :invoicing_milestone
+        f.input :delivery_milestone
       else
-        f.input :invoicing_milestone, required: true, input_html: {disabled: :true}
-        f.input :invoicing_milestone_id, as: :hidden
+        f.input :delivery_milestone, required: true, input_html: {disabled: :true}
+        f.input :delivery_milestone_id, as: :hidden
       end
       f.input :comments
       f.actions do

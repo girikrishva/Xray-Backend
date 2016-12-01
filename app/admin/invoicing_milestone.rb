@@ -46,7 +46,9 @@ ActiveAdmin.register InvoicingMilestone do
     column :last_reminder_date
     column :completion_date
     column :comments
-    actions defaults: true, dropdown: true
+    actions defaults: true, dropdown: true do |resource|
+      item I18n.t('actions.delivery_milestones'), admin_invoicing_delivery_milestones_path(project_id: session[:project_id], invoicing_milestone_id: resource.id)
+    end
   end
 
   filter :name
