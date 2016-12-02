@@ -69,4 +69,8 @@ class AdminUser < ActiveRecord::Base
   def self.ordered_lookup
     AdminUser.all.order(:name)
   end
+
+  def business_unit_name
+    self.business_unit.name
+  end
 end

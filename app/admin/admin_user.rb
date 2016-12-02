@@ -33,7 +33,7 @@ ActiveAdmin.register AdminUser do
 
   config.sort_order = 'email_asc'
 
-  index do
+  index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
     column :id
     column :email
@@ -41,9 +41,6 @@ ActiveAdmin.register AdminUser do
     column :active
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
-    end
-    column :business_unit, sortable: 'business_units.name' do |resource|
-      resource.business_unit.name
     end
     column :department, sortable: 'departments.name' do |resource|
       resource.department.name
@@ -79,11 +76,11 @@ ActiveAdmin.register AdminUser do
     end
   end
 
+  filter :business_unit
   filter :email
   filter :name
   filter :active
   filter :role
-  filter :business_unit
   filter :department
   filter :designation
 
