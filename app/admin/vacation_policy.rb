@@ -28,12 +28,9 @@ ActiveAdmin.register VacationPolicy do
     link_to I18n.t('label.back'), admin_vacation_policies_path
   end
 
-  index do
+  index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
     column :id
-    column :business_unit, sortable: 'business_units.name' do |resource|
-      resource.business_unit.name
-    end
     column :vacation_code, sortable: 'vacation_codes.name' do |resource|
       resource.vacation_code.name
     end

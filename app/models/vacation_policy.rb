@@ -9,4 +9,8 @@ class VacationPolicy < ActiveRecord::Base
 
   # validates_uniqueness_of :business_unit, scope: [:vacation_code, :as_on]
   validates_uniqueness_of :vacation_code, scope: [:business_unit, :as_on]
+
+  def business_unit_name
+    self.business_unit.name
+  end
 end
