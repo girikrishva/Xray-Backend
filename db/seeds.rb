@@ -1,3 +1,4 @@
+# Comments
 AdminUser.create!([
   {email: "don@example.com", encrypted_password: "$2a$11$FfJ9RRbNH2JYO67UEy70UuHKki80kQJ3dwfdpR11rzxaMkk/TaQmu", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 14, current_sign_in_at: "2016-11-18 15:47:18", last_sign_in_at: "2016-11-14 10:29:28", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 5, business_unit_id: 1, department_id: 5, designation_id: 133, active: true, name: "Don Frey"},
   {email: "bob@example.com", encrypted_password: "$2a$11$PF65wOrnmozdpGu4P8INlepYlghWPceE8sA.u2hbhTnCSNECMK3uO", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 29, current_sign_in_at: "2016-11-15 11:19:00", last_sign_in_at: "2016-11-15 11:17:43", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 3, business_unit_id: 1, department_id: 5, designation_id: 133, active: false, name: "Robert Ludlow"},
