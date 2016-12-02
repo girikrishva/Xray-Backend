@@ -38,12 +38,9 @@ ActiveAdmin.register Lookup do
     redirect_to collection_url(lookup_type_id: session[:lookup_type_id])
   end
 
-  index do
+  index as: :grouped_table, group_by_attribute: :lookup_type_name do
     selectable_column
     column :id
-    column I18n.t('label.type'), :lookup_type do |caller|
-      caller.lookup_type.name
-    end
     column :name
     column :description
     column :rank

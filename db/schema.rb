@@ -292,6 +292,22 @@ SELECT lookups.id,
   end
   add_index "holiday_calendars", ["business_unit_id"], :name=>"index_holiday_calendars_on_business_unit_id"
 
+  create_view "invoice_terms", <<-'END_VIEW_INVOICE_TERMS', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id,
+    lookups.created_at,
+    lookups.updated_at,
+    lookups.extra
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Invoice Terms'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  ORDER BY lookups.rank
+  END_VIEW_INVOICE_TERMS
+
   create_table "overheads", force: :cascade do |t|
     t.date     "amount_date",        :null=>false
     t.float    "amount",             :null=>false

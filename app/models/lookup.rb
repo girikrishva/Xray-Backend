@@ -9,6 +9,10 @@ class Lookup < ActiveRecord::Base
   validates_uniqueness_of :name, scope: [:lookup_type_id]
   validates_uniqueness_of :rank, scope: [:lookup_type_id]
 
+  def lookup_type_name
+    self.lookup_type.name
+  end
+
   def self.lookups_for_name(lookup_type_name)
     Lookup.where(lookup_type_id: LookupType.where(name: lookup_type_name).first.id).order(:rank) rescue nil
   end

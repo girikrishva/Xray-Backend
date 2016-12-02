@@ -210,10 +210,6 @@ Lookup.create!([
   {name: "CL", description: "Casual Leave", rank: 2.0, comments: "", lookup_type_id: 10, extra: nil},
   {name: "SL", description: "Sick Leave", rank: 3.0, comments: "", lookup_type_id: 10, extra: nil},
   {name: "UL", description: "Unpaid Leave", rank: 4.0, comments: "", lookup_type_id: 10, extra: nil},
-  {name: "Sales Tax", description: "Sales Tax", rank: 3.0, comments: "", lookup_type_id: 11, extra: nil},
-  {name: "Service Tax", description: "Service Tax", rank: 1.0, comments: "", lookup_type_id: 11, extra: nil},
-  {name: "Value Added Tax", description: "Value Added Tax", rank: 2.0, comments: "", lookup_type_id: 11, extra: nil},
-  {name: "Income Tax", description: "Income Tax", rank: 4.0, comments: "", lookup_type_id: 11, extra: nil},
   {name: "Finance", description: "Finance", rank: 6.0, comments: "", lookup_type_id: 3, extra: nil},
   {name: "Sales", description: "Sales", rank: 2.0, comments: "", lookup_type_id: 3, extra: nil},
   {name: "Rental", description: "Rental", rank: 1.0, comments: "", lookup_type_id: 12, extra: nil},
@@ -269,7 +265,14 @@ Lookup.create!([
   {name: "Manager", description: "Manager", rank: 7.0, comments: "", lookup_type_id: 8, extra: nil},
   {name: "Engineer", description: "Engineer", rank: 8.0, comments: "", lookup_type_id: 8, extra: nil},
   {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 8, extra: nil},
-  {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 3, extra: nil}
+  {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 3, extra: nil},
+  {name: "Service Tax", description: "Service Tax", rank: 1.0, comments: "", lookup_type_id: 11, extra: "5.5"},
+  {name: "Value Added Tax", description: "Value Added Tax", rank: 2.0, comments: "", lookup_type_id: 11, extra: "14.5"},
+  {name: "Sales Tax", description: "Sales Tax", rank: 3.0, comments: "", lookup_type_id: 11, extra: "2"},
+  {name: "Income Tax", description: "Income Tax", rank: 4.0, comments: "", lookup_type_id: 11, extra: "22"},
+  {name: "Net 30", description: "Net 30", rank: 1.0, comments: "", lookup_type_id: 20, extra: "30"},
+  {name: "Net 15", description: "Net 15", rank: 2.0, comments: "", lookup_type_id: 20, extra: "15"},
+  {name: "Immediate", description: "Immediate", rank: 3.0, comments: "", lookup_type_id: 20, extra: "0"}
 ])
 LookupType.create!([
   {name: "Departments", description: "Departments", comments: ""},
@@ -283,7 +286,8 @@ LookupType.create!([
   {name: "Pipeline Statuses", description: "Pipeline Statuses", comments: ""},
   {name: "Project Statuses", description: "Project Statuses", comments: ""},
   {name: "Invoice Statuses", description: "Invoice Statuses", comments: ""},
-  {name: "Payment Statuses", description: "Payment Statuses", comments: ""}
+  {name: "Payment Statuses", description: "Payment Statuses", comments: ""},
+  {name: "Invoice Terms", description: "Invoice Terms", comments: ""}
 ])
 Overhead.create!([
   {amount_date: "2016-11-16", amount: 50000.0, comments: "", business_unit_id: 1, department_id: 12, cost_adder_type_id: 80},
@@ -392,6 +396,11 @@ Designation.create!([
   {name: "Manager", description: "Manager", rank: 7.0, comments: "", lookup_type_id: 8},
   {name: "Engineer", description: "Engineer", rank: 8.0, comments: "", lookup_type_id: 8},
   {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 8}
+])
+InvoiceTerm.create!([
+  {name: "Net 30", description: "Net 30", rank: 1.0, comments: "", lookup_type_id: 20, extra: "30"},
+  {name: "Net 15", description: "Net 15", rank: 2.0, comments: "", lookup_type_id: 20, extra: "15"},
+  {name: "Immediate", description: "Immediate", rank: 3.0, comments: "", lookup_type_id: 20, extra: "0"}
 ])
 PipelineStatus.create!([
   {name: "New", description: "New", rank: 1.0, comments: "", lookup_type_id: 15},
