@@ -13,7 +13,7 @@ ActiveAdmin.register Lookup do
 #   permitted
 # end
 
-  permit_params :name, :description, :rank, :comments, :lookup_type_id
+  permit_params :name, :description, :rank, :comments, :lookup_type_id, :extra
 
   config.sort_order = 'rank_asc'
 
@@ -47,8 +47,20 @@ ActiveAdmin.register Lookup do
     column :name
     column :description
     column :rank
+    column :extra
     column :comments
     actions defaults: true, dropdown: true
+  end
+
+  show do |r|
+    attributes_table_for r do
+      row :id
+      row :name
+      row :description
+      row :rank
+      row :extra
+      row :comments
+    end
   end
 
   controller do
@@ -96,6 +108,7 @@ ActiveAdmin.register Lookup do
   filter :name
   filter :description
   filter :rank
+  filter :extra
   filter :comments
 
   form do |f|
@@ -111,6 +124,7 @@ ActiveAdmin.register Lookup do
       f.input :name
       f.input :description
       f.input :rank
+      f.input :extra
       f.input :comments
     end
     f.actions do
