@@ -16,10 +16,6 @@ class InvoiceHeader < ActiveRecord::Base
   before_create :populate_due_date
   before_update :populate_due_date
 
-  def client_name
-    self.client.name
-  end
-
   def populate_due_date
     self.due_date = self.invoice_date + self.invoice_term.extra.to_f
   end

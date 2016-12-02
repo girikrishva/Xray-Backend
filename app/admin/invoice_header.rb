@@ -16,7 +16,7 @@ ActiveAdmin.register InvoiceHeader do
 
   permit_params :client_id, :narrative, :invoice_date, :invoice_term_id, :invoice_status_id, :comments, :due_date
 
-  config.sort_order = 'clients.name_asc_and_invoice_date_desc_and_narrative_asc'
+  config.sort_order = 'invoice_date_desc_and_narrative_asc'
 
   config.clear_action_items!
 
@@ -28,9 +28,12 @@ ActiveAdmin.register InvoiceHeader do
     link_to I18n.t('label.back'), admin_invoice_headers_path
   end
 
-  index as: :grouped_table, group_by_attribute: :client_name do
+  index do
     selectable_column
     column :id
+    column :client do |resource|
+      resource.client.name
+    end
     column :narrative
     column :invoice_date
     column :invoice_term, sortable: 'invoice_terms.name' do |resource|
