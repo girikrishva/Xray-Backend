@@ -28,12 +28,9 @@ ActiveAdmin.register HolidayCalendar do
     link_to I18n.t('label.back'), admin_holiday_calendars_path
   end
 
-  index do
+  index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
     column :id
-    column :business_unit, sortable: 'business_units.name' do |resource|
-      resource.business_unit.name
-    end
     column :name
     column :description
     column :as_on
