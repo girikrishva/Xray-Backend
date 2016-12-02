@@ -19,4 +19,8 @@ class InvoiceHeader < ActiveRecord::Base
   def populate_due_date
     self.due_date = self.invoice_date + self.invoice_term.extra.to_f
   end
+
+  def invoice_header_name
+    '[' + self.id.to_s + '] [' + self.client.name + '] [' + self.narrative + '] [' + self.invoice_date.to_s + ']'
+  end
 end
