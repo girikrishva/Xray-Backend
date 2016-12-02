@@ -1,4 +1,3 @@
-# Comments
 AdminUser.create!([
   {email: "don@example.com", encrypted_password: "$2a$11$FfJ9RRbNH2JYO67UEy70UuHKki80kQJ3dwfdpR11rzxaMkk/TaQmu", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 14, current_sign_in_at: "2016-11-18 15:47:18", last_sign_in_at: "2016-11-14 10:29:28", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 5, business_unit_id: 1, department_id: 5, designation_id: 133, active: true, name: "Don Frey"},
   {email: "bob@example.com", encrypted_password: "$2a$11$PF65wOrnmozdpGu4P8INlepYlghWPceE8sA.u2hbhTnCSNECMK3uO", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 29, current_sign_in_at: "2016-11-15 11:19:00", last_sign_in_at: "2016-11-15 11:17:43", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 3, business_unit_id: 1, department_id: 5, designation_id: 133, active: false, name: "Robert Ludlow"},
@@ -188,6 +187,12 @@ HolidayCalendar.create!([
   {name: "Christmas", as_on: "2016-12-25", description: "Christmas", comments: "", business_unit_id: 4},
   {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", business_unit_id: 1},
   {name: "Easter", as_on: "2016-09-17", description: "Easter", comments: "", business_unit_id: 4}
+])
+InvoiceHeader.create!([
+  {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01"},
+  {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02"},
+  {narrative: "Advance invoice", invoice_date: "2016-12-02", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01"},
+  {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09"}
 ])
 InvoicingDeliveryMilestone.create!([
   {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1},
@@ -397,6 +402,14 @@ Designation.create!([
   {name: "Manager", description: "Manager", rank: 7.0, comments: "", lookup_type_id: 8},
   {name: "Engineer", description: "Engineer", rank: 8.0, comments: "", lookup_type_id: 8},
   {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 8}
+])
+InvoiceStatus.create!([
+  {name: "New", description: "New", rank: 1.0, comments: "", lookup_type_id: 17, extra: nil},
+  {name: "Sent", description: "Sent", rank: 2.0, comments: "", lookup_type_id: 17, extra: nil},
+  {name: "Paid", description: "Paid", rank: 3.0, comments: "", lookup_type_id: 17, extra: nil},
+  {name: "Part-Paid", description: "Part-Paid", rank: 4.0, comments: "", lookup_type_id: 17, extra: nil},
+  {name: "Canceled", description: "Canceled", rank: 5.0, comments: "", lookup_type_id: 17, extra: nil},
+  {name: "Hold", description: "Hold", rank: 6.0, comments: "", lookup_type_id: 17, extra: nil}
 ])
 InvoiceTerm.create!([
   {name: "Net 30", description: "Net 30", rank: 1.0, comments: "", lookup_type_id: 20, extra: "30"},

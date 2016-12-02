@@ -9,7 +9,7 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended that you check this file into your version control system..
+# It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 0) do
 
@@ -291,6 +291,34 @@ SELECT lookups.id,
     t.datetime "updated_at"
   end
   add_index "holiday_calendars", ["business_unit_id"], :name=>"index_holiday_calendars_on_business_unit_id"
+
+  create_table "invoice_headers", force: :cascade do |t|
+    t.string   "narrative",         :null=>false
+    t.date     "invoice_date",      :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "client_id",         :null=>false, :index=>{:name=>"index_invoice_headers_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_invoice_headers_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoice_status_id", :null=>false, :index=>{:name=>"index_invoice_headers_on_invoice_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_invoice_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoice_term_id",   :null=>false, :index=>{:name=>"index_invoice_headers_on_invoice_term_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_invoice_term_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.date     "due_date",          :null=>false
+  end
+
+  create_view "invoice_statuses", <<-'END_VIEW_INVOICE_STATUSES', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id,
+    lookups.created_at,
+    lookups.updated_at,
+    lookups.extra
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Invoice Statuses'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  ORDER BY lookups.rank
+  END_VIEW_INVOICE_STATUSES
 
   create_view "invoice_terms", <<-'END_VIEW_INVOICE_TERMS', :force => true
 SELECT lookups.id,
