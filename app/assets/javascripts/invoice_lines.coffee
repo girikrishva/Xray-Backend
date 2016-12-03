@@ -29,6 +29,7 @@ jQuery ->
       url = '/admin/api/invoicing_milestone?invoicing_milestone_id=' + escaped_invoicing_milestone_id
       $.ajax url,
         success: (data, status, xhr) ->
+          $('#invoice_line_invoicing_milestone_id').val(data.invoicing_milestone.id)
           $('#invoice_line_narrative').val(data.invoicing_milestone.name)
           $('#invoice_line_line_amount').val(data.invoicing_milestone.amount)
         error: (xhr, status, err) ->
@@ -45,6 +46,8 @@ jQuery ->
       url = '/admin/api/invoice_adder_type?invoice_adder_type_id=' + escaped_invoice_adder_type_id
       $.ajax url,
         success: (data, status, xhr) ->
+          alert(data.invoice_adder_type.id)
+          $('#invoice_line_invoice_adder_type_id').val(data.invoice_adder_type.id)
           $('#invoice_line_narrative').val(data.invoice_adder_type.name)
         error: (xhr, status, err) ->
           console.log(err)
