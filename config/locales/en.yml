@@ -45,6 +45,7 @@ en:
         Roles: ""
         Staffing Requirements: ""
         Vacation Policies  : ""
+        Invoice Lines: ""
   role:
     administrator: "Administrator"
     executive: "Executive"
@@ -77,6 +78,7 @@ en:
     delivery_milestones: "Delivery Milestones"
     invoicing_milestones: "Invoicing Milestones"
     invoices: "Invoices"
+    invoice_lines: "Invoice Lines"
   label:
     new: "New"
     back: "Back"
@@ -117,6 +119,7 @@ en:
     project_overheads: "Project Overheads"
     delivery_milestones: "Delivery Milestones"
     invoicing_milestones: "Invoicing Milestones"
+    invoice_lines: "Invoice Lines"
   models:
     business_units: "Business Units"
     departments: "Departments"

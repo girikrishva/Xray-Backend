@@ -45,6 +45,7 @@ ActiveAdmin.register InvoiceHeader do
     column :due_date
     column :comments
     actions defaults: true, dropdown: true do |resource|
+      item I18n.t('actions.invoice_lines'), admin_invoice_lines_path(invoice_header_id: resource.id)
     end
   end
   filter :client, collection:
