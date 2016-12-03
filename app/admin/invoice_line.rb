@@ -117,6 +117,18 @@ ActiveAdmin.register InvoiceLine do
         redirect_to collection_url(invoice_header_id: session[:invoice_header_id]) and return if resource.valid?
       end
     end
+
+    def invoicing_milestone
+      invoicing_milestone_id = params[:invoicing_milestone_id]
+      invoicing_milestone = InvoicingMilestone.find(invoicing_milestone_id)
+      render json: '{"invoicing_milestone": ' + invoicing_milestone.to_json + '}'
+    end
+
+    def invoice_adder_type
+      invoice_adder_type_id = params[:invoice_adder_type_id]
+      invoice_adder_type = InvoiceAdderType.find(invoice_adder_type_id)
+      render json: '{"invoice_adder_type": ' + invoice_adder_type.to_json + '}'
+    end
   end
 
   form do |f|
@@ -124,16 +136,16 @@ ActiveAdmin.register InvoiceLine do
     f.inputs do
       f.input :invoice_header, label: I18n.t('label.invoice_header'), as: :select, collection: InvoiceHeader.where(id: session[:invoice_header_id]).map { |a| [a.invoice_header_name, a.id] }, input_html: {disabled: true}, required: true
       f.input :invoice_header_id, as: :hidden, required: true
-      f.input :project, label: I18n.t('label.project'), as: :select, collection: Project.where(client_id: InvoiceHeader.where(id: session[:invoice_header_id]).first.client_id).map { |a| [a.name, a.id] }, input_html: {disabled: true}, required: true
-      if f.object.invoicing_milestone_id.blank? and f.object.invoice_adder_type_id.blank?
-        f.input :invoicing_milestone, label: I18n.t('label.invoicing_milestone')
-        f.input :invoice_adder_type, label: I18n.t('label.invoice_adder_type')
+      if f.object.project_id.blank?
+        f.input :project, label: I18n.t('label.project'), as: :select, collection: Project.where(client_id: InvoiceHeader.where(id: session[:invoice_header_id]).first.client_id).map { |a| [a.name, a.id] }, required: true
       else
-        f.input :invoicing_milestone, label: I18n.t('label.invoicing_milestone'), input_html: {disabled: true}
-        f.input :invoicing_milestone_id, as: :hidden
-        f.input :invoice_adder_type, label: I18n.t('label.invoice_adder_type'), input_html: {disabled: true}
-        f.input :invoice_adder_type_id, as: :hidden
+        f.input :project, label: I18n.t('label.project'), as: :select, collection: Project.where(client_id: InvoiceHeader.where(id: session[:invoice_header_id]).first.client_id).map { |a| [a.name, a.id] }, input_html: {disabled: true}, required: true
+        f.input :project_id, as: :hidden
       end
+      f.input :invoicing_milestone, label: I18n.t('label.invoicing_milestone'), input_html: {disabled: true}
+      f.input :invoicing_milestone_id, as: :hidden
+      f.input :invoice_adder_type, label: I18n.t('label.invoice_adder_type'), input_html: {disabled: true}
+      f.input :invoice_adder_type_id, as: :hidden
       f.input :narrative, label: I18n.t('label.narrative'), required: true
       f.input :line_amount, label: I18n.t('label.line_amount'), required: true
       f.input :comments, label: I18n.t('label.comments')

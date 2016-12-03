@@ -24,4 +24,8 @@ class InvoicingMilestone < ActiveRecord::Base
   def self.ordered_lookup(project_id)
     InvoicingMilestone.where(project_id: project_id).order(:name)
   end
+
+  def self.invoicing_milestones_for_project(project_id)
+    InvoicingMilestone.where(project_id: project_id).order(:due_date)
+  end
 end

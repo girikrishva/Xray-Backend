@@ -109,6 +109,12 @@ ActiveAdmin.register InvoicingMilestone do
         redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
       end
     end
+
+    def invoicing_milestones_for_project
+      project_id = params[:project_id]
+      invoicing_milestones = InvoicingMilestone.invoicing_milestones_for_project(project_id)
+      render json: '{"invoicing_milestones": ' + invoicing_milestones.to_json.to_json + '}'
+    end
   end
 
   form do |f|
