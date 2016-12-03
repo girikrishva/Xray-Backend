@@ -107,6 +107,7 @@ en:
     detailed_view: "Detailed View"
     default_invoice_term: "Net 30"
     invoice_date: "Invoice Date"
+    invoice_header: "Invoice Header"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"

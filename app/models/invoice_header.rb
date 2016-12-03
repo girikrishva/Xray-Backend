@@ -21,6 +21,6 @@ class InvoiceHeader < ActiveRecord::Base
   end
 
   def invoice_header_name
-    '[' + self.id.to_s + '] [' + self.client.name + '] [' + self.narrative + '] [' + self.invoice_date.to_s + ']'
+    'Id: [' + self.id.to_s + '], Invoice: [' + self.narrative + '], Client: [' + self.client.name + '], Dated: [' + self.invoice_date.to_s + ']'
   end
 end

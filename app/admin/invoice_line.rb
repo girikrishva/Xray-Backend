@@ -122,9 +122,9 @@ ActiveAdmin.register InvoiceLine do
   form do |f|
     f.object.invoice_header_id = session[:invoice_header_id]
     f.inputs do
-      f.input :invoice_header, as: :select, collection: InvoiceHeader.where(id: session[:invoice_header_id]).map { |a| [a.invoice_header_name, a.id] }, input_html: {disabled: true}
+      f.input :invoice_header, label: I18n.t('label.invoice_header'), as: :select, collection: InvoiceHeader.where(id: session[:invoice_header_id]).map { |a| [a.invoice_header_name, a.id] }, input_html: {disabled: true}
       f.input :invoice_header_id, as: :hidden
-      f.input :project
+      f.input :project, label: I18n.t('label.project'), as: :select, collection: Project.where(client_id: InvoiceHeader.where(id: session[:invoice_header_id]).first.client_id).map { |a| [a.name, a.id] }, input_html: {disabled: true}
       f.input :invoicing_milestone
       f.input :invoice_adder_type
       f.input :narrative
