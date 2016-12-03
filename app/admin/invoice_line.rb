@@ -125,11 +125,11 @@ ActiveAdmin.register InvoiceLine do
       f.input :invoice_header, label: I18n.t('label.invoice_header'), as: :select, collection: InvoiceHeader.where(id: session[:invoice_header_id]).map { |a| [a.invoice_header_name, a.id] }, input_html: {disabled: true}
       f.input :invoice_header_id, as: :hidden
       f.input :project, label: I18n.t('label.project'), as: :select, collection: Project.where(client_id: InvoiceHeader.where(id: session[:invoice_header_id]).first.client_id).map { |a| [a.name, a.id] }, input_html: {disabled: true}
-      f.input :invoicing_milestone
-      f.input :invoice_adder_type
-      f.input :narrative
-      f.input :line_amount
-      f.input :comments
+      f.input :invoicing_milestone, label: I18n.t('label.invoicing_milestone')
+      f.input :invoice_adder_type, label: I18n.t('label.invoice_adder_type')
+      f.input :narrative, label: I18n.t('label.narrative')
+      f.input :line_amount, label: I18n.t('label.line_amount')
+      f.input :comments, label: I18n.t('label.comments')
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))

@@ -108,6 +108,12 @@ en:
     default_invoice_term: "Net 30"
     invoice_date: "Invoice Date"
     invoice_header: "Invoice Header"
+    invoice_line: "Invoice Line"
+    invoicing_milestone: "Invoicing Milestone"
+    invoice_adder_type: "Invoice Adder Type"
+    narrative: "Narrative"
+    line_amount: "Line Amount"
+    comments: "Comments"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"
