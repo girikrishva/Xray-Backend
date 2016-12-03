@@ -12,7 +12,16 @@ class InvoiceLine < ActiveRecord::Base
   validates_uniqueness_of :project_id, scope: [:project_id, :narrative]
   validates_uniqueness_of :narrative, scope: [:project_id, :narrative]
 
+  before_create :invoicing_milestone_invoice_adder_type_arc_check
+  before_update :invoicing_milestone_invoice_adder_type_arc_check
+
   def invoice_header_name
     self.invoice_header.invoice_header_name
+  end
+
+  def invoicing_milestone_invoice_adder_type_arc_check
+    if self.invoicing_milestone_id.blank? and self.invoice_adder_type_id.blank?
+      raise I18n.t('errors.invoicing_milestone_invoice_adder_type_arc_error')
+    end
   end
 end
