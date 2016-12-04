@@ -190,9 +190,13 @@ HolidayCalendar.create!([
 ])
 InvoiceHeader.create!([
   {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01"},
-  {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02"},
   {narrative: "Advance invoice", invoice_date: "2016-12-02", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01"},
-  {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09"}
+  {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09"},
+  {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02"}
+])
+InvoiceLine.create!([
+  {narrative: "Advance Invoice", line_amount: 100000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: 1, invoice_adder_type_id: nil},
+  {narrative: "Final Payment", line_amount: 300000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: 2, invoice_adder_type_id: nil}
 ])
 InvoicingDeliveryMilestone.create!([
   {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1},
@@ -402,6 +406,12 @@ Designation.create!([
   {name: "Manager", description: "Manager", rank: 7.0, comments: "", lookup_type_id: 8},
   {name: "Engineer", description: "Engineer", rank: 8.0, comments: "", lookup_type_id: 8},
   {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 8}
+])
+InvoiceAdderType.create!([
+  {name: "Service Tax", description: "Service Tax", rank: 1.0, comments: "", lookup_type_id: 11, extra: "5.5"},
+  {name: "Value Added Tax", description: "Value Added Tax", rank: 2.0, comments: "", lookup_type_id: 11, extra: "14.5"},
+  {name: "Sales Tax", description: "Sales Tax", rank: 3.0, comments: "", lookup_type_id: 11, extra: "2"},
+  {name: "Income Tax", description: "Income Tax", rank: 4.0, comments: "", lookup_type_id: 11, extra: "22"}
 ])
 InvoiceStatus.create!([
   {name: "New", description: "New", rank: 1.0, comments: "", lookup_type_id: 17, extra: nil},

@@ -322,14 +322,14 @@ SELECT lookups.id,
 
   create_table "invoice_lines", force: :cascade do |t|
     t.string   "narrative",              :null=>false
-    t.float    "amount",                 :null=>false
+    t.float    "line_amount",            :null=>false
     t.string   "comments"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "invoice_header_id",      :null=>false, :index=>{:name=>"index_invoice_lines_on_invoice_header_id"}, :foreign_key=>{:references=>"invoice_headers", :name=>"fk_invoice_lines_invoice_header_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "project_id",             :null=>false, :index=>{:name=>"index_invoice_lines_on_project_id"}, :foreign_key=>{:references=>"projects", :name=>"fk_invoice_lines_project_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoicing_milestone_id", :index=>{:name=>"index_invoice_lines_on_invoicing_milestone_id"}, :foreign_key=>{:references=>"invoicing_milestones", :name=>"fk_invoice_lines_invoicing_milestone_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer  "invoice_adder_type_id",  :index=>{:name=>"index_invoice_lines_on_invoice_adder_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_lines_lookup_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoice_adder_type_id",  :index=>{:name=>"index_invoice_lines_on_invoice_adder_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_lines_invoice_adder_type_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_view "invoice_statuses", <<-'END_VIEW_INVOICE_STATUSES', :force => true
