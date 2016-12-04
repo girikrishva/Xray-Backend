@@ -9,8 +9,9 @@ class InvoiceLine < ActiveRecord::Base
   validates :narrative, presence: true
   validates :line_amount, presence: true
 
-  validates_uniqueness_of :project_id, scope: [:project_id, :narrative]
-  validates_uniqueness_of :narrative, scope: [:project_id, :narrative]
+  validates_uniqueness_of :invoice_header_id, scope: [:invoice_header_id, :project_id, :narrative]
+  validates_uniqueness_of :project_id, scope: [:invoice_header_id, :project_id, :narrative]
+  validates_uniqueness_of :narrative, scope: [:invoice_header_id, :project_id, :narrative]
 
   before_create :invoicing_milestone_invoice_adder_type_arc_check
   before_update :invoicing_milestone_invoice_adder_type_arc_check
