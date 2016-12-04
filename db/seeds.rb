@@ -189,14 +189,13 @@ HolidayCalendar.create!([
   {name: "Easter", as_on: "2016-09-17", description: "Easter", comments: "", business_unit_id: 4}
 ])
 InvoiceHeader.create!([
-  {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01"},
-  {narrative: "Advance invoice", invoice_date: "2016-12-02", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01"},
-  {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09"},
-  {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02"}
+  {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", amount: 0.0},
+  {narrative: "Advance invoice", invoice_date: "2016-12-02", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", amount: 0.0},
+  {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09", amount: 0.0},
+  {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02", amount: 5000.0}
 ])
 InvoiceLine.create!([
-  {narrative: "Advance Invoice", line_amount: 100000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: 1, invoice_adder_type_id: nil},
-  {narrative: "Final Payment", line_amount: 300000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: 2, invoice_adder_type_id: nil}
+  {narrative: "Service Tax", line_amount: 5000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: nil, invoice_adder_type_id: 76}
 ])
 InvoicingDeliveryMilestone.create!([
   {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1},

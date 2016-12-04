@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161204142930) do
+ActiveRecord::Schema.define(version: 0) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -318,7 +318,7 @@ SELECT lookups.id,
     t.integer  "invoice_status_id", :null=>false, :index=>{:name=>"index_invoice_headers_on_invoice_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_invoice_status_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoice_term_id",   :null=>false, :index=>{:name=>"index_invoice_headers_on_invoice_term_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_invoice_term_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.date     "due_date",          :null=>false
-    t.float    "amount"
+    t.float    "amount",            :null=>false
   end
 
   create_table "invoice_lines", force: :cascade do |t|
