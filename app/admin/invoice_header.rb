@@ -31,7 +31,7 @@ ActiveAdmin.register InvoiceHeader do
   index do
     selectable_column
     column :id
-    column :client do |resource|
+    column :client, sortable: 'client.name' do |resource|
       resource.client.name
     end
     column :narrative
