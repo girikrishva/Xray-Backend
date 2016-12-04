@@ -14,7 +14,7 @@ ActiveAdmin.register InvoiceHeader do
 #   permitted
 # end
 
-  permit_params :client_id, :narrative, :invoice_date, :invoice_term_id, :invoice_status_id, :comments, :due_date
+  permit_params :client_id, :narrative, :invoice_date, :invoice_term_id, :invoice_status_id, :comments, :due_date, :amount
 
   config.sort_order = 'invoice_date_desc_and_narrative_asc'
 
@@ -43,6 +43,11 @@ ActiveAdmin.register InvoiceHeader do
       resource.invoice_status.name
     end
     column :due_date
+    column :amount do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.amount, precision: 0, delimiter: ','
+      end
+    end
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.invoice_lines'), admin_invoice_lines_path(invoice_header_id: resource.id)
@@ -55,6 +60,7 @@ ActiveAdmin.register InvoiceHeader do
   filter :invoice_term
   filter :invoice_status
   filter :due_date
+  filter :amount
   filter :comments
 
   show do |r|
@@ -72,6 +78,7 @@ ActiveAdmin.register InvoiceHeader do
         r.invoice_status.name
       end
       row :due_date
+      row :amount
       row :comments
     end
   end
@@ -107,6 +114,9 @@ ActiveAdmin.register InvoiceHeader do
     end
     if f.object.invoice_date.blank?
       f.object.invoice_date = Date.today
+    end
+    if f.object.new_record?
+      f.object.amount = 0
     end
     f.inputs do
       f.input :client, required: true, as: :select, collection:

@@ -16,6 +16,10 @@ class InvoiceLine < ActiveRecord::Base
   before_create :invoicing_milestone_invoice_adder_type_arc_check
   before_update :invoicing_milestone_invoice_adder_type_arc_check
 
+  after_create :update_header_amount
+  after_update :update_header_amount
+  after_destroy :update_header_amount
+
   def invoice_header_name
     self.invoice_header.invoice_header_name
   end
@@ -24,5 +28,11 @@ class InvoiceLine < ActiveRecord::Base
     if self.invoicing_milestone_id.blank? and self.invoice_adder_type_id.blank?
       raise I18n.t('errors.invoicing_milestone_invoice_adder_type_arc_error')
     end
+  end
+
+  def update_header_amount
+    invoice_header = InvoiceHeader.where(id: self.invoice_header_id).first
+    invoice_header.amount = InvoiceLine.where(invoice_header_id: invoice_header.id).sum(line_amount)
+    invoice_header.save
   end
 end
