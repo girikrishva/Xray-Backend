@@ -12,7 +12,7 @@ jQuery ->
         result = JSON.parse data.invoicing_milestones
         i = 0
         while i < result.length
-          $('#invoice_line_invoicing_milestone_id').append('<option value="' + result[i].id + '">' + '[' + result[i]. id + '] [' + result[i].name + '] due on [' + result[i].due_date + '] for the amount of [' + result[i].amount + ']' + '</option>')
+          $('#invoice_line_invoicing_milestone_id').append('<option value="' + result[i].id + '">' + 'Id: [' + result[i]. id + '], Name: [' + result[i].name + '],  Due on: [' + result[i].due_date + '], Amount: [' + result[i].amount + ']' + '</option>')
           i++
         console.log result[0].name
       error: (xhr, status, err) ->
@@ -46,7 +46,6 @@ jQuery ->
       url = '/admin/api/invoice_adder_type?invoice_adder_type_id=' + escaped_invoice_adder_type_id
       $.ajax url,
         success: (data, status, xhr) ->
-          alert(data.invoice_adder_type.id)
           $('#invoice_line_invoice_adder_type_id').val(data.invoice_adder_type.id)
           $('#invoice_line_narrative').val(data.invoice_adder_type.name)
         error: (xhr, status, err) ->
