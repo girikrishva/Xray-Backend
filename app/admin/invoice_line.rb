@@ -143,9 +143,7 @@ ActiveAdmin.register InvoiceLine do
         f.input :project_id, as: :hidden
       end
       f.input :invoicing_milestone, label: I18n.t('label.invoicing_milestone'), input_html: {disabled: true}
-      # f.input :invoicing_milestone_id, as: :hidden
       f.input :invoice_adder_type, label: I18n.t('label.invoice_adder_type'), input_html: {disabled: true}
-      # f.input :invoice_adder_type_id, as: :hidden
       f.input :narrative, label: I18n.t('label.narrative'), required: true
       f.input :line_amount, label: I18n.t('label.line_amount'), required: true
       f.input :comments, label: I18n.t('label.comments')
