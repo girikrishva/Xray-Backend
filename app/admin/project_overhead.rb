@@ -28,7 +28,7 @@ ActiveAdmin.register ProjectOverhead do
     link_to I18n.t('label.back'), admin_project_overheads_path(project_id: nil)
   end
 
-  action_item only: [:show, :edit, :new] do |resource|
+  action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_project_overheads_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
 

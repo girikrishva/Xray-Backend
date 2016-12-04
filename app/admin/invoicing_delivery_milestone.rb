@@ -28,7 +28,7 @@ ActiveAdmin.register InvoicingDeliveryMilestone do
     link_to I18n.t('label.back'), admin_invoicing_milestones_path(project_id: session[:project_id])
   end
 
-  action_item only: [:show, :edit, :new] do |resource|
+  action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_invoicing_delivery_milestones_path(project_id: session[:project_id],  invoicing_milestone_id: session[:invoicing_milestone_id]) if session.has_key?(:project_id) and session.has_key?(:invoicing_milestone_id)
   end
 

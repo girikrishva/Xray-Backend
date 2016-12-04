@@ -28,7 +28,7 @@ ActiveAdmin.register InvoiceLine do
     link_to I18n.t('label.back'), admin_invoice_lines_path(invoice_header_id: nil)
   end
 
-  action_item only: [:show, :edit, :new] do |resource|
+  action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_invoice_lines_path(invoice_header_id: session[:invoice_header_id]) if session.has_key?(:invoice_header_id)
   end
 
@@ -136,7 +136,7 @@ ActiveAdmin.register InvoiceLine do
     f.inputs do
       f.input :invoice_header, label: I18n.t('label.invoice_header'), as: :select, collection: InvoiceHeader.where(id: session[:invoice_header_id]).map { |a| [a.invoice_header_name, a.id] }, input_html: {disabled: true}, required: true
       f.input :invoice_header_id, as: :hidden, required: true
-      if f.object.project_id.blank?
+      if f.object.new_record?
         f.input :project, label: I18n.t('label.project'), as: :select, collection: Project.where(client_id: InvoiceHeader.where(id: session[:invoice_header_id]).first.client_id).map { |a| [a.name, a.id] }, required: true
       else
         f.input :project, label: I18n.t('label.project'), as: :select, collection: Project.where(client_id: InvoiceHeader.where(id: session[:invoice_header_id]).first.client_id).map { |a| [a.name, a.id] }, input_html: {disabled: true}, required: true

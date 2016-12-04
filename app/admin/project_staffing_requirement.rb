@@ -29,7 +29,7 @@ ActiveAdmin.register StaffingRequirement, as: 'ProjectStaffingRequirement' do
     link_to I18n.t('label.back'), admin_project_staffing_requirements_path(pipeline_id: nil)
   end
 
-  action_item only: [:show, :edit, :new] do |resource|
+  action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_project_staffing_requirements_path(pipeline_id: session[:pipeline_id]) if session.has_key?(:pipeline_id)
   end
 
