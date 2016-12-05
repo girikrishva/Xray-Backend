@@ -46,6 +46,7 @@ en:
         Staffing Requirements: ""
         Vacation Policies  : ""
         Invoice Lines: ""
+        Payment Headers: ""
   role:
     administrator: "Administrator"
     executive: "Executive"
@@ -79,6 +80,7 @@ en:
     invoicing_milestones: "Invoicing Milestones"
     invoices: "Invoices"
     invoice_lines: "Invoice Lines"
+    payments: "Payments"
   label:
     new: "New"
     back: "Back"
@@ -113,6 +115,7 @@ en:
     invoice_adder_type: "Invoice Adder Type"
     narrative: "Narrative"
     line_amount: "Line Amount"
+    payment_date: "Payment Date"
     comments: "Comments"
   actions:
     change_qualifiers: "Change Qualifiers"
@@ -127,6 +130,7 @@ en:
     delivery_milestones: "Delivery Milestones"
     invoicing_milestones: "Invoicing Milestones"
     invoice_lines: "Invoice Lines"
+    payment_lines: "Payment Lines"
   models:
     business_units: "Business Units"
     departments: "Departments"

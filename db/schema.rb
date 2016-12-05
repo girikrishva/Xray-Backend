@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20161205092833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -375,6 +375,33 @@ SELECT lookups.id,
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "payment_headers", force: :cascade do |t|
+    t.string   "narrative",         :null=>false
+    t.date     "payment_date",      :null=>false
+    t.float    "amount",            :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "client_id",         :null=>false, :index=>{:name=>"index_payment_headers_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_payment_headers_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "payment_status_id", :null=>false, :index=>{:name=>"index_payment_headers_on_payment_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_payment_headers_payment_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
+
+  create_view "payment_statuses", <<-'END_VIEW_PAYMENT_STATUSES', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id,
+    lookups.created_at,
+    lookups.updated_at,
+    lookups.extra
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Payment Statuses'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  ORDER BY lookups.rank
+  END_VIEW_PAYMENT_STATUSES
 
   create_view "pipeline_statuses", <<-'END_VIEW_PIPELINE_STATUSES', :force => true
 SELECT lookups.id,
