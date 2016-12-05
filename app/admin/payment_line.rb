@@ -44,6 +44,11 @@ ActiveAdmin.register PaymentLine do
         number_with_precision element.line_amount, precision: 0, delimiter: ','
       end
     end
+    column :unapplied_amount do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.invoice_line.unapplied_amount, precision: 0, delimiter: ','
+      end
+    end
     column :comments
     actions defaults: true, dropdown: true do |resource|
     end

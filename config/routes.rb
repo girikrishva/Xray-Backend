@@ -71,4 +71,5 @@ Rails.application.routes.draw do
   match '/admin/api/invoicing_milestone' => 'admin/invoice_lines#invoicing_milestone', via: [:get]
   match '/admin/api/invoice_adder_type' => 'admin/invoice_lines#invoice_adder_type', via: [:get]
   match '/admin/api/invoice_line_name' => 'admin/invoice_lines#invoice_line_name', via: [:get]
+  match '/admin/api/unapplied_amount' => 'admin/invoice_lines#unapplied_amount', via: [:get]
 end

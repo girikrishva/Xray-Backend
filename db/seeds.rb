@@ -305,7 +305,11 @@ Overhead.create!([
   {amount_date: "2016-11-18", amount: 54000.0, comments: "", business_unit_id: 1, department_id: 10, cost_adder_type_id: 81}
 ])
 PaymentHeader.create!([
-  {narrative: "Advance payment", payment_date: "2016-12-05", amount: 50000.0, comments: "", client_id: 3, payment_status_id: 119}
+  {narrative: "Advance payment", payment_date: "2016-12-05", amount: 25000.0, comments: "", client_id: 3, payment_status_id: 119}
+])
+PaymentLine.create!([
+  {narrative: "Test", line_amount: 20000.0, comments: "", payment_header_id: 1, invoice_line_id: 12},
+  {narrative: "Id: [2], Invoice: [Proforma invoice], Client: [Snapbizz], Dated: [2016-12-03], Line Id: [13], Narrative: [Service Tax], Line Amount: [5000.0], Unapplied: [5000.0]", line_amount: 5000.0, comments: "", payment_header_id: 1, invoice_line_id: 13}
 ])
 Pipeline.create!([
   {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, client_id: 3, project_type_code_id: 96, pipeline_status_id: 104, sales_person_id: 9, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9}
