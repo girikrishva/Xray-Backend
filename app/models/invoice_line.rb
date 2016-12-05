@@ -41,4 +41,13 @@ class InvoiceLine < ActiveRecord::Base
   def invoice_line_name
     self.invoice_header_name + ', Line Id: [' + self.id.to_s + '], Narrative: [' + self.narrative + '], Line Amount: [' + self.line_amount.to_s + ']'
   end
+
+  def self.invoice_lines_for_client(payment_header_id)
+    payment_header = PaymentHeader.find(payment_header_id)
+    invoice_header_ids = []
+    InvoiceHeader.where(client_id: payment_header.client_id).each do |invoice_header|
+      invoice_header_ids << invoice_header.id
+    end
+    InvoiceLine.where(invoice_header_id: invoice_header_ids)
+  end
 end

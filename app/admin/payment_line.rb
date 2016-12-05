@@ -36,7 +36,7 @@ ActiveAdmin.register PaymentLine do
     selectable_column
     column :id
     column :invoice_line do |resource|
-      resource.invoice_line.name
+      resource.invoice_line.invoice_line_name
     end
     column :narrative
     column :line_amount do |element|
@@ -108,9 +108,9 @@ ActiveAdmin.register PaymentLine do
       f.input :payment_header_id, label: I18n.t('label.payment_header'), as: :select, collection: PaymentHeader.where(id: session[:payment_header_id]).map { |a| [a.payment_header_name, a.id] }, input_html: {disabled: true}, required: true
       f.input :payment_header_id, as: :hidden, required: true
       if f.object.new_record?
-        f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, collection: InvoiceLine.all.map { |a| [a.invoice_line_name, a.id] }, required: true
+        f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, collection: InvoiceLine.invoice_lines_for_client(session[:payment_header_id]).map { |a| [a.invoice_line_name, a.id] }, required: true
       else
-        f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, collection: InvoiceLine.all.map { |a| [a.invoice_line_name, a.id] }, input_html: {disabled: true}, required: true
+        f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, collection: InvoiceLine.invoice_lines_for_client(session[:payment_header_id]).map { |a| [a.invoice_line_name, a.id] }, input_html: {disabled: true}, required: true
         f.input :invoice_line_id, as: :hidden
       end
       f.input :narrative, label: I18n.t('label.narrative'), required: true
