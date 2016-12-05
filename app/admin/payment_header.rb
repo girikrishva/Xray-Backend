@@ -44,6 +44,11 @@ ActiveAdmin.register PaymentHeader do
         number_with_precision element.amount, precision: 0, delimiter: ','
       end
     end
+    column :unreconciled_amount do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.unreconciled_amount, precision: 0, delimiter: ','
+      end
+    end
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.payment_lines'), admin_payment_lines_path(payment_header_id: resource.id)
@@ -69,6 +74,7 @@ ActiveAdmin.register PaymentHeader do
         r.payment_status.name
       end
       row :amount
+      row :unreconciled_amount
       row :comments
     end
   end

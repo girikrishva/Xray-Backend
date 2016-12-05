@@ -17,4 +17,8 @@ class PaymentHeader < ActiveRecord::Base
   def payment_header_name
     'Id: [' + self.id.to_s + '], Payment: [' + self.narrative + '], Client: [' + self.client.name + '], Dated: [' + self.payment_date.to_s + '], Amount: [' + amount.to_s + ']'
   end
+
+  def unreconciled_amount
+    self.amount - PaymentLine.where(payment_header_id: self.id).sum(:line_amount)
+  end
 end

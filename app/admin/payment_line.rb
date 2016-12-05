@@ -67,6 +67,7 @@ ActiveAdmin.register PaymentLine do
       end
       row :narrative
       row :line_amount
+      row :unapplied_amount
       row :comments
     end
   end
