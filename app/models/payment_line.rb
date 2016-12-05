@@ -7,9 +7,8 @@ class PaymentLine < ActiveRecord::Base
   validates :narrative, presence: true
   validates :line_amount, presence: true
 
-  validates_uniqueness_of :payment_header_id, scope: [:payment_header_id, :invoice_line_id, :narrative]
-  validates_uniqueness_of :invoice_line_id, scope: [:payment_header_id, :invoice_line_id, :narrative]
-  validates_uniqueness_of :narrative, scope: [:payment_header_id, :invoice_line_id, :narrative]
+  validates_uniqueness_of :payment_header_id, scope: [:payment_header_id, :invoice_line_id]
+  validates_uniqueness_of :invoice_line_id, scope: [:payment_header_id, :invoice_line_id]
 
   after_create :update_header_amount
   after_update :update_header_amount
