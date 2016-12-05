@@ -46,7 +46,7 @@ ActiveAdmin.register PaymentHeader do
     end
     column :comments
     actions defaults: true, dropdown: true do |resource|
-      # item I18n.t('actions.payment_lines'), admin_invoice_lines_path(invoice_header_id: resource.id)
+      item I18n.t('actions.payment_lines'), admin_payment_lines_path(payment_header_id: resource.id)
     end
   end
   filter :client, collection:

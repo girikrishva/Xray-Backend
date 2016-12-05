@@ -4,6 +4,8 @@ class InvoiceLine < ActiveRecord::Base
   belongs_to :invoicing_milestone, class_name: 'InvoicingMilestone', foreign_key: :invoicing_milestone_id
   belongs_to :invoice_adder_type, class_name: 'InvoiceAdderType', foreign_key: :invoice_adder_type_id
 
+  has_many :payment_lines, class_name: 'PaymentLine'
+
   validates :invoice_header_id, presence: true
   validates :project_id, presence: true
   validates :narrative, presence: true
@@ -34,5 +36,9 @@ class InvoiceLine < ActiveRecord::Base
     invoice_header = InvoiceHeader.where(id: self.invoice_header_id).first
     invoice_header.amount = InvoiceLine.where(invoice_header_id: invoice_header.id).sum(:line_amount)
     invoice_header.save
+  end
+
+  def invoice_line_name
+    self.invoice_header_name + ', Line Id: [' + self.id.to_s + '], Narrative: [' + self.narrative + '], Line Amount: [' + self.line_amount.to_s + ']'
   end
 end

@@ -47,6 +47,7 @@ en:
         Vacation Policies  : ""
         Invoice Lines: ""
         Payment Headers: ""
+        Payment Lines: ""
   role:
     administrator: "Administrator"
     executive: "Executive"
@@ -117,6 +118,7 @@ en:
     line_amount: "Line Amount"
     payment_date: "Payment Date"
     comments: "Comments"
+    payment_header: "Payment Header"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"
