@@ -32,7 +32,7 @@ class InvoiceLine < ActiveRecord::Base
 
   def update_header_amount
     invoice_header = InvoiceHeader.where(id: self.invoice_header_id).first
-    invoice_header.amount = InvoiceLine.where(invoice_header_id: invoice_header.id).sum(line_amount)
+    invoice_header.amount = InvoiceLine.where(invoice_header_id: invoice_header.id).sum(:line_amount)
     invoice_header.save
   end
 end
