@@ -43,6 +43,11 @@ ActiveAdmin.register InvoicingMilestone do
         number_with_precision element.amount, precision: 0, delimiter: ','
       end
     end
+    column :uninvoiced do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.uninvoiced, precision: 0, delimiter: ','
+      end
+    end
     column :last_reminder_date
     column :completion_date
     column :comments

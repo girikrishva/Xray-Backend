@@ -21,8 +21,8 @@ class InvoicingMilestone < ActiveRecord::Base
     self.project.name
   end
 
-  def uninvoiced_amount
-
+  def uninvoiced
+    self.amount - InvoiceLine.where(invoicing_milestone_id: self.id).sum(:line_amount)
   end
 
   def self.ordered_lookup(project_id)
