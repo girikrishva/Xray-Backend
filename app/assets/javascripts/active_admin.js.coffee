@@ -3,3 +3,4 @@
 //= require vacation_policies.coffee
 //= require assigned_resources.coffee
 //= require invoice_lines.coffee
+//= require payment_lines.coffee

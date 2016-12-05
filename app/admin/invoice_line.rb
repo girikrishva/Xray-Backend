@@ -129,6 +129,12 @@ ActiveAdmin.register InvoiceLine do
       invoice_adder_type = InvoiceAdderType.find(invoice_adder_type_id)
       render json: '{"invoice_adder_type": ' + invoice_adder_type.to_json + '}'
     end
+
+    def invoice_line_name
+      invoice_line_id = params[:invoice_line_id]
+      invoice_line = InvoiceLine.find(invoice_line_id)
+      render json: '{"invoice_line_name": ' + invoice_line.invoice_line_name.to_json + '}'
+    end
   end
 
   form do |f|
