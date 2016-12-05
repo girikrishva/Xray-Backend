@@ -5,7 +5,7 @@ jQuery ->
     url = '/admin/api/invoice_line_name?invoice_line_id=' + escaped_invoice_line_id
     $.ajax url,
       success: (data, status, xhr) ->
-        $('#payment_line_narrative').val(data.invoice_line_name)
+        $('#payment_line_narrative').val(data.invoice_line_narrative)
         console.log result[0].name
       error: (xhr, status, err) ->
         console.log(err)

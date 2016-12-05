@@ -133,7 +133,7 @@ ActiveAdmin.register InvoiceLine do
     def invoice_line_name
       invoice_line_id = params[:invoice_line_id]
       invoice_line = InvoiceLine.find(invoice_line_id)
-      render json: '{"invoice_line_name": ' + invoice_line.invoice_line_name.to_json + '}'
+      render json: '{"invoice_line_narrative": ' + invoice_line.narrative.to_json + '}'
     end
 
     def unapplied_amount
