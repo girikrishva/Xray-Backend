@@ -22,6 +22,10 @@ class InvoiceLine < ActiveRecord::Base
   after_update :update_header_amount
   after_destroy :update_header_amount
 
+  def name
+    self.invoice_line_name
+  end
+
   def invoice_header_name
     self.invoice_header.invoice_header_name
   end

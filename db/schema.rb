@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161205101939) do
+ActiveRecord::Schema.define(version: 20161206105444) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -318,7 +318,7 @@ SELECT lookups.id,
     t.integer  "invoice_status_id", :null=>false, :index=>{:name=>"index_invoice_headers_on_invoice_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_invoice_status_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoice_term_id",   :null=>false, :index=>{:name=>"index_invoice_headers_on_invoice_term_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_invoice_term_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.date     "due_date",          :null=>false
-    t.float    "amount",            :null=>false
+    t.float    "header_amount",     :null=>false
   end
 
   create_table "invoice_lines", force: :cascade do |t|
@@ -379,7 +379,7 @@ SELECT lookups.id,
   create_table "payment_headers", force: :cascade do |t|
     t.string   "narrative",         :null=>false
     t.date     "payment_date",      :null=>false
-    t.float    "amount",            :null=>false
+    t.float    "header_amount",     :null=>false
     t.string   "comments"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -395,6 +395,7 @@ SELECT lookups.id,
     t.datetime "updated_at"
     t.integer  "payment_header_id", :null=>false, :index=>{:name=>"index_payment_lines_on_payment_header_id"}, :foreign_key=>{:references=>"payment_headers", :name=>"fk_payment_lines_payment_header_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoice_line_id",   :null=>false, :index=>{:name=>"index_payment_lines_on_invoice_line_id"}, :foreign_key=>{:references=>"invoice_lines", :name=>"fk_payment_lines_invoice_line_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoice_header_id", :index=>{:name=>"index_payment_lines_on_invoice_header_id"}, :foreign_key=>{:references=>"invoice_headers", :name=>"fk_payment_lines_invoice_header_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_view "payment_statuses", <<-'END_VIEW_PAYMENT_STATUSES', :force => true

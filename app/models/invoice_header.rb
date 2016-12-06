@@ -17,8 +17,15 @@ class InvoiceHeader < ActiveRecord::Base
   before_create :populate_due_date
   before_update :populate_due_date
 
+  has_many :invoice_lines, class_name: 'InvoiceLine'
+  has_many :payment_lines, class_name: 'PaymentLine '
+
   def populate_due_date
     self.due_date = self.invoice_date + self.invoice_term.extra.to_f
+  end
+
+  def name
+    self.invoice_header_name
   end
 
   def invoice_header_name
@@ -31,5 +38,10 @@ class InvoiceHeader < ActiveRecord::Base
       unpaid_amount += invoice_line.unpaid_amount
     end
     unpaid_amount
+  end
+
+  def self.invoice_headers_for_client(payment_header_id)
+    payment_header = PaymentHeader.find(payment_header_id)
+    InvoiceHeader.where(client_id: payment_header.client_id).order('invoice_date desc')
   end
 end

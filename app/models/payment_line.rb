@@ -1,8 +1,10 @@
 class PaymentLine < ActiveRecord::Base
   belongs_to :payment_header, class_name: 'PaymentHeader', foreign_key: :payment_header_id
+  belongs_to :invoice_header, class_name: 'InvoiceHeader', foreign_key: :invoice_header_id
   belongs_to :invoice_line, class_name: 'InvoiceLine', foreign_key: :invoice_line_id
 
   validates :payment_header_id, presence: true
+  validates :invoice_header_id, presence: true
   validates :invoice_line_id, presence: true
   validates :narrative, presence: true
   validates :line_amount, presence: true

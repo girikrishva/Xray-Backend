@@ -14,7 +14,7 @@ ActiveAdmin.register PaymentLine do
 #   permitted
 # end
 
-  permit_params :payment_header_id, :invoice_line_id, :narrative, :line_amount, :comments
+  permit_params :payment_header_id, :invoice_line_id, :narrative, :line_amount, :comments, :invoice_header_id
 
   config.sort_order = 'narrative_asc'
 
@@ -36,7 +36,7 @@ ActiveAdmin.register PaymentLine do
     selectable_column
     column :id
     column :invoice_header do |resource|
-      resource.invoice_line.invoice_header.invoice_header_name
+      resource.invoice_header.invoice_header_name
     end
     column :invoice_line do |resource|
       resource.invoice_line.invoice_line_name
@@ -52,6 +52,7 @@ ActiveAdmin.register PaymentLine do
     end
   end
 
+  filter :invoice_header
   filter :invoice_line
   filter :narrative
   filter :line_amount
@@ -61,7 +62,7 @@ ActiveAdmin.register PaymentLine do
     attributes_table_for r do
       row :id
       row :invoice_header do
-        r.invoice_line.invoice_header.invoice_header_name
+        r.invoice_header.invoice_header_name
       end
       row :invoice_line do
         r.invoice_line.invoice_line_name
@@ -114,9 +115,11 @@ ActiveAdmin.register PaymentLine do
       f.input :payment_header_id, label: I18n.t('label.payment_header'), as: :select, collection: PaymentHeader.where(id: session[:payment_header_id]).map { |a| [a.payment_header_name, a.id] }, input_html: {disabled: true}, required: true
       f.input :payment_header_id, as: :hidden, required: true
       if f.object.new_record?
-        f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, collection: InvoiceLine.invoice_lines_for_client(session[:payment_header_id]).map { |a| [a.name, a.id] }, required: true
+        f.input :invoice_header, label: I18n.t('label.invoice_header'), as: :select, collection: InvoiceHeader.invoice_headers_for_client(session[:payment_header_id]).map { |a| [a.invoice_header_name, a.id] }, required: true
+        f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, required: true
       else
-        f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, collection: InvoiceLine.invoice_lines_for_client(session[:payment_header_id]).map { |a| [a.name, a.id] }, input_html: {disabled: true}, required: true
+        f.input :invoice_header, label: I18n.t('label.invoice_header'), as: :select, collection: InvoiceHeader.invoice_headers_for_client(session[:payment_header_id]).map { |a| [a.invoice_header_name, a.id] }, required: true, input_html: {disabled: true}
+        f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, input_html: {disabled: true}, required: true
         f.input :invoice_line_id, as: :hidden
       end
       f.input :narrative, label: I18n.t('label.narrative'), required: true
