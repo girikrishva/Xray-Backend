@@ -48,11 +48,6 @@ ActiveAdmin.register InvoiceHeader do
         number_with_precision element.header_amount, precision: 0, delimiter: ','
       end
     end
-    column :unapplied_amount do |element|
-      div :style => "text-align: right;" do
-        number_with_precision element.unapplied_amount, precision: 0, delimiter: ','
-      end
-    end
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.invoice_lines'), admin_invoice_lines_path(invoice_header_id: resource.id)
@@ -66,7 +61,6 @@ ActiveAdmin.register InvoiceHeader do
   filter :invoice_status
   filter :due_date
   filter :header_amount
-  filter :unapplied_amount
   filter :comments
 
   show do |r|
