@@ -73,6 +73,7 @@ ActiveAdmin.register InvoicingMilestone do
       row :name
       row :description
       row :amount
+      row :uninvoiced
       row :due_date
       row :last_reminder_date
       row :completion_date
