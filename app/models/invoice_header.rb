@@ -24,4 +24,12 @@ class InvoiceHeader < ActiveRecord::Base
   def invoice_header_name
     'Id: [' + self.id.to_s + '], Invoice: [' + self.narrative + '], Client: [' + self.client.name + '], Dated: [' + self.invoice_date.to_s + '], Header Amount: [' + self.header_amount.to_s + ']'
   end
+
+  def unpaid_amount
+    unpaid_amount = 0
+    InvoiceLine.where(invoice_header_id: self.id).each do |invoice_line|
+      unpaid_amount += invoice_line.unpaid_amount
+    end
+    unpaid_amount
+  end
 end

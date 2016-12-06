@@ -60,6 +60,11 @@ ActiveAdmin.register InvoiceLine do
         number_with_precision element.line_amount, precision: 0, delimiter: ','
       end
     end
+    column :unpaid_amount do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.unpaid_amount, precision: 0, delimiter: ','
+      end
+    end
     column :comments
     actions defaults: true, dropdown: true do |resource|
     end
@@ -95,6 +100,7 @@ ActiveAdmin.register InvoiceLine do
       end
       row :narrative
       row :line_amount
+      row :unpaid_amount
       row :comments
     end
   end

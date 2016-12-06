@@ -45,7 +45,7 @@ class InvoiceLine < ActiveRecord::Base
     line_id + ', '  + line_detail + ', ' + line_amount
   end
 
-  def unapplied_amount
+  def unpaid_amount
     self.line_amount - PaymentLine.where(invoice_line_id: self.id).sum(:line_amount)
   end
 

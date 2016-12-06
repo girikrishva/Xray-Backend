@@ -48,6 +48,11 @@ ActiveAdmin.register InvoiceHeader do
         number_with_precision element.header_amount, precision: 0, delimiter: ','
       end
     end
+    column :unpaid_amount do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.unpaid_amount, precision: 0, delimiter: ','
+      end
+    end
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.invoice_lines'), admin_invoice_lines_path(invoice_header_id: resource.id)
@@ -79,6 +84,7 @@ ActiveAdmin.register InvoiceHeader do
       end
       row :due_date
       row :header_amount
+      row :unpaid_amount
       row :comments
     end
   end
