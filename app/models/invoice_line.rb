@@ -38,11 +38,8 @@ class InvoiceLine < ActiveRecord::Base
     invoice_header.save
   end
 
-  def name
-    line_id = !self.invoicing_milestone.blank? ? 'Invoicing Milestone Id: [' + self.invoicing_milestone.id.to_s + ']': 'Invoice Adder Type Id: [' + self.invoice_adder_type.id.to_s + ']'
-    line_detail = !self.invoicing_milestone.blank? ? 'Invoicing Milestone: [' + self.invoicing_milestone.name + ']': 'Invoice Adder Type: [' + self.invoice_adder_type.name + ']'
-    line_amount = !self.invoicing_milestone.blank? ? 'Invoicing Milestone Amount: [' + self.invoicing_milestone.amount.to_s + ']': 'Invoice Adder Type Amount: [' + self.line_amount.to_s + ']'
-    line_id + ', '  + line_detail + ', ' + line_amount
+  def invoice_line_name
+    'Invoice Line Id: [' + self.id.to_s + '], Narrative: [' + self.narrative + '], Line Amount: [' + self.line_amount.to_s + '], Unpaid Amount: [' + self.unpaid_amount.to_s + ']'
   end
 
   def unpaid_amount

@@ -35,16 +35,16 @@ ActiveAdmin.register PaymentLine do
   index as: :grouped_table, group_by_attribute: :payment_header_name do
     selectable_column
     column :id
-    column :invoice_line
+    column :invoice_header do |resource|
+      resource.invoice_line.invoice_header.invoice_header_name
+    end
+    column :invoice_line do |resource|
+      resource.invoice_line.invoice_line_name
+    end
     column :narrative
     column :line_amount do |element|
       div :style => "text-align: right;" do
         number_with_precision element.line_amount, precision: 0, delimiter: ','
-      end
-    end
-    column :unapplied_amount do |element|
-      div :style => "text-align: right;" do
-        number_with_precision element.invoice_line.unapplied_amount, precision: 0, delimiter: ','
       end
     end
     column :comments
@@ -60,10 +60,14 @@ ActiveAdmin.register PaymentLine do
   show do |r|
     attributes_table_for r do
       row :id
-      row :invoice_line
+      row :invoice_header do
+        r.invoice_line.invoice_header.invoice_header_name
+      end
+      row :invoice_line do
+        r.invoice_line.invoice_line_name
+      end
       row :narrative
       row :line_amount
-      row :unapplied_amount
       row :comments
     end
   end

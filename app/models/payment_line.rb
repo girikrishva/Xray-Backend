@@ -23,4 +23,8 @@ class PaymentLine < ActiveRecord::Base
     payment_header.amount = PaymentLine.where(payment_header_id: payment_header.id).sum(:line_amount)
     payment_header.save
   end
+
+  def unapplied_amount
+    self.invoice_line.line_amount - self.line_amount
+  end
 end
