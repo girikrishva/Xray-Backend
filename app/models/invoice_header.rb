@@ -8,6 +8,7 @@ class InvoiceHeader < ActiveRecord::Base
   validates :invoice_date, presence: true
   validates :invoice_term_id, presence: true
   validates :invoice_status_id, presence: true
+  validates :header_amount, presence: true
 
   validates_uniqueness_of :client_id, scope: [:client_id, :narrative, :invoice_date]
   validates_uniqueness_of :narrative, scope: [:client_id, :narrative, :invoice_date]
@@ -21,6 +22,10 @@ class InvoiceHeader < ActiveRecord::Base
   end
 
   def invoice_header_name
-    'Id: [' + self.id.to_s + '], Invoice: [' + self.narrative + '], Client: [' + self.client.name + '], Dated: [' + self.invoice_date.to_s + ']'
+    'Id: [' + self.id.to_s + '], Invoice: [' + self.narrative + '], Client: [' + self.client.name + '], Dated: [' + self.invoice_date.to_s + '], Header Amount: [' + self.header_amount.to_s + ']'
+  end
+
+  def unapplied_amount
+    self.header_amount - InvoiceLine.where(invoice_header_id: self.id).sum(:line_amount)
   end
 end

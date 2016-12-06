@@ -14,7 +14,7 @@ ActiveAdmin.register PaymentHeader do
 #   permitted
 # end
 
-  permit_params :client_id, :narrative, :payment_date, :amount, :payment_status_id, :comments
+  permit_params :client_id, :narrative, :payment_date, :header_amount, :payment_status_id, :comments
 
   config.sort_order = 'payment_date_desc_and_narrative_asc'
 
@@ -39,9 +39,9 @@ ActiveAdmin.register PaymentHeader do
     column :payment_status, sortable: 'payment_statuses.name' do |resource|
       resource.payment_status.name
     end
-    column :amount do |element|
+    column :header_amount do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.amount, precision: 0, delimiter: ','
+        number_with_precision element.header_amount, precision: 0, delimiter: ','
       end
     end
     column :unreconciled_amount do |element|
@@ -59,7 +59,7 @@ ActiveAdmin.register PaymentHeader do
   filter :narrative
   filter :payment_date
   filter :payment_status
-  filter :amount
+  filter :header_amount
   filter :comments
 
   show do |r|
@@ -73,7 +73,7 @@ ActiveAdmin.register PaymentHeader do
       row :payment_status do
         r.payment_status.name
       end
-      row :amount
+      row :header_amount
       row :unreconciled_amount
       row :comments
     end
@@ -114,7 +114,7 @@ ActiveAdmin.register PaymentHeader do
       f.input :narrative
       f.input :payment_date, required: true, label: I18n.t('label.payment_date'), as: :datepicker
       f.input :payment_status
-      f.input :amount
+      f.input :header_amount
       f.input :comments
     end
     f.actions do

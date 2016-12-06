@@ -14,7 +14,7 @@ ActiveAdmin.register InvoiceHeader do
 #   permitted
 # end
 
-  permit_params :client_id, :narrative, :invoice_date, :invoice_term_id, :invoice_status_id, :comments, :due_date, :amount
+  permit_params :client_id, :narrative, :invoice_date, :invoice_term_id, :invoice_status_id, :comments, :due_date, :header_amount
 
   config.sort_order = 'invoice_date_desc_and_narrative_asc'
 
@@ -43,9 +43,14 @@ ActiveAdmin.register InvoiceHeader do
       resource.invoice_status.name
     end
     column :due_date
-    column :amount do |element|
+    column :header_amount do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.amount, precision: 0, delimiter: ','
+        number_with_precision element.header_amount, precision: 0, delimiter: ','
+      end
+    end
+    column :unapplied_amount do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.unapplied_amount, precision: 0, delimiter: ','
       end
     end
     column :comments
@@ -60,7 +65,8 @@ ActiveAdmin.register InvoiceHeader do
   filter :invoice_term
   filter :invoice_status
   filter :due_date
-  filter :amount
+  filter :header_amount
+  filter :unapplied_amount
   filter :comments
 
   show do |r|
@@ -78,7 +84,7 @@ ActiveAdmin.register InvoiceHeader do
         r.invoice_status.name
       end
       row :due_date
-      row :amount
+      row :header_amount
       row :comments
     end
   end
@@ -125,6 +131,7 @@ ActiveAdmin.register InvoiceHeader do
       f.input :invoice_date, required: true, label: I18n.t('label.invoice_date'), as: :datepicker
       f.input :invoice_term
       f.input :invoice_status
+      f.input :header_amount, as: :hidden
       f.input :comments
     end
     f.actions do
