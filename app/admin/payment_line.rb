@@ -116,12 +116,10 @@ ActiveAdmin.register PaymentLine do
       f.input :payment_header_id, as: :hidden, required: true
       if f.object.new_record?
         f.input :invoice_header, label: I18n.t('label.invoice_header'), as: :select, collection: InvoiceHeader.invoice_headers_for_client(session[:payment_header_id]).map { |a| [a.invoice_header_name, a.id] }, required: true
-        f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, required: true
       else
         f.input :invoice_header, label: I18n.t('label.invoice_header'), as: :select, collection: InvoiceHeader.invoice_headers_for_client(session[:payment_header_id]).map { |a| [a.invoice_header_name, a.id] }, required: true, input_html: {disabled: true}
-        f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, input_html: {disabled: true}, required: true
-        f.input :invoice_line_id, as: :hidden
       end
+      f.input :invoice_line, label: I18n.t('label.invoice_line'), as: :select, input_html: {disabled: true}, required: true
       f.input :narrative, label: I18n.t('label.narrative'), required: true
       f.input :line_amount, label: I18n.t('label.line_amount'), required: true
       f.input :comments, label: I18n.t('label.comments')

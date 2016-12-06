@@ -161,13 +161,19 @@ ActiveAdmin.register InvoiceLine do
     def invoice_line_name
       invoice_line_id = params[:invoice_line_id]
       invoice_line = InvoiceLine.find(invoice_line_id)
-      render json: '{"invoice_line_name": ' + invoice_line.na.to_json + '}'
+      render json: '{"invoice_line_name": ' + invoice_line.name.to_json + '}'
     end
 
     def unapplied_amount
       invoice_line_id = params[:invoice_line_id]
       invoice_line = InvoiceLine.find(invoice_line_id)
-      render json: '{"unapplied_amount": ' + invoice_line.unapplied_amount.to_json + '}'
+      render json: '{"unpaid_amount": ' + invoice_line.unpaid_amount.to_json + '}'
+    end
+
+    def invoice_lines_for_header
+      invoice_header_id = params[:invoice_header_id]
+      invoice_lines = InvoiceLine.where(invoice_header_id: invoice_header_id)
+      render json: '{"invoice_lines": ' + invoice_lines.to_json + '}'
     end
   end
 
