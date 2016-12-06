@@ -119,7 +119,11 @@ ActiveAdmin.register InvoicingMilestone do
     def invoicing_milestones_for_project
       project_id = params[:project_id]
       invoicing_milestones = InvoicingMilestone.invoicing_milestones_for_project(project_id)
-      render json: '{"invoicing_milestones": ' + invoicing_milestones.to_json.to_json + '}'
+      uninvoiced = []
+      invoicing_milestones.each do |im|
+        uninvoiced << im.uninvoiced
+      end
+      render json: '{"invoicing_milestones": ' + invoicing_milestones.to_json.to_json + ', "uninvoiced": ' + uninvoiced.to_json  + '}'
     end
   end
 

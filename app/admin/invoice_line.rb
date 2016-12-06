@@ -72,10 +72,10 @@ ActiveAdmin.register InvoiceLine do
         r.project.name
       end
       row :invoicing_milestone do
-        r.invoicing_milestone.name rescue nil
+        r.invoicing_milestone.invoicing_milestone_name rescue nil
       end
       row :invoice_adder_type do
-        r.invoice_adder_type.name rescue nil
+        r.invoice_adder_type.invoice_adder_type_name rescue nil
       end
       row :narrative
       row :line_amount
@@ -124,6 +124,12 @@ ActiveAdmin.register InvoiceLine do
       render json: '{"invoicing_milestone": ' + invoicing_milestone.to_json + '}'
     end
 
+    def invoicing_milestone_uninvoiced
+      invoicing_milestone_id = params[:invoicing_milestone_id]
+      invoicing_milestone = InvoicingMilestone.find(invoicing_milestone_id)
+      render json: '{"invoicing_milestone_uninvoiced": ' + invoicing_milestone.uninvoiced.to_json + '}'
+    end
+
     def invoice_adder_type
       invoice_adder_type_id = params[:invoice_adder_type_id]
       invoice_adder_type = InvoiceAdderType.find(invoice_adder_type_id)
@@ -133,7 +139,7 @@ ActiveAdmin.register InvoiceLine do
     def invoice_line_name
       invoice_line_id = params[:invoice_line_id]
       invoice_line = InvoiceLine.find(invoice_line_id)
-      render json: '{"invoice_line_narrative": ' + invoice_line.narrative.to_json + '}'
+      render json: '{"invoice_line_name": ' + invoice_line.na.to_json + '}'
     end
 
     def unapplied_amount
@@ -155,7 +161,7 @@ ActiveAdmin.register InvoiceLine do
         f.input :project_id, as: :hidden
       end
       f.input :invoicing_milestone, label: I18n.t('label.invoicing_milestone'), input_html: {disabled: true}
-      f.input :invoice_adder_type, label: I18n.t('label.invoice_adder_type'), input_html: {disabled: true}
+      f.input :invoice_adder_type, label: I18n.t('label.invoice_adder_type'), collection: InvoiceAdderType.all.map {|a| [a.invoice_adder_type_name, a.id] }, input_html: {disabled: true}
       f.input :narrative, label: I18n.t('label.narrative'), required: true
       f.input :line_amount, label: I18n.t('label.line_amount'), required: true
       f.input :comments, label: I18n.t('label.comments')

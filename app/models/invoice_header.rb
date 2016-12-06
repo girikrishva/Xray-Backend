@@ -22,10 +22,6 @@ class InvoiceHeader < ActiveRecord::Base
   end
 
   def invoice_header_name
-    'Id: [' + self.id.to_s + '], Invoice: [' + self.narrative + '], Client: [' + self.client.name + '], Dated: [' + self.invoice_date.to_s + '], Header Amount: [' + self.header_amount.to_s + '], Unapplied Header Amount: [' + self.unapplied_amount.to_s + ']'
-  end
-
-  def unapplied_amount
-    self.header_amount - InvoiceLine.where(invoice_header_id: self.id).sum(:line_amount)
+    'Id: [' + self.id.to_s + '], Invoice: [' + self.narrative + '], Client: [' + self.client.name + '], Dated: [' + self.invoice_date.to_s + '], Header Amount: [' + self.header_amount.to_s + ']'
   end
 end

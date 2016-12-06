@@ -14,7 +14,7 @@ class InvoicingMilestone < ActiveRecord::Base
   validates_uniqueness_of :due_date, scope: [:project_id, :name, :due_date]
 
   def invoicing_milestone_name
-    '[' + self.id.to_s + '] [' + self.name + '] due on [' + self.due_date.to_s + '] for the amount of [' + self.amount.to_s + ']'
+    'Id: [' + self.id.to_s + '], Name: [' + self.name + '], Due Date: [' + self.due_date.to_s + '], Amount: [' + self.amount.to_s + '], Uninvoiced: [' + self.uninvoiced.to_s + ']'
   end
 
   def project_name

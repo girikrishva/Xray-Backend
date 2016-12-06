@@ -12,9 +12,9 @@ jQuery ->
         result = JSON.parse data.invoicing_milestones
         i = 0
         while i < result.length
-          $('#invoice_line_invoicing_milestone_id').append('<option value="' + result[i].id + '">' + 'Id: [' + result[i]. id + '], Name: [' + result[i].name + '],  Due on: [' + result[i].due_date + '], Amount: [' + result[i].amount + ']' + '</option>')
+          option_line = '<option value="' + result[i].id + '">' + 'Id: [' + result[i].id + '], Name: [' + result[i].name + '],  Due on: [' + result[i].due_date + '], Amount: [' + result[i].amount + '], Uninvoiced: [' + data.uninvoiced[i] + ']</option>'
+          $('#invoice_line_invoicing_milestone_id').append(option_line)
           i++
-        console.log result[0].name
       error: (xhr, status, err) ->
         console.log(err)
   $('#invoice_line_invoicing_milestone_input').change ->
@@ -31,7 +31,12 @@ jQuery ->
         success: (data, status, xhr) ->
           $('#invoice_line_invoicing_milestone_input').val(escaped_invoicing_milestone_id)
           $('#invoice_line_narrative').val(data.invoicing_milestone.name)
-          $('#invoice_line_line_amount').val(data.invoicing_milestone.amount)
+          url = '/admin/api/invoicing_milestone_uninvoiced?invoicing_milestone_id=' + escaped_invoicing_milestone_id
+          $.ajax url,
+            success: (data, status, xhr) ->
+              $('#invoice_line_line_amount').val(data.invoicing_milestone_uninvoiced)
+            error: (xhr, status, err) ->
+              console.log(err)
         error: (xhr, status, err) ->
           console.log(err)
   $('#invoice_line_invoice_adder_type_input').change ->
