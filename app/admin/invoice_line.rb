@@ -41,6 +41,16 @@ ActiveAdmin.register InvoiceLine do
     column :invoicing_milestone do |resource|
       resource.invoicing_milestone.name rescue nil
     end
+    column :invoicing_milestone_amount do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.invoicing_milestone.amount, precision: 0, delimiter: ',' rescue nil
+      end
+    end
+    column :uninvoiced do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.invoicing_milestone.uninvoiced, precision: 0, delimiter: ',' rescue nil
+      end
+    end
     column :invoice_adder_type do |resource|
       resource.invoice_adder_type.name rescue nil
     end
@@ -73,6 +83,12 @@ ActiveAdmin.register InvoiceLine do
       end
       row :invoicing_milestone do
         r.invoicing_milestone.invoicing_milestone_name rescue nil
+      end
+      row :invoicing_milestone_amount do
+        r.invoicing_milestone.amount rescue nil
+      end
+      row :uninvoiced do
+        r.invoicing_milestone.uninvoiced rescue nil
       end
       row :invoice_adder_type do
         r.invoice_adder_type.invoice_adder_type_name rescue nil
