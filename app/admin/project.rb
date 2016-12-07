@@ -32,6 +32,10 @@ ActiveAdmin.register Project do
     Project.all
   end
 
+  scope I18n.t('label.financial_view'), :financial_view, default: false do |projects|
+    Project.all
+  end
+
   index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
     column :id
@@ -58,6 +62,18 @@ ActiveAdmin.register Project do
       end
       column I18n.t('label.estimated_by'), :estimator, sortable: 'admin_users.name' do |resource|
         resource.estimator.name
+      end
+    end
+    if params[:scope] == 'financial_view'
+      column I18n.t('label.invoiced_amount'), :invoiced_amount do |element|
+        div :style => "text-align: right;" do
+          number_with_precision element.invoiced_amount, precision: 0, delimiter: ','
+        end
+      end
+      column I18n.t('label.paid_amount'), :paid_amount do |element|
+        div :style => "text-align: right;" do
+          number_with_precision element.paid_amount, precision: 0, delimiter: ','
+        end
       end
     end
     if !params.has_key?('scope') || params[:scope] == 'delivery_view'

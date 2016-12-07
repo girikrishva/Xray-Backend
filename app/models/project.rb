@@ -70,4 +70,13 @@ class Project < ActiveRecord::Base
       raise I18n.t('errors.date_check')
     end
   end
+
+  def invoiced_amount
+    InvoiceLine.where(project_id: self.id).sum(:line_amount)
+  end
+
+  def paid_amount
+    invoice_line_ids = InvoiceLine.where(project_id: self.id).pluck(:id)
+    PaymentLine.where(invoice_line_id: invoice_line_ids).sum(:line_amount)
+  end
 end
