@@ -395,7 +395,7 @@ SELECT lookups.id,
     t.datetime "updated_at"
     t.integer  "payment_header_id", :null=>false, :index=>{:name=>"index_payment_lines_on_payment_header_id"}, :foreign_key=>{:references=>"payment_headers", :name=>"fk_payment_lines_payment_header_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoice_line_id",   :null=>false, :index=>{:name=>"index_payment_lines_on_invoice_line_id"}, :foreign_key=>{:references=>"invoice_lines", :name=>"fk_payment_lines_invoice_line_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer  "invoice_header_id", :index=>{:name=>"index_payment_lines_on_invoice_header_id"}, :foreign_key=>{:references=>"invoice_headers", :name=>"fk_payment_lines_invoice_header_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoice_header_id", :null=>false, :index=>{:name=>"index_payment_lines_on_invoice_header_id"}, :foreign_key=>{:references=>"invoice_headers", :name=>"fk_payment_lines_invoice_header_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_view "payment_statuses", <<-'END_VIEW_PAYMENT_STATUSES', :force => true

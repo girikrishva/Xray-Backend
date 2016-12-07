@@ -1,7 +1,7 @@
 AdminUser.create!([
   {email: "don@example.com", encrypted_password: "$2a$11$FfJ9RRbNH2JYO67UEy70UuHKki80kQJ3dwfdpR11rzxaMkk/TaQmu", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 14, current_sign_in_at: "2016-11-18 15:47:18", last_sign_in_at: "2016-11-14 10:29:28", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 5, business_unit_id: 1, department_id: 5, designation_id: 133, active: true, name: "Don Frey"},
   {email: "bob@example.com", encrypted_password: "$2a$11$PF65wOrnmozdpGu4P8INlepYlghWPceE8sA.u2hbhTnCSNECMK3uO", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 29, current_sign_in_at: "2016-11-15 11:19:00", last_sign_in_at: "2016-11-15 11:17:43", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 3, business_unit_id: 1, department_id: 5, designation_id: 133, active: false, name: "Robert Ludlow"},
-  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 78, current_sign_in_at: "2016-12-05 07:04:57", last_sign_in_at: "2016-12-01 07:51:07", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"},
+  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 79, current_sign_in_at: "2016-12-06 05:06:18", last_sign_in_at: "2016-12-05 07:04:57", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"},
   {email: "ray@example.com", encrypted_password: "$2a$11$Q/RDL0EzUjC0wIFm6pCTW.wzhOIf8dBmfp.zGizpvVHGFkyciPkRS", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 3, current_sign_in_at: "2016-11-18 15:46:36", last_sign_in_at: "2016-11-14 07:14:03", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 4, business_unit_id: 1, department_id: 5, designation_id: 133, active: true, name: "Ray Mascarenhas"},
   {email: "sam@example.com", encrypted_password: "$2a$11$ATRcJPuNeKkXfqPhclNOAuPxrJJo5c259QYdJstBkEMCY.toN8Ou2", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 15, current_sign_in_at: "2016-11-14 07:13:40", last_sign_in_at: "2016-11-12 17:21:11", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 2, business_unit_id: 1, department_id: 5, designation_id: 132, active: true, name: "Sam Brody"}
 ])
@@ -163,7 +163,8 @@ AdminUsersAudit.create!([
   {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 73, current_sign_in_at: "2016-11-27 16:46:57", last_sign_in_at: "2016-11-25 01:59:28", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, admin_user_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"},
   {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 74, current_sign_in_at: "2016-11-28 01:04:50", last_sign_in_at: "2016-11-27 16:46:57", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, admin_user_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"},
   {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 75, current_sign_in_at: "2016-11-29 04:49:58", last_sign_in_at: "2016-11-28 01:04:50", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, admin_user_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"},
-  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 77, current_sign_in_at: "2016-12-01 07:51:07", last_sign_in_at: "2016-11-29 17:22:38", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, admin_user_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"}
+  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 77, current_sign_in_at: "2016-12-01 07:51:07", last_sign_in_at: "2016-11-29 17:22:38", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, admin_user_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"},
+  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 79, current_sign_in_at: "2016-12-06 05:06:18", last_sign_in_at: "2016-12-05 07:04:57", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, admin_user_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"}
 ])
 AssignedResource.create!([
   {as_on: "2016-11-28", start_date: "2016-11-10", end_date: "2016-11-16", hours_per_day: 8.0, delivery_due_alert: false, invoicing_due_alert: false, payment_due_alert: false, comments: "", project_id: 5, skill_id: 87, designation_id: 133, resource_id: 16, staffing_requirement_id: 3, bill_rate: 2000.0, cost_rate: 1000.0},
@@ -176,7 +177,6 @@ Client.create!([
   {name: "Dell", contact_name: "Shankar Menon", contact_email: "", contact_phone: "", comments: "", business_unit_id: 1}
 ])
 DeliveryInvoicingMilestone.create!([
-  {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1},
   {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2}
 ])
 DeliveryMilestone.create!([
@@ -190,22 +190,25 @@ HolidayCalendar.create!([
   {name: "Easter", as_on: "2016-09-17", description: "Easter", comments: "", business_unit_id: 4}
 ])
 InvoiceHeader.create!([
-  {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", amount: 0.0},
-  {narrative: "Advance invoice", invoice_date: "2016-12-02", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", amount: 0.0},
-  {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09", amount: 0.0},
-  {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02", amount: 93000.0}
+  {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", header_amount: 0.0},
+  {narrative: "Advance invoice", invoice_date: "2016-12-02", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", header_amount: 0.0},
+  {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09", header_amount: 0.0},
+  {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02", header_amount: 93000.0},
+  {narrative: "Test invoice", invoice_date: "2016-12-05", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-04", header_amount: 0.0},
+  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-04", header_amount: 66000.0}
 ])
 InvoiceLine.create!([
   {narrative: "Advance Invoice", line_amount: 88000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: 1, invoice_adder_type_id: nil},
-  {narrative: "Service Tax", line_amount: 5000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: nil, invoice_adder_type_id: 76}
+  {narrative: "Service Tax", line_amount: 5000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: nil, invoice_adder_type_id: 76},
+  {narrative: "Interim payment", line_amount: 66000.0, comments: "", invoice_header_id: 7, project_id: 5, invoicing_milestone_id: 3, invoice_adder_type_id: nil}
 ])
 InvoicingDeliveryMilestone.create!([
-  {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1},
   {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2}
 ])
 InvoicingMilestone.create!([
   {name: "Advance Invoice", description: "", due_date: "2016-11-30", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 100000.0},
-  {name: "Final Payment", description: "", due_date: "2016-12-31", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 300000.0}
+  {name: "Final Payment", description: "", due_date: "2016-12-31", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 300000.0},
+  {name: "Interim payment", description: "", due_date: "2016-12-05", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 66000.0}
 ])
 Lookup.create!([
   {name: "CCI", description: "Cognitive Clouds India", rank: 3.0, comments: "", lookup_type_id: 2, extra: nil},
@@ -305,11 +308,12 @@ Overhead.create!([
   {amount_date: "2016-11-18", amount: 54000.0, comments: "", business_unit_id: 1, department_id: 10, cost_adder_type_id: 81}
 ])
 PaymentHeader.create!([
-  {narrative: "Advance payment", payment_date: "2016-12-05", amount: 25000.0, comments: "", client_id: 3, payment_status_id: 119}
+  {narrative: "Interim Payment", payment_date: "2016-12-05", header_amount: 50000.0, comments: "", client_id: 3, payment_status_id: 119},
+  {narrative: "Advance payment", payment_date: "2016-12-05", header_amount: 47000.0, comments: "", client_id: 3, payment_status_id: 119}
 ])
 PaymentLine.create!([
-  {narrative: "Test", line_amount: 20000.0, comments: "", payment_header_id: 1, invoice_line_id: 12},
-  {narrative: "Id: [2], Invoice: [Proforma invoice], Client: [Snapbizz], Dated: [2016-12-03], Line Id: [13], Narrative: [Service Tax], Line Amount: [5000.0], Unapplied: [5000.0]", line_amount: 5000.0, comments: "", payment_header_id: 1, invoice_line_id: 13}
+  {narrative: "Test", line_amount: 42000.0, comments: "", payment_header_id: 1, invoice_line_id: 12, invoice_header_id: 2},
+  {narrative: "Interim payment", line_amount: 50000.0, comments: "", payment_header_id: 2, invoice_line_id: 16, invoice_header_id: 7}
 ])
 Pipeline.create!([
   {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, client_id: 3, project_type_code_id: 96, pipeline_status_id: 104, sales_person_id: 9, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9}
@@ -455,7 +459,7 @@ PipelineStatus.create!([
 Profile.create!([
   {email: "don@example.com", encrypted_password: "$2a$11$FfJ9RRbNH2JYO67UEy70UuHKki80kQJ3dwfdpR11rzxaMkk/TaQmu", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 14, current_sign_in_at: "2016-11-18 15:47:18", last_sign_in_at: "2016-11-14 10:29:28", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 5, business_unit_id: 1, department_id: 5, designation_id: 133, active: true, name: "Don Frey"},
   {email: "bob@example.com", encrypted_password: "$2a$11$PF65wOrnmozdpGu4P8INlepYlghWPceE8sA.u2hbhTnCSNECMK3uO", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 29, current_sign_in_at: "2016-11-15 11:19:00", last_sign_in_at: "2016-11-15 11:17:43", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 3, business_unit_id: 1, department_id: 5, designation_id: 133, active: false, name: "Robert Ludlow"},
-  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 78, current_sign_in_at: "2016-12-05 07:04:57", last_sign_in_at: "2016-12-01 07:51:07", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"},
+  {email: "admin@example.com", encrypted_password: "$2a$11$1I7ENczf9eRDfZ7xyLZsius4v2X4JxQvq7rvELroVlXKfitUW.31a", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 79, current_sign_in_at: "2016-12-06 05:06:18", last_sign_in_at: "2016-12-05 07:04:57", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 1, business_unit_id: 1, department_id: 139, designation_id: 138, active: true, name: "System Administrator"},
   {email: "ray@example.com", encrypted_password: "$2a$11$Q/RDL0EzUjC0wIFm6pCTW.wzhOIf8dBmfp.zGizpvVHGFkyciPkRS", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 3, current_sign_in_at: "2016-11-18 15:46:36", last_sign_in_at: "2016-11-14 07:14:03", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 4, business_unit_id: 1, department_id: 5, designation_id: 133, active: true, name: "Ray Mascarenhas"},
   {email: "sam@example.com", encrypted_password: "$2a$11$ATRcJPuNeKkXfqPhclNOAuPxrJJo5c259QYdJstBkEMCY.toN8Ou2", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 15, current_sign_in_at: "2016-11-14 07:13:40", last_sign_in_at: "2016-11-12 17:21:11", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 2, business_unit_id: 1, department_id: 5, designation_id: 132, active: true, name: "Sam Brody"}
 ])
