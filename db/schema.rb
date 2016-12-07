@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161206105444) do
+ActiveRecord::Schema.define(version: 20161207103955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -280,6 +280,22 @@ SELECT lookups.id,
   WHERE (((lookup_types.name)::text = 'Designations'::text) AND (lookups.lookup_type_id = lookup_types.id))
   ORDER BY lookups.rank
   END_VIEW_DESIGNATIONS
+
+  create_view "flag_statuses", <<-'END_VIEW_FLAG_STATUSES', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id,
+    lookups.created_at,
+    lookups.updated_at,
+    lookups.extra
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Flag Statuses'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  ORDER BY lookups.rank
+  END_VIEW_FLAG_STATUSES
 
   create_table "holiday_calendars", force: :cascade do |t|
     t.string   "name"
@@ -553,6 +569,20 @@ SELECT lookups.id,
     t.integer  "vacation_code_id", :null=>false, :index=>{:name=>"index_vacation_policies_on_vacation_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_rails_392ec43fd8", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "vacations", force: :cascade do |t|
+    t.string   "narrative",          :null=>false
+    t.date     "request_date",       :null=>false
+    t.date     "start_date",         :null=>false
+    t.date     "end_date",           :null=>false
+    t.float    "hours_per_day",      :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "admin_user_id",      :null=>false, :index=>{:name=>"index_vacations_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_vacations_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "vacation_code_id",   :null=>false, :index=>{:name=>"index_vacations_on_vacation_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_vacations_vacation_code_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "approval_status_id", :null=>false, :index=>{:name=>"index_vacations_on_approval_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_vacations_lookup_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
 end

@@ -48,6 +48,7 @@ en:
         Invoice Lines: ""
         Payment Headers: ""
         Payment Lines: ""
+        Vacations: ""
   role:
     administrator: "Administrator"
     executive: "Executive"
@@ -82,6 +83,7 @@ en:
     invoices: "Invoices"
     invoice_lines: "Invoice Lines"
     payments: "Payments"
+    vacations: "Vacations"
   label:
     new: "New"
     back: "Back"
@@ -151,3 +153,4 @@ en:
     convert_pipeline_engagement_manager_missing: "Engagement manager must be defined before conversion."
     convert_pipeline_delivery_manager_missing: "Delivery manager must be defined before conversion."
     invoicing_milestone_invoice_adder_type_arc_error: "Either one of invoicing milestone or invoice adder type must be chosen."
+    request_validity_check_error: "Cannot initiate request as an overlapping one exists."

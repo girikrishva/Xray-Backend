@@ -14,6 +14,7 @@ class AdminUser < ActiveRecord::Base
   has_many :pipelines, class_name: 'Pipeline'
   has_many :pipelines_audits, class_name: 'PipelinesAudit'
   has_many :projects, class_name: 'Project'
+  has_many :vacations, class_name: 'Vacation'
 
   before_create :super_admin_cannot_be_inactive
   after_create :create_audit_record
