@@ -15,7 +15,7 @@ class PaymentHeader < ActiveRecord::Base
   validates_uniqueness_of :payment_date, scope: [:client_id, :narrative, :payment_date]
 
   def payment_header_name
-    'Id: [' + self.id.to_s + '], Payment: [' + self.narrative + '], Client: [' + self.client.name + '], Dated: [' + self.payment_date.to_s + '], Header Amount: [' + header_amount.to_s + '], Unreconciled: [' + self.unreconciled_amount.to_s + ']'
+    'Id: [' + self.id.to_s + '], Narrative: [' + self.narrative + '], Client: [' + self.client.name + '], Dated: [' + self.payment_date.to_s + '], Amount: [' + header_amount.to_s + '], Unreconciled: [' + self.unreconciled_amount.to_s + ']'
   end
 
   def unreconciled_amount

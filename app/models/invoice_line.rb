@@ -43,7 +43,7 @@ class InvoiceLine < ActiveRecord::Base
   end
 
   def invoice_line_name
-    'Invoice Line Id: [' + self.id.to_s + '], Narrative: [' + self.narrative + '], Line Amount: [' + self.line_amount.to_s + '], Unpaid Amount: [' + self.unpaid_amount.to_s + ']'
+    'Id: [' + self.id.to_s + '], Narrative: [' + self.narrative + '], Amount: [' + self.line_amount.to_s + '], Unpaid: [' + self.unpaid_amount.to_s + ']'
   end
 
   def unpaid_amount

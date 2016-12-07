@@ -164,7 +164,7 @@ ActiveAdmin.register InvoiceLine do
       render json: '{"invoice_line_name": ' + invoice_line.name.to_json + '}'
     end
 
-    def unapplied_amount
+    def unpaid_amount
       invoice_line_id = params[:invoice_line_id]
       invoice_line = InvoiceLine.find(invoice_line_id)
       render json: '{"unpaid_amount": ' + invoice_line.unpaid_amount.to_json + '}'
