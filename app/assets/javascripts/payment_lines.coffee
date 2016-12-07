@@ -14,8 +14,15 @@ jQuery ->
           result = data.invoice_lines
           i = 0
           while i < result.length
-            $('#payment_line_invoice_line_id').append('<option value="' + result[i].id + '">' + 'Id: [' + result[i].id + '], Narrative: [' + result[i].narrative + '], Amount: [' + result[i].line_amount + ']' + '</option>')
+            option_line = ('<option value="' + result[i].id + '">' + 'Id: [' + result[i].id + '], Narrative: [' + result[i].narrative + '], Amount: [' + result[i].line_amount + '], Unpaid: [')
+            url = '/admin/api/unpaid_amount?invoice_line_id=' + result[i].id
             i++
+            $.ajax url,
+              success: (data, status, xhr) ->
+                option_line += data.unpaid_amount + ']</option?'
+                $('#payment_line_invoice_line_id').append(option_line)
+              error: (xhr, status, err) ->
+                console.log(err)
           console.log result[0].name
         error: (xhr, status, err) ->
           console.log(err)
