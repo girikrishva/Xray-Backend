@@ -22,7 +22,7 @@ class PaymentLine < ActiveRecord::Base
 
   def update_header_amount
     payment_header = PaymentHeader.where(id: self.payment_header_id).first
-    payment_header.amount = PaymentLine.where(payment_header_id: payment_header.id).sum(:line_amount)
+    payment_header.header_amount = PaymentLine.where(payment_header_id: payment_header.id).sum(:line_amount)
     payment_header.save
   end
 

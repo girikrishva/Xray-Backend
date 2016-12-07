@@ -158,10 +158,10 @@ ActiveAdmin.register InvoiceLine do
       render json: '{"invoice_adder_type": ' + invoice_adder_type.to_json + '}'
     end
 
-    def invoice_line_name
+    def invoice_line_narrative
       invoice_line_id = params[:invoice_line_id]
       invoice_line = InvoiceLine.find(invoice_line_id)
-      render json: '{"invoice_line_name": ' + invoice_line.name.to_json + '}'
+      render json: '{"invoice_line_narrative": ' + invoice_line.narrative.to_json + '}'
     end
 
     def unpaid_amount
@@ -172,7 +172,16 @@ ActiveAdmin.register InvoiceLine do
 
     def invoice_lines_for_header
       invoice_header_id = params[:invoice_header_id]
-      invoice_lines = InvoiceLine.where(invoice_header_id: invoice_header_id)
+      results = InvoiceLine.where(invoice_header_id: invoice_header_id)
+      invoice_lines = []
+      results.each do |result|
+        invoice_line = {}
+        invoice_line[:id] = result.id
+        invoice_line[:narrative] = result.narrative
+        invoice_line[:line_amount] = result.line_amount
+        invoice_line[:unpaid_amount] = result.unpaid_amount
+        invoice_lines << invoice_line
+      end
       render json: '{"invoice_lines": ' + invoice_lines.to_json + '}'
     end
   end
