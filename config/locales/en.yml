@@ -120,8 +120,9 @@ en:
     payment_date: "Payment Date"
     comments: "Comments"
     payment_header: "Payment Header"
-    invoiced_amount: "Invoiced Amount"
-    paid_amount: "Paid Amount"
+    invoiced_amount: "Invoiced"
+    paid_amount: "Paid"
+    unpaid_amount: "Unpaid"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"

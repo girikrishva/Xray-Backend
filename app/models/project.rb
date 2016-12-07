@@ -79,4 +79,8 @@ class Project < ActiveRecord::Base
     invoice_line_ids = InvoiceLine.where(project_id: self.id).pluck(:id)
     PaymentLine.where(invoice_line_id: invoice_line_ids).sum(:line_amount)
   end
+
+  def unpaid_amount
+    self.invoiced_amount - self.paid_amount
+  end
 end

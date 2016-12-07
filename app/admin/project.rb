@@ -75,6 +75,11 @@ ActiveAdmin.register Project do
           number_with_precision element.paid_amount, precision: 0, delimiter: ','
         end
       end
+      column I18n.t('label.unpaid_amount'), :unpaid_amount do |element|
+        div :style => "text-align: right;" do
+          number_with_precision element.unpaid_amount, precision: 0, delimiter: ','
+        end
+      end
     end
     if !params.has_key?('scope') || params[:scope] == 'delivery_view'
       column I18n.t('label.engagement_by'), :engagement_manager, sortable: 'admin_users.name' do |resource|
