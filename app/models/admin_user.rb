@@ -84,7 +84,7 @@ class AdminUser < ActiveRecord::Base
     Resource.where('admin_user_id = ? and as_on <= ?', self.id, as_on).order('as_on desc').first.bill_rate rescue 0
   end
 
-  def default_cost_rate(as_on = Date.today)
+  def self.default_cost_rate(as_on = Date.today)
     Resource.where('admin_user_id = ? and as_on <= ?', self.id, as_on).order('as_on desc').first.bill_rate rescue 0
   end
 end
