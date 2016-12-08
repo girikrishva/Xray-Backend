@@ -232,7 +232,8 @@ SELECT lookups.id,
     lookups.description,
     lookups.rank,
     lookups.comments,
-    lookups.lookup_type_id
+    lookups.lookup_type_id,
+    lookups.extra
    FROM lookups,
     lookup_types
   WHERE (((lookup_types.name)::text = 'Cost Adder Types'::text) AND (lookups.lookup_type_id = lookup_types.id))
@@ -278,7 +279,8 @@ SELECT lookups.id,
     lookups.description,
     lookups.rank,
     lookups.comments,
-    lookups.lookup_type_id
+    lookups.lookup_type_id,
+    lookups.extra
    FROM lookups,
     lookup_types
   WHERE (((lookup_types.name)::text = 'Departments'::text) AND (lookups.lookup_type_id = lookup_types.id))
@@ -291,7 +293,8 @@ SELECT lookups.id,
     lookups.description,
     lookups.rank,
     lookups.comments,
-    lookups.lookup_type_id
+    lookups.lookup_type_id,
+    lookups.extra
    FROM lookups,
     lookup_types
   WHERE (((lookup_types.name)::text = 'Designations'::text) AND (lookups.lookup_type_id = lookup_types.id))
@@ -437,7 +440,8 @@ SELECT lookups.id,
     lookups.description,
     lookups.rank,
     lookups.comments,
-    lookups.lookup_type_id
+    lookups.lookup_type_id,
+    lookups.extra
    FROM lookups,
     lookup_types
   WHERE (((lookup_types.name)::text = 'Pipeline Statuses'::text) AND (lookups.lookup_type_id = lookup_types.id))
@@ -481,7 +485,8 @@ SELECT lookups.id,
     lookups.comments,
     lookups.lookup_type_id,
     lookups.created_at,
-    lookups.updated_at
+    lookups.updated_at,
+    lookups.extra
    FROM lookups,
     lookup_types
   WHERE (((lookup_types.name)::text = 'Project Statuses'::text) AND (lookups.lookup_type_id = lookup_types.id))
@@ -494,7 +499,8 @@ SELECT lookups.id,
     lookups.description,
     lookups.rank,
     lookups.comments,
-    lookups.lookup_type_id
+    lookups.lookup_type_id,
+    lookups.extra
    FROM lookups,
     lookup_types
   WHERE (((lookup_types.name)::text = 'Project Types'::text) AND (lookups.lookup_type_id = lookup_types.id))
@@ -540,7 +546,8 @@ SELECT lookups.id,
     lookups.description,
     lookups.rank,
     lookups.comments,
-    lookups.lookup_type_id
+    lookups.lookup_type_id,
+    lookups.extra
    FROM lookups,
     lookup_types
   WHERE (((lookup_types.name)::text = 'Skills'::text) AND (lookups.lookup_type_id = lookup_types.id))
@@ -553,7 +560,8 @@ SELECT lookups.id,
     lookups.description,
     lookups.rank,
     lookups.comments,
-    lookups.lookup_type_id
+    lookups.lookup_type_id,
+    lookups.extra
    FROM lookups,
     lookup_types
   WHERE (((lookup_types.name)::text = 'Vacation Codes'::text) AND (lookups.lookup_type_id = lookup_types.id))

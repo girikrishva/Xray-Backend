@@ -407,33 +407,33 @@ BusinessUnit.create!([
   {name: "CCI", description: "Cognitive Clouds India", rank: 3.0, comments: "", lookup_type_id: 2, extra: "{\"fiscal_year_start\": \"04\"}"}
 ])
 CostAdderType.create!([
-  {name: "Rental", description: "Rental", rank: 1.0, comments: "", lookup_type_id: 12},
-  {name: "Travel", description: "Travel", rank: 2.0, comments: "", lookup_type_id: 12},
-  {name: "Hotel", description: "Hotel", rank: 3.0, comments: "", lookup_type_id: 12},
-  {name: "Communication", description: "Communication", rank: 4.0, comments: "", lookup_type_id: 12},
-  {name: "Food", description: "Food", rank: 5.0, comments: "", lookup_type_id: 12},
-  {name: "Training", description: "Training", rank: 6.0, comments: "", lookup_type_id: 12}
+  {name: "Rental", description: "Rental", rank: 1.0, comments: "", lookup_type_id: 12, extra: nil},
+  {name: "Travel", description: "Travel", rank: 2.0, comments: "", lookup_type_id: 12, extra: nil},
+  {name: "Hotel", description: "Hotel", rank: 3.0, comments: "", lookup_type_id: 12, extra: nil},
+  {name: "Communication", description: "Communication", rank: 4.0, comments: "", lookup_type_id: 12, extra: nil},
+  {name: "Food", description: "Food", rank: 5.0, comments: "", lookup_type_id: 12, extra: nil},
+  {name: "Training", description: "Training", rank: 6.0, comments: "", lookup_type_id: 12, extra: nil}
 ])
 Department.create!([
-  {name: "Engineering", description: "Engineering", rank: 1.0, comments: "", lookup_type_id: 3},
-  {name: "Sales", description: "Sales", rank: 2.0, comments: "", lookup_type_id: 3},
-  {name: "Administration", description: "Administration", rank: 4.0, comments: "", lookup_type_id: 3},
-  {name: "Legal", description: "Legal", rank: 5.0, comments: "", lookup_type_id: 3},
-  {name: "Finance", description: "Finance", rank: 6.0, comments: "", lookup_type_id: 3},
-  {name: "Security", description: "Security", rank: 7.0, comments: "", lookup_type_id: 3},
-  {name: "Management", description: "Management", rank: 8.0, comments: "", lookup_type_id: 3},
-  {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 3}
+  {name: "Engineering", description: "Engineering", rank: 1.0, comments: "", lookup_type_id: 3, extra: nil},
+  {name: "Sales", description: "Sales", rank: 2.0, comments: "", lookup_type_id: 3, extra: nil},
+  {name: "Administration", description: "Administration", rank: 4.0, comments: "", lookup_type_id: 3, extra: nil},
+  {name: "Legal", description: "Legal", rank: 5.0, comments: "", lookup_type_id: 3, extra: nil},
+  {name: "Finance", description: "Finance", rank: 6.0, comments: "", lookup_type_id: 3, extra: nil},
+  {name: "Security", description: "Security", rank: 7.0, comments: "", lookup_type_id: 3, extra: nil},
+  {name: "Management", description: "Management", rank: 8.0, comments: "", lookup_type_id: 3, extra: nil},
+  {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 3, extra: nil}
 ])
 Designation.create!([
-  {name: "CEO", description: "CEO", rank: 1.0, comments: "", lookup_type_id: 8},
-  {name: "COO", description: "COO", rank: 2.0, comments: "", lookup_type_id: 8},
-  {name: "CFO", description: "CFO", rank: 3.0, comments: "", lookup_type_id: 8},
-  {name: "CBO", description: "CBO", rank: 4.0, comments: "", lookup_type_id: 8},
-  {name: "CPO", description: "CPO", rank: 5.0, comments: "", lookup_type_id: 8},
-  {name: "Director", description: "Director", rank: 6.0, comments: "", lookup_type_id: 8},
-  {name: "Manager", description: "Manager", rank: 7.0, comments: "", lookup_type_id: 8},
-  {name: "Engineer", description: "Engineer", rank: 8.0, comments: "", lookup_type_id: 8},
-  {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 8}
+  {name: "CEO", description: "CEO", rank: 1.0, comments: "", lookup_type_id: 8, extra: nil},
+  {name: "COO", description: "COO", rank: 2.0, comments: "", lookup_type_id: 8, extra: nil},
+  {name: "CFO", description: "CFO", rank: 3.0, comments: "", lookup_type_id: 8, extra: nil},
+  {name: "CBO", description: "CBO", rank: 4.0, comments: "", lookup_type_id: 8, extra: nil},
+  {name: "CPO", description: "CPO", rank: 5.0, comments: "", lookup_type_id: 8, extra: nil},
+  {name: "Director", description: "Director", rank: 6.0, comments: "", lookup_type_id: 8, extra: nil},
+  {name: "Manager", description: "Manager", rank: 7.0, comments: "", lookup_type_id: 8, extra: nil},
+  {name: "Engineer", description: "Engineer", rank: 8.0, comments: "", lookup_type_id: 8, extra: nil},
+  {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 8, extra: nil}
 ])
 InvoiceAdderType.create!([
   {name: "Service Tax", description: "Service Tax", rank: 1.0, comments: "", lookup_type_id: 11, extra: "{\"tax_rate\": \"5.5\"}"},
@@ -463,14 +463,14 @@ PaymentStatus.create!([
   {name: "Hold", description: "Hold", rank: 6.0, comments: "", lookup_type_id: 18, extra: nil}
 ])
 PipelineStatus.create!([
-  {name: "New", description: "New", rank: 1.0, comments: "", lookup_type_id: 15},
-  {name: "Discussion", description: "Discussion", rank: 2.0, comments: "", lookup_type_id: 15},
-  {name: "Proposal", description: "Proposal", rank: 3.0, comments: "", lookup_type_id: 15},
-  {name: "Signed", description: "Signed", rank: 4.0, comments: "", lookup_type_id: 15},
-  {name: "Delivery", description: "Delivery", rank: 5.0, comments: "", lookup_type_id: 15},
-  {name: "Lost", description: "Lost", rank: 6.0, comments: "", lookup_type_id: 15},
-  {name: "Hold", description: "Hold", rank: 7.0, comments: "", lookup_type_id: 15},
-  {name: "Canceled", description: "Canceled", rank: 8.0, comments: "", lookup_type_id: 15}
+  {name: "New", description: "New", rank: 1.0, comments: "", lookup_type_id: 15, extra: nil},
+  {name: "Discussion", description: "Discussion", rank: 2.0, comments: "", lookup_type_id: 15, extra: nil},
+  {name: "Proposal", description: "Proposal", rank: 3.0, comments: "", lookup_type_id: 15, extra: nil},
+  {name: "Signed", description: "Signed", rank: 4.0, comments: "", lookup_type_id: 15, extra: nil},
+  {name: "Delivery", description: "Delivery", rank: 5.0, comments: "", lookup_type_id: 15, extra: nil},
+  {name: "Lost", description: "Lost", rank: 6.0, comments: "", lookup_type_id: 15, extra: nil},
+  {name: "Hold", description: "Hold", rank: 7.0, comments: "", lookup_type_id: 15, extra: nil},
+  {name: "Canceled", description: "Canceled", rank: 8.0, comments: "", lookup_type_id: 15, extra: nil}
 ])
 Profile.create!([
   {email: "don@example.com", encrypted_password: "$2a$11$FfJ9RRbNH2JYO67UEy70UuHKki80kQJ3dwfdpR11rzxaMkk/TaQmu", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 14, current_sign_in_at: "2016-11-18 15:47:18", last_sign_in_at: "2016-11-14 10:29:28", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 5, business_unit_id: 1, department_id: 5, designation_id: 133, active: true, name: "Don Frey"},
@@ -480,33 +480,33 @@ Profile.create!([
   {email: "sam@example.com", encrypted_password: "$2a$11$ATRcJPuNeKkXfqPhclNOAuPxrJJo5c259QYdJstBkEMCY.toN8Ou2", reset_password_token: nil, reset_password_sent_at: nil, remember_created_at: nil, sign_in_count: 15, current_sign_in_at: "2016-11-14 07:13:40", last_sign_in_at: "2016-11-12 17:21:11", current_sign_in_ip: "127.0.0.1", last_sign_in_ip: "127.0.0.1", role_id: 2, business_unit_id: 1, department_id: 5, designation_id: 132, active: true, name: "Sam Brody"}
 ])
 ProjectStatus.create!([
-  {name: "New", description: "New", rank: 1.0, comments: "", lookup_type_id: 16},
-  {name: "Delivery", description: "Delivery", rank: 2.0, comments: "", lookup_type_id: 16},
-  {name: "Completed", description: "Completed", rank: 3.0, comments: "", lookup_type_id: 16},
-  {name: "Hold", description: "Hold", rank: 4.0, comments: "", lookup_type_id: 16},
-  {name: "Canceled", description: "Canceled", rank: 5.0, comments: "", lookup_type_id: 16}
+  {name: "New", description: "New", rank: 1.0, comments: "", lookup_type_id: 16, extra: nil},
+  {name: "Delivery", description: "Delivery", rank: 2.0, comments: "", lookup_type_id: 16, extra: nil},
+  {name: "Completed", description: "Completed", rank: 3.0, comments: "", lookup_type_id: 16, extra: nil},
+  {name: "Hold", description: "Hold", rank: 4.0, comments: "", lookup_type_id: 16, extra: nil},
+  {name: "Canceled", description: "Canceled", rank: 5.0, comments: "", lookup_type_id: 16, extra: nil}
 ])
 ProjectTypeCode.create!([
-  {name: "FB", description: "Fixed Bid", rank: 1.0, comments: "", lookup_type_id: 14},
-  {name: "TnM", description: "Time and Material", rank: 2.0, comments: "", lookup_type_id: 14},
-  {name: "INT", description: "Internal", rank: 3.0, comments: "", lookup_type_id: 14},
-  {name: "DEF", description: "Default", rank: 4.0, comments: "", lookup_type_id: 14}
+  {name: "FB", description: "Fixed Bid", rank: 1.0, comments: "", lookup_type_id: 14, extra: nil},
+  {name: "TnM", description: "Time and Material", rank: 2.0, comments: "", lookup_type_id: 14, extra: nil},
+  {name: "INT", description: "Internal", rank: 3.0, comments: "", lookup_type_id: 14, extra: nil},
+  {name: "DEF", description: "Default", rank: 4.0, comments: "", lookup_type_id: 14, extra: nil}
 ])
 Skill.create!([
-  {name: "iOS", description: "iOS", rank: 1.0, comments: "", lookup_type_id: 13},
-  {name: "Android", description: "Android", rank: 2.0, comments: "", lookup_type_id: 13},
-  {name: "Java", description: "Java", rank: 3.0, comments: "", lookup_type_id: 13},
-  {name: "Web", description: "Web", rank: 4.0, comments: "", lookup_type_id: 13},
-  {name: "Sales", description: "Sales", rank: 5.0, comments: "", lookup_type_id: 13},
-  {name: "Project Management", description: "Project Management", rank: 6.0, comments: "", lookup_type_id: 13},
-  {name: "Finance", description: "Finance", rank: 7.0, comments: "", lookup_type_id: 13},
-  {name: "Administration", description: "Administration", rank: 8.0, comments: "", lookup_type_id: 13},
-  {name: "Management", description: "Management", rank: 9.0, comments: "", lookup_type_id: 13},
-  {name: "HR", description: "HR", rank: 10.0, comments: "", lookup_type_id: 13}
+  {name: "iOS", description: "iOS", rank: 1.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Android", description: "Android", rank: 2.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Java", description: "Java", rank: 3.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Web", description: "Web", rank: 4.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Sales", description: "Sales", rank: 5.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Project Management", description: "Project Management", rank: 6.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Finance", description: "Finance", rank: 7.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Administration", description: "Administration", rank: 8.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Management", description: "Management", rank: 9.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "HR", description: "HR", rank: 10.0, comments: "", lookup_type_id: 13, extra: nil}
 ])
 VacationCode.create!([
-  {name: "PL", description: "Privileged Leave", rank: 1.0, comments: "", lookup_type_id: 10},
-  {name: "CL", description: "Casual Leave", rank: 2.0, comments: "", lookup_type_id: 10},
-  {name: "SL", description: "Sick Leave", rank: 3.0, comments: "", lookup_type_id: 10},
-  {name: "UL", description: "Unpaid Leave", rank: 4.0, comments: "", lookup_type_id: 10}
+  {name: "PL", description: "Privileged Leave", rank: 1.0, comments: "", lookup_type_id: 10, extra: nil},
+  {name: "CL", description: "Casual Leave", rank: 2.0, comments: "", lookup_type_id: 10, extra: nil},
+  {name: "SL", description: "Sick Leave", rank: 3.0, comments: "", lookup_type_id: 10, extra: nil},
+  {name: "UL", description: "Unpaid Leave", rank: 4.0, comments: "", lookup_type_id: 10, extra: nil}
 ])
