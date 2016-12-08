@@ -99,7 +99,7 @@ ActiveAdmin.register Vacation do
   end
 
   filter :request_date
-  filter :user, collection: proc { AdminUser.ordered_lookup }
+  filter :user, collection: proc { AdminUser.ordered_lookup_of_users_as_resource }
   filter :vacation_code, collection: Lookup.lookups_for_name(I18n.t('models.vacation_codes')).map { |a| [a.description, a.id] }
   filter :narrative
   filter :start_date
@@ -192,9 +192,9 @@ ActiveAdmin.register Vacation do
     end
     f.inputs do
       if f.object.new_record?
-        f.input :user, collection: AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, required: true
+        f.input :user, collection: AdminUser.ordered_lookup_of_users_as_resource.map { |a| [a.name, a.id] }, required: true
       else
-        f.input :user, collection: AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, required: true, input_html: {disabled: true}
+        f.input :user, collection: AdminUser.ordered_lookup_of_users_as_resource.map { |a| [a.name, a.id] }, required: true, input_html: {disabled: true}
         f.input :admin_user_id, as: :hidden
       end
       if f.object.new_record?

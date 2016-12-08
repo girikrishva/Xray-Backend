@@ -71,6 +71,11 @@ class AdminUser < ActiveRecord::Base
     AdminUser.all.order(:name)
   end
 
+  def self.ordered_lookup_of_users_as_resource
+    admin_user_ids = Resource.pluck(:admin_user_id).uniq
+    AdminUser.where(id: admin_user_ids).order(:name)
+  end
+
   def business_unit_name
     self.business_unit.name
   end
