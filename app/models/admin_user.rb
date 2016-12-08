@@ -79,4 +79,12 @@ class AdminUser < ActiveRecord::Base
   def business_unit_name
     self.business_unit.name
   end
+
+  def default_bill_rate
+    Resource.where(admin_user_id: self.id).minimum(:bill_rate) rescue 0
+  end
+
+  def default_cost_rate
+    Resource.where(admin_user_id: self.id).maximum(:cost_rate) rescue 0
+  end
 end
