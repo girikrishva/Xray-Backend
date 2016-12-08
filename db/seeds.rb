@@ -224,6 +224,7 @@ Lookup.create!([
   {name: "CL", description: "Casual Leave", rank: 2.0, comments: "", lookup_type_id: 10, extra: nil},
   {name: "SL", description: "Sick Leave", rank: 3.0, comments: "", lookup_type_id: 10, extra: nil},
   {name: "UL", description: "Unpaid Leave", rank: 4.0, comments: "", lookup_type_id: 10, extra: nil},
+  {name: "Pending", description: "Pending", rank: 1.0, comments: "", lookup_type_id: 21, extra: ""},
   {name: "Finance", description: "Finance", rank: 6.0, comments: "", lookup_type_id: 3, extra: nil},
   {name: "Sales", description: "Sales", rank: 2.0, comments: "", lookup_type_id: 3, extra: nil},
   {name: "Rental", description: "Rental", rank: 1.0, comments: "", lookup_type_id: 12, extra: nil},
@@ -274,6 +275,9 @@ Lookup.create!([
   {name: "Part-Reconciled", description: "Part-Reconciled", rank: 4.0, comments: "", lookup_type_id: 18, extra: nil},
   {name: "Canceled", description: "Canceled", rank: 5.0, comments: "", lookup_type_id: 18, extra: nil},
   {name: "Hold", description: "Hold", rank: 6.0, comments: "", lookup_type_id: 18, extra: nil},
+  {name: "Approved", description: "Approved", rank: 2.0, comments: "", lookup_type_id: 21, extra: ""},
+  {name: "Rejected", description: "Rejected", rank: 3.0, comments: "", lookup_type_id: 21, extra: nil},
+  {name: "Canceled", description: "Canceled", rank: 4.0, comments: "", lookup_type_id: 21, extra: ""},
   {name: "Management", description: "Management", rank: 8.0, comments: "", lookup_type_id: 3, extra: nil},
   {name: "Director", description: "Director", rank: 6.0, comments: "", lookup_type_id: 8, extra: nil},
   {name: "Manager", description: "Manager", rank: 7.0, comments: "", lookup_type_id: 8, extra: nil},
@@ -301,7 +305,8 @@ LookupType.create!([
   {name: "Project Statuses", description: "Project Statuses", comments: ""},
   {name: "Invoice Statuses", description: "Invoice Statuses", comments: ""},
   {name: "Payment Statuses", description: "Payment Statuses", comments: ""},
-  {name: "Invoice Terms", description: "Invoice Terms", comments: ""}
+  {name: "Invoice Terms", description: "Invoice Terms", comments: ""},
+  {name: "Approval Statuses", description: "Approval Statuses", comments: ""}
 ])
 Overhead.create!([
   {amount_date: "2016-11-16", amount: 50000.0, comments: "", business_unit_id: 1, department_id: 12, cost_adder_type_id: 80},
@@ -377,6 +382,11 @@ Role.create!([
   {name: "Lead", description: "Lead", rank: 7.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager"},
   {name: "Consultant", description: "Consultant", rank: 8.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager"}
 ])
+Vacation.create!([
+  {narrative: "Test 1", request_date: "2016-12-08", start_date: "2016-12-09", end_date: "2016-12-09", hours_per_day: 8.0, comments: "", admin_user_id: 1, vacation_code_id: 71, approval_status_id: 144},
+  {narrative: "Test", request_date: "2016-12-08", start_date: "2016-12-08", end_date: "2016-12-08", hours_per_day: 8.0, comments: "", admin_user_id: 1, vacation_code_id: 71, approval_status_id: 145},
+  {narrative: "Doctor consult", request_date: "2016-12-08", start_date: "2016-12-08", end_date: "2016-12-08", hours_per_day: 8.0, comments: "", admin_user_id: 8, vacation_code_id: 73, approval_status_id: 146}
+])
 VacationPolicy.create!([
   {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 15.0, comments: "", business_unit_id: 1, vacation_code_id: 71},
   {description: "Unpaid Leave", as_on: "2016-01-01", paid: false, days_allowed: 365.0, comments: "", business_unit_id: 1, vacation_code_id: 74},
@@ -384,6 +394,12 @@ VacationPolicy.create!([
   {description: "Sick Leave", as_on: "2016-01-01", paid: true, days_allowed: 3.0, comments: "", business_unit_id: 1, vacation_code_id: 73},
   {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 10.0, comments: "", business_unit_id: 4, vacation_code_id: 71},
   {description: "Unpaid Leave", as_on: "2016-11-10", paid: false, days_allowed: 30.0, comments: "", business_unit_id: 4, vacation_code_id: 74}
+])
+ApprovalStatus.create!([
+  {name: "Pending", description: "Pending", rank: 1.0, comments: "", lookup_type_id: 21, extra: ""},
+  {name: "Approved", description: "Approved", rank: 2.0, comments: "", lookup_type_id: 21, extra: ""},
+  {name: "Rejected", description: "Rejected", rank: 3.0, comments: "", lookup_type_id: 21, extra: nil},
+  {name: "Canceled", description: "Canceled", rank: 4.0, comments: "", lookup_type_id: 21, extra: ""}
 ])
 BusinessUnit.create!([
   {name: "CCS", description: "Cognitive Clouds Singapore", rank: 1.0, comments: "", lookup_type_id: 2},

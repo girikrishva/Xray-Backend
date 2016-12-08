@@ -15,6 +15,15 @@ ActiveAdmin.register Vacation do
 # end
 
 
+  batch_action :cancel do |ids|
+    ids.each do |id|
+      vacation = Vacation.find(id)
+      vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.canceled')).first.id
+      vacation.save
+    end
+    redirect_to collection_url
+  end
+
   batch_action :reject do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
@@ -31,6 +40,26 @@ ActiveAdmin.register Vacation do
       vacation.save
     end
     redirect_to collection_url
+  end
+
+  scope I18n.t('label.pending'), :pending_view, default: true do |vacations|
+    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.pending')).first.id)
+  end
+
+  scope I18n.t('label.approved'), :approved_view, default: true do |vacations|
+    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.approved')).first.id)
+  end
+
+  scope I18n.t('label.rejected'), :rejected_view, default: true do |vacations|
+    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.rejected')).first.id)
+  end
+
+  scope I18n.t('label.canceled'), :canceled_view, default: true do |vacations|
+    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.canceled')).first.id)
+  end
+
+  scope I18n.t('label.all'), :all_view, default: true do |vacations|
+    Vacation.all
   end
 
   permit_params :admin_user_id, :vacation_code_id, :narrative, :request_date, :start_date, :end_date, :hours_per_day, :approval_status_id, :comments
@@ -61,13 +90,11 @@ ActiveAdmin.register Vacation do
     column :start_date
     column :end_date
     column :hours_per_day
-    column :approval_status, sortable: 'approval_statuses.name' do |resource|
-      resource.approval_status.name
-    end
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.approve_vacation'), admin_api_approve_vacation_path(vacation_id: resource.id), method: :post
       item I18n.t('actions.reject_vacation'), admin_api_reject_vacation_path(vacation_id: resource.id), method: :post
+      item I18n.t('actions.cancel_vacation'), admin_api_cancel_vacation_path(vacation_id: resource.id), method: :post
     end
   end
 
@@ -78,7 +105,7 @@ ActiveAdmin.register Vacation do
   filter :start_date
   filter :end_date
   filter :hours_per_day
-  filter :approval_status
+  filter :approval_status, if: proc { !params.has_key?('scope') || params[:scope] == 'all_view' }
   filter :comments
 
   show do |r|
@@ -138,6 +165,16 @@ ActiveAdmin.register Vacation do
         vacation_id = params[:vacation_id]
         vacation = Vacation.find(vacation_id)
         vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.rejected')).first.id
+        vacation.save
+        redirect_to admin_vacations_path
+      end
+    end
+
+    def cancel_vacation
+      if params.has_key?(:vacation_id)
+        vacation_id = params[:vacation_id]
+        vacation = Vacation.find(vacation_id)
+        vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.canceled')).first.id
         vacation.save
         redirect_to admin_vacations_path
       end

@@ -16,7 +16,7 @@ class Vacation < ActiveRecord::Base
   before_create :request_validity_check
 
   def request_validity_check
-    Vacation.where(admin_user_id: self.admin_user_id).each do |v|
+    Vacation.where('admin_user_id = ? and approval_status_id != ?', self.admin_user_id, ApprovalStatus.where(name: I18n.t('label.canceled')).first.id).each do |v|
       if (self.id != v.id) and (self.start_date >= v.start_date and self.start_date <= v.end_date) or (self.end_date >= v.start_date and self.end_date <= v.end_date)
         raise I18n.t('errors.request_validity_check_error')
       end

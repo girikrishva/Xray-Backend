@@ -128,6 +128,8 @@ en:
     pending: "Pending"
     approved: "Approved"
     rejected: "Rejected"
+    canceled: "Canceled"
+    all: "All"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"
@@ -144,6 +146,7 @@ en:
     payment_lines: "Payment Lines"
     approve_vacation: "Approve"
     reject_vacation: "Reject"
+    cancel_vacation: "Cancel"
   models:
     business_units: "Business Units"
     departments: "Departments"

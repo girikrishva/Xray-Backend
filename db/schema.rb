@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161207103955) do
+ActiveRecord::Schema.define(version: 0) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -100,6 +100,22 @@ ActiveRecord::Schema.define(version: 20161207103955) do
     t.boolean  "active"
     t.string   "name",                   :null=>false
   end
+
+  create_view "approval_statuses", <<-'END_VIEW_APPROVAL_STATUSES', :force => true
+SELECT lookups.id,
+    lookups.name,
+    lookups.description,
+    lookups.rank,
+    lookups.comments,
+    lookups.lookup_type_id,
+    lookups.created_at,
+    lookups.updated_at,
+    lookups.extra
+   FROM lookups,
+    lookup_types
+  WHERE (((lookup_types.name)::text = 'Approval Statuses'::text) AND (lookups.lookup_type_id = lookup_types.id))
+  ORDER BY lookups.rank
+  END_VIEW_APPROVAL_STATUSES
 
   create_table "clients", force: :cascade do |t|
     t.string   "name",             :null=>false
@@ -280,22 +296,6 @@ SELECT lookups.id,
   WHERE (((lookup_types.name)::text = 'Designations'::text) AND (lookups.lookup_type_id = lookup_types.id))
   ORDER BY lookups.rank
   END_VIEW_DESIGNATIONS
-
-  create_view "flag_statuses", <<-'END_VIEW_FLAG_STATUSES', :force => true
-SELECT lookups.id,
-    lookups.name,
-    lookups.description,
-    lookups.rank,
-    lookups.comments,
-    lookups.lookup_type_id,
-    lookups.created_at,
-    lookups.updated_at,
-    lookups.extra
-   FROM lookups,
-    lookup_types
-  WHERE (((lookup_types.name)::text = 'Flag Statuses'::text) AND (lookups.lookup_type_id = lookup_types.id))
-  ORDER BY lookups.rank
-  END_VIEW_FLAG_STATUSES
 
   create_table "holiday_calendars", force: :cascade do |t|
     t.string   "name"
