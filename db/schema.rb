@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20161208150611) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "designation_id",         :null=>false, :index=>{:name=>"index_admin_users_on_designation_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_designation_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.boolean  "active"
     t.string   "name",                   :null=>false
+    t.date     "date_of_joining",        :null=>false
+    t.date     "date_of_leaving"
   end
 
   create_table "admin_users_audits", force: :cascade do |t|
@@ -99,6 +101,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "designation_id",         :null=>false, :index=>{:name=>"index_admin_users_audits_on_designation"}, :foreign_key=>{:references=>"lookups", :name=>"fk_admin_users_audits_designation_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.boolean  "active"
     t.string   "name",                   :null=>false
+    t.date     "date_of_joining",        :null=>false
+    t.date     "date_of_leaving"
   end
 
   create_view "approval_statuses", <<-'END_VIEW_APPROVAL_STATUSES', :force => true
@@ -591,7 +595,7 @@ SELECT lookups.id,
     t.datetime "updated_at"
     t.integer  "admin_user_id",      :null=>false, :index=>{:name=>"index_vacations_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_vacations_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "vacation_code_id",   :null=>false, :index=>{:name=>"index_vacations_on_vacation_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_vacations_vacation_code_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer  "approval_status_id", :null=>false, :index=>{:name=>"index_vacations_on_approval_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_vacations_lookup_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "approval_status_id", :null=>false, :index=>{:name=>"index_vacations_on_approval_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_vacations_approval_status_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
 end

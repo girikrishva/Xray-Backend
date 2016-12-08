@@ -29,4 +29,8 @@ class Vacation < ActiveRecord::Base
       raise I18n.t('errors.date_check')
     end
   end
+
+  def self.eligible_days(admin_user_id, as_on = Date.today)
+
+  end
 end

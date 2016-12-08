@@ -21,6 +21,10 @@ class AdminUser < ActiveRecord::Base
   before_update :at_least_one_user_must_be_super_admin, :super_admin_cannot_be_inactive
   after_update :create_audit_record
   before_destroy :cannot_destroy_last_super_admin_user
+  before_create :doj_dol_date_check
+  before_update :doj_dol_date_check
+  before_create :deactivate_left_user
+  before_update :deactivate_left_user
 
   def at_least_one_user_must_be_super_admin
     role_id_for_super_admin = Role.where(super_admin: true).first.id
@@ -54,6 +58,8 @@ class AdminUser < ActiveRecord::Base
     audit_record.admin_user_id = self.id
     audit_record.active = self.active
     audit_record.name = self.name
+    audit_record.date_of_joining = self.date_of_joining
+    audit_record.date_of_leaving = self.date_of_leaving
     audit_record.save
   end
 
@@ -86,5 +92,19 @@ class AdminUser < ActiveRecord::Base
 
   def self.default_cost_rate(as_on = Date.today)
     Resource.where('admin_user_id = ? and as_on <= ?', self.id, as_on).order('as_on desc').first.bill_rate rescue 0
+  end
+
+  def doj_dol_date_check
+    if !self.date_of_joining.blank? and !self.date_of_leaving.blank?
+      if self.date_of_joining > self.date_of_leaving
+        raise I18n.t('errors.doj_dol_date_check')
+      end
+    end
+  end
+
+  def deactivate_left_user
+    if !self.date_of_leaving.blank?
+      self.active = false
+    end
   end
 end

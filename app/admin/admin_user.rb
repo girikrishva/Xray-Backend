@@ -29,7 +29,7 @@ ActiveAdmin.register AdminUser do
     redirect_to collection_url
   end
 
-  permit_params :email, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active
+  permit_params :email, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active, :date_of_joining, :date_of_leaving
 
   config.sort_order = 'email_asc'
 
@@ -48,6 +48,8 @@ ActiveAdmin.register AdminUser do
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
     end
+    column :date_of_joining
+    column :date_of_leaving
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.change_qualifiers'), edit_admin_admin_user_path(id: resource.id, suppress_password: true)
       item I18n.t('actions.audit_trail'), admin_admin_users_audits_path(admin_user_id: resource.id)
@@ -83,6 +85,8 @@ ActiveAdmin.register AdminUser do
   filter :role
   filter :department
   filter :designation
+  filter :date_of_joining
+  filter :date_of_leaving
 
   form do |f|
     f.inputs I18n.t('label.admin_details') do
@@ -98,6 +102,8 @@ ActiveAdmin.register AdminUser do
         f.input :business_unit, required: true
         f.input :department, required: true
         f.input :designation, required: true
+        f.input :date_of_joining, required: true, as: :datepicker
+        f.input :date_of_leaving, as: :datepicker
       else
         f.input :password
         f.input :password_confirmation
@@ -108,6 +114,8 @@ ActiveAdmin.register AdminUser do
           f.input :business_unit, required: true
           f.input :department, required: true
           f.input :designation, required: true
+          f.input :date_of_joining, required: true, as: :datepicker
+          f.input :date_of_leaving, as: :datepicke
         end
       end
     end

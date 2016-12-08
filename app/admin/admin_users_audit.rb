@@ -27,6 +27,8 @@ ActiveAdmin.register AdminUsersAudit do
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
     end
+    column :date_of_joining
+    column :date_of_leaving
     column :created_at
   end
 
@@ -58,4 +60,6 @@ ActiveAdmin.register AdminUsersAudit do
   filter :business_unit
   filter :department
   filter :designation
+  filter :date_of_joining
+  filter :date_of_leaving
 end
