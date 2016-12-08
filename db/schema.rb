@@ -218,7 +218,8 @@ SELECT lookups.id,
     lookups.description,
     lookups.rank,
     lookups.comments,
-    lookups.lookup_type_id
+    lookups.lookup_type_id,
+    lookups.extra
    FROM lookups,
     lookup_types
   WHERE (((lookup_types.name)::text = 'Business Units'::text) AND (lookups.lookup_type_id = lookup_types.id))

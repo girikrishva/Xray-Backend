@@ -195,7 +195,7 @@ InvoiceHeader.create!([
   {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09", header_amount: 0.0},
   {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02", header_amount: 93000.0},
   {narrative: "Test invoice", invoice_date: "2016-12-05", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-04", header_amount: 0.0},
-  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-04", header_amount: 66000.0}
+  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, due_date: "2016-12-20", header_amount: 66000.0}
 ])
 InvoiceLine.create!([
   {narrative: "Advance Invoice", line_amount: 88000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: 1, invoice_adder_type_id: nil},
@@ -211,8 +211,6 @@ InvoicingMilestone.create!([
   {name: "Interim payment", description: "", due_date: "2016-12-05", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 66000.0}
 ])
 Lookup.create!([
-  {name: "CCI", description: "Cognitive Clouds India", rank: 3.0, comments: "", lookup_type_id: 2, extra: nil},
-  {name: "CCS", description: "Cognitive Clouds Singapore", rank: 1.0, comments: "", lookup_type_id: 2, extra: nil},
   {name: "Engineering", description: "Engineering", rank: 1.0, comments: "", lookup_type_id: 3, extra: nil},
   {name: "Administration", description: "Administration", rank: 4.0, comments: "", lookup_type_id: 3, extra: nil},
   {name: "CEO", description: "CEO", rank: 1.0, comments: "", lookup_type_id: 8, extra: nil},
@@ -239,7 +237,6 @@ Lookup.create!([
   {name: "Web", description: "Web", rank: 4.0, comments: "", lookup_type_id: 13, extra: nil},
   {name: "Legal", description: "Legal", rank: 5.0, comments: "", lookup_type_id: 3, extra: nil},
   {name: "Security", description: "Security", rank: 7.0, comments: "", lookup_type_id: 3, extra: nil},
-  {name: "CCU", description: "Cognitive Clouds US", rank: 2.0, comments: "Test", lookup_type_id: 2, extra: nil},
   {name: "Sales", description: "Sales", rank: 5.0, comments: "", lookup_type_id: 13, extra: nil},
   {name: "Project Management", description: "Project Management", rank: 6.0, comments: "", lookup_type_id: 13, extra: nil},
   {name: "Finance", description: "Finance", rank: 7.0, comments: "", lookup_type_id: 13, extra: nil},
@@ -278,19 +275,22 @@ Lookup.create!([
   {name: "Approved", description: "Approved", rank: 2.0, comments: "", lookup_type_id: 21, extra: ""},
   {name: "Rejected", description: "Rejected", rank: 3.0, comments: "", lookup_type_id: 21, extra: nil},
   {name: "Canceled", description: "Canceled", rank: 4.0, comments: "", lookup_type_id: 21, extra: ""},
+  {name: "Service Tax", description: "Service Tax", rank: 1.0, comments: "", lookup_type_id: 11, extra: "{\"tax_rate\": \"5.5\"}"},
+  {name: "CCS", description: "Cognitive Clouds Singapore", rank: 1.0, comments: "", lookup_type_id: 2, extra: "{\"fiscal_year_start\": \"01\"}"},
+  {name: "Net 30", description: "Net 30", rank: 1.0, comments: "", lookup_type_id: 20, extra: "{\"credit_days\": \"30\"}"},
+  {name: "Value Added Tax", description: "Value Added Tax", rank: 2.0, comments: "", lookup_type_id: 11, extra: "{\"tax_rate\": \"14.5\"}"},
+  {name: "Sales Tax", description: "Sales Tax", rank: 3.0, comments: "", lookup_type_id: 11, extra: "{\"tax_rate\": \"2.0\"}"},
+  {name: "Income Tax", description: "Income Tax", rank: 4.0, comments: "", lookup_type_id: 11, extra: "{\"tax_rate\": \"28.0\"}"},
+  {name: "CCU", description: "Cognitive Clouds US", rank: 2.0, comments: "", lookup_type_id: 2, extra: "{\"fiscal_year_start\": \"01\"}"},
+  {name: "CCI", description: "Cognitive Clouds India", rank: 3.0, comments: "", lookup_type_id: 2, extra: "{\"fiscal_year_start\": \"04\"}"},
+  {name: "Net 15", description: "Net 15", rank: 2.0, comments: "", lookup_type_id: 20, extra: "{\"credit_days\": \"15\"}"},
   {name: "Management", description: "Management", rank: 8.0, comments: "", lookup_type_id: 3, extra: nil},
   {name: "Director", description: "Director", rank: 6.0, comments: "", lookup_type_id: 8, extra: nil},
   {name: "Manager", description: "Manager", rank: 7.0, comments: "", lookup_type_id: 8, extra: nil},
   {name: "Engineer", description: "Engineer", rank: 8.0, comments: "", lookup_type_id: 8, extra: nil},
   {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 8, extra: nil},
   {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 3, extra: nil},
-  {name: "Service Tax", description: "Service Tax", rank: 1.0, comments: "", lookup_type_id: 11, extra: "5.5"},
-  {name: "Value Added Tax", description: "Value Added Tax", rank: 2.0, comments: "", lookup_type_id: 11, extra: "14.5"},
-  {name: "Sales Tax", description: "Sales Tax", rank: 3.0, comments: "", lookup_type_id: 11, extra: "2"},
-  {name: "Income Tax", description: "Income Tax", rank: 4.0, comments: "", lookup_type_id: 11, extra: "22"},
-  {name: "Net 30", description: "Net 30", rank: 1.0, comments: "", lookup_type_id: 20, extra: "30"},
-  {name: "Net 15", description: "Net 15", rank: 2.0, comments: "", lookup_type_id: 20, extra: "15"},
-  {name: "Immediate", description: "Immediate", rank: 3.0, comments: "", lookup_type_id: 20, extra: "0"}
+  {name: "Immediate", description: "Immediate", rank: 3.0, comments: "", lookup_type_id: 20, extra: "{\"credit_days\": \"0\"}"}
 ])
 LookupType.create!([
   {name: "Departments", description: "Departments", comments: ""},
@@ -402,9 +402,9 @@ ApprovalStatus.create!([
   {name: "Canceled", description: "Canceled", rank: 4.0, comments: "", lookup_type_id: 21, extra: ""}
 ])
 BusinessUnit.create!([
-  {name: "CCS", description: "Cognitive Clouds Singapore", rank: 1.0, comments: "", lookup_type_id: 2},
-  {name: "CCU", description: "Cognitive Clouds US", rank: 2.0, comments: "Test", lookup_type_id: 2},
-  {name: "CCI", description: "Cognitive Clouds India", rank: 3.0, comments: "", lookup_type_id: 2}
+  {name: "CCS", description: "Cognitive Clouds Singapore", rank: 1.0, comments: "", lookup_type_id: 2, extra: "{\"fiscal_year_start\": \"01\"}"},
+  {name: "CCU", description: "Cognitive Clouds US", rank: 2.0, comments: "", lookup_type_id: 2, extra: "{\"fiscal_year_start\": \"01\"}"},
+  {name: "CCI", description: "Cognitive Clouds India", rank: 3.0, comments: "", lookup_type_id: 2, extra: "{\"fiscal_year_start\": \"04\"}"}
 ])
 CostAdderType.create!([
   {name: "Rental", description: "Rental", rank: 1.0, comments: "", lookup_type_id: 12},
@@ -436,10 +436,10 @@ Designation.create!([
   {name: "Not Applicable", description: "Not Applicable", rank: 9.0, comments: "", lookup_type_id: 8}
 ])
 InvoiceAdderType.create!([
-  {name: "Service Tax", description: "Service Tax", rank: 1.0, comments: "", lookup_type_id: 11, extra: "5.5"},
-  {name: "Value Added Tax", description: "Value Added Tax", rank: 2.0, comments: "", lookup_type_id: 11, extra: "14.5"},
-  {name: "Sales Tax", description: "Sales Tax", rank: 3.0, comments: "", lookup_type_id: 11, extra: "2"},
-  {name: "Income Tax", description: "Income Tax", rank: 4.0, comments: "", lookup_type_id: 11, extra: "22"}
+  {name: "Service Tax", description: "Service Tax", rank: 1.0, comments: "", lookup_type_id: 11, extra: "{\"tax_rate\": \"5.5\"}"},
+  {name: "Value Added Tax", description: "Value Added Tax", rank: 2.0, comments: "", lookup_type_id: 11, extra: "{\"tax_rate\": \"14.5\"}"},
+  {name: "Sales Tax", description: "Sales Tax", rank: 3.0, comments: "", lookup_type_id: 11, extra: "{\"tax_rate\": \"2.0\"}"},
+  {name: "Income Tax", description: "Income Tax", rank: 4.0, comments: "", lookup_type_id: 11, extra: "{\"tax_rate\": \"28.0\"}"}
 ])
 InvoiceStatus.create!([
   {name: "New", description: "New", rank: 1.0, comments: "", lookup_type_id: 17, extra: nil},
@@ -450,9 +450,9 @@ InvoiceStatus.create!([
   {name: "Hold", description: "Hold", rank: 6.0, comments: "", lookup_type_id: 17, extra: nil}
 ])
 InvoiceTerm.create!([
-  {name: "Net 30", description: "Net 30", rank: 1.0, comments: "", lookup_type_id: 20, extra: "30"},
-  {name: "Net 15", description: "Net 15", rank: 2.0, comments: "", lookup_type_id: 20, extra: "15"},
-  {name: "Immediate", description: "Immediate", rank: 3.0, comments: "", lookup_type_id: 20, extra: "0"}
+  {name: "Net 30", description: "Net 30", rank: 1.0, comments: "", lookup_type_id: 20, extra: "{\"credit_days\": \"30\"}"},
+  {name: "Net 15", description: "Net 15", rank: 2.0, comments: "", lookup_type_id: 20, extra: "{\"credit_days\": \"15\"}"},
+  {name: "Immediate", description: "Immediate", rank: 3.0, comments: "", lookup_type_id: 20, extra: "{\"credit_days\": \"0\"}"}
 ])
 PaymentStatus.create!([
   {name: "New", description: "New", rank: 1.0, comments: "", lookup_type_id: 18, extra: nil},
