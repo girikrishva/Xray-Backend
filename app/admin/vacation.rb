@@ -18,8 +18,7 @@ ActiveAdmin.register Vacation do
   batch_action :reject do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
-      no = I18n.t('label.no')
-      vacation.approval_status_id = FlagStatus.where('name = ?',   no).first.id
+      vacation.approval_status_id = ApprovalStatus.where('name = ?',  I18n.t('label.rejected')).first.id
       vacation.save
     end
     redirect_to collection_url
@@ -28,8 +27,7 @@ ActiveAdmin.register Vacation do
   batch_action :approve do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
-      yes = I18n.t('label.yes')
-      vacation.approval_status_id = FlagStatus.where('name = ?', yes).first.id
+      vacation.approval_status_id = ApprovalStatus.where('name = ?',  I18n.t('label.approved')).first.id
       vacation.save
     end
     redirect_to collection_url
@@ -63,7 +61,7 @@ ActiveAdmin.register Vacation do
     column :start_date
     column :end_date
     column :hours_per_day
-    column :approval_status, sortable: 'flag_statuses.name' do |resource|
+    column :approval_status, sortable: 'approval_statuses.name' do |resource|
       resource.approval_status.name
     end
     column :comments
@@ -130,7 +128,7 @@ ActiveAdmin.register Vacation do
       f.object.start_date = Date.today
       f.object.end_date = Date.today
       f.object.hours_per_day = 8
-      f.object.approval_status_id = FlagStatus.where(name: I18n.t('label.no')).first.id
+      f.object.approval_status_id = ApprovalStatus.where(name: I18n.t('label.pending')).first.id
     end
     f.inputs do
       if f.object.new_record?
