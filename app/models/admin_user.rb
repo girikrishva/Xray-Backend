@@ -80,11 +80,11 @@ class AdminUser < ActiveRecord::Base
     self.business_unit.name
   end
 
-  def default_bill_rate
-    Resource.where(admin_user_id: self.id).minimum(:bill_rate) rescue 0
+  def self.default_bill_rate(as_on = Date.today)
+    Resource.where('admin_user_id = ? and as_on <= ?', self.id, as_on).order('as_on desc').first.bill_rate rescue 0
   end
 
-  def default_cost_rate
-    Resource.where(admin_user_id: self.id).maximum(:cost_rate) rescue 0
+  def default_cost_rate(as_on = Date.today)
+    Resource.where('admin_user_id = ? and as_on <= ?', self.id, as_on).order('as_on desc').first.bill_rate rescue 0
   end
 end
