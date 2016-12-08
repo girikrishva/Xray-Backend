@@ -142,6 +142,8 @@ en:
     invoicing_milestones: "Invoicing Milestones"
     invoice_lines: "Invoice Lines"
     payment_lines: "Payment Lines"
+    approve_vacation: "Approve"
+    reject_vacation: "Reject"
   models:
     business_units: "Business Units"
     departments: "Departments"

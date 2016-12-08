@@ -18,7 +18,7 @@ ActiveAdmin.register Vacation do
   batch_action :reject do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
-      vacation.approval_status_id = ApprovalStatus.where('name = ?',  I18n.t('label.rejected')).first.id
+      vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.rejected')).first.id
       vacation.save
     end
     redirect_to collection_url
@@ -27,7 +27,7 @@ ActiveAdmin.register Vacation do
   batch_action :approve do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
-      vacation.approval_status_id = ApprovalStatus.where('name = ?',  I18n.t('label.approved')).first.id
+      vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.approved')).first.id
       vacation.save
     end
     redirect_to collection_url
@@ -65,7 +65,10 @@ ActiveAdmin.register Vacation do
       resource.approval_status.name
     end
     column :comments
-    actions defaults: true, dropdown: true
+    actions defaults: true, dropdown: true do |resource|
+      item I18n.t('actions.approve_vacation'), admin_api_approve_vacation_path(vacation_id: resource.id), method: :post
+      item I18n.t('actions.reject_vacation'), admin_api_reject_vacation_path(vacation_id: resource.id), method: :post
+    end
   end
 
   filter :user, collection: proc { AdminUser.ordered_lookup }
@@ -117,6 +120,26 @@ ActiveAdmin.register Vacation do
     def update
       super do |format|
         redirect_to collection_url and return if resource.valid?
+      end
+    end
+
+    def approve_vacation
+      if params.has_key?(:vacation_id)
+        vacation_id = params[:vacation_id]
+        vacation = Vacation.find(vacation_id)
+        vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.approved')).first.id
+        vacation.save
+        redirect_to admin_vacations_path
+      end
+    end
+
+    def reject_vacation
+      if params.has_key?(:vacation_id)
+        vacation_id = params[:vacation_id]
+        vacation = Vacation.find(vacation_id)
+        vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.rejected')).first.id
+        vacation.save
+        redirect_to admin_vacations_path
       end
     end
   end
