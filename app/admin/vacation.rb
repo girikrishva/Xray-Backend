@@ -50,6 +50,7 @@ ActiveAdmin.register Vacation do
   index do
     selectable_column
     column :id
+    column :request_date
     column :user, sortable: 'admin_users.name' do |resource|
       resource.user.name
     end
@@ -57,7 +58,6 @@ ActiveAdmin.register Vacation do
       resource.vacation_code.description
     end
     column :narrative
-    column :request_date
     column :start_date
     column :end_date
     column :hours_per_day
@@ -71,10 +71,10 @@ ActiveAdmin.register Vacation do
     end
   end
 
+  filter :request_date
   filter :user, collection: proc { AdminUser.ordered_lookup }
   filter :vacation_code, collection: Lookup.lookups_for_name(I18n.t('models.vacation_codes')).map { |a| [a.description, a.id] }
   filter :narrative
-  filter :request_date
   filter :start_date
   filter :end_date
   filter :hours_per_day
@@ -84,6 +84,7 @@ ActiveAdmin.register Vacation do
   show do |r|
     attributes_table_for r do
       row :id
+      row :request_date
       row :user do
         r.user.name
       end
@@ -91,7 +92,6 @@ ActiveAdmin.register Vacation do
         r.vacation_code.description
       end
       row :narrative
-      row :request_date
       row :start_date
       row :end_date
       row :hours_per_day
