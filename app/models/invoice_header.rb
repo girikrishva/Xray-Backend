@@ -21,7 +21,9 @@ class InvoiceHeader < ActiveRecord::Base
   has_many :payment_lines, class_name: 'PaymentLine '
 
   def populate_due_date
-    self.due_date = self.invoice_date + self.invoice_term.extra.to_f
+    invoice_term = InvoiceTerm.find(self.invoice_term.id)
+    extra = JSON.parse(invoice_term.extra)
+    self.due_date = self.invoice_date + extra['credit_days'].to_f
   end
 
   def name
