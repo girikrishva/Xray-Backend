@@ -31,7 +31,19 @@ class Vacation < ActiveRecord::Base
   end
 
   def eligible_days
-    Vacation.eligible_days(self.user.id, self.vacation_code.id, self.start_date)
+    @eligible_days = Vacation.eligible_days(self.user.id, self.vacation_code.id, self.start_date)
+  end
+
+  def holidays
+    @holidays = Vacation.holidays(self.user.id, self.start_date)
+  end
+
+  def availed_days
+    @availed_days = Vacation.availed_days(self.user.id, self.vacation_code.id, self.start_date)
+  end
+
+  def balance_days
+    @eligible_days + @holidays - @availed_days
   end
 
   def self.eligible_days(admin_user_id, vacation_code_id, start_date = Date.today)
@@ -47,6 +59,36 @@ class Vacation < ActiveRecord::Base
     end
     days_in_year = fiscal_year_end_date - fiscal_year_start_date + 25
     days_employed_till_start_date = to_date - from_date + 1
-    eligible_days = (((days_employed_till_start_date / days_in_year) * days_allowed * 2).round / 2.0) + HolidayCalendar.holidays_between(admin_user.business_unit_id, from_date, to_date)
+    eligible_days = (((days_employed_till_start_date / days_in_year) * days_allowed * 2).round / 2.0)
+  end
+
+  def self.availed_days(admin_user_id, vacation_code_id, start_date = Date.today)
+    admin_user = AdminUser.find(admin_user_id)
+    availed_hours = 0
+    Vacation.where('admin_user_id = ? and vacation_code_id = ? and end_date < ? and approval_status_id = ?', admin_user.id, vacation_code_id, start_date, ApprovalStatus.where(name: I18n.t('label.approved')).first.id).each do |vacation|
+      availed_hours += (vacation.end_date - vacation.start_date + 1) * vacation.hours_per_day
+    end
+    fiscal_year_start_date = BusinessUnit.fiscal_year_start_date(admin_user.business_unit_id, start_date)
+    fiscal_year_end_date = BusinessUnit.fiscal_year_end_date(admin_user.business_unit_id, start_date.year)
+    from_date = (admin_user.date_of_joining >= fiscal_year_start_date) ? admin_user.date_of_joining : fiscal_year_start_date
+    if !admin_user.date_of_leaving.blank?
+      to_date = (admin_user.date_of_leaving < fiscal_year_end_date) ? admin_user.date_of_leaving : fiscal_year_end_date
+    else
+      to_date = start_date
+    end
+    availed_days = (((availed_hours / 8) * 2).round / 2.0) + HolidayCalendar.holidays_between(admin_user.business_unit_id, from_date, start_date)
+  end
+
+  def self.holidays(admin_user_id, start_date = Date.today)
+    admin_user = AdminUser.find(admin_user_id)
+    fiscal_year_start_date = BusinessUnit.fiscal_year_start_date(admin_user.business_unit_id, start_date)
+    fiscal_year_end_date = BusinessUnit.fiscal_year_end_date(admin_user.business_unit_id, start_date.year)
+    from_date = (admin_user.date_of_joining >= fiscal_year_start_date) ? admin_user.date_of_joining : fiscal_year_start_date
+    if !admin_user.date_of_leaving.blank?
+      to_date = (admin_user.date_of_leaving < fiscal_year_end_date) ? admin_user.date_of_leaving : fiscal_year_end_date
+    else
+      to_date = start_date
+    end
+    (HolidayCalendar.holidays_between(admin_user.business_unit_id, from_date, to_date) * 2).round / 2.0
   end
 end

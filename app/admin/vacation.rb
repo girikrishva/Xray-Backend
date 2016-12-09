@@ -91,6 +91,9 @@ ActiveAdmin.register Vacation do
     column :end_date
     column :hours_per_day
     column :eligible_days
+    column :holidays
+    column :availed_days
+    column :balance_days
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.approve_vacation'), admin_api_approve_vacation_path(vacation_id: resource.id), method: :post
@@ -126,6 +129,10 @@ ActiveAdmin.register Vacation do
       row :approval_status do
         r.approval_status.name
       end
+      row :eligible_days
+      row :holidays
+      row :availed_days
+      row :balance_days
       row :comments
     end
   end
