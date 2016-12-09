@@ -15,7 +15,7 @@ ActiveAdmin.register Vacation do
 # end
 
 
-  batch_action :revert do |ids|
+  batch_action :revert, priority: 4 do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.pending')).first.id
@@ -24,7 +24,7 @@ ActiveAdmin.register Vacation do
     redirect_to collection_url
   end
 
-  batch_action :cancel do |ids|
+  batch_action :cancel, priority: 3 do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.canceled')).first.id
@@ -33,7 +33,7 @@ ActiveAdmin.register Vacation do
     redirect_to collection_url
   end
 
-  batch_action :reject do |ids|
+  batch_action :reject, priority: 2 do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.rejected')).first.id
@@ -42,7 +42,7 @@ ActiveAdmin.register Vacation do
     redirect_to collection_url
   end
 
-  batch_action :approve do |ids|
+  batch_action :approve, priority: 1 do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.approved')).first.id
@@ -51,11 +51,7 @@ ActiveAdmin.register Vacation do
     redirect_to collection_url
   end
 
-  scope I18n.t('label.all'), :all_view, default: true do |vacations|
-    Vacation.all.order('request_date desc')
-  end
-
-  scope I18n.t('label.pending'), :pending_view, default: false do |vacations|
+  scope I18n.t('label.pending'), :pending_view, default: true do |vacations|
     Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.pending')).first.id).order('request_date desc')
   end
 
@@ -69,6 +65,10 @@ ActiveAdmin.register Vacation do
 
   scope I18n.t('label.canceled'), :canceled_view, default: false do |vacations|
     Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.canceled')).first.id).order('request_date desc')
+  end
+
+  scope I18n.t('label.all'), :all_view, default: false do |vacations|
+    Vacation.all.order('request_date desc')
   end
 
   permit_params :admin_user_id, :vacation_code_id, :narrative, :request_date, :start_date, :end_date, :hours_per_day, :approval_status_id, :comments
