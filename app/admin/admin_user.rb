@@ -38,6 +38,8 @@ ActiveAdmin.register AdminUser do
     column :id
     column :email
     column :name
+    column I18n.t('label.joining_date'), :date_of_joining
+    column I18n.t('label.leaving_date'), :date_of_leaving
     column :active
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
@@ -48,8 +50,6 @@ ActiveAdmin.register AdminUser do
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
     end
-    column :date_of_joining
-    column :date_of_leaving
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.change_qualifiers'), edit_admin_admin_user_path(id: resource.id, suppress_password: true)
       item I18n.t('actions.audit_trail'), admin_admin_users_audits_path(admin_user_id: resource.id)
@@ -81,9 +81,9 @@ ActiveAdmin.register AdminUser do
   filter :business_unit
   filter :email
   filter :name
+  filter :date_of_joining, label: I18n.t('label.joining_date')
+  filter :date_of_leaving, label: I18n.t('label.leaving_date')
   filter :active
-  filter :date_of_joining
-  filter :date_of_leaving
   filter :role
   filter :department
   filter :designation
@@ -97,9 +97,9 @@ ActiveAdmin.register AdminUser do
       end
       if params.has_key?(:suppress_password) and params[:suppress_password]
         f.input :name, required: true
+        f.input :date_of_joining, required: true, as: :datepicker, label: I18n.t('label.joining_date')
+        f.input :date_of_leaving, as: :datepicker, label: I18n.t('label.leaving_date')
         f.input :active, required: true
-        f.input :date_of_joining, required: true, as: :datepicker
-        f.input :date_of_leaving, as: :datepicker
         f.input :role, required: true
         f.input :business_unit, required: true
         f.input :department, required: true
@@ -109,9 +109,9 @@ ActiveAdmin.register AdminUser do
         f.input :password_confirmation
         if f.object.new_record?
           f.input :name, required: true
+          f.input :date_of_joining, required: true, as: :datepicker, label: I18n.t('label.joining_date')
+          f.input :date_of_leaving, as: :datepicker, label: I18n.t('label.leaving_date')
           f.input :active
-          f.input :date_of_joining, required: true, as: :datepicker
-          f.input :date_of_leaving, as: :datepicker
           f.input :role, required: true
           f.input :business_unit, required: true
           f.input :department, required: true

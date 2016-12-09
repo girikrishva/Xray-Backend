@@ -130,6 +130,8 @@ en:
     rejected: "Rejected"
     canceled: "Canceled"
     all: "All"
+    joining_date: "Joining Date"
+    leaving_date: "Leaving Date"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"
@@ -162,4 +164,4 @@ en:
     convert_pipeline_delivery_manager_missing: "Delivery manager must be defined before conversion."
     invoicing_milestone_invoice_adder_type_arc_error: "Either one of invoicing milestone or invoice adder type must be chosen."
     request_validity_check_error: "Cannot initiate request as an overlapping one exists."
-    doj_dol_date_check: "Joining date must be before leaving date.
+    doj_dol_date_check: "Joining date must be on or before leaving date."
