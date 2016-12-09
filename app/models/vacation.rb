@@ -30,20 +30,24 @@ class Vacation < ActiveRecord::Base
     end
   end
 
+  def approval_status_name
+    self.approval_status.name
+  end
+
   def eligible_days
-    @eligible_days = Vacation.eligible_days(self.user.id, self.vacation_code.id, self.start_date)
+    Vacation.eligible_days(self.user.id, self.vacation_code.id, self.start_date)
   end
 
   def holidays
-    @holidays = Vacation.holidays(self.user.id, self.start_date)
+    Vacation.holidays(self.user.id, self.start_date)
   end
 
   def availed_days
-    @availed_days = Vacation.availed_days(self.user.id, self.vacation_code.id, self.start_date)
+    Vacation.availed_days(self.user.id, self.vacation_code.id, self.start_date)
   end
 
   def balance_days
-    @eligible_days + @holidays - @availed_days
+    self.eligible_days + self.holidays - self.availed_days
   end
 
   def requested_days

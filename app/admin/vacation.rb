@@ -74,7 +74,7 @@ ActiveAdmin.register Vacation do
     link_to I18n.t('label.back'), admin_vacations_path
   end
 
-  index do
+  index as: :grouped_table, group_by_attribute: :approval_status_name do
     selectable_column
     column :id
     column :request_date
@@ -88,9 +88,6 @@ ActiveAdmin.register Vacation do
     column :start_date
     column :end_date
     column :hours_per_day
-    column :eligible_days
-    column :holidays
-    column :availed_days
     column :balance_days
     column :requested_days
     column :comments
