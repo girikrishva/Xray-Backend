@@ -15,6 +15,15 @@ ActiveAdmin.register Vacation do
 # end
 
 
+  batch_action :revert do |ids|
+    ids.each do |id|
+      vacation = Vacation.find(id)
+      vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.pending')).first.id
+      vacation.save
+    end
+    redirect_to collection_url
+  end
+
   batch_action :cancel do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
@@ -95,6 +104,7 @@ ActiveAdmin.register Vacation do
       item I18n.t('actions.approve_vacation'), admin_api_approve_vacation_path(vacation_id: resource.id), method: :post
       item I18n.t('actions.reject_vacation'), admin_api_reject_vacation_path(vacation_id: resource.id), method: :post
       item I18n.t('actions.cancel_vacation'), admin_api_cancel_vacation_path(vacation_id: resource.id), method: :post
+      item I18n.t('actions.revert_vacation'), admin_api_make_pending_path(vacation_id: resource.id), method: :post
     end
   end
 
@@ -180,6 +190,16 @@ ActiveAdmin.register Vacation do
         vacation_id = params[:vacation_id]
         vacation = Vacation.find(vacation_id)
         vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.canceled')).first.id
+        vacation.save
+        redirect_to admin_vacations_path
+      end
+    end
+
+    def make_pending
+      if params.has_key?(:vacation_id)
+        vacation_id = params[:vacation_id]
+        vacation = Vacation.find(vacation_id)
+        vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.pending')).first.id
         vacation.save
         redirect_to admin_vacations_path
       end

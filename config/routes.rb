@@ -77,4 +77,5 @@ Rails.application.routes.draw do
   match '/admin/api/approve_vacation', to: 'admin/vacations#approve_vacation', via: [:post]
   match '/admin/api/reject_vacation', to: 'admin/vacations#reject_vacation', via: [:post]
   match '/admin/api/cancel_vacation', to: 'admin/vacations#cancel_vacation', via: [:post]
+  match '/admin/api/make_pending', to: 'admin/vacations#make_pending', via: [:post]
 end

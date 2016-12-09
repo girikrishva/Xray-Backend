@@ -149,6 +149,7 @@ en:
     approve_vacation: "Approve"
     reject_vacation: "Reject"
     cancel_vacation: "Cancel"
+    revert_vacation: "Revert"
   models:
     business_units: "Business Units"
     departments: "Departments"
