@@ -43,28 +43,26 @@ ActiveAdmin.register Vacation do
   end
 
   scope I18n.t('label.pending'), :pending_view, default: true do |vacations|
-    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.pending')).first.id)
+    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.pending')).first.id).order('request_date desc')
   end
 
   scope I18n.t('label.approved'), :approved_view, default: true do |vacations|
-    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.approved')).first.id)
+    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.approved')).first.id).order('request_date desc')
   end
 
   scope I18n.t('label.rejected'), :rejected_view, default: true do |vacations|
-    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.rejected')).first.id)
+    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.rejected')).first.id).order('request_date desc')
   end
 
   scope I18n.t('label.canceled'), :canceled_view, default: true do |vacations|
-    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.canceled')).first.id)
+    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.canceled')).first.id).order('request_date desc')
   end
 
   scope I18n.t('label.all'), :all_view, default: true do |vacations|
-    Vacation.all
+    Vacation.all.order('request_date desc')
   end
 
   permit_params :admin_user_id, :vacation_code_id, :narrative, :request_date, :start_date, :end_date, :hours_per_day, :approval_status_id, :comments
-
-  config.sort_order = 'start_date_desc_and_end_date_desc'
 
   config.clear_action_items!
 
