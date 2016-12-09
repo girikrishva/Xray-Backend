@@ -30,7 +30,23 @@ class Vacation < ActiveRecord::Base
     end
   end
 
-  def self.eligible_days(admin_user_id, as_on = Date.today)
+  def eligible_days
+    Vacation.eligible_days(self.user.id, self.vacation_code.id, self.start_date)
+  end
 
+  def self.eligible_days(admin_user_id, vacation_code_id, start_date = Date.today)
+    admin_user = AdminUser.find(admin_user_id)
+    days_allowed = VacationPolicy.latest_days_allowed(admin_user.business_unit_id, vacation_code_id, start_date)
+    fiscal_year_start_date = BusinessUnit.fiscal_year_start_date(admin_user.business_unit_id, start_date)
+    fiscal_year_end_date = BusinessUnit.fiscal_year_end_date(admin_user.business_unit_id, start_date.year)
+    from_date = (admin_user.date_of_joining >= fiscal_year_start_date) ? admin_user.date_of_joining : fiscal_year_start_date
+    if !admin_user.date_of_leaving.blank?
+      to_date = (admin_user.date_of_leaving < fiscal_year_end_date) ? admin_user.date_of_leaving : fiscal_year_end_date
+    else
+      to_date = start_date
+    end
+    days_in_year = fiscal_year_end_date - fiscal_year_start_date + 25
+    days_employed_till_start_date = to_date - from_date + 1
+    eligible_days = (((days_employed_till_start_date / days_in_year) * days_allowed * 2).round / 2.0) + HolidayCalendar.holidays_between(admin_user.business_unit_id, from_date, to_date)
   end
 end

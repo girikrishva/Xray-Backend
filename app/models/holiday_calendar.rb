@@ -12,4 +12,8 @@ class HolidayCalendar < ActiveRecord::Base
   def business_unit_name
     self.business_unit.name
   end
+
+  def self.holidays_between(business_unit_id, start_date, end_date)
+    HolidayCalendar.where('business_unit_id = ? and as_on between ? and ?', business_unit_id, start_date, end_date).count
+  end
 end

@@ -13,4 +13,8 @@ class VacationPolicy < ActiveRecord::Base
   def business_unit_name
     self.business_unit.name
   end
+
+  def self.latest_days_allowed(business_unit_id, vacation_code_id, as_on)
+    VacationPolicy.where('business_unit_id = ? and vacation_code_id = ? and as_on <= ?', business_unit_id, vacation_code_id, as_on).order('as_on desc').first.days_allowed
+  end
 end
