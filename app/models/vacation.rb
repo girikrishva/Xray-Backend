@@ -46,6 +46,10 @@ class Vacation < ActiveRecord::Base
     @eligible_days + @holidays - @availed_days
   end
 
+  def requested_days
+    ((((self.end_date - self.start_date + 1) * 8) / 8) * 2).round / 2.0
+  end
+
   def self.eligible_days(admin_user_id, vacation_code_id, start_date = Date.today)
     admin_user = AdminUser.find(admin_user_id)
     days_allowed = VacationPolicy.latest_days_allowed(admin_user.business_unit_id, vacation_code_id, start_date)
@@ -76,7 +80,7 @@ class Vacation < ActiveRecord::Base
     else
       to_date = start_date
     end
-    availed_days = (((availed_hours / 8) * 2).round / 2.0) + HolidayCalendar.holidays_between(admin_user.business_unit_id, from_date, start_date)
+    availed_days = (((availed_hours / 8) * 2).round / 2.0)
   end
 
   def self.holidays(admin_user_id, start_date = Date.today)

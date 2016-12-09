@@ -64,7 +64,7 @@ ActiveAdmin.register Vacation do
 
   permit_params :admin_user_id, :vacation_code_id, :narrative, :request_date, :start_date, :end_date, :hours_per_day, :approval_status_id, :comments
 
-  config.sort_order = 'request_date_desc_and_admin_users.name_asc_and_vacation_codes.name_asc'
+  config.sort_order = 'start_date_desc_and_end_date_desc'
 
   config.clear_action_items!
 
@@ -94,6 +94,7 @@ ActiveAdmin.register Vacation do
     column :holidays
     column :availed_days
     column :balance_days
+    column :requested_days
     column :comments
     actions defaults: true, dropdown: true do |resource|
       item I18n.t('actions.approve_vacation'), admin_api_approve_vacation_path(vacation_id: resource.id), method: :post
@@ -133,6 +134,7 @@ ActiveAdmin.register Vacation do
       row :holidays
       row :availed_days
       row :balance_days
+      row :requested_days
       row :comments
     end
   end
