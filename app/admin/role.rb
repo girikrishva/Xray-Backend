@@ -24,7 +24,7 @@ ActiveAdmin.register Role do
     link_to I18n.t('label.new'), new_admin_role_path
   end
 
-  action_item only: :show do |resource|
+  action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_roles_path
   end
 
@@ -82,7 +82,6 @@ ActiveAdmin.register Role do
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))
-      f.cancel_link
     end
   end
 end

@@ -24,7 +24,7 @@ ActiveAdmin.register HolidayCalendar do
     link_to I18n.t('label.new'), new_admin_holiday_calendar_path
   end
 
-  action_item only: :show do |resource|
+  action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_holiday_calendars_path
   end
 
@@ -93,7 +93,6 @@ ActiveAdmin.register HolidayCalendar do
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))
-      f.cancel_link
     end
   end
 end

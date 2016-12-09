@@ -24,7 +24,7 @@ ActiveAdmin.register LookupType do
     link_to I18n.t('label.new'), new_admin_lookup_type_path
   end
 
-  action_item only: :show do |resource|
+  action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_lookup_types_path(lookup_type_id: nil)
   end
 
@@ -65,7 +65,6 @@ ActiveAdmin.register LookupType do
     f.inputs
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))
-      f.cancel_link
     end
   end
 end
