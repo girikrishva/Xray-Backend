@@ -82,11 +82,11 @@ ActiveAdmin.register AdminUser do
   filter :email
   filter :name
   filter :active
+  filter :date_of_joining
+  filter :date_of_leaving
   filter :role
   filter :department
   filter :designation
-  filter :date_of_joining
-  filter :date_of_leaving
 
   form do |f|
     f.inputs I18n.t('label.admin_details') do
@@ -98,24 +98,24 @@ ActiveAdmin.register AdminUser do
       if params.has_key?(:suppress_password) and params[:suppress_password]
         f.input :name, required: true
         f.input :active, required: true
+        f.input :date_of_joining, required: true, as: :datepicker
+        f.input :date_of_leaving, as: :datepicker
         f.input :role, required: true
         f.input :business_unit, required: true
         f.input :department, required: true
         f.input :designation, required: true
-        f.input :date_of_joining, required: true, as: :datepicker
-        f.input :date_of_leaving, as: :datepicker
       else
         f.input :password
         f.input :password_confirmation
         if f.object.new_record?
           f.input :name, required: true
           f.input :active
+          f.input :date_of_joining, required: true, as: :datepicker
+          f.input :date_of_leaving, as: :datepicker
           f.input :role, required: true
           f.input :business_unit, required: true
           f.input :department, required: true
           f.input :designation, required: true
-          f.input :date_of_joining, required: true, as: :datepicker
-          f.input :date_of_leaving, as: :datepicke
         end
       end
     end
