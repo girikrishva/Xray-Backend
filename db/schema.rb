@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161208150611) do
+ActiveRecord::Schema.define(version: 20161210030120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -557,6 +557,15 @@ SELECT lookups.id,
   WHERE (((lookup_types.name)::text = 'Skills'::text) AND (lookups.lookup_type_id = lookup_types.id))
   ORDER BY lookups.rank
   END_VIEW_SKILLS
+
+  create_table "timesheets", force: :cascade do |t|
+    t.date     "timesheet_date",       :null=>false
+    t.float    "hours",                :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "assigned_resource_id", :null=>false, :index=>{:name=>"index_timesheets_on_assigned_resource_id"}, :foreign_key=>{:references=>"assigned_resources", :name=>"fk_timesheets_assigned_resource_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
 
   create_view "vacation_codes", <<-'END_VIEW_VACATION_CODES', :force => true
 SELECT lookups.id,

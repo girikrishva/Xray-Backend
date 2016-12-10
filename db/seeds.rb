@@ -383,9 +383,24 @@ Role.create!([
   {name: "Lead", description: "Lead", rank: 7.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager"},
   {name: "Consultant", description: "Consultant", rank: 8.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager"}
 ])
+Timesheet.create!([
+  {timesheet_date: "2016-11-11", hours: 8.0, comments: "", assigned_resource_id: 6}
+])
+Skill.create!([
+  {name: "iOS", description: "iOS", rank: 1.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Android", description: "Android", rank: 2.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Java", description: "Java", rank: 3.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Web", description: "Web", rank: 4.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Sales", description: "Sales", rank: 5.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Project Management", description: "Project Management", rank: 6.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Finance", description: "Finance", rank: 7.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Administration", description: "Administration", rank: 8.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "Management", description: "Management", rank: 9.0, comments: "", lookup_type_id: 13, extra: nil},
+  {name: "HR", description: "HR", rank: 10.0, comments: "", lookup_type_id: 13, extra: nil}
+])
 Vacation.create!([
-  {narrative: "Test", request_date: "2016-12-09", start_date: "2016-12-09", end_date: "2016-12-09", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 144},
-  {narrative: "Test 4", request_date: "2016-12-09", start_date: "2016-10-01", end_date: "2016-10-02", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 145}
+  {narrative: "Test 4", request_date: "2016-12-09", start_date: "2016-10-01", end_date: "2016-10-02", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 144},
+  {narrative: "Test", request_date: "2016-12-09", start_date: "2016-12-09", end_date: "2016-12-09", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 146}
 ])
 VacationPolicy.create!([
   {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 15.0, comments: "", business_unit_id: 1, vacation_code_id: 71},
@@ -491,18 +506,6 @@ ProjectTypeCode.create!([
   {name: "TnM", description: "Time and Material", rank: 2.0, comments: "", lookup_type_id: 14, extra: nil},
   {name: "INT", description: "Internal", rank: 3.0, comments: "", lookup_type_id: 14, extra: nil},
   {name: "DEF", description: "Default", rank: 4.0, comments: "", lookup_type_id: 14, extra: nil}
-])
-Skill.create!([
-  {name: "iOS", description: "iOS", rank: 1.0, comments: "", lookup_type_id: 13, extra: nil},
-  {name: "Android", description: "Android", rank: 2.0, comments: "", lookup_type_id: 13, extra: nil},
-  {name: "Java", description: "Java", rank: 3.0, comments: "", lookup_type_id: 13, extra: nil},
-  {name: "Web", description: "Web", rank: 4.0, comments: "", lookup_type_id: 13, extra: nil},
-  {name: "Sales", description: "Sales", rank: 5.0, comments: "", lookup_type_id: 13, extra: nil},
-  {name: "Project Management", description: "Project Management", rank: 6.0, comments: "", lookup_type_id: 13, extra: nil},
-  {name: "Finance", description: "Finance", rank: 7.0, comments: "", lookup_type_id: 13, extra: nil},
-  {name: "Administration", description: "Administration", rank: 8.0, comments: "", lookup_type_id: 13, extra: nil},
-  {name: "Management", description: "Management", rank: 9.0, comments: "", lookup_type_id: 13, extra: nil},
-  {name: "HR", description: "HR", rank: 10.0, comments: "", lookup_type_id: 13, extra: nil}
 ])
 VacationCode.create!([
   {name: "PL", description: "Privileged Leave", rank: 1.0, comments: "", lookup_type_id: 10, extra: nil},
