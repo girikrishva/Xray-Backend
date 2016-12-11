@@ -195,7 +195,7 @@ ActiveAdmin.register Vacation do
       end
     end
 
-    def make_pending
+    def make_vacation_pending
       if params.has_key?(:vacation_id)
         vacation_id = params[:vacation_id]
         vacation = Vacation.find(vacation_id)

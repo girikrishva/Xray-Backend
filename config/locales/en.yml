@@ -153,6 +153,10 @@ en:
     reject_vacation: "Reject"
     cancel_vacation: "Cancel"
     revert_vacation: "Revert"
+    approve_timesheet: "Approve"
+    reject_timesheet: "Reject"
+    cancel_timesheet: "Cancel"
+    revert_timesheet: "Revert"
   models:
     business_units: "Business Units"
     departments: "Departments"
