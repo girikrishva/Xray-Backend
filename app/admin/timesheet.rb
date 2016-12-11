@@ -14,7 +14,7 @@ ActiveAdmin.register Timesheet do
 #   permitted
 # end
 
-  permit_params :assigned_resource_id, :timesheet_date, :hours, :comments
+  permit_params :assigned_resource_id, :timesheet_date, :hours, :approval_status_id, :comments
 
   config.clear_action_items!
 
@@ -36,6 +36,7 @@ ActiveAdmin.register Timesheet do
     end
     column :timesheet_date
     column :hours
+    column :approval_status
     column :comments
     actions defaults: true, dropdown: true
   end
@@ -43,6 +44,7 @@ ActiveAdmin.register Timesheet do
   filter :assigned_resource, label: I18n.t('label.assignment'), collection: AssignedResource.ordered_lookup.map{ |a| [a.assigned_resource_name, a.id]}
   filter :timesheet_date
   filter :hours
+  filter :approval_status
   filter :comments
 
   show do |r|
@@ -53,6 +55,7 @@ ActiveAdmin.register Timesheet do
       end
       row :timesheet_date
       row :hours
+      row :approval_status
       row :comments
     end
   end
@@ -83,18 +86,23 @@ ActiveAdmin.register Timesheet do
     if f.object.new_record?
       f.object.timesheet_date = Date.today
       f.object.hours = 8
+      f.object.approval_status_id = ApprovalStatus.where(name: I18n.t('label.pending')).first.id
     end
     f.inputs do
       if f.object.new_record?
         f.input :assigned_resource, label: I18n.t('label.assignment'), collection: AssignedResource.ordered_lookup.map { |a| [a.assigned_resource_name, a.id] }, required: true, include_blank: true
         f.input :timesheet_date, as: :datepicker
         f.input :hours
+        f.input :approval_status, input_html: {disabled: true}
+        f.input :approval_status_id, as: :hidden
         f.input :comments
       else
         f.input :assigned_resource, collection: AssignedResource.ordered_lookup.map { |a| [a.assigned_resource_name, a.id] }, required: true, include_blank: true, input_html: {disabled: true}
         f.input :assigned_resource_id, as: :hidden
         f.input :timesheet_date, as: :string, input_html: {readonly: true}
         f.input :hours, input_html: {readonly: true}
+        f.input :approval_status, input_html: {disabled: true}
+        f.input :approval_status_id, as: :hidden
         f.input :comments
       end
     end

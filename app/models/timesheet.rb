@@ -1,9 +1,11 @@
 class Timesheet < ActiveRecord::Base
   belongs_to :assigned_resource, class_name: 'AssignedResource', foreign_key: :assigned_resource_id
+  belongs_to :approval_status, class_name: 'ApprovalStatus', foreign_key: :approval_status_id
 
   validates :assigned_resource_id, presence: true
   validates :timesheet_date, presence: true
   validates :hours, presence: true
+  validates :approval_status_id, presence: true
 
   validates_uniqueness_of :assigned_resource_id, scope: [:assigned_resource_id, :timesheet_date]
   validates_uniqueness_of :timesheet_date, scope: [:assigned_resource_id, :timesheet_date]
