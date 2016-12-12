@@ -113,8 +113,8 @@ ActiveAdmin.register VacationPolicy do
       f.input :paid
       f.input :days_allowed
       f.input :comments
-      f.input :updated_by, as: :hidden
       f.input :ip_address, as: :hidden
+      f.input :updated_by, as: :hidden
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))

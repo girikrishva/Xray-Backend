@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161212113345) do
+ActiveRecord::Schema.define(version: 20161212125546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -317,8 +317,23 @@ SELECT lookups.id,
     t.integer  "business_unit_id", :null=>false, :index=>{:name=>"fk__holiday_calendars_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_holiday_calendars_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "updated_by"
+    t.string   "ip_address"
   end
   add_index "holiday_calendars", ["business_unit_id"], :name=>"index_holiday_calendars_on_business_unit_id"
+
+  create_table "holiday_calendars_audits", force: :cascade do |t|
+    t.string   "name"
+    t.date     "as_on"
+    t.string   "description"
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "updated_by"
+    t.string   "ip_address"
+    t.integer  "holiday_calendar_id", :null=>false, :index=>{:name=>"index_holiday_calendars_audits_on_holiday_calendar_id"}, :foreign_key=>{:references=>"holiday_calendars", :name=>"fk_holiday_calendars_audits_holiday_calendar_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "business_unit_id",    :null=>false, :index=>{:name=>"index_holiday_calendars_audits_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_holiday_calendars_audits_lookup_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
 
   create_view "invoice_adder_types", <<-'END_VIEW_INVOICE_ADDER_TYPES', :force => true
 SELECT lookups.id,
@@ -600,8 +615,7 @@ SELECT lookups.id,
     t.string   "ip_address"
   end
 
-  create_table "vacation_policies_audits", id: false, force: :cascade do |t|
-    t.integer  "id"
+  create_table "vacation_policies_audits", force: :cascade do |t|
     t.string   "description"
     t.date     "as_on"
     t.boolean  "paid"

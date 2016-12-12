@@ -51,6 +51,7 @@ en:
         Vacations: ""
         Timesheets: ""
         Vacation Policies Audits: ""
+        Holiday Calendars Audits: ""
   role:
     administrator: "Administrator"
     executive: "Executive"

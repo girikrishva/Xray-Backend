@@ -189,10 +189,13 @@ DeliveryMilestone.create!([
   {name: "Release 1", description: "", due_date: "2016-10-31", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5}
 ])
 HolidayCalendar.create!([
-  {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "", business_unit_id: 1},
-  {name: "Christmas", as_on: "2016-12-25", description: "Christmas", comments: "", business_unit_id: 4},
-  {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", business_unit_id: 1},
-  {name: "Easter", as_on: "2016-09-17", description: "Easter", comments: "", business_unit_id: 4}
+  {name: "Christmas", as_on: "2016-12-25", description: "Christmas", comments: "", business_unit_id: 4, updated_by: nil, ip_address: nil},
+  {name: "Easter", as_on: "2016-09-17", description: "Easter", comments: "", business_unit_id: 4, updated_by: nil, ip_address: nil},
+  {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "", business_unit_id: 1, updated_by: nil, ip_address: nil},
+  {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1"}
+])
+HolidayCalendarsAudit.create!([
+  {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", updated_by: "System Administrator", ip_address: "127.0.0.1", holiday_calendar_id: 2, business_unit_id: 1}
 ])
 InvoiceHeader.create!([
   {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", header_amount: 0.0},
@@ -406,16 +409,13 @@ Vacation.create!([
   {narrative: "Test 4", request_date: "2016-12-09", start_date: "2016-10-01", end_date: "2016-10-02", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 144},
   {narrative: "Test", request_date: "2016-12-09", start_date: "2016-12-09", end_date: "2016-12-09", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 146}
 ])
-VacationPoliciesAudit.create!([
-  {description: "Casual Leave", as_on: "2016-01-01", paid: false, days_allowed: 5.0, comments: "", business_unit_id: 1, vacation_code_id: 72, updated_by: "System Administrator", ip_address: "127.0.0.1", vacation_policy_id: 3}
-])
 VacationPolicy.create!([
   {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 15.0, comments: "", business_unit_id: 1, vacation_code_id: 71, updated_by: nil, ip_address: nil},
   {description: "Unpaid Leave", as_on: "2016-01-01", paid: false, days_allowed: 365.0, comments: "", business_unit_id: 1, vacation_code_id: 74, updated_by: nil, ip_address: nil},
   {description: "Sick Leave", as_on: "2016-01-01", paid: true, days_allowed: 3.0, comments: "", business_unit_id: 1, vacation_code_id: 73, updated_by: nil, ip_address: nil},
   {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 10.0, comments: "", business_unit_id: 4, vacation_code_id: 71, updated_by: nil, ip_address: nil},
   {description: "Unpaid Leave", as_on: "2016-11-10", paid: false, days_allowed: 30.0, comments: "", business_unit_id: 4, vacation_code_id: 74, updated_by: nil, ip_address: nil},
-  {description: "Casual Leave", as_on: "2016-01-01", paid: false, days_allowed: 5.0, comments: "", business_unit_id: 1, vacation_code_id: 72, updated_by: "System Administrator", ip_address: "127.0.0.1"}
+  {description: "Casual Leave", as_on: "2016-01-01", paid: true, days_allowed: 5.0, comments: "", business_unit_id: 1, vacation_code_id: 72, updated_by: "System Administrator", ip_address: "127.0.0.1"}
 ])
 ApprovalStatus.create!([
   {name: "Pending", description: "Pending", rank: 1.0, comments: "", lookup_type_id: 21, extra: ""},

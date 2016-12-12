@@ -14,7 +14,7 @@ ActiveAdmin.register HolidayCalendar do
 #   permitted
 # end
 
-  permit_params :name, :as_on, :description, :comments, :business_unit_id
+  permit_params :name, :as_on, :description, :comments, :business_unit_id, :updated_by, :ip_address
 
   config.sort_order = 'as_on_desc'
 
@@ -35,15 +35,17 @@ ActiveAdmin.register HolidayCalendar do
     column :description
     column :as_on
     column :comments
-    actions defaults: true, dropdown: true
+    actions defaults: true, dropdown: true do |resource|
+      item I18n.t('actions.audit_trail'), admin_holiday_calendars_audits_path(holiday_calendar_id: resource.id)
+    end
   end
 
 
   filter :business_unit, collection:
                            proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
   filter :name
-  filter :as_on
   filter :description
+  filter :as_on
   filter :comments
 
   controller do
@@ -69,6 +71,8 @@ ActiveAdmin.register HolidayCalendar do
   end
 
   form do |f|
+    f.object.updated_by = current_admin_user.name
+    f.object.ip_address = current_admin_user.current_sign_in_ip
     if f.object.as_on.blank?
       f.object.as_on = Date.today
     end
@@ -90,6 +94,8 @@ ActiveAdmin.register HolidayCalendar do
       f.input :description
       f.input :as_on, as: :datepicker
       f.input :comments
+      f.input :ip_address, as: :hidden
+      f.input :updated_by, as: :hidden
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))

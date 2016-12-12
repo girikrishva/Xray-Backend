@@ -91,8 +91,6 @@ ActiveAdmin.register AdminUser do
   form do |f|
     f.object.updated_by = current_admin_user.name
     f.object.ip_address = current_admin_user.current_sign_in_ip
-    f.input :updated_by, as: :hidden
-    f.input :ip_address, as: :hidden
     f.inputs I18n.t('label.admin_details') do
       if !f.object.new_record?
         f.input :email, input_html: {readonly: true}
@@ -122,6 +120,8 @@ ActiveAdmin.register AdminUser do
           f.input :designation, required: true
         end
       end
+      f.input :updated_by, as: :hidden
+      f.input :ip_address, as: :hidden
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))
