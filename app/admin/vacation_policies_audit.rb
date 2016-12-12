@@ -9,10 +9,11 @@ ActiveAdmin.register VacationPoliciesAudit do
 
   config.sort_order = 'id_desc'
 
-  index as: :grouped_table, group_by_attribute: :description do
+  index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
     column :id
     column :vacation_code
+    column :description
     column :as_on
     column :paid
     column :days_allowed
