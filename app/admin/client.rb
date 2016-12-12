@@ -14,7 +14,7 @@ ActiveAdmin.register Client do
 #   permitted
 # end
 
-  permit_params :business_unit_id, :name, :contact_name, :contact_email, :contact_phone, :comments
+  permit_params :business_unit_id, :name, :contact_name, :contact_email, :contact_phone, :comments, :updated_by, :ip_address
 
 # config.sort_order = 'admin_users.name_asc_and_skills.name_asc_and_as_on_desc'
 
@@ -39,7 +39,9 @@ ActiveAdmin.register Client do
     column :contact_email
     column :contact_phone
     column :comments
-    actions defaults: true, dropdown: true
+    actions defaults: true, dropdown: true do |resource|
+      item I18n.t('actions.audit_trail'), admin_clients_audits_path(client_id: resource.id)
+    end
   end
 
   filter :business_unit, collection:
@@ -87,6 +89,8 @@ ActiveAdmin.register Client do
   end
 
   form do |f|
+    f.object.updated_by = current_admin_user.name
+    f.object.ip_address = current_admin_user.current_sign_in_ip
     f.inputs do
       if f.object.business_unit_id.blank?
         f.input :business_unit, required: true, as: :select, collection:
@@ -105,6 +109,8 @@ ActiveAdmin.register Client do
       f.input :contact_email
       f.input :contact_phone
       f.input :comments
+      f.input :ip_address, as: :hidden
+      f.input :updated_by, as: :hidden
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))

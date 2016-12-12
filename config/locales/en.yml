@@ -40,7 +40,7 @@ en:
         Project Overheads: ""
         Project Staffing Requirements: ""
         Project Types: ""
-        Project Audits: ""
+        Projects Audits: ""
         Resources: ""
         Roles: ""
         Staffing Requirements: ""
@@ -52,6 +52,7 @@ en:
         Timesheets: ""
         Vacation Policies Audits: ""
         Holiday Calendars Audits: ""
+        Clients Audits: ""
   role:
     administrator: "Administrator"
     executive: "Executive"

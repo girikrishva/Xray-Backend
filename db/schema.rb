@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161212125546) do
+ActiveRecord::Schema.define(version: 20161212134006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -134,6 +134,8 @@ SELECT lookups.id,
     t.integer  "business_unit_id", :null=>false, :index=>{:name=>"index_clients_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_clients_lookup_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "updated_by"
+    t.string   "ip_address"
   end
 
   create_table "pipelines", force: :cascade do |t|
@@ -233,6 +235,20 @@ SELECT lookups.id,
   WHERE (((lookup_types.name)::text = 'Business Units'::text) AND (lookups.lookup_type_id = lookup_types.id))
   ORDER BY lookups.rank
   END_VIEW_BUSINESS_UNITS
+
+  create_table "clients_audits", force: :cascade do |t|
+    t.string   "name",             :null=>false
+    t.string   "contact_name"
+    t.string   "contact_email"
+    t.string   "contact_phone"
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "updated_by"
+    t.string   "ip_address"
+    t.integer  "business_unit_id", :null=>false, :index=>{:name=>"index_clients_audits_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_clients_audits_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "client_id",        :null=>false, :index=>{:name=>"index_clients_audits_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_clients_audits_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+  end
 
   create_view "cost_adder_types", <<-'END_VIEW_COST_ADDER_TYPES', :force => true
 SELECT lookups.id,

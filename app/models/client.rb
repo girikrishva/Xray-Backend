@@ -11,6 +11,23 @@ class Client < ActiveRecord::Base
   validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :name]
   validates_uniqueness_of :name, scope: [:business_unit_id, :name]
 
+  after_create :create_audit_record
+  after_update :create_audit_record
+
+  def create_audit_record
+    audit_record = ClientsAudit.new
+    audit_record.business_unit = self.business_unit
+    audit_record.name = self.name
+    audit_record.contact_name = self.contact_name
+    audit_record.contact_email = self.contact_email
+    audit_record.contact_phone = self.contact_phone
+    audit_record.comments = self.comments
+    audit_record.updated_by = self.updated_by
+    audit_record.ip_address = self.ip_address
+    audit_record.client_id = self.id
+    audit_record.save
+  end
+
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name
   end
