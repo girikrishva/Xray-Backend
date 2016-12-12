@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20161212113345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -596,6 +596,24 @@ SELECT lookups.id,
     t.integer  "vacation_code_id", :null=>false, :index=>{:name=>"index_vacation_policies_on_vacation_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_rails_392ec43fd8", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "updated_by"
+    t.string   "ip_address"
+  end
+
+  create_table "vacation_policies_audits", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.string   "description"
+    t.date     "as_on"
+    t.boolean  "paid"
+    t.float    "days_allowed"
+    t.string   "comments"
+    t.integer  "business_unit_id",   :index=>{:name=>"fki_vacation_policies_audits_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_vacation_policies_audits_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "vacation_code_id",   :index=>{:name=>"fki_vacation_policies_audits_vacation_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_vacation_policies_audits_vacation_code_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "updated_by"
+    t.string   "ip_address"
+    t.integer  "vacation_policy_id", :null=>false, :index=>{:name=>"index_vacation_policies_audits_on_vacation_policy_id"}, :foreign_key=>{:references=>"vacation_policies", :name=>"fk_vacation_policies_audits_vacation_policy_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_table "vacations", force: :cascade do |t|

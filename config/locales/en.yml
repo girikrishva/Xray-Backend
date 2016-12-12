@@ -50,6 +50,7 @@ en:
         Payment Lines: ""
         Vacations: ""
         Timesheets: ""
+        Vacation Policies Audits: ""
   role:
     administrator: "Administrator"
     executive: "Executive"

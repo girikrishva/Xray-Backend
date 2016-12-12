@@ -14,7 +14,7 @@ ActiveAdmin.register VacationPolicy do
 #   permitted
 # end
 
-  permit_params :vacation_code_id, :description, :as_on, :paid, :days_allowed, :comments, :business_unit_id
+  permit_params :vacation_code_id, :description, :as_on, :paid, :days_allowed, :comments, :business_unit_id, :updated_by, :ip_address
 
   config.sort_order = 'as_on_desc_and_business_units.name_asc_and_vacation_codes.name_asc'
 
@@ -39,7 +39,9 @@ ActiveAdmin.register VacationPolicy do
     column :paid
     column :days_allowed
     column :comments
-    actions defaults: true, dropdown: true
+    actions defaults: true, dropdown: true do |resource|
+      item I18n.t('actions.audit_trail'), admin_vacation_policies_audits_path(vacation_policy_id: resource.id)
+    end
   end
 
   filter :business_unit, collection:
@@ -81,6 +83,8 @@ ActiveAdmin.register VacationPolicy do
   end
 
   form do |f|
+    f.object.updated_by = current_admin_user.name
+    f.object.ip_address = current_admin_user.current_sign_in_ip
     if f.object.as_on.blank?
       f.object.as_on = Date.today
     end
@@ -109,6 +113,8 @@ ActiveAdmin.register VacationPolicy do
       f.input :paid
       f.input :days_allowed
       f.input :comments
+      f.input :updated_by, as: :hidden
+      f.input :ip_address, as: :hidden
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))

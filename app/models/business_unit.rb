@@ -9,6 +9,7 @@ class BusinessUnit < ActiveRecord::Base
   has_many :pipelines, class_name: 'Pipeline'
   has_many :pipelines_audits, class_name: 'PipelinesAudit'
   has_many :projects, class_name: 'Project'
+  has_many :vacation_policies_audits, class_name: 'VacationPoliciesAudit'
 
   def self.fiscal_year_start_date(business_unit_id, year = Date.today.year)
     business_unit = BusinessUnit.find(business_unit_id)
