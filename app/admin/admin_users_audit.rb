@@ -9,10 +9,9 @@ ActiveAdmin.register AdminUsersAudit do
 
   config.sort_order = 'id_desc'
 
-  index do
+  index as: :grouped_table, group_by_attribute: :email do
     selectable_column
     column :id
-    column :email
     column :name
     column :active
     column :role, sortable: 'roles.name' do |resource|
@@ -29,7 +28,9 @@ ActiveAdmin.register AdminUsersAudit do
     end
     column :date_of_joining
     column :date_of_leaving
-    column :created_at
+    column :updated_at
+    column :updated_by
+    column :ip_address
   end
 
   controller do
@@ -53,7 +54,6 @@ ActiveAdmin.register AdminUsersAudit do
     end
   end
 
-  filter :email
   filter :name
   filter :active
   filter :role
@@ -62,4 +62,7 @@ ActiveAdmin.register AdminUsersAudit do
   filter :designation
   filter :date_of_joining
   filter :date_of_leaving
+  filter :updated_at
+  filter :updated_by
+  filter :ip_address
 end

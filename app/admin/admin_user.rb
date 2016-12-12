@@ -29,7 +29,7 @@ ActiveAdmin.register AdminUser do
     redirect_to collection_url
   end
 
-  permit_params :email, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active, :date_of_joining, :date_of_leaving
+  permit_params :email, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active, :date_of_joining, :date_of_leaving, :updated_by, :ip_address
 
   config.sort_order = 'email_asc'
 
@@ -89,6 +89,8 @@ ActiveAdmin.register AdminUser do
   filter :designation
 
   form do |f|
+    f.object.updated_by = current_admin_user.name
+    f.object.ip_address = current_admin_user.current_sign_in_ip
     f.inputs I18n.t('label.admin_details') do
       if !f.object.new_record?
         f.input :email, input_html: {readonly: true}
@@ -118,6 +120,8 @@ ActiveAdmin.register AdminUser do
           f.input :designation, required: true
         end
       end
+      f.input :updated_by, as: :hidden
+      f.input :ip_address, as: :hidden
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))

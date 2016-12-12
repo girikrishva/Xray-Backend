@@ -79,6 +79,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "name",                   :null=>false
     t.date     "date_of_joining",        :null=>false
     t.date     "date_of_leaving"
+    t.string   "updated_by"
+    t.string   "ip_address"
   end
 
   create_table "admin_users_audits", force: :cascade do |t|
@@ -103,6 +105,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "name",                   :null=>false
     t.date     "date_of_joining",        :null=>false
     t.date     "date_of_leaving"
+    t.string   "updated_by"
+    t.string   "ip_address"
   end
 
   create_view "approval_statuses", <<-'END_VIEW_APPROVAL_STATUSES', :force => true
