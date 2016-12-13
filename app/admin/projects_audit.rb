@@ -72,7 +72,9 @@ ActiveAdmin.register ProjectsAudit do
         resource.delivery_manager.name rescue nil
       end
       column :comments
-      column :created_at
+      column :updated_at
+      column :updated_by
+      column :ip_address
       actions defaults: false, dropdown: true do |resource|
         item I18n.t('actions.view'), admin_projects_audit_path(resource.id)
       end
@@ -99,6 +101,9 @@ ActiveAdmin.register ProjectsAudit do
   filter :delivery_manager, label: I18n.t('label.delivery_by'), collection:
                               proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
   filter :comments
+  filter :updated_at
+  filter :updated_by
+  filter :ip_address
 
   show do |r|
     attributes_table_for r do
@@ -126,6 +131,9 @@ ActiveAdmin.register ProjectsAudit do
       row I18n.t('label.engagement_by'), :engagement_manager
       row I18n.t('label.delivery_by'), :delivery_manager
       row :pipeline
+      row :updated_at
+      row :updated_by
+      row :ip_address
       row :comments
     end
   end

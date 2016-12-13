@@ -19,6 +19,7 @@ class HolidayCalendar < ActiveRecord::Base
     audit_record.description = self.description
     audit_record.as_on = self.as_on
     audit_record.comments = self.comments
+    audit_record.updated_at = DateTime.now
     audit_record.updated_by = self.updated_by
     audit_record.ip_address = self.ip_address
     audit_record.holiday_calendar_id = self.id

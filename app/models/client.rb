@@ -22,6 +22,7 @@ class Client < ActiveRecord::Base
     audit_record.contact_email = self.contact_email
     audit_record.contact_phone = self.contact_phone
     audit_record.comments = self.comments
+    audit_record.updated_at = DateTime.now
     audit_record.updated_by = self.updated_by
     audit_record.ip_address = self.ip_address
     audit_record.client_id = self.id

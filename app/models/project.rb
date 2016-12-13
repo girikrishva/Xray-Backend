@@ -62,6 +62,9 @@ class Project < ActiveRecord::Base
     audit_record.pipeline_id = self.pipeline_id
     audit_record.sales_person_id = self.sales_person_id
     audit_record.project_id = self.id
+    audit_record.updated_at = self.DateTime.now
+    audit_record.updated_by = self.updated_by
+    audit_record.ip_address = self.ip_address
     audit_record.save
   end
 

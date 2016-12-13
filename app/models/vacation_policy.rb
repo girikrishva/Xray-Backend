@@ -24,6 +24,7 @@ class VacationPolicy < ActiveRecord::Base
     audit_record.days_allowed = self.days_allowed
     audit_record.comments = self.comments
     audit_record.business_unit_id = self.business_unit_id
+    audit_record.updated_at = DateTime.now
     audit_record.updated_by = self.updated_by
     audit_record.ip_address = self.ip_address
     audit_record.vacation_policy_id = self.id

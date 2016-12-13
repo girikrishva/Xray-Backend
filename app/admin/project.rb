@@ -14,7 +14,7 @@ ActiveAdmin.register Project do
 #   permitted
 # end
 
-  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id
+  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id, :updated_by, :ip_address
 
   config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
 
@@ -174,6 +174,8 @@ ActiveAdmin.register Project do
   end
 
   form do |f|
+    f.object.updated_by = current_admin_user.name
+    f.object.ip_address = current_admin_user.current_sign_in_ip
     if f.object.project_status_id.blank?
       f.object.project_status_id = ProjectStatus.where(name: I18n.t('label.new')).first.id
     end
@@ -196,6 +198,8 @@ ActiveAdmin.register Project do
       f.input :delivery_manager, required: true, label: I18n.t('label.delivery_by'), as: :select, collection:
                                    AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
+      f.input :ip_address, as: :hidden
+      f.input :updated_by, as: :hidden
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))
