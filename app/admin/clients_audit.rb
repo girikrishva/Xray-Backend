@@ -30,7 +30,7 @@ ActiveAdmin.register ClientsAudit do
         redirect_to admin_clients_path
       end
       if params[:commit].blank? && params[:q].blank?
-        extra_params = {"q" => {"client_id" => params[:client_id]}}
+        extra_params = {"q" => {"client_id_eq" => params[:client_id]}}
         # make sure data is filtered and filters show correctly
         params.merge! extra_params
       end

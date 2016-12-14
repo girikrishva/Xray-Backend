@@ -31,7 +31,7 @@ ActiveAdmin.register VacationPoliciesAudit do
         redirect_to admin_vacation_policies_path
       end
       if params[:commit].blank? && params[:q].blank?
-        extra_params = {"q" => {"vacation_policy_id" => params[:vacation_policy_id]}}
+        extra_params = {"q" => {"vacation_policy_id_eq" => params[:vacation_policy_id]}}
         # make sure data is filtered and filters show correctly
         params.merge! extra_params
       end

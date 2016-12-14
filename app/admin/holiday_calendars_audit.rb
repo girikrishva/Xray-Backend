@@ -29,7 +29,7 @@ ActiveAdmin.register HolidayCalendarsAudit do
         redirect_to admin_holiday_calendars_path
       end
       if params[:commit].blank? && params[:q].blank?
-        extra_params = {"q" => {"holiday_calendar_id" => params[:holiday_calendar_id]}}
+        extra_params = {"q" => {"holiday_calendar_id_eq" => params[:holiday_calendar_id]}}
         # make sure data is filtered and filters show correctly
         params.merge! extra_params
       end
