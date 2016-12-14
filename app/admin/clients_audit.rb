@@ -9,9 +9,10 @@ ActiveAdmin.register ClientsAudit do
 
   config.sort_order = 'id_desc'
 
-  index as: :grouped_table, group_by_attribute: :business_unit_name do
+  index as: :grouped_table, group_by_attribute: :name do
     selectable_column
-    column :name
+    column :id
+    column :business_unit
     column :contact_name
     column :contact_email
     column :contact_phone
@@ -40,7 +41,7 @@ ActiveAdmin.register ClientsAudit do
     end
   end
 
-  filter :name
+  filter :business_unit
   filter :contact_name
   filter :contact_email
   filter :contact_phone
