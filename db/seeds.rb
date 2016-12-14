@@ -182,8 +182,7 @@ Client.create!([
   {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Test.", business_unit_id: 1, updated_by: nil, ip_address: nil}
 ])
 ClientsAudit.create!([
-  {name: "Dell", contact_name: "Shankar Menon", contact_email: "shankar@yopmail.com", contact_phone: "", comments: "", updated_by: "System Administrator", ip_address: "127.0.0.1", business_unit_id: 1, client_id: 5},
-  {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Test.", updated_by: nil, ip_address: nil, business_unit_id: 1, client_id: 1}
+  {name: "Dell", contact_name: "Shankar Menon", contact_email: "shankar@yopmail.com", contact_phone: "", comments: "", updated_by: "System Administrator", ip_address: "127.0.0.1", business_unit_id: 1, client_id: 5}
 ])
 DeliveryInvoicingMilestone.create!([
   {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2}

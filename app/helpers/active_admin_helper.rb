@@ -69,4 +69,9 @@ module ActiveAdminHelper
     end
     return true
   end
+
+  def datetime_as_string(datetime)
+    result = datetime.to_s.split('+')[0]
+    result[0..result.length - 2]
+  end
 end
