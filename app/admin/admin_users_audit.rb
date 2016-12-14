@@ -28,9 +28,7 @@ ActiveAdmin.register AdminUsersAudit do
     end
     column :date_of_joining
     column :date_of_leaving
-    column :updated_at
-    column :updated_by
-    column :ip_address
+    column :audit_details
   end
 
   controller do

@@ -73,9 +73,7 @@ ActiveAdmin.register ProjectsAudit do
       end
     end
     column :comments
-    column :updated_at
-    column :updated_by
-    column :ip_address
+    column :audit_details
     actions defaults: false, dropdown: true do |resource|
       item I18n.t('actions.view'), admin_projects_audit_path(resource.id)
     end

@@ -28,4 +28,8 @@ class ProjectsAudit < ActiveRecord::Base
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name
   end
+
+  def audit_details
+    I18n.t('label.updated_at') + ': ['+ self.updated_at.to_s + '], ' + I18n.t('label.updated_by') + ': [' + self.updated_by + '], ' + I18n.t('label.ip_address') + ': [' + self.ip_address + ']'
+  end
 end

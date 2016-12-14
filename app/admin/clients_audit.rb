@@ -16,9 +16,7 @@ ActiveAdmin.register ClientsAudit do
     column :contact_email
     column :contact_phone
     column :comments
-    column :updated_at
-    column :updated_by
-    column :ip_address
+    column :audit_details
   end
 
   controller do

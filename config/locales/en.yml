@@ -138,6 +138,9 @@ en:
     joining_date: "Joining Date"
     leaving_date: "Leaving Date"
     assignment: "Assignment"
+    updated_at: "Updated At"
+    updated_by: "Updated By"
+    ip_address: "IP Address"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"

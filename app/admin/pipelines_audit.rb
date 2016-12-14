@@ -59,7 +59,7 @@ ActiveAdmin.register PipelinesAudit do
       end
     end
     column :comments
-    column :created_at
+    column :audit_details
     actions defaults: false, dropdown: true do |resource|
       item I18n.t('actions.view'), admin_pipelines_audit_path(resource.id)
     end

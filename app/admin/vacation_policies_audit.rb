@@ -18,9 +18,7 @@ ActiveAdmin.register VacationPoliciesAudit do
     column :paid
     column :days_allowed
     column :comments
-    column :updated_at
-    column :updated_by
-    column :ip_address
+    column :audit_details
   end
 
   controller do

@@ -16,9 +16,7 @@ ActiveAdmin.register HolidayCalendarsAudit do
     column :description
     column :as_on
     column :comments
-    column :updated_at
-    column :updated_by
-    column :ip_address
+    column :audit_details
   end
 
   controller do
