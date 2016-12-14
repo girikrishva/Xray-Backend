@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161213054638) do
+ActiveRecord::Schema.define(version: 20161214124949) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,8 @@ SELECT lookups.id,
     t.integer  "estimator_id",          :null=>false, :index=>{:name=>"index_pipelines_on_estimator_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_estimator_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "engagement_manager_id", :index=>{:name=>"index_pipelines_on_engagement_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_engagement_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "delivery_manager_id",   :index=>{:name=>"index_pipelines_on_delivery_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_delivery_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "updated_by"
+    t.string   "ip_address"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -506,6 +508,8 @@ SELECT lookups.id,
     t.integer  "estimator_id",          :null=>false, :index=>{:name=>"index_pipelines_audits_on_estimator_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_estimator_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "engagement_manager_id", :index=>{:name=>"index_pipelines_audits_on_engagement_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_engagement_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "delivery_manager_id",   :index=>{:name=>"index_pipelines_audits_on_delivery_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_audits_delivery_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "updated_by"
+    t.string   "ip_address"
   end
 
   create_table "project_overheads", force: :cascade do |t|
