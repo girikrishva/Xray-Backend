@@ -14,7 +14,7 @@ ActiveAdmin.register Project do
 #   permitted
 # end
 
-  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id, :updated_by, :ip_address
+  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id, :updated_at, :updated_by, :ip_address
 
   config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
 

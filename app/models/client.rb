@@ -12,7 +12,7 @@ class Client < ActiveRecord::Base
   validates_uniqueness_of :name, scope: [:business_unit_id, :name]
 
   after_create :create_audit_record
-  after_update :create_audit_record
+  before_update :create_audit_record
 
   def create_audit_record
     audit_record = ClientsAudit.new

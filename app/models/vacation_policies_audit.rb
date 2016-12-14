@@ -8,8 +8,6 @@ class VacationPoliciesAudit < ActiveRecord::Base
   validates :days_allowed, presence: true
   validates :vacation_policy_id, presence: true
 
-  validates_uniqueness_of :vacation_code, scope: [:business_unit, :as_on]
-
   def business_unit_name
     self.business_unit.name
   end

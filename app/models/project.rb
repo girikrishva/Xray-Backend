@@ -51,7 +51,6 @@ class Project < ActiveRecord::Base
     audit_record.booking_value = self.booking_value
     audit_record.comments = self.comments
     audit_record.created_at = self.created_at
-    audit_record.updated_at = self.updated_at
     audit_record.client_id = self.client_id
     audit_record.project_type_code_id = self.project_type_code_id
     audit_record.project_status_id = self.project_status_id
@@ -62,10 +61,10 @@ class Project < ActiveRecord::Base
     audit_record.pipeline_id = self.pipeline_id
     audit_record.sales_person_id = self.sales_person_id
     audit_record.project_id = self.id
-    audit_record.updated_at = self.DateTime.now
+    audit_record.updated_at = DateTime.now
     audit_record.updated_by = self.updated_by
     audit_record.ip_address = self.ip_address
-    audit_record.save
+    audit_record.save!
   end
 
   def date_check

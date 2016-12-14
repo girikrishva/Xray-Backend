@@ -14,9 +14,9 @@ ActiveAdmin.register ProjectsAudit do
 #   permitted
 # end
 
-  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id, :project_id
+  permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id, :project_id, :updated_at, :updated_by, :ip_address
 
-  config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
+  config.sort_order = 'id_desc'
 
   config.clear_action_items!
 
@@ -29,11 +29,11 @@ ActiveAdmin.register ProjectsAudit do
   end
 
   scope I18n.t('label.delivery_view'), :delivery_view, default: true do |pipelines|
-    ProjectsAudit.all
+    ProjectsAudit.all.order('id desc')
   end
 
   scope I18n.t('label.sales_view'), :sales_view, default: false do |pipelines|
-    ProjectsAudit.all
+    ProjectsAudit.all.order('id desc')
   end
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do
@@ -71,13 +71,13 @@ ActiveAdmin.register ProjectsAudit do
       column I18n.t('label.delivery_by'), :delivery_manager, sortable: 'admin_users.name' do |resource|
         resource.delivery_manager.name rescue nil
       end
-      column :comments
-      column :updated_at
-      column :updated_by
-      column :ip_address
-      actions defaults: false, dropdown: true do |resource|
-        item I18n.t('actions.view'), admin_projects_audit_path(resource.id)
-      end
+    end
+    column :comments
+    column :updated_at
+    column :updated_by
+    column :ip_address
+    actions defaults: false, dropdown: true do |resource|
+      item I18n.t('actions.view'), admin_projects_audit_path(resource.id)
     end
   end
 

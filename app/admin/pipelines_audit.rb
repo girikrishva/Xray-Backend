@@ -16,10 +16,10 @@ ActiveAdmin.register PipelinesAudit do
   end
 
   scope I18n.t('label.sales_view'), :sales_view, default: true do |pipelines|
-    PipelinesAudit.all
+    PipelinesAudit.all.order('id desc')
   end
   scope I18n.t('label.delivery_view'), :delivery_view, default: false do |pipelines|
-    PipelinesAudit.all
+    PipelinesAudit.all.order('id desc')
   end
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do

@@ -25,9 +25,6 @@ class ProjectsAudit < ActiveRecord::Base
   validates :delivery_manager_id, presence: true
   validates :project_id, presence: true
 
-  validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :client_id]
-  validates_uniqueness_of :client_id, scope: [:business_unit_id, :client_id]
-
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name
   end
