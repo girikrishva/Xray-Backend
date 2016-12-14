@@ -104,7 +104,7 @@ ActiveAdmin.register Vacation do
       item I18n.t('actions.approve_vacation'), admin_api_approve_vacation_path(vacation_id: resource.id), method: :post
       item I18n.t('actions.reject_vacation'), admin_api_reject_vacation_path(vacation_id: resource.id), method: :post
       item I18n.t('actions.cancel_vacation'), admin_api_cancel_vacation_path(vacation_id: resource.id), method: :post
-      item I18n.t('actions.revert_vacation'), admin_api_make_pending_path(vacation_id: resource.id), method: :post
+      item I18n.t('actions.revert_vacation'), admin_api_make_vacation_pending_path(vacation_id: resource.id), method: :post
     end
   end
 
