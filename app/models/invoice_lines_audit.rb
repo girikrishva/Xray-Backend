@@ -26,7 +26,7 @@ class InvoiceLinesAudit < ActiveRecord::Base
     payment_lines = PaymentLine.where(invoice_line_id: self.invoice_line_id)
     total_line_amount = 0
     payment_lines.each do |payment_line|
-      if payment_line.payment_header.payment_date <= self.updated_at
+      if payment_line.payment_header.payment_date < self.updated_at + 1
         total_line_amount += payment_line.line_amount
       end
     end
