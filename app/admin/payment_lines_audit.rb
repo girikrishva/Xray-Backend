@@ -46,7 +46,7 @@ ActiveAdmin.register PaymentLinesAudit do
     column :comments
     column :audit_details
     actions defaults: false, dropdown: true do |resource|
-      item I18n.t('actions.view'), admin_invoice_lines_audit_path(resource.id)
+      item I18n.t('actions.view'), admin_payment_lines_audit_path(resource.id)
     end
   end
 
@@ -89,7 +89,7 @@ ActiveAdmin.register PaymentLinesAudit do
     end
 
     def scoped_collection
-      PaymentLinesAudit.includes [:payment_header, :invoice_line, :payment_line]
+      PaymentLinesAudit.includes [:payment_header, :invoice_line, :payment_line, :invoice_header]
     end
 
     def create

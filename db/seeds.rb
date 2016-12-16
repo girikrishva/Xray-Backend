@@ -213,9 +213,7 @@ InvoiceHeader.create!([
   {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", comments: "Test.", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, due_date: "2016-12-20", header_amount: 66000.0, updated_by: nil, ip_address: nil}
 ])
 InvoiceHeadersAudit.create!([
-  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", due_date: "2016-12-20", header_amount: 66000.0, comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, invoice_header_id: 7},
-  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", due_date: "2016-12-20", header_amount: 66000.0, comments: "Test.", updated_by: nil, ip_address: nil, client_id: 3, invoice_status_id: 113, invoice_term_id: 141, invoice_header_id: 7},
-  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", due_date: "2016-12-20", header_amount: 66000.0, comments: "Test.", updated_by: nil, ip_address: nil, client_id: 3, invoice_status_id: 113, invoice_term_id: 141, invoice_header_id: 7}
+  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", due_date: "2016-12-20", header_amount: 66000.0, comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, invoice_header_id: 7}
 ])
 InvoiceLine.create!([
   {narrative: "Advance Invoice", line_amount: 88000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: 1, invoice_adder_type_id: nil, updated_by: nil, ip_address: nil},
@@ -338,14 +336,18 @@ Overhead.create!([
 ])
 PaymentHeader.create!([
   {narrative: "Interim Payment", payment_date: "2016-12-05", header_amount: 50000.0, comments: "", client_id: 3, payment_status_id: 119, updated_by: nil, ip_address: nil},
-  {narrative: "Advance payment", payment_date: "2016-12-05", header_amount: 47000.0, comments: "Test.", client_id: 3, payment_status_id: 119, updated_by: "System Administrator", ip_address: "127.0.0.1"}
+  {narrative: "Advance payment", payment_date: "2016-12-05", header_amount: 47000.0, comments: "Tester.", client_id: 3, payment_status_id: 119, updated_by: "System Administrator", ip_address: "127.0.0.1"}
 ])
 PaymentHeadersAudit.create!([
-  {narrative: "Advance payment", payment_date: "2016-12-05", header_amount: 47000.0, comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", client_id: 3, payment_status_id: 119, payment_header_id: 1}
+  {narrative: "Advance payment", payment_date: "2016-12-05", header_amount: 47000.0, comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", client_id: 3, payment_status_id: 119, payment_header_id: 1},
+  {narrative: "Advance payment", payment_date: "2016-12-05", header_amount: 47000.0, comments: "Tester.", updated_by: "System Administrator", ip_address: "127.0.0.1", client_id: 3, payment_status_id: 119, payment_header_id: 1}
 ])
 PaymentLine.create!([
-  {narrative: "Test", line_amount: 42000.0, comments: "", payment_header_id: 1, invoice_line_id: 12, invoice_header_id: 2},
-  {narrative: "Interim payment", line_amount: 50000.0, comments: "", payment_header_id: 2, invoice_line_id: 16, invoice_header_id: 7}
+  {narrative: "Interim payment", line_amount: 50000.0, comments: "", payment_header_id: 2, invoice_line_id: 16, invoice_header_id: 7, updated_by: nil, ip_address: nil},
+  {narrative: "Test", line_amount: 42000.0, comments: "", payment_header_id: 1, invoice_line_id: 12, invoice_header_id: 2, updated_by: "System Administrator", ip_address: "127.0.0.1"}
+])
+PaymentLinesAudit.create!([
+  {narrative: "Test", line_amount: 42000.0, comments: "", updated_by: "System Administrator", ip_address: "127.0.0.1", payment_line_id: 1, payment_header_id: 1, invoice_header_id: 2, invoice_line_id: 12}
 ])
 Pipeline.create!([
   {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, client_id: 3, project_type_code_id: 96, pipeline_status_id: 104, sales_person_id: 9, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, updated_by: "System Administrator", ip_address: "127.0.0.1"}
