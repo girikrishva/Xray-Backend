@@ -99,7 +99,7 @@ ActiveAdmin.register InvoiceHeadersAudit do
 
     before_filter only: :index do |resource|
       if !params.has_key?(:invoice_header_id)
-        redirect_to admin_invoice_headers_audits_path
+        redirect_to admin_invoice_headers_path
       end
       if params[:commit].blank? && params[:q].blank?
         extra_params = {"q" => {"invoice_header_id_eq" => params[:invoice_header_id]}}
