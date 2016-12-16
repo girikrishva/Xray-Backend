@@ -337,8 +337,11 @@ Overhead.create!([
   {amount_date: "2016-11-18", amount: 54000.0, comments: "", business_unit_id: 1, department_id: 10, cost_adder_type_id: 81}
 ])
 PaymentHeader.create!([
-  {narrative: "Interim Payment", payment_date: "2016-12-05", header_amount: 50000.0, comments: "", client_id: 3, payment_status_id: 119},
-  {narrative: "Advance payment", payment_date: "2016-12-05", header_amount: 47000.0, comments: "", client_id: 3, payment_status_id: 119}
+  {narrative: "Interim Payment", payment_date: "2016-12-05", header_amount: 50000.0, comments: "", client_id: 3, payment_status_id: 119, updated_by: nil, ip_address: nil},
+  {narrative: "Advance payment", payment_date: "2016-12-05", header_amount: 47000.0, comments: "Test.", client_id: 3, payment_status_id: 119, updated_by: "System Administrator", ip_address: "127.0.0.1"}
+])
+PaymentHeadersAudit.create!([
+  {narrative: "Advance payment", payment_date: "2016-12-05", header_amount: 47000.0, comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", client_id: 3, payment_status_id: 119, payment_header_id: 1}
 ])
 PaymentLine.create!([
   {narrative: "Test", line_amount: 42000.0, comments: "", payment_header_id: 1, invoice_line_id: 12, invoice_header_id: 2},

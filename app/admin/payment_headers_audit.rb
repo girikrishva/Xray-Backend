@@ -1,5 +1,5 @@
-ActiveAdmin.register PaymentHeader do
-  menu if: proc { is_menu_authorized? [I18n.t('role.manager')] }, label: I18n.t('menu.payments'), parent: I18n.t('menu.operations'), priority: 40
+ActiveAdmin.register PaymentHeadersAudit do
+  menu false
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -14,21 +14,21 @@ ActiveAdmin.register PaymentHeader do
 #   permitted
 # end
 
-  permit_params :client_id, :narrative, :payment_date, :header_amount, :payment_status_id, :comments, :updated_at, :updated_by, :ip_address
+  permit_params :client_id, :narrative, :payment_date, :header_amount, :payment_status_id, :comments, :payment_header_id, :updated_at, :updated_by, :ip_address
 
-  config.sort_order = 'payment_date_desc_and_narrative_asc'
+  config.sort_order = 'id_desc'
 
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to I18n.t('label.new'), new_admin_payment_header_path
-  end
-
-  action_item only:  [:show, :edit, :new] do |resource|
     link_to I18n.t('label.back'), admin_payment_headers_path
   end
 
-  index do
+  action_item only: :show do |resource|
+    link_to I18n.t('label.back'), :back
+  end
+
+  index as: :grouped_table, group_by_attribute: :payment_header_name do
     selectable_column
     column :id
     column :client, sortable: 'client.name' do |resource|
@@ -50,9 +50,9 @@ ActiveAdmin.register PaymentHeader do
       end
     end
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item "Audit Trail", admin_payment_headers_audits_path(payment_header_id: resource.id)
-      item I18n.t('actions.payment_lines'), admin_payment_lines_path(payment_header_id: resource.id)
+    column :audit_details
+    actions defaults: false, dropdown: true do |resource|
+      item I18n.t('actions.view'), admin_payment_headers_audit_path(resource.id)
     end
   end
 
@@ -78,6 +78,7 @@ ActiveAdmin.register PaymentHeader do
       row :header_amount
       row :unreconciled_amount
       row :comments
+      row :audit_details
     end
   end
 
@@ -86,8 +87,19 @@ ActiveAdmin.register PaymentHeader do
       c.send(:is_resource_authorized?, [I18n.t('role.manager')])
     end
 
+    before_filter only: :index do |resource|
+      if !params.has_key?(:payment_header_id)
+        redirect_to admin_payment_headers_path
+      end
+      if params[:commit].blank? && params[:q].blank?
+        extra_params = {"q" => {"payment_header_id_eq" => params[:invoice_header_id]}}
+        # make sure data is filtered and filters show correctly
+        params.merge! extra_params
+      end
+    end
+
     def scoped_collection
-      PaymentHeader.includes [:client, :payment_status]
+      PaymentHeadersAudit.includes [:client, :payment_status, :payment_header]
     end
 
     def create
@@ -100,31 +112,6 @@ ActiveAdmin.register PaymentHeader do
       super do |format|
         redirect_to collection_url and return if resource.valid?
       end
-    end
-  end
-
-  form do |f|
-    f.object.updated_by = current_admin_user.name
-    f.object.ip_address = current_admin_user.current_sign_in_ip
-    if f.object.payment_status_id.blank?
-      f.object.payment_status_id = PaymentStatus.where(name: I18n.t('label.new')).first.id
-    end
-    if f.object.payment_date.blank?
-      f.object.payment_date = Date.today
-    end
-    f.inputs do
-      f.input :client, required: true, as: :select, collection:
-                         Client.ordered_lookup.map { |a| [a.name + ' [' + a.business_unit_name + ']', a.id] }, include_blank: true
-      f.input :narrative
-      f.input :payment_date, required: true, label: I18n.t('label.payment_date'), as: :datepicker
-      f.input :payment_status
-      f.input :header_amount
-      f.input :comments
-      f.input :ip_address, as: :hidden
-      f.input :updated_by, as: :hidden
-    end
-    f.actions do
-      f.action(:submit, label: I18n.t('label.save'))
     end
   end
 end

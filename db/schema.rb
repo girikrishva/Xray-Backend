@@ -483,6 +483,22 @@ SELECT lookups.id,
     t.datetime "updated_at"
     t.integer  "client_id",         :null=>false, :index=>{:name=>"index_payment_headers_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_payment_headers_client_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "payment_status_id", :null=>false, :index=>{:name=>"index_payment_headers_on_payment_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_payment_headers_payment_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "updated_by"
+    t.string   "ip_address"
+  end
+
+  create_table "payment_headers_audits", force: :cascade do |t|
+    t.string   "narrative",         :null=>false
+    t.date     "payment_date",      :null=>false
+    t.float    "header_amount",     :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "updated_by"
+    t.string   "ip_address"
+    t.integer  "client_id",         :null=>false, :index=>{:name=>"index_payment_headers_audits_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_payment_headers_audits_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "payment_status_id", :null=>false, :index=>{:name=>"index_payment_headers_audits_on_payment_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_payment_headers_audits_payment_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "payment_header_id", :null=>false, :index=>{:name=>"index_payment_headers_audits_on_payment_header_id"}, :foreign_key=>{:references=>"payment_headers", :name=>"fk_payment_headers_audits_payment_header_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_table "payment_lines", force: :cascade do |t|
