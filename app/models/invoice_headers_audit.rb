@@ -31,5 +31,6 @@ class InvoiceHeadersAudit < ActiveRecord::Base
         unpaid_amount += invoice_line_audit.unpaid_amount
       end
     end
+    unpaid_amount
   end
 end
