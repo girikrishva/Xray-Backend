@@ -54,6 +54,7 @@ en:
         Holiday Calendars Audits: ""
         Clients Audits: ""
         Invoice Headers Audits: ""
+        Invoice Lines Audits: ""
   role:
     administrator: "Administrator"
     executive: "Executive"

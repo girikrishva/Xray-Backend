@@ -21,7 +21,7 @@ ActiveAdmin.register InvoiceHeadersAudit do
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to I18n.t('label.back'), admin_invoice_headers_audits_path
+    link_to I18n.t('label.back'), admin_invoice_headers_path
   end
 
   action_item only: :show do |resource|

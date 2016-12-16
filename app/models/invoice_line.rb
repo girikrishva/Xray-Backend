@@ -5,6 +5,7 @@ class InvoiceLine < ActiveRecord::Base
   belongs_to :invoice_adder_type, class_name: 'InvoiceAdderType', foreign_key: :invoice_adder_type_id
 
   has_many :payment_lines, class_name: 'PaymentLine'
+  has_many :invoice_lines_audits, class_name: 'InvoiceLinesAudit'
 
   validates :invoice_header_id, presence: true
   validates :project_id, presence: true
@@ -21,6 +22,9 @@ class InvoiceLine < ActiveRecord::Base
   after_create :update_header_amount
   after_update :update_header_amount
   after_destroy :update_header_amount
+
+  after_create :create_audit_record
+  after_update :create_audit_record
 
   def name
     self.invoice_line_name
@@ -48,5 +52,22 @@ class InvoiceLine < ActiveRecord::Base
 
   def unpaid_amount
     self.line_amount - PaymentLine.where(invoice_line_id: self.id).sum(:line_amount)
+  end
+
+  def create_audit_record
+    audit_record = InvoiceLinesAudit.new
+    audit_record.narrative = self.narrative
+    audit_record.line_amount = self.line_amount
+    audit_record.invoice_header_id = self.invoice_header_id
+    audit_record.project_id = self.project_id
+    audit_record.invoicing_milestone_id = self.invoicing_milestone_id
+    audit_record.invoice_adder_type_id = self.invoice_adder_type_id
+    audit_record.created_at = self.created_at
+    audit_record.comments = self.comments
+    audit_record.updated_at = DateTime.now
+    audit_record.updated_by = self.updated_by
+    audit_record.ip_address = self.ip_address
+    audit_record.invoice_line_id = self.id
+    audit_record.save
   end
 end

@@ -14,7 +14,7 @@ ActiveAdmin.register InvoiceLine do
 #   permitted
 # end
 
-  permit_params :invoice_header_id, :project_id, :invoicing_milestone_id, :invoice_adder_type_id, :narrative, :line_amount, :comments
+  permit_params :invoice_header_id, :project_id, :invoicing_milestone_id, :invoice_adder_type_id, :narrative, :line_amount, :comments, :updated_at, :updated_by, :ip_address
 
   config.sort_order = 'projects.name_asc_and_narrative_asc'
 
@@ -67,6 +67,7 @@ ActiveAdmin.register InvoiceLine do
     end
     column :comments
     actions defaults: true, dropdown: true do |resource|
+      item "Audit Trail", admin_invoice_lines_audits_path(invoice_line_id: resource.id)
     end
   end
 
@@ -187,6 +188,8 @@ ActiveAdmin.register InvoiceLine do
   end
 
   form do |f|
+    f.object.updated_by = current_admin_user.name
+    f.object.ip_address = current_admin_user.current_sign_in_ip
     f.object.invoice_header_id = session[:invoice_header_id]
     f.inputs do
       f.input :invoice_header, label: I18n.t('label.invoice_header'), as: :select, collection: InvoiceHeader.where(id: session[:invoice_header_id]).map { |a| [a.invoice_header_name, a.id] }, input_html: {disabled: true}, required: true
@@ -202,6 +205,8 @@ ActiveAdmin.register InvoiceLine do
       f.input :narrative, label: I18n.t('label.narrative'), required: true
       f.input :line_amount, label: I18n.t('label.line_amount'), required: true
       f.input :comments, label: I18n.t('label.comments')
+      f.input :ip_address, as: :hidden
+      f.input :updated_by, as: :hidden
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))
