@@ -50,7 +50,7 @@ ActiveAdmin.register InvoiceHeadersAudit do
     end
     column :unpaid_amount do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.invoice_header.unpaid_amount, precision: 0, delimiter: ','
+        number_with_precision element.unpaid_amount, precision: 0, delimiter: ','
       end
     end
     column :comments

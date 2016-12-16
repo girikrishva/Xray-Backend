@@ -1,22 +1,21 @@
-class PaymentLine < ActiveRecord::Base
+class PaymentLinesAudit < ActiveRecord::Base
   belongs_to :payment_header, class_name: 'PaymentHeader', foreign_key: :payment_header_id
+  belongs_to :payment_line, class_name: 'PaymentLine', foreign_key: :payment_line_id
   belongs_to :invoice_header, class_name: 'InvoiceHeader', foreign_key: :invoice_header_id
   belongs_to :invoice_line, class_name: 'InvoiceLine', foreign_key: :invoice_line_id
 
   validates :payment_header_id, presence: true
+  validates :payment_line_id, presence: true
   validates :invoice_header_id, presence: true
   validates :invoice_line_id, presence: true
   validates :narrative, presence: true
   validates :line_amount, presence: true
 
-  validates_uniqueness_of :payment_header_id, scope: [:payment_header_id, :invoice_line_id]
-  validates_uniqueness_of :invoice_line_id, scope: [:payment_header_id, :invoice_line_id]
-
-  def payment_header_name
-    self.payment_header.payment_header_name
+  def audit_details
+    I18n.t('label.updated_at') + ': ['+ datetime_as_string(self.updated_at) + '], ' + I18n.t('label.updated_by') + ': [' + self.updated_by + '], ' + I18n.t('label.ip_address') + ': [' + self.ip_address + ']'
   end
 
   def payment_line_name
-    'Id: [' + self.id.to_s + '], Narrative: [' + self.narrative + '], Amount: [' + self.line_amount.to_s + ']'
+    self.payment_line.payment_line_name
   end
 end

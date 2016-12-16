@@ -46,7 +46,7 @@ ActiveAdmin.register PaymentHeadersAudit do
     end
     column :unreconciled_amount do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.unreconciled_amount, precision: 0, delimiter: ','
+        number_with_precision element.payment_header.unreconciled_amount, precision: 0, delimiter: ','
       end
     end
     column :comments

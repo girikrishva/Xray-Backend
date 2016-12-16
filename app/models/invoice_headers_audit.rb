@@ -23,4 +23,13 @@ class InvoiceHeadersAudit < ActiveRecord::Base
   def invoice_header_name
     self.invoice_header.invoice_header_name
   end
+
+  def unpaid_amount
+    unpaid_amount = 0
+    InvoiceLinesAudit.where(invoice_header_id: self.invoice_header_id).each do |invoice_line_audit|
+      if invoice_line_audit.invoice_header.invoice_date <= self.updated_at
+        unpaid_amount += invoice_line_audit.unpaid_amount
+      end
+    end
+  end
 end

@@ -14,7 +14,7 @@ ActiveAdmin.register PaymentLine do
 #   permitted
 # end
 
-  permit_params :payment_header_id, :invoice_line_id, :narrative, :line_amount, :comments, :invoice_header_id
+  permit_params :payment_header_id, :invoice_line_id, :narrative, :line_amount, :comments, :invoice_header_id, :updated_at, :updated_by, :ip_address
 
   config.sort_order = 'narrative_asc'
 
@@ -110,6 +110,8 @@ ActiveAdmin.register PaymentLine do
   end
 
   form do |f|
+    f.object.updated_by = current_admin_user.name
+    f.object.ip_address = current_admin_user.current_sign_in_ip
     f.object.payment_header_id = session[:payment_header_id]
     f.inputs do
       f.input :payment_header_id, label: I18n.t('label.payment_header'), as: :select, collection: PaymentHeader.where(id: session[:payment_header_id]).map { |a| [a.payment_header_name, a.id] }, input_html: {disabled: true}, required: true
@@ -123,6 +125,8 @@ ActiveAdmin.register PaymentLine do
       f.input :narrative, label: I18n.t('label.narrative'), required: true
       f.input :line_amount, label: I18n.t('label.line_amount'), required: true
       f.input :comments, label: I18n.t('label.comments')
+      f.input :ip_address, as: :hidden
+      f.input :updated_by, as: :hidden
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))

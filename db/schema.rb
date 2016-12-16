@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20161216094933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -510,6 +510,22 @@ SELECT lookups.id,
     t.integer  "payment_header_id", :null=>false, :index=>{:name=>"index_payment_lines_on_payment_header_id"}, :foreign_key=>{:references=>"payment_headers", :name=>"fk_payment_lines_payment_header_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoice_line_id",   :null=>false, :index=>{:name=>"index_payment_lines_on_invoice_line_id"}, :foreign_key=>{:references=>"invoice_lines", :name=>"fk_payment_lines_invoice_line_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoice_header_id", :null=>false, :index=>{:name=>"index_payment_lines_on_invoice_header_id"}, :foreign_key=>{:references=>"invoice_headers", :name=>"fk_payment_lines_invoice_header_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "updated_by"
+    t.string   "ip_address"
+  end
+
+  create_table "payment_lines_audits", force: :cascade do |t|
+    t.string   "narrative",         :null=>false
+    t.float    "line_amount",       :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "updated_by"
+    t.string   "ip_address"
+    t.integer  "payment_line_id",   :null=>false, :index=>{:name=>"index_payment_lines_audits_on_payment_line_id"}, :foreign_key=>{:references=>"payment_lines", :name=>"fk_payment_lines_audits_payment_line_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "payment_header_id", :null=>false, :index=>{:name=>"index_payment_lines_audits_on_payment_header_id"}, :foreign_key=>{:references=>"payment_headers", :name=>"fk_payment_lines_audits_payment_header_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoice_header_id", :null=>false, :index=>{:name=>"index_payment_lines_audits_on_invoice_header_id"}, :foreign_key=>{:references=>"invoice_headers", :name=>"fk_payment_lines_audits_invoice_header_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoice_line_id",   :null=>false, :index=>{:name=>"index_payment_lines_audits_on_invoice_line_id"}, :foreign_key=>{:references=>"invoice_lines", :name=>"fk_payment_lines_audits_invoice_line_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_view "payment_statuses", <<-'END_VIEW_PAYMENT_STATUSES', :force => true
