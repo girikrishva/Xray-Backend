@@ -19,6 +19,6 @@ class PaymentHeadersAudit < ActiveRecord::Base
   end
 
   def unreconciled_amount
-    self.header_amount - PaymentLine.where(payment_header_id: self.id).sum(:line_amount)
+    self.header_amount - PaymentLine.where('payment_header_id = ? and created_at <= ?', self.payment_header_id, self.payment_date).sum(:line_amount)
   end
 end
