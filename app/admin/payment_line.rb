@@ -49,6 +49,7 @@ ActiveAdmin.register PaymentLine do
     end
     column :comments
     actions defaults: true, dropdown: true do |resource|
+      item "Audit Trail", admin_payment_lines_audits_path(payment_line_id: resource.id)
     end
   end
 
@@ -93,7 +94,7 @@ ActiveAdmin.register PaymentLine do
 
 
     def scoped_collection
-      PaymentLine.includes [:payment_header, :invoice_line]
+      PaymentLine.includes [:payment_header, :invoice_line, :invoice_header]
     end
 
     def create

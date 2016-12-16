@@ -56,6 +56,7 @@ en:
         Invoice Headers Audits: ""
         Invoice Lines Audits: ""
         Payment Headers Audits: ""
+        Payment Lines Audits: ""
   role:
     administrator: "Administrator"
     executive: "Executive"
