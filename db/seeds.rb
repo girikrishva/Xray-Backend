@@ -187,7 +187,8 @@ ClientsAudit.create!([
   {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Moon.", updated_by: "System Administrator", ip_address: "127.0.0.1", business_unit_id: 1, client_id: 1}
 ])
 DeliveryInvoicingMilestone.create!([
-  {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2}
+  {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2},
+  {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1}
 ])
 DeliveryMilestone.create!([
   {name: "Release 2", description: "", due_date: "2016-11-30", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5},
@@ -203,12 +204,15 @@ HolidayCalendarsAudit.create!([
   {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", updated_by: "System Administrator", ip_address: "127.0.0.1", holiday_calendar_id: 2, business_unit_id: 1}
 ])
 InvoiceHeader.create!([
-  {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", header_amount: 0.0},
-  {narrative: "Advance invoice", invoice_date: "2016-12-02", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", header_amount: 0.0},
-  {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09", header_amount: 0.0},
-  {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02", header_amount: 93000.0},
-  {narrative: "Test invoice", invoice_date: "2016-12-05", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-04", header_amount: 0.0},
-  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, due_date: "2016-12-20", header_amount: 66000.0}
+  {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", header_amount: 0.0, updated_by: nil, ip_address: nil},
+  {narrative: "Advance invoice", invoice_date: "2016-12-02", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", header_amount: 0.0, updated_by: nil, ip_address: nil},
+  {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09", header_amount: 0.0, updated_by: nil, ip_address: nil},
+  {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02", header_amount: 93000.0, updated_by: nil, ip_address: nil},
+  {narrative: "Test invoice", invoice_date: "2016-12-05", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-04", header_amount: 0.0, updated_by: nil, ip_address: nil},
+  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", comments: "Test.", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, due_date: "2016-12-20", header_amount: 66000.0, updated_by: nil, ip_address: nil}
+])
+InvoiceHeadersAudit.create!([
+  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", due_date: "2016-12-20", header_amount: 66000.0, comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, invoice_header_id: 7}
 ])
 InvoiceLine.create!([
   {narrative: "Advance Invoice", line_amount: 88000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: 1, invoice_adder_type_id: nil},
@@ -216,12 +220,13 @@ InvoiceLine.create!([
   {narrative: "Interim payment", line_amount: 66000.0, comments: "", invoice_header_id: 7, project_id: 5, invoicing_milestone_id: 3, invoice_adder_type_id: nil}
 ])
 InvoicingDeliveryMilestone.create!([
-  {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2}
+  {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2},
+  {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1}
 ])
 InvoicingMilestone.create!([
   {name: "Advance Invoice", description: "", due_date: "2016-11-30", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 100000.0},
-  {name: "Final Payment", description: "", due_date: "2016-12-31", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 300000.0},
-  {name: "Interim payment", description: "", due_date: "2016-12-05", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 66000.0}
+  {name: "Interim payment", description: "", due_date: "2016-12-05", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 66000.0},
+  {name: "Final Payment", description: "", due_date: "2016-12-23", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 300000.0}
 ])
 Lookup.create!([
   {name: "Engineering", description: "Engineering", rank: 1.0, comments: "", lookup_type_id: 3, extra: nil},
@@ -340,7 +345,7 @@ PipelinesAudit.create!([
   {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, pipeline_status_id: 104, project_type_code_id: 96, client_id: 3, pipeline_id: 9, sales_person_id: 9, estimator_id: 9, engagement_manager_id: nil, delivery_manager_id: nil, updated_by: "System Administrator", ip_address: "127.0.0.1"}
 ])
 Project.create!([
-  {description: nil, start_date: "2016-11-01", end_date: "2016-11-30", booking_value: 10000.0, comments: "Moon.", client_id: 3, project_type_code_id: 96, project_status_id: 108, business_unit_id: 3, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, pipeline_id: 9, sales_person_id: 9, name: "Billing App", updated_by: "System Administrator", ip_address: "127.0.0.1"}
+  {description: nil, start_date: "2016-11-01", end_date: "2016-11-30", booking_value: 10000.0, comments: "", client_id: 3, project_type_code_id: 96, project_status_id: 108, business_unit_id: 3, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, pipeline_id: 9, sales_person_id: 9, name: "Billing App", updated_by: "System Administrator", ip_address: "127.0.0.1"}
 ])
 ProjectOverhead.create!([
   {amount_date: "2016-11-30", amount: 54000.0, comments: "", cost_adder_type_id: 80, project_id: 5},
@@ -362,7 +367,8 @@ ProjectType.create!([
 ])
 ProjectsAudit.create!([
   {description: nil, start_date: "2016-11-01", end_date: "2016-11-30", booking_value: 10000.0, comments: "", client_id: 3, project_type_code_id: 96, project_status_id: 108, business_unit_id: 3, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, pipeline_id: 9, sales_person_id: 9, project_id: 5, name: "Billing App", updated_by: "System Administrator", ip_address: "127.0.0.1"},
-  {description: nil, start_date: "2016-11-01", end_date: "2016-11-30", booking_value: 10000.0, comments: "Moon.", client_id: 3, project_type_code_id: 96, project_status_id: 108, business_unit_id: 3, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, pipeline_id: 9, sales_person_id: 9, project_id: 5, name: "Billing App", updated_by: "System Administrator", ip_address: "127.0.0.1"}
+  {description: nil, start_date: "2016-11-01", end_date: "2016-11-30", booking_value: 10000.0, comments: "Moon.", client_id: 3, project_type_code_id: 96, project_status_id: 108, business_unit_id: 3, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, pipeline_id: 9, sales_person_id: 9, project_id: 5, name: "Billing App", updated_by: "System Administrator", ip_address: "127.0.0.1"},
+  {description: nil, start_date: "2016-11-01", end_date: "2016-11-30", booking_value: 10000.0, comments: "", client_id: 3, project_type_code_id: 96, project_status_id: 108, business_unit_id: 3, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, pipeline_id: 9, sales_person_id: 9, project_id: 5, name: "Billing App", updated_by: "System Administrator", ip_address: "127.0.0.1"}
 ])
 Resource.create!([
   {primary_skill: true, as_on: "2016-11-07", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 7, skill_id: 87},

@@ -1,5 +1,5 @@
-ActiveAdmin.register InvoiceHeader do
-  menu if: proc { is_menu_authorized? [I18n.t('role.manager')] }, label: I18n.t('menu.invoices'), parent: I18n.t('menu.operations'), priority: 30
+ActiveAdmin.register InvoiceHeadersAudit do
+  menu false
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -14,21 +14,21 @@ ActiveAdmin.register InvoiceHeader do
 #   permitted
 # end
 
-  permit_params :client_id, :narrative, :invoice_date, :invoice_term_id, :invoice_status_id, :comments, :due_date, :header_amount, :updated_by, :ip_address
+  permit_params :narrative, :invoice_date, :due_date, :header_amount, :comments, :created_at, :client_id, :invoice_status_id, :invoice_term_id, :invoice_header_id, :updated_at, :updated_by, :ip_address
 
-  config.sort_order = 'invoice_date_desc_and_narrative_asc'
+  config.sort_order = 'id_desc'
 
   config.clear_action_items!
 
   action_item only: :index do |resource|
-    link_to I18n.t('label.new'), new_admin_invoice_header_path
+    link_to I18n.t('label.back'), admin_invoice_headers_audits_path
   end
 
-  action_item only:  [:show, :edit, :new] do |resource|
-    link_to I18n.t('label.back'), admin_invoice_headers_path
+  action_item only: :show do |resource|
+    link_to I18n.t('label.back'), :back
   end
 
-  index do
+  index as: :grouped_table, group_by_attribute: :invoice_header_name do
     selectable_column
     column :id
     column :client, sortable: 'client.name' do |resource|
@@ -50,13 +50,13 @@ ActiveAdmin.register InvoiceHeader do
     end
     column :unpaid_amount do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.unpaid_amount, precision: 0, delimiter: ','
+        number_with_precision element.invoice_header.unpaid_amount, precision: 0, delimiter: ','
       end
     end
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item "Audit Trail", admin_invoice_headers_audits_path(invoice_header_id: resource.id)
-      item I18n.t('actions.invoice_lines'), admin_invoice_lines_path(invoice_header_id: resource.id)
+    column :audit_details
+    actions defaults: false, dropdown: true do |resource|
+      item I18n.t('actions.view'), admin_invoice_headers_audit_path(resource.id)
     end
   end
 
@@ -88,6 +88,7 @@ ActiveAdmin.register InvoiceHeader do
       row :header_amount
       row :unpaid_amount
       row :comments
+      row :audit_details
     end
   end
 
@@ -96,8 +97,19 @@ ActiveAdmin.register InvoiceHeader do
       c.send(:is_resource_authorized?, [I18n.t('role.manager')])
     end
 
+    before_filter only: :index do |resource|
+      if !params.has_key?(:invoice_header_id)
+        redirect_to admin_invoice_headers_audits_path
+      end
+      if params[:commit].blank? && params[:q].blank?
+        extra_params = {"q" => {"invoice_header_id_eq" => params[:invoice_header_id]}}
+        # make sure data is filtered and filters show correctly
+        params.merge! extra_params
+      end
+    end
+
     def scoped_collection
-      InvoiceHeader.includes [:client, :invoice_term, :invoice_status]
+      InvoiceHeadersAudit.includes [:client, :invoice_term, :invoice_status, :invoice_header]
     end
 
     def create
@@ -110,38 +122,6 @@ ActiveAdmin.register InvoiceHeader do
       super do |format|
         redirect_to collection_url and return if resource.valid?
       end
-    end
-  end
-
-  form do |f|
-    f.object.updated_by = current_admin_user.name
-    f.object.ip_address = current_admin_user.current_sign_in_ip
-    if f.object.invoice_term_id.blank?
-      f.object.invoice_term_id = InvoiceTerm.where(name: I18n.t('label.default_invoice_term')).first.id
-    end
-    if f.object.invoice_status_id.blank?
-      f.object.invoice_status_id = InvoiceStatus.where(name: I18n.t('label.new')).first.id
-    end
-    if f.object.invoice_date.blank?
-      f.object.invoice_date = Date.today
-    end
-    if f.object.new_record?
-      f.object.amount = 0
-    end
-    f.inputs do
-      f.input :client, required: true, as: :select, collection:
-                         Client.ordered_lookup.map { |a| [a.name + ' [' + a.business_unit_name + ']', a.id] }, include_blank: true
-      f.input :narrative
-      f.input :invoice_date, required: true, label: I18n.t('label.invoice_date'), as: :datepicker
-      f.input :invoice_term
-      f.input :invoice_status
-      f.input :header_amount, as: :hidden
-      f.input :comments
-      f.input :ip_address, as: :hidden
-      f.input :updated_by, as: :hidden
-    end
-    f.actions do
-      f.action(:submit, label: I18n.t('label.save'))
     end
   end
 end

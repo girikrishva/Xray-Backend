@@ -382,6 +382,24 @@ SELECT lookups.id,
     t.integer  "invoice_term_id",   :null=>false, :index=>{:name=>"index_invoice_headers_on_invoice_term_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_invoice_term_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.date     "due_date",          :null=>false
     t.float    "header_amount",     :null=>false
+    t.string   "updated_by"
+    t.string   "ip_address"
+  end
+
+  create_table "invoice_headers_audits", force: :cascade do |t|
+    t.string   "narrative",         :null=>false
+    t.date     "invoice_date",      :null=>false
+    t.date     "due_date",          :null=>false
+    t.float    "header_amount",     :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "updated_by"
+    t.string   "ip_address"
+    t.integer  "client_id",         :null=>false, :index=>{:name=>"index_invoice_headers_audits_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_invoice_headers_audits_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoice_status_id", :null=>false, :index=>{:name=>"index_invoice_headers_audits_on_invoice_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_audits_invoice_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoice_term_id",   :null=>false, :index=>{:name=>"index_invoice_headers_audits_on_invoice_term_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_audits_invoice_term_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "invoice_header_id", :null=>false, :index=>{:name=>"fk__invoice_headers_audits_invoice_header_id"}, :foreign_key=>{:references=>"invoice_headers", :name=>"fk_invoice_headers_audits_invoice_header_id", :on_update=>:no_action, :on_delete=>:no_action}
   end
 
   create_table "invoice_lines", force: :cascade do |t|

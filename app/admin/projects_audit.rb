@@ -133,6 +133,7 @@ ActiveAdmin.register ProjectsAudit do
       row :updated_by
       row :ip_address
       row :comments
+      row :audit_details
     end
   end
 

@@ -112,6 +112,7 @@ ActiveAdmin.register PipelinesAudit do
       row I18n.t('label.engagement_by'), :engagement_manager
       row I18n.t('label.delivery_by'), :delivery_manager
       row :comments
+      row :audit_details
     end
   end
 

@@ -53,6 +53,7 @@ en:
         Vacation Policies Audits: ""
         Holiday Calendars Audits: ""
         Clients Audits: ""
+        Invoice Headers Audits: ""
   role:
     administrator: "Administrator"
     executive: "Executive"
