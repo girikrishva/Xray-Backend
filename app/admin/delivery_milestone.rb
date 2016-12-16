@@ -110,14 +110,25 @@ ActiveAdmin.register DeliveryMilestone do
       f.object.due_date = Date.today
     end
     f.inputs do
-      f.input :project, required: true, input_html: {disabled: :true}
-      f.input :project_id, as: :hidden
-      f.input :name
-      f.input :description
-      f.input :due_date, as: :datepicker
-      f.input :last_reminder_date, as: :string, input_html: {readonly: :true}
-      f.input :completion_date, as: :datepicker
-      f.input :comments
+      if f.object.new_record?
+        f.input :project, required: true, input_html: {disabled: :true}
+        f.input :project_id, as: :hidden
+        f.input :name
+        f.input :description
+        f.input :due_date, as: :datepicker
+        f.input :last_reminder_date, as: :string, input_html: {readonly: :true}
+        f.input :completion_date, as: :datepicker
+        f.input :comments
+      else
+        f.input :project, required: true, input_html: {disabled: :true}
+        f.input :project_id, as: :hidden
+        f.input :name, input_html: {readonly: :true}
+        f.input :description
+        f.input :due_date, as: :string, input_html: {readonly: :true}
+        f.input :last_reminder_date, as: :string, input_html: {readonly: :true}
+        f.input :completion_date, as: :datepicker
+        f.input :comments
+      end
     end
     f.actions do
       f.action(:submit, label: I18n.t('label.save'))
