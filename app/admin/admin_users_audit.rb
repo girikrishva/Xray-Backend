@@ -16,17 +16,19 @@ ActiveAdmin.register AdminUsersAudit do
   end
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    admin_user_id = AdminUsersAudit.without_deleted.find(ids.first).admin_user_id
     ids.each do |id|
       AdminUsersAudit.destroy(id)
     end
-    redirect_to admin_admin_users_audits_path(admin_user_id: params[:admin_user_id])
+    redirect_to admin_admin_users_audits_path(admin_user_id: admin_user_id)
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    admin_user_id = AdminUsersAudit.with_deleted.find(ids.first).admin_user_id
     ids.each do |id|
       AdminUsersAudit.restore(id)
     end
-    redirect_to admin_admin_users_audits_path(admin_user_id: params[:admin_user_id])
+    redirect_to admin_admin_users_audits_path(admin_user_id: admin_user_id)
   end
 
   config.sort_order = 'id_desc'
@@ -51,14 +53,8 @@ ActiveAdmin.register AdminUsersAudit do
     column :date_of_joining
     column :date_of_leaving
     column :audit_details
-    if params[:scope] == 'deleted'
-      actions defaults: false, dropdown: true do |resource|
-        item I18n.t('actions.restore'), admin_api_restore_admin_users_audit_path(id: resource.id), method: :post
-      end
-    else
-      actions defaults: false, dropdown: true do |resource|
-        item I18n.t('actions.view'), admin_admin_users_audit_path(resource.id)
-      end
+    actions defaults: false, dropdown: true do |resource|
+      item I18n.t('actions.view'), admin_admin_users_audit_path(resource.id)
     end
   end
 
@@ -80,11 +76,6 @@ ActiveAdmin.register AdminUsersAudit do
 
     def scoped_action
       AdminUsersAudit.includes [:role, :business_unit, :department, :designation]
-    end
-
-    def restore
-      AdminUsersAudit.restore(params[:id])
-      redirect_to admin_admin_users_audits_path(admin_user_id: params[:admin_user_id])
     end
   end
 
