@@ -1,4 +1,6 @@
 class HolidayCalendarsAudit < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :business_unit, :class_name => 'BusinessUnit', :foreign_key => :business_unit_id
 
   validates :name, presence: true

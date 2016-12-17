@@ -198,11 +198,13 @@ DeliveryMilestone.create!([
 HolidayCalendar.create!([
   {name: "Christmas", as_on: "2016-12-25", description: "Christmas", comments: "", business_unit_id: 4, updated_by: nil, ip_address: nil, deleted_at: nil},
   {name: "Easter", as_on: "2016-09-17", description: "Easter", comments: "", business_unit_id: 4, updated_by: nil, ip_address: nil, deleted_at: nil},
-  {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "", business_unit_id: 1, updated_by: nil, ip_address: nil, deleted_at: nil},
-  {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
+  {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil},
+  {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "Moon.", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
 ])
 HolidayCalendarsAudit.create!([
-  {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", updated_by: "System Administrator", ip_address: "127.0.0.1", holiday_calendar_id: 2, business_unit_id: 1}
+  {name: "Bhai Duj", as_on: "2016-08-10", description: "Bhai Duj", comments: "", updated_by: "System Administrator", ip_address: "127.0.0.1", holiday_calendar_id: 2, business_unit_id: 1, deleted_at: nil},
+  {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "Moon.", updated_by: "System Administrator", ip_address: "127.0.0.1", holiday_calendar_id: 1, business_unit_id: 1, deleted_at: nil},
+  {name: "Diwali", as_on: "2016-10-30", description: "Diwali", comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", holiday_calendar_id: 1, business_unit_id: 1, deleted_at: nil}
 ])
 InvoiceHeader.create!([
   {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", header_amount: 0.0, updated_by: nil, ip_address: nil},

@@ -3,8 +3,32 @@ ActiveAdmin.register HolidayCalendarsAudit do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    HolidayCalendarsAudit.without_deleted.where('holiday_calendar_id = ?', params[:holiday_calendar_id]).order('id desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    HolidayCalendarsAudit.only_deleted.where('holiday_calendar_id = ?', params[:holiday_calendar_id]).order('id desc')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.back'), admin_holiday_calendars_path
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    holiday_calendar_id = HolidayCalendarsAudit.without_deleted.find(ids.first).holiday_calendar_id
+    ids.each do |id|
+      HolidayCalendarsAudit.destroy(id)
+    end
+    redirect_to admin_holiday_calendars_audits_path(holiday_calendar_id: holiday_calendar_id)
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    holiday_calendar_id = HolidayCalendarsAudit.with_deleted.find(ids.first).holiday_calendar_id
+    ids.each do |id|
+      HolidayCalendarsAudit.restore(id)
+    end
+    redirect_to admin_holiday_calendars_audits_path(holiday_calendar_id: holiday_calendar_id)
   end
 
   config.sort_order = 'id_desc'

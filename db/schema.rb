@@ -359,6 +359,7 @@ SELECT lookups.id,
     t.string   "ip_address"
     t.integer  "holiday_calendar_id", :null=>false, :index=>{:name=>"index_holiday_calendars_audits_on_holiday_calendar_id"}, :foreign_key=>{:references=>"holiday_calendars", :name=>"fk_holiday_calendars_audits_holiday_calendar_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "business_unit_id",    :null=>false, :index=>{:name=>"index_holiday_calendars_audits_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_holiday_calendars_audits_lookup_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at",          :index=>{:name=>"index_holiday_calendars_audits_on_deleted_at"}
   end
 
   create_view "invoice_adder_types", <<-'END_VIEW_INVOICE_ADDER_TYPES', :force => true
