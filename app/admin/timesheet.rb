@@ -14,7 +14,7 @@ ActiveAdmin.register Timesheet do
 #   permitted
 # end
 
-  batch_action :revert, priority: 4 do |ids|
+  batch_action :revert, if: proc { params[:scope] != 'deleted' }, priority: 4 do |ids|
     ids.each do |id|
       timesheet = Timesheet.find(id)
       timesheet.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.pending')).first.id
@@ -23,7 +23,7 @@ ActiveAdmin.register Timesheet do
     redirect_to collection_url
   end
 
-  batch_action :cancel, priority: 3 do |ids|
+  batch_action :cancel, if: proc { params[:scope] != 'deleted' }, priority: 3 do |ids|
     ids.each do |id|
       timesheet = Timesheet.find(id)
       timesheet.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.canceled')).first.id
@@ -32,7 +32,7 @@ ActiveAdmin.register Timesheet do
     redirect_to collection_url
   end
 
-  batch_action :reject, priority: 2 do |ids|
+  batch_action :reject, if: proc { params[:scope] != 'deleted' }, priority: 2 do |ids|
     ids.each do |id|
       timesheet = Timesheet.find(id)
       timesheet.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.rejected')).first.id
@@ -41,13 +41,27 @@ ActiveAdmin.register Timesheet do
     redirect_to collection_url
   end
 
-  batch_action :approve, priority: 1 do |ids|
+  batch_action :approve, if: proc { params[:scope] != 'deleted' }, priority: 1 do |ids|
     ids.each do |id|
       timesheet = Timesheet.find(id)
       timesheet.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.approved')).first.id
       timesheet.save
     end
     redirect_to collection_url
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      Timesheet.destroy(id)
+    end
+    redirect_to admin_timesheets_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      Timesheet.restore(id)
+    end
+    redirect_to admin_timesheets_path
   end
 
   scope I18n.t('label.pending'), :pending_view, default: true do |timesheets|
@@ -68,6 +82,14 @@ ActiveAdmin.register Timesheet do
 
   scope I18n.t('label.all'), :all_view, default: false do |timesheets|
     Timesheet.all.order('timesheet_date desc')
+  end
+
+  scope I18n.t('label.active'), default: true do |resources|
+    Timesheet.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    Timesheet.only_deleted
   end
 
   permit_params :assigned_resource_id, :timesheet_date, :hours, :approval_status_id, :comments
@@ -94,11 +116,17 @@ ActiveAdmin.register Timesheet do
     column :hours
     column :approval_status
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item I18n.t('actions.approve_timesheet'), admin_api_approve_timesheet_path(timesheet_id: resource.id), method: :post
-      item I18n.t('actions.reject_timesheet'), admin_api_reject_timesheet_path(timesheet_id: resource.id), method: :post
-      item I18n.t('actions.cancel_timesheet'), admin_api_cancel_timesheet_path(timesheet_id: resource.id), method: :post
-      item I18n.t('actions.revert_timesheet'), admin_api_make_timesheet_pending_path(timesheet_id: resource.id), method: :post
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_timesheet_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.approve_timesheet'), admin_api_approve_timesheet_path(timesheet_id: resource.id), method: :post
+        item I18n.t('actions.reject_timesheet'), admin_api_reject_timesheet_path(timesheet_id: resource.id), method: :post
+        item I18n.t('actions.cancel_timesheet'), admin_api_cancel_timesheet_path(timesheet_id: resource.id), method: :post
+        item I18n.t('actions.revert_timesheet'), admin_api_make_timesheet_pending_path(timesheet_id: resource.id), method: :post
+      end
     end
   end
 
@@ -141,7 +169,7 @@ ActiveAdmin.register Timesheet do
         redirect_to collection_url and return if resource.valid?
       end
     end
-    
+
     def approve_timesheet
       if params.has_key?(:timesheet_id)
         timesheet_id = params[:timesheet_id]
@@ -180,6 +208,11 @@ ActiveAdmin.register Timesheet do
         timesheet.save
         redirect_to admin_timesheets_path
       end
+    end
+
+    def restore
+      Timesheet.restore(params[:id])
+      redirect_to admin_timesheets_path
     end
   end
 

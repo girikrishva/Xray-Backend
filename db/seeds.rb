@@ -407,7 +407,7 @@ Role.create!([
   {name: "Lead", description: "Lead", rank: 7.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager", deleted_at: nil}
 ])
 Timesheet.create!([
-  {timesheet_date: "2016-11-11", hours: 8.0, comments: "", assigned_resource_id: 6, approval_status_id: 143}
+  {timesheet_date: "2016-11-11", hours: 8.0, comments: "", assigned_resource_id: 6, approval_status_id: 143, deleted_at: nil}
 ])
 Skill.create!([
   {name: "iOS", description: "iOS", rank: 1.0, comments: "", lookup_type_id: 13, extra: nil},

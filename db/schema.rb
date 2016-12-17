@@ -688,6 +688,7 @@ SELECT lookups.id,
     t.datetime "updated_at"
     t.integer  "assigned_resource_id", :null=>false, :index=>{:name=>"index_timesheets_on_assigned_resource_id"}, :foreign_key=>{:references=>"assigned_resources", :name=>"fk_timesheets_assigned_resource_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "approval_status_id",   :null=>false, :index=>{:name=>"index_timesheets_on_approval_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_timesheets_lookup_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at",           :index=>{:name=>"index_timesheets_on_deleted_at"}
   end
 
   create_view "vacation_codes", <<-'END_VIEW_VACATION_CODES', :force => true

@@ -1,4 +1,6 @@
 class Timesheet < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :assigned_resource, class_name: 'AssignedResource', foreign_key: :assigned_resource_id
   belongs_to :approval_status, class_name: 'ApprovalStatus', foreign_key: :approval_status_id
 
