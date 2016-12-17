@@ -1,4 +1,6 @@
 class ClientsAudit < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :business_unit, :class_name => 'BusinessUnit', :foreign_key => :business_unit_id
   belongs_to :client, :class_name => 'Client', :foreign_key => :client_id
 

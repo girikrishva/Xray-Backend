@@ -183,10 +183,11 @@ Client.create!([
   {name: "Snapbizz", contact_name: "Yash Prakash", contact_email: "", contact_phone: "", comments: "", business_unit_id: 3, updated_by: nil, ip_address: nil, deleted_at: nil},
   {name: "Wishcloud", contact_name: "Mary Como", contact_email: "", contact_phone: "", comments: "", business_unit_id: 4, updated_by: nil, ip_address: nil, deleted_at: nil},
   {name: "Dell", contact_name: "Shankar Menon", contact_email: "shankar@yopmail.com", contact_phone: "", comments: "Tester.", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil},
-  {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Moon.", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
+  {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Test.", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
 ])
 ClientsAudit.create!([
-  {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Moon.", updated_by: "System Administrator", ip_address: "127.0.0.1", business_unit_id: 1, client_id: 1}
+  {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", business_unit_id: 1, client_id: 1, deleted_at: nil},
+  {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Moon.", updated_by: "System Administrator", ip_address: "127.0.0.1", business_unit_id: 1, client_id: 1, deleted_at: nil}
 ])
 DeliveryInvoicingMilestone.create!([
   {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2},

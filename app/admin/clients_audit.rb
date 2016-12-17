@@ -3,8 +3,32 @@ ActiveAdmin.register ClientsAudit do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    ClientsAudit.without_deleted.where('client_id = ?', params[:client_id]).order('id desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    ClientsAudit.only_deleted.where('client_id = ?', params[:client_id]).order('id desc')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.back'), admin_clients_audits_path
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    client_id = ClientsAudit.without_deleted.find(ids.first).client_id
+    ids.each do |id|
+      ClientsAudit.destroy(id)
+    end
+    redirect_to admin_clients_audits_path(client_id: client_id)
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    client_id = ClientsAudit.with_deleted.find(ids.first).client_id
+    ids.each do |id|
+      ClientsAudit.restore(id)
+    end
+    redirect_to admin_clients_audits_path(client_id: client_id)
   end
 
   config.sort_order = 'id_desc'

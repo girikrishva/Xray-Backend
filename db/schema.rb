@@ -259,6 +259,7 @@ SELECT lookups.id,
     t.string   "ip_address"
     t.integer  "business_unit_id", :null=>false, :index=>{:name=>"index_clients_audits_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_clients_audits_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "client_id",        :null=>false, :index=>{:name=>"index_clients_audits_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_clients_audits_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at",       :index=>{:name=>"index_clients_audits_on_deleted_at"}
   end
 
   create_view "cost_adder_types", <<-'END_VIEW_COST_ADDER_TYPES', :force => true
