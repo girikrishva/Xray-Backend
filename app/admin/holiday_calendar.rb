@@ -20,12 +20,34 @@ ActiveAdmin.register HolidayCalendar do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    HolidayCalendar.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    HolidayCalendar.only_deleted
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_holiday_calendar_path
   end
 
   action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_holiday_calendars_path
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      HolidayCalendar.destroy(id)
+    end
+    redirect_to admin_holiday_calendars_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      HolidayCalendar.restore(id)
+    end
+    redirect_to admin_holiday_calendars_path
   end
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do
@@ -35,8 +57,14 @@ ActiveAdmin.register HolidayCalendar do
     column :description
     column :as_on
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item I18n.t('actions.audit_trail'), admin_holiday_calendars_audits_path(holiday_calendar_id: resource.id)
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_holiday_calendar_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.audit_trail'), admin_holiday_calendars_audits_path(holiday_calendar_id: resource.id)
+      end
     end
   end
 
@@ -67,6 +95,11 @@ ActiveAdmin.register HolidayCalendar do
       super do |format|
         redirect_to collection_url and return if resource.valid?
       end
+    end
+
+    def restore
+      HolidayCalendar.restore(params[:id])
+      redirect_to admin_holiday_calendars_path
     end
   end
 

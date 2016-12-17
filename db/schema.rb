@@ -344,6 +344,7 @@ SELECT lookups.id,
     t.datetime "updated_at"
     t.string   "updated_by"
     t.string   "ip_address"
+    t.datetime "deleted_at",       :index=>{:name=>"index_holiday_calendars_on_deleted_at"}
   end
   add_index "holiday_calendars", ["business_unit_id"], :name=>"index_holiday_calendars_on_business_unit_id"
 
