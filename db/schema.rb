@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.date     "date_of_leaving"
     t.string   "updated_by"
     t.string   "ip_address"
+    t.datetime "deleted_at",             :index=>{:name=>"index_admin_users_on_deleted_at"}
   end
 
   create_table "admin_users_audits", force: :cascade do |t|

@@ -3,6 +3,14 @@ ActiveAdmin.register AdminUser do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |roles|
+    AdminUser.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |roles|
+    AdminUser.only_deleted
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_admin_user_path
   end
@@ -11,7 +19,21 @@ ActiveAdmin.register AdminUser do
     link_to I18n.t('label.back'), admin_admin_users_path
   end
 
-  batch_action :activate do |ids|
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      AdminUser.destroy(id)
+    end
+    redirect_to admin_admin_users_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      AdminUser.restore(id)
+    end
+    redirect_to admin_admin_users_path
+  end
+
+  batch_action :activate, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
       admin_user = AdminUser.find(id)
       admin_user.active = true
@@ -20,7 +42,7 @@ ActiveAdmin.register AdminUser do
     redirect_to collection_url
   end
 
-  batch_action :deactivate do |ids|
+  batch_action :deactivate, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
       admin_user = AdminUser.find(id)
       admin_user.active = false
@@ -50,9 +72,15 @@ ActiveAdmin.register AdminUser do
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
     end
-    actions defaults: true, dropdown: true do |resource|
-      item I18n.t('actions.change_qualifiers'), edit_admin_admin_user_path(id: resource.id, suppress_password: true)
-      item I18n.t('actions.audit_trail'), admin_admin_users_audits_path(admin_user_id: resource.id)
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_admin_user_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.change_qualifiers'), edit_admin_admin_user_path(id: resource.id, suppress_password: true)
+        item I18n.t('actions.audit_trail'), admin_admin_users_audits_path(admin_user_id: resource.id)
+      end
     end
   end
 
@@ -75,6 +103,11 @@ ActiveAdmin.register AdminUser do
       super do |format|
         redirect_to collection_url and return if resource.valid?
       end
+    end
+
+    def restore
+      AdminUser.restore(params[:id])
+      redirect_to admin_users_path
     end
   end
 
