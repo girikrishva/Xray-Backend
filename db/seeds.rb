@@ -422,8 +422,8 @@ Skill.create!([
   {name: "HR", description: "HR", rank: 10.0, comments: "", lookup_type_id: 13, extra: nil}
 ])
 Vacation.create!([
-  {narrative: "Test", request_date: "2016-12-09", start_date: "2016-12-09", end_date: "2016-12-09", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 146},
-  {narrative: "Test 4", request_date: "2016-12-09", start_date: "2016-10-01", end_date: "2016-10-02", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 143}
+  {narrative: "Test", request_date: "2016-12-09", start_date: "2016-12-09", end_date: "2016-12-09", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 146, deleted_at: nil},
+  {narrative: "Test 4", request_date: "2016-12-09", start_date: "2016-10-01", end_date: "2016-10-02", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 143, deleted_at: nil}
 ])
 VacationPoliciesAudit.create!([
   {description: "Sick Leave", as_on: "2016-01-01", paid: true, days_allowed: 4.0, comments: "", business_unit_id: 1, vacation_code_id: 73, updated_by: "System Administrator", ip_address: "127.0.0.1", vacation_policy_id: 4, deleted_at: nil},

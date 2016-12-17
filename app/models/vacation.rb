@@ -1,4 +1,6 @@
 class Vacation < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :user, :class_name => 'AdminUser', :foreign_key => :admin_user_id
   belongs_to :vacation_code, :class_name => 'VacationCode', :foreign_key => :vacation_code_id
   belongs_to :approval_status, :class_name => 'ApprovalStatus', :foreign_key => :approval_status_id

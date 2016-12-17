@@ -747,6 +747,7 @@ SELECT lookups.id,
     t.integer  "admin_user_id",      :null=>false, :index=>{:name=>"index_vacations_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_vacations_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "vacation_code_id",   :null=>false, :index=>{:name=>"index_vacations_on_vacation_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_vacations_vacation_code_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "approval_status_id", :null=>false, :index=>{:name=>"index_vacations_on_approval_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_vacations_approval_status_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at",         :index=>{:name=>"index_vacations_on_deleted_at"}
   end
 
 end

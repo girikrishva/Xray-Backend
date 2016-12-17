@@ -15,7 +15,7 @@ ActiveAdmin.register Vacation do
 # end
 
 
-  batch_action :revert, priority: 4 do |ids|
+  batch_action :revert, if: proc { params[:scope] != 'deleted' }, priority: 4 do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.pending')).first.id
@@ -24,7 +24,7 @@ ActiveAdmin.register Vacation do
     redirect_to collection_url
   end
 
-  batch_action :cancel, priority: 3 do |ids|
+  batch_action :cancel, if: proc { params[:scope] != 'deleted' }, priority: 3 do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.canceled')).first.id
@@ -33,7 +33,7 @@ ActiveAdmin.register Vacation do
     redirect_to collection_url
   end
 
-  batch_action :reject, priority: 2 do |ids|
+  batch_action :reject, if: proc { params[:scope] != 'deleted' }, priority: 2 do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.rejected')).first.id
@@ -42,7 +42,7 @@ ActiveAdmin.register Vacation do
     redirect_to collection_url
   end
 
-  batch_action :approve, priority: 1 do |ids|
+  batch_action :approve, if: proc { params[:scope] != 'deleted' }, priority: 1 do |ids|
     ids.each do |id|
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.approved')).first.id
@@ -71,6 +71,14 @@ ActiveAdmin.register Vacation do
     Vacation.all.order('request_date desc')
   end
 
+  scope I18n.t('label.active'), default: false do |resources|
+    Vacation.without_deleted.order('request_date desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    Vacation.only_deleted.order('request_date desc')
+  end
+
   permit_params :admin_user_id, :vacation_code_id, :narrative, :request_date, :start_date, :end_date, :hours_per_day, :approval_status_id, :comments
 
   config.clear_action_items!
@@ -81,6 +89,20 @@ ActiveAdmin.register Vacation do
 
   action_item only: [:show, :edit, :new] do |resource|
     link_to I18n.t('label.back'), admin_vacations_path
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      Vacation.destroy(id)
+    end
+    redirect_to admin_vacations_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      Vacation.restore(id)
+    end
+    redirect_to admin_vacations_path
   end
 
   index as: :grouped_table, group_by_attribute: :approval_status_name do
@@ -100,11 +122,17 @@ ActiveAdmin.register Vacation do
     column :balance_days
     column :requested_days
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item I18n.t('actions.approve_vacation'), admin_api_approve_vacation_path(vacation_id: resource.id), method: :post
-      item I18n.t('actions.reject_vacation'), admin_api_reject_vacation_path(vacation_id: resource.id), method: :post
-      item I18n.t('actions.cancel_vacation'), admin_api_cancel_vacation_path(vacation_id: resource.id), method: :post
-      item I18n.t('actions.revert_vacation'), admin_api_make_vacation_pending_path(vacation_id: resource.id), method: :post
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_vacation_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.approve_vacation'), admin_api_approve_vacation_path(vacation_id: resource.id), method: :post
+        item I18n.t('actions.reject_vacation'), admin_api_reject_vacation_path(vacation_id: resource.id), method: :post
+        item I18n.t('actions.cancel_vacation'), admin_api_cancel_vacation_path(vacation_id: resource.id), method: :post
+        item I18n.t('actions.revert_vacation'), admin_api_make_vacation_pending_path(vacation_id: resource.id), method: :post
+      end
     end
   end
 
@@ -203,6 +231,11 @@ ActiveAdmin.register Vacation do
         vacation.save
         redirect_to admin_vacations_path
       end
+    end
+
+    def restore
+      Vacation.restore(params[:id])
+      redirect_to admin_vacations_path
     end
   end
 
