@@ -195,6 +195,7 @@ SELECT lookups.id,
     t.integer  "skill_id",      :null=>false, :index=>{:name=>"index_resources_on_lookup_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_resources_skill_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at",    :index=>{:name=>"index_resources_on_deleted_at"}
   end
 
   create_table "staffing_requirements", force: :cascade do |t|

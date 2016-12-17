@@ -1,4 +1,6 @@
 class Resource < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :admin_user, class_name: 'AdminUser', foreign_key: :admin_user_id
   belongs_to :skill, :class_name => 'Skill', :foreign_key => :skill_id
 
@@ -20,7 +22,7 @@ class Resource < ActiveRecord::Base
   end
 
   def only_one_primary_skill_allowed_per_user
-    if self.primary_skill and Resource.where(admin_user_id: self.admin_user_id, primary_skill: self.primary_skill).count > 1
+    if self.deleted_at.blank? and self.primary_skill and Resource.where(admin_user_id: self.admin_user_id, primary_skill: self.primary_skill).count > 1
       raise "User cannot have more than one primary skill."
     end
   end
@@ -34,7 +36,7 @@ class Resource < ActiveRecord::Base
   end
 
   def is_latest
-    if self.id == Resource.where(skill_id: self.skill_id, admin_user_id: self.admin_user_id).order(:as_on).last.id
+    if self.deleted_at.blank? and self.id == Resource.where(skill_id: self.skill_id, admin_user_id: self.admin_user_id).order(:as_on).last.id
       return true
     else
       return false

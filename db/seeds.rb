@@ -385,16 +385,16 @@ ProjectsAudit.create!([
   {description: nil, start_date: "2016-11-01", end_date: "2016-11-30", booking_value: 10000.0, comments: "", client_id: 3, project_type_code_id: 96, project_status_id: 108, business_unit_id: 3, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, pipeline_id: 9, sales_person_id: 9, project_id: 5, name: "Billing App", updated_by: "System Administrator", ip_address: "127.0.0.1"}
 ])
 Resource.create!([
-  {primary_skill: true, as_on: "2016-11-07", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 7, skill_id: 87},
-  {primary_skill: false, as_on: "2016-11-08", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 7, skill_id: 87},
-  {primary_skill: true, as_on: "2016-11-17", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 8, skill_id: 87},
-  {primary_skill: false, as_on: "2016-11-11", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 7, skill_id: 87},
-  {primary_skill: true, as_on: "2016-11-16", bill_rate: 1700.0, cost_rate: 900.0, comments: "", admin_user_id: 9, skill_id: 88},
-  {primary_skill: false, as_on: "2016-11-18", bill_rate: 0.0, cost_rate: 3000.0, comments: "", admin_user_id: 8, skill_id: 90},
-  {primary_skill: false, as_on: "2016-11-25", bill_rate: 1800.0, cost_rate: 1000.0, comments: "", admin_user_id: 9, skill_id: 87},
-  {primary_skill: false, as_on: "2016-11-09", bill_rate: 2000.0, cost_rate: 1200.0, comments: "", admin_user_id: 8, skill_id: 86},
-  {primary_skill: false, as_on: "2016-11-11", bill_rate: 1800.0, cost_rate: 1200.0, comments: "", admin_user_id: 9, skill_id: 86},
-  {primary_skill: true, as_on: "2016-11-07", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 8, skill_id: 87}
+  {primary_skill: true, as_on: "2016-11-07", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 7, skill_id: 87, deleted_at: nil},
+  {primary_skill: false, as_on: "2016-11-08", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 7, skill_id: 87, deleted_at: nil},
+  {primary_skill: true, as_on: "2016-11-17", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 8, skill_id: 87, deleted_at: nil},
+  {primary_skill: false, as_on: "2016-11-11", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 7, skill_id: 87, deleted_at: nil},
+  {primary_skill: true, as_on: "2016-11-16", bill_rate: 1700.0, cost_rate: 900.0, comments: "", admin_user_id: 9, skill_id: 88, deleted_at: nil},
+  {primary_skill: false, as_on: "2016-11-18", bill_rate: 0.0, cost_rate: 3000.0, comments: "", admin_user_id: 8, skill_id: 90, deleted_at: nil},
+  {primary_skill: false, as_on: "2016-11-09", bill_rate: 2000.0, cost_rate: 1200.0, comments: "", admin_user_id: 8, skill_id: 86, deleted_at: nil},
+  {primary_skill: false, as_on: "2016-11-11", bill_rate: 1800.0, cost_rate: 1200.0, comments: "", admin_user_id: 9, skill_id: 86, deleted_at: nil},
+  {primary_skill: false, as_on: "2016-11-25", bill_rate: 1800.0, cost_rate: 1000.0, comments: "", admin_user_id: 9, skill_id: 87, deleted_at: nil},
+  {primary_skill: true, as_on: "2016-11-07", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 8, skill_id: 87, deleted_at: nil}
 ])
 Role.create!([
   {name: "Administrator", description: "Administrator", rank: 1.0, comments: "", super_admin: true, ancestry: nil, parent_name: nil, deleted_at: nil},

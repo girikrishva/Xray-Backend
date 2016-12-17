@@ -28,8 +28,31 @@ ActiveAdmin.register Resource do
     link_to I18n.t('label.back'), admin_resources_path
   end
 
-  scope :latest, default: true do |resources| resources.latest end
-  scope :all
+  scope :latest, default: true do |resources|
+    resources.latest
+  end
+
+  scope I18n.t('label.active'), default: false do |resources|
+    Resource.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    Resource.only_deleted
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      Resource.destroy(id)
+    end
+    redirect_to admin_resources_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      Resource.restore(id)
+    end
+    redirect_to admin_resources_path
+  end
 
   index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
@@ -42,7 +65,7 @@ ActiveAdmin.register Resource do
     # end
     column :as_on
     column I18n.t('label.latest'), (:is_latest) do |resource|
-      resource.is_latest ? status_tag(:yes, :ok ) : status_tag(:no)
+      resource.is_latest ? status_tag(:yes, :ok) : status_tag(:no)
     end
     column :bill_rate, :sortable => 'bill_rate' do |element|
       div :style => "text-align: right;" do
@@ -56,7 +79,14 @@ ActiveAdmin.register Resource do
     end
     column :primary_skill
     column :comments
-    actions defaults: true, dropdown: true
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_resource_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+      end
+    end
   end
 
   filter :skill, collection:
@@ -121,6 +151,11 @@ ActiveAdmin.register Resource do
       resource_id = params[:resource_id]
       resource = Resource.find(resource_id)
       render json: '{"resource": ' + resource.to_json + '}'
+    end
+
+    def restore
+      Resource.restore(params[:id])
+      redirect_to admin_resources_path
     end
   end
 
