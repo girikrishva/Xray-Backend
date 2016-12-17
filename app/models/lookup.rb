@@ -1,4 +1,6 @@
 class Lookup < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :lookup_type, :class_name => 'LookupType', :foreign_key => :lookup_type_id
   has_many :business_units, :class_name => 'HolidayCalendar', foreign_key: :business_unit_id
 

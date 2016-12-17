@@ -14,11 +14,19 @@ ActiveAdmin.register LookupType do
 #   permitted
 # end
 
-  permit_params  :name, :description, :comments
+  permit_params :name, :description, :comments
 
   config.sort_order = 'name_asc'
 
   config.clear_action_items!
+
+  scope I18n.t('label.active'), default: true do |resources|
+    LookupType.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    LookupType.only_deleted
+  end
 
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_lookup_type_path
@@ -28,14 +36,34 @@ ActiveAdmin.register LookupType do
     link_to I18n.t('label.back'), admin_lookup_types_path(lookup_type_id: nil)
   end
 
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      LookupType.destroy(id)
+    end
+    redirect_to admin_lookup_types_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      LookupType.restore(id)
+    end
+    redirect_to admin_lookup_types_path
+  end
+
   index do
     selectable_column
     column :id
     column :name
     column :description
     column :comments
-    actions defaults: true  , dropdown: true do |resource|
-      item I18n.t('actions.lookups'), admin_lookups_path(lookup_type_id: resource)
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_lookup_type_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.lookups'), admin_lookups_path(lookup_type_id: resource)
+      end
     end
   end
 
@@ -58,6 +86,11 @@ ActiveAdmin.register LookupType do
       super do |format|
         redirect_to collection_url and return if resource.valid?
       end
+    end
+
+    def restore
+      LookupType.restore(params[:id])
+      redirect_to admin_lookup_types_path
     end
   end
 

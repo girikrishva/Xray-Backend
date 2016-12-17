@@ -19,6 +19,14 @@ ActiveAdmin.register Lookup do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    Lookup.without_deleted.where('lookup_type_id = ?', session[:lookup_type_id]).order('rank desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    Lookup.only_deleted.where('lookup_type_id = ?', session[:lookup_type_id]).order('rank desc')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_lookup_path(lookup_type_id: session[:lookup_type_id]) if session.has_key?(:lookup_type_id)
   end
@@ -31,11 +39,18 @@ ActiveAdmin.register Lookup do
     link_to I18n.t('label.back'), admin_lookups_path(lookup_type_id: session[:lookup_type_id]) if session.has_key?(:lookup_type_id)
   end
 
-  batch_action :destroy do |ids|
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      Lookup.delete(id)
+      Lookup.destroy(id)
     end
-    redirect_to collection_url(lookup_type_id: session[:lookup_type_id])
+    redirect_to admin_lookups_path(lookup_type_id: session[:lookup_type_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      Lookup.restore(id)
+    end
+    redirect_to admin_lookups_path(lookup_type_id: session[:lookup_type_id])
   end
 
   index as: :grouped_table, group_by_attribute: :lookup_type_name do
@@ -46,7 +61,13 @@ ActiveAdmin.register Lookup do
     column :rank
     column :extra
     column :comments
-    actions defaults: true, dropdown: true
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_lookup_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true
+    end
   end
 
   show do |r|
@@ -99,6 +120,11 @@ ActiveAdmin.register Lookup do
       super do |format|
         redirect_to collection_url(lookup_type_id: session[:lookup_type_id]) and return if resource.valid?
       end
+    end
+
+    def restore
+      Lookup.restore(params[:id])
+      redirect_to admin_lookups_path(lookup_type_id: session[:lookup_type_id])
     end
   end
 

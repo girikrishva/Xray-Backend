@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "comments"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at",  :index=>{:name=>"index_lookup_types_on_deleted_at"}
   end
 
   create_table "lookups", force: :cascade do |t|
@@ -44,6 +45,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "extra"
+    t.datetime "deleted_at",     :index=>{:name=>"index_lookups_on_deleted_at"}
   end
 
   create_table "roles", force: :cascade do |t|
