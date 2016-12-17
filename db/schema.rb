@@ -665,6 +665,7 @@ SELECT lookups.id,
     t.string   "name",                  :null=>false
     t.string   "updated_by"
     t.string   "ip_address"
+    t.datetime "deleted_at",            :index=>{:name=>"index_projects_audits_on_deleted_at"}
   end
 
   create_view "skills", <<-'END_VIEW_SKILLS', :force => true
