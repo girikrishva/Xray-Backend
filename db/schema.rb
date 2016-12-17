@@ -480,6 +480,7 @@ SELECT lookups.id,
     t.integer  "cost_adder_type_id", :null=>false, :index=>{:name=>"index_overheads_on_cost_adder_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_overheads_cost_adder_type_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at",         :index=>{:name=>"index_overheads_on_deleted_at"}
   end
 
   create_table "payment_headers", force: :cascade do |t|

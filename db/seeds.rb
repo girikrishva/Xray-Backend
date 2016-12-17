@@ -334,8 +334,8 @@ LookupType.create!([
   {name: "Approval Statuses", description: "Approval Statuses", comments: "", deleted_at: nil}
 ])
 Overhead.create!([
-  {amount_date: "2016-11-16", amount: 50000.0, comments: "", business_unit_id: 1, department_id: 12, cost_adder_type_id: 80},
-  {amount_date: "2016-11-18", amount: 54000.0, comments: "", business_unit_id: 1, department_id: 10, cost_adder_type_id: 81}
+  {amount_date: "2016-11-16", amount: 50000.0, comments: "", business_unit_id: 1, department_id: 12, cost_adder_type_id: 80, deleted_at: nil},
+  {amount_date: "2016-11-18", amount: 54000.0, comments: "", business_unit_id: 1, department_id: 10, cost_adder_type_id: 81, deleted_at: nil}
 ])
 PaymentHeader.create!([
   {narrative: "Interim Payment", payment_date: "2016-12-05", header_amount: 50000.0, comments: "", client_id: 3, payment_status_id: 119, updated_by: nil, ip_address: nil},
