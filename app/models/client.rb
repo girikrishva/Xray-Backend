@@ -1,4 +1,6 @@
 class Client < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :business_unit, class_name: 'BusinessUnit', foreign_key: :business_unit_id
 
   has_many :pipelines, class_name: 'Pipeline'

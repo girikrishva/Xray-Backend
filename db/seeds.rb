@@ -180,10 +180,10 @@ AssignedResource.create!([
   {as_on: "2016-11-29", start_date: "2016-11-22", end_date: "2016-11-30", hours_per_day: 8.0, delivery_due_alert: false, invoicing_due_alert: false, payment_due_alert: false, comments: "", project_id: 5, skill_id: 87, designation_id: 133, resource_id: 21, staffing_requirement_id: 1, bill_rate: 2000.0, cost_rate: 1000.0}
 ])
 Client.create!([
-  {name: "Snapbizz", contact_name: "Yash Prakash", contact_email: "", contact_phone: "", comments: "", business_unit_id: 3, updated_by: nil, ip_address: nil},
-  {name: "Wishcloud", contact_name: "Mary Como", contact_email: "", contact_phone: "", comments: "", business_unit_id: 4, updated_by: nil, ip_address: nil},
-  {name: "Dell", contact_name: "Shankar Menon", contact_email: "shankar@yopmail.com", contact_phone: "", comments: "Tester.", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1"},
-  {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Moon.", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1"}
+  {name: "Snapbizz", contact_name: "Yash Prakash", contact_email: "", contact_phone: "", comments: "", business_unit_id: 3, updated_by: nil, ip_address: nil, deleted_at: nil},
+  {name: "Wishcloud", contact_name: "Mary Como", contact_email: "", contact_phone: "", comments: "", business_unit_id: 4, updated_by: nil, ip_address: nil, deleted_at: nil},
+  {name: "Dell", contact_name: "Shankar Menon", contact_email: "shankar@yopmail.com", contact_phone: "", comments: "Tester.", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil},
+  {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Moon.", business_unit_id: 1, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
 ])
 ClientsAudit.create!([
   {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Moon.", updated_by: "System Administrator", ip_address: "127.0.0.1", business_unit_id: 1, client_id: 1}

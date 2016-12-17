@@ -141,6 +141,7 @@ SELECT lookups.id,
     t.datetime "updated_at"
     t.string   "updated_by"
     t.string   "ip_address"
+    t.datetime "deleted_at",       :index=>{:name=>"index_clients_on_deleted_at"}
   end
 
   create_table "pipelines", force: :cascade do |t|
