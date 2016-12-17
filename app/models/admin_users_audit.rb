@@ -1,4 +1,6 @@
 class AdminUsersAudit < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :role, class_name: 'Role', foreign_key: :role_id
   belongs_to :business_unit, class_name: 'BusinessUnit', foreign_key: :business_unit_id
   belongs_to :department, class_name: 'Department', foreign_key: :department_id

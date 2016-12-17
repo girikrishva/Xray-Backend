@@ -18,6 +18,9 @@ ActiveAdmin.register ClientsAudit do
     column :contact_phone
     column :comments
     column :audit_details
+    actions defaults: false, dropdown: true do |resource|
+      item I18n.t('actions.view'), admin_clients_audit_path(resource.id)
+    end
   end
 
   controller do

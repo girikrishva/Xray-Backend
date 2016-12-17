@@ -19,6 +19,9 @@ ActiveAdmin.register VacationPoliciesAudit do
     column :days_allowed
     column :comments
     column :audit_details
+    actions defaults: false, dropdown: true do |resource|
+      item I18n.t('actions.view'), admin_vacation_policies_audit_path(resource.id)
+    end
   end
 
   controller do

@@ -17,6 +17,9 @@ ActiveAdmin.register HolidayCalendarsAudit do
     column :as_on
     column :comments
     column :audit_details
+    actions defaults: false, dropdown: true do |resource|
+      item I18n.t('actions.view'), admin_holiday_calendars_audit_path(resource.id)
+    end
   end
 
   controller do

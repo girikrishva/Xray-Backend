@@ -3,8 +3,30 @@ ActiveAdmin.register AdminUsersAudit do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    AdminUsersAudit.without_deleted.where('admin_user_id = ?', params[:admin_user_id]).order('id desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    AdminUsersAudit.only_deleted.where('admin_user_id = ?', params[:admin_user_id]).order('id desc')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.back'), admin_admin_users_path
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      AdminUsersAudit.destroy(id)
+    end
+    redirect_to admin_admin_users_audits_path(admin_user_id: params[:admin_user_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      AdminUsersAudit.restore(id)
+    end
+    redirect_to admin_admin_users_audits_path(admin_user_id: params[:admin_user_id])
   end
 
   config.sort_order = 'id_desc'
@@ -29,6 +51,15 @@ ActiveAdmin.register AdminUsersAudit do
     column :date_of_joining
     column :date_of_leaving
     column :audit_details
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_admin_users_audit_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.view'), admin_admin_users_audit_path(resource.id)
+      end
+    end
   end
 
   controller do
@@ -48,7 +79,12 @@ ActiveAdmin.register AdminUsersAudit do
     end
 
     def scoped_action
-      AdminUser.includes [:role, :business_unit, :department, :designation]
+      AdminUsersAudit.includes [:role, :business_unit, :department, :designation]
+    end
+
+    def restore
+      AdminUsersAudit.restore(params[:id])
+      redirect_to admin_admin_users_audits_path(admin_user_id: params[:admin_user_id])
     end
   end
 

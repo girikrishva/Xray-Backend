@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.date     "date_of_leaving"
     t.string   "updated_by"
     t.string   "ip_address"
+    t.datetime "deleted_at",             :index=>{:name=>"index_admin_users_audits_on_deleted_at"}
   end
 
   create_view "approval_statuses", <<-'END_VIEW_APPROVAL_STATUSES', :force => true

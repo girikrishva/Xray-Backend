@@ -21,11 +21,11 @@ ActiveAdmin.register Role do
   config.clear_action_items!
 
 
-  scope I18n.t('label.active'), default: true do |roles|
+  scope I18n.t('label.active'), default: true do |resources|
     Role.without_deleted
   end
 
-  scope I18n.t('label.deleted'), default: false do |roles|
+  scope I18n.t('label.deleted'), default: false do |resources|
     Role.only_deleted
   end
 

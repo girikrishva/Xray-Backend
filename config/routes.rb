@@ -58,6 +58,7 @@ Rails.application.routes.draw do
 
   match '/admin/api/restore_role', to: 'admin/roles#restore', via: [:post]
   match '/admin/api/restore_admin_user', to: 'admin/admin_users#restore', via: [:post]
+  match '/admin/api/restore_admin_users_audit', to: 'admin/admin_users_audits#restore', via: [:post]
 
   match '/admin/api/project_type_description' => 'admin/project_types#description_for_lookup', via: [:get]
   match '/admin/api/vacation_policy_description' => 'admin/vacation_policies#description_for_lookup', via: [:get]

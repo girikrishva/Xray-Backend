@@ -3,11 +3,11 @@ ActiveAdmin.register AdminUser do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |roles|
+  scope I18n.t('label.active'), default: true do |resources|
     AdminUser.without_deleted
   end
 
-  scope I18n.t('label.deleted'), default: false do |roles|
+  scope I18n.t('label.deleted'), default: false do |resources|
     AdminUser.only_deleted
   end
 
@@ -78,8 +78,8 @@ ActiveAdmin.register AdminUser do
       end
     else
       actions defaults: true, dropdown: true do |resource|
-        item I18n.t('actions.change_qualifiers'), edit_admin_admin_user_path(id: resource.id, suppress_password: true)
         item I18n.t('actions.audit_trail'), admin_admin_users_audits_path(admin_user_id: resource.id)
+        item I18n.t('actions.change_qualifiers'), edit_admin_admin_user_path(id: resource.id, suppress_password: true)
       end
     end
   end
