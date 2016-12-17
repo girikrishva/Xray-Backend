@@ -20,6 +20,28 @@ ActiveAdmin.register VacationPolicy do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    VacationPolicy.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    VacationPolicy.only_deleted
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      VacationPolicy.destroy(id)
+    end
+    redirect_to admin_vacation_policies_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      VacationPolicy.restore(id)
+    end
+    redirect_to admin_vacation_policies_path
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_vacation_policy_path
   end
@@ -39,8 +61,14 @@ ActiveAdmin.register VacationPolicy do
     column :paid
     column :days_allowed
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item I18n.t('actions.audit_trail'), admin_vacation_policies_audits_path(vacation_policy_id: resource.id)
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_vacation_policy_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.audit_trail'), admin_vacation_policies_audits_path(vacation_policy_id: resource.id)
+      end
     end
   end
 
@@ -60,7 +88,7 @@ ActiveAdmin.register VacationPolicy do
     end
 
     def scoped_collection
-      VacationPolicy.includes  [:vacation_code, :business_unit]
+      VacationPolicy.includes [:vacation_code, :business_unit]
     end
 
     def create
@@ -79,6 +107,11 @@ ActiveAdmin.register VacationPolicy do
       lookup_id = params[:lookup_id]
       description = Lookup.description_for_lookup(lookup_id)
       render json: '{"description": "' + description + '"}'
+    end
+
+    def restore
+      VacationPolicy.restore(params[:id])
+      redirect_to admin_vacation_policies_path
     end
   end
 

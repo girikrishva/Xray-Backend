@@ -709,6 +709,7 @@ SELECT lookups.id,
     t.datetime "updated_at"
     t.string   "updated_by"
     t.string   "ip_address"
+    t.datetime "deleted_at",       :index=>{:name=>"index_vacation_policies_on_deleted_at"}
   end
 
   create_table "vacation_policies_audits", force: :cascade do |t|

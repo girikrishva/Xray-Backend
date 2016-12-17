@@ -1,4 +1,6 @@
 class VacationPolicy < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :vacation_code, :class_name => 'VacationCode', :foreign_key => :vacation_code_id
   belongs_to :business_unit, :class_name => 'BusinessUnit', :foreign_key => :business_unit_id
 
