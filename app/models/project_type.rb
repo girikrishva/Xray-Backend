@@ -1,4 +1,6 @@
 class ProjectType < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :business_unit, class_name: 'BusinessUnit', foreign_key: :business_unit_id
   belongs_to :project_type_code, class_name: 'ProjectTypeCode', foreign_key: :project_type_code_id
 

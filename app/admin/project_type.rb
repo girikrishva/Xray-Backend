@@ -20,12 +20,34 @@ ActiveAdmin.register ProjectType do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    ProjectType.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    ProjectType.only_deleted
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_project_type_path
   end
 
   action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_project_types_path
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      ProjectType.destroy(id)
+    end
+    redirect_to admin_project_types_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      ProjectType.restore(id)
+    end
+    redirect_to admin_project_types_path
   end
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do
@@ -40,13 +62,19 @@ ActiveAdmin.register ProjectType do
     column :description
     column :billed
     column :comments
-    actions defaults: true, dropdown: true
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_project_type_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true
+    end
   end
 
   filter :business_unit, collection:
                            proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
   filter :project_type_code, collection:
-                           proc { Lookup.lookups_for_name(I18n.t('models.project_code_types')) }
+                               proc { Lookup.lookups_for_name(I18n.t('models.project_code_types')) }
   filter :description
   filter :billed
   filter :comments
@@ -57,7 +85,7 @@ ActiveAdmin.register ProjectType do
     end
 
     def scoped_collection
-      ProjectType.includes  [:project_type_code, :business_unit]
+      ProjectType.includes [:project_type_code, :business_unit]
     end
 
     def create
@@ -77,6 +105,11 @@ ActiveAdmin.register ProjectType do
       description = Lookup.description_for_lookup(lookup_id)
       render json: '{"description": "' + description + '"}'
     end
+
+    def restore
+      ProjectType.restore(params[:id])
+      redirect_to admin_project_types_path
+    end
   end
 
   form do |f|
@@ -94,8 +127,8 @@ ActiveAdmin.register ProjectType do
       end
       if f.object.project_type_code_id.blank?
         f.input :project_type_code, required: true, as: :select, collection:
-                                  Lookup.lookups_for_name(I18n.t('models.project_types'))
-                                      .map { |a| [a.name, a.id] }, include_blank: true
+                                      Lookup.lookups_for_name(I18n.t('models.project_types'))
+                                          .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :project_type_code, required: true, input_html: {disabled: :true}
         f.input :project_type_code_id, as: :hidden

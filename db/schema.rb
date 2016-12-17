@@ -634,6 +634,7 @@ SELECT lookups.id,
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at",           :index=>{:name=>"index_project_types_on_deleted_at"}
   end
   add_index "project_types", ["business_unit_id"], :name=>"index_project_types_on_business_unit_id"
   add_index "project_types", ["project_type_code_id"], :name=>"index_project_types_on_project_type_id"
