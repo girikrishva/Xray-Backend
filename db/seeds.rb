@@ -422,16 +422,17 @@ Vacation.create!([
   {narrative: "Test 4", request_date: "2016-12-09", start_date: "2016-10-01", end_date: "2016-10-02", hours_per_day: 8.0, comments: "", admin_user_id: 7, vacation_code_id: 71, approval_status_id: 143}
 ])
 VacationPoliciesAudit.create!([
-  {description: "Sick Leave", as_on: "2016-01-01", paid: true, days_allowed: 4.0, comments: "", business_unit_id: 1, vacation_code_id: 73, updated_by: "System Administrator", ip_address: "127.0.0.1", vacation_policy_id: 4},
-  {description: "Sick Leave", as_on: "2016-01-01", paid: true, days_allowed: 3.0, comments: "", business_unit_id: 1, vacation_code_id: 73, updated_by: "System Administrator", ip_address: "127.0.0.1", vacation_policy_id: 4}
+  {description: "Sick Leave", as_on: "2016-01-01", paid: true, days_allowed: 4.0, comments: "", business_unit_id: 1, vacation_code_id: 73, updated_by: "System Administrator", ip_address: "127.0.0.1", vacation_policy_id: 4, deleted_at: nil},
+  {description: "Sick Leave", as_on: "2016-01-01", paid: true, days_allowed: 3.0, comments: "", business_unit_id: 1, vacation_code_id: 73, updated_by: "System Administrator", ip_address: "127.0.0.1", vacation_policy_id: 4, deleted_at: nil},
+  {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 10.0, comments: "Test.", business_unit_id: 4, vacation_code_id: 71, updated_by: "System Administrator", ip_address: "127.0.0.1", vacation_policy_id: 8, deleted_at: nil}
 ])
 VacationPolicy.create!([
   {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 15.0, comments: "", business_unit_id: 1, vacation_code_id: 71, updated_by: nil, ip_address: nil, deleted_at: nil},
   {description: "Unpaid Leave", as_on: "2016-01-01", paid: false, days_allowed: 365.0, comments: "", business_unit_id: 1, vacation_code_id: 74, updated_by: nil, ip_address: nil, deleted_at: nil},
   {description: "Casual Leave", as_on: "2016-01-01", paid: true, days_allowed: 5.0, comments: "", business_unit_id: 1, vacation_code_id: 72, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil},
   {description: "Sick Leave", as_on: "2016-01-01", paid: true, days_allowed: 3.0, comments: "", business_unit_id: 1, vacation_code_id: 73, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil},
-  {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 10.0, comments: "", business_unit_id: 4, vacation_code_id: 71, updated_by: nil, ip_address: nil, deleted_at: nil},
-  {description: "Unpaid Leave", as_on: "2016-11-10", paid: false, days_allowed: 30.0, comments: "", business_unit_id: 4, vacation_code_id: 74, updated_by: nil, ip_address: nil, deleted_at: nil}
+  {description: "Unpaid Leave", as_on: "2016-11-10", paid: false, days_allowed: 30.0, comments: "", business_unit_id: 4, vacation_code_id: 74, updated_by: nil, ip_address: nil, deleted_at: nil},
+  {description: "Privileged Leave", as_on: "2016-01-01", paid: true, days_allowed: 10.0, comments: "Test.", business_unit_id: 4, vacation_code_id: 71, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
 ])
 ApprovalStatus.create!([
   {name: "Pending", description: "Pending", rank: 1.0, comments: "", lookup_type_id: 21, extra: ""},

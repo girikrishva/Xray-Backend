@@ -725,6 +725,7 @@ SELECT lookups.id,
     t.string   "updated_by"
     t.string   "ip_address"
     t.integer  "vacation_policy_id", :null=>false, :index=>{:name=>"index_vacation_policies_audits_on_vacation_policy_id"}, :foreign_key=>{:references=>"vacation_policies", :name=>"fk_vacation_policies_audits_vacation_policy_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at",         :index=>{:name=>"index_vacation_policies_audits_on_deleted_at"}
   end
 
   create_table "vacations", force: :cascade do |t|

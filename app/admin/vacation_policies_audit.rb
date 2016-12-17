@@ -3,8 +3,32 @@ ActiveAdmin.register VacationPoliciesAudit do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    VacationPoliciesAudit.without_deleted.where('vacation_policy_id = ?', params[:vacation_policy_id]).order('id desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    VacationPoliciesAudit.only_deleted.where('vacation_policy_id = ?', params[:vacation_policy_id]).order('id desc')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.back'), admin_vacation_policies_path
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    vacation_policy_id = VacationPoliciesAudit.without_deleted.find(ids.first).vacation_policy_id
+    ids.each do |id|
+      VacationPoliciesAudit.destroy(id)
+    end
+    redirect_to admin_vacation_policies_audits_path(vacation_policy_id: vacation_policy_id)
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    vacation_policy_id = VacationPoliciesAudit.with_deleted.find(ids.first).vacation_policy_id
+    ids.each do |id|
+      VacationPoliciesAudit.restore(id)
+    end
+    redirect_to admin_vacation_policies_audits_path(vacation_policy_id: vacation_policy_id)
   end
 
   config.sort_order = 'id_desc'
