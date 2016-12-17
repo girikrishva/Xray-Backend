@@ -394,13 +394,13 @@ Resource.create!([
   {primary_skill: true, as_on: "2016-11-07", bill_rate: 2000.0, cost_rate: 1000.0, comments: "", admin_user_id: 8, skill_id: 87}
 ])
 Role.create!([
-  {name: "Administrator", description: "Administrator", rank: 1.0, comments: "", super_admin: true, ancestry: nil, parent_name: nil},
-  {name: "User", description: "User", rank: 2.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager"},
-  {name: "Manager", description: "Manager", rank: 3.0, comments: "", super_admin: false, ancestry: "1/5/4", parent_name: "Director"},
-  {name: "Director", description: "Director", rank: 4.0, comments: "", super_admin: false, ancestry: "1/5", parent_name: "Executive"},
-  {name: "Executive", description: "Executive", rank: 5.0, comments: "", super_admin: false, ancestry: "1", parent_name: "Administrator"},
-  {name: "Lead", description: "Lead", rank: 7.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager"},
-  {name: "Consultant", description: "Consultant", rank: 8.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager"}
+  {name: "Administrator", description: "Administrator", rank: 1.0, comments: "", super_admin: true, ancestry: nil, parent_name: nil, deleted_at: nil},
+  {name: "User", description: "User", rank: 2.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager", deleted_at: nil},
+  {name: "Manager", description: "Manager", rank: 3.0, comments: "", super_admin: false, ancestry: "1/5/4", parent_name: "Director", deleted_at: nil},
+  {name: "Director", description: "Director", rank: 4.0, comments: "", super_admin: false, ancestry: "1/5", parent_name: "Executive", deleted_at: nil},
+  {name: "Executive", description: "Executive", rank: 5.0, comments: "", super_admin: false, ancestry: "1", parent_name: "Administrator", deleted_at: nil},
+  {name: "Consultant", description: "Consultant", rank: 8.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager", deleted_at: nil},
+  {name: "Lead", description: "Lead", rank: 7.0, comments: "", super_admin: false, ancestry: "1/5/4/3", parent_name: "Manager", deleted_at: nil}
 ])
 Timesheet.create!([
   {timesheet_date: "2016-11-11", hours: 8.0, comments: "", assigned_resource_id: 6, approval_status_id: 143}

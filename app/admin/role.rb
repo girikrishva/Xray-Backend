@@ -20,12 +20,35 @@ ActiveAdmin.register Role do
 
   config.clear_action_items!
 
+
+  scope I18n.t('label.active'), default: true do |roles|
+    Role.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |roles|
+    Role.only_deleted
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_role_path
   end
 
   action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_roles_path
+  end
+
+  batch_action :destroy, if: proc{ params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      Role.destroy(id)
+    end
+    redirect_to admin_roles_path
+  end
+
+  batch_action :restore, if: proc{ params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      Role.restore(id)
+    end
+    redirect_to admin_roles_path
   end
 
   index do
@@ -37,7 +60,13 @@ ActiveAdmin.register Role do
     column :rank
     column :parent_name
     column :comments
-    actions defaults: true, dropdown: true do |resource|
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_role_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+      end
     end
   end
 
@@ -65,6 +94,11 @@ ActiveAdmin.register Role do
         redirect_to collection_url and return if resource.valid?
       end
     end
+
+    def restore
+      Role.restore(params[:id])
+      redirect_to admin_roles_path
+    end
   end
 
   form do |f|
@@ -77,7 +111,7 @@ ActiveAdmin.register Role do
       f.input :super_admin
       f.input :rank
       f.input :parent_id, as: :select, collection:
-          Role.all.map { |a| [a.name, a.id] }, include_blank: true
+                            Role.all.map { |a| [a.name, a.id] }, include_blank: true
       f.input :comments
     end
     f.actions do

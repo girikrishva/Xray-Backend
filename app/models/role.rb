@@ -1,6 +1,8 @@
 class Role < ActiveRecord::Base
   has_ancestry
 
+  acts_as_paranoid
+
   has_many :admin_users, class_name: 'AdminUser'
   has_many :admin_users_audits, class_name: 'AdminUsersAudit'
 

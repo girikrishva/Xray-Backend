@@ -56,6 +56,8 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
+  match '/admin/api/restore_role', to: 'admin/roles#restore', via: [:post]
+
   match '/admin/api/project_type_description' => 'admin/project_types#description_for_lookup', via: [:get]
   match '/admin/api/vacation_policy_description' => 'admin/vacation_policies#description_for_lookup', via: [:get]
   match '/admin/api/skill_for_staffing' => 'admin/assigned_resources#skill_for_staffing', via: [:get]
