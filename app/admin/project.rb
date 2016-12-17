@@ -20,9 +20,24 @@ ActiveAdmin.register Project do
 
   config.clear_action_items!
 
-  action_item only:  [:show, :edit, :new] do |resource|
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      Project.destroy(id)
+    end
+    redirect_to admin_projects_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      Project.restore(id)
+    end
+    redirect_to admin_projects_path
+  end
+
+  action_item only: [:show, :edit, :new] do |resource|
     link_to I18n.t('label.back'), admin_projects_path
   end
+
 
   scope I18n.t('label.delivery_view'), :delivery_view, default: true do |projects|
     Project.all
@@ -34,6 +49,14 @@ ActiveAdmin.register Project do
 
   scope I18n.t('label.financial_view'), :financial_view, default: false do |projects|
     Project.all
+  end
+
+  scope I18n.t('label.active'), default: true do |resources|
+    Project.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    Project.only_deleted
   end
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do
@@ -90,13 +113,19 @@ ActiveAdmin.register Project do
       end
       column :comments
     end
-    actions defaults: true, dropdown: true do |resource|
-      item "Audit Trail", admin_projects_audits_path(project_id: resource.id)
-      item I18n.t('actions.staffing_requirements'), admin_project_staffing_requirements_path(pipeline_id: resource.pipeline_id)
-      item I18n.t('actions.assigned_resources'), admin_assigned_resources_path(project_id: resource.id)
-      item I18n.t('actions.project_overheads'), admin_project_overheads_path(project_id: resource.id)
-      item I18n.t('actions.delivery_milestones'), admin_delivery_milestones_path(project_id: resource.id)
-      item I18n.t('actions.invoicing_milestones'), admin_invoicing_milestones_path(project_id: resource.id)
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_project_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item "Audit Trail", admin_projects_audits_path(project_id: resource.id)
+        item I18n.t('actions.staffing_requirements'), admin_project_staffing_requirements_path(pipeline_id: resource.pipeline_id)
+        item I18n.t('actions.assigned_resources'), admin_assigned_resources_path(project_id: resource.id)
+        item I18n.t('actions.project_overheads'), admin_project_overheads_path(project_id: resource.id)
+        item I18n.t('actions.delivery_milestones'), admin_delivery_milestones_path(project_id: resource.id)
+        item I18n.t('actions.invoicing_milestones'), admin_invoicing_milestones_path(project_id: resource.id)
+      end
     end
   end
 
@@ -170,6 +199,11 @@ ActiveAdmin.register Project do
       super do |format|
         redirect_to collection_url and return if resource.valid?
       end
+    end
+
+    def restore
+      Project.restore(params[:id])
+      redirect_to admin_projects_path
     end
   end
 

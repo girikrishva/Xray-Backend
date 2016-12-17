@@ -360,7 +360,7 @@ PipelinesAudit.create!([
   {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, pipeline_status_id: 104, project_type_code_id: 96, client_id: 3, pipeline_id: 9, sales_person_id: 9, estimator_id: 9, engagement_manager_id: nil, delivery_manager_id: nil, updated_by: "System Administrator", ip_address: "127.0.0.1"}
 ])
 Project.create!([
-  {description: nil, start_date: "2016-11-01", end_date: "2016-11-30", booking_value: 10000.0, comments: "", client_id: 3, project_type_code_id: 96, project_status_id: 108, business_unit_id: 3, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, pipeline_id: 9, sales_person_id: 9, name: "Billing App", updated_by: "System Administrator", ip_address: "127.0.0.1"}
+  {description: nil, start_date: "2016-11-01", end_date: "2016-11-30", booking_value: 10000.0, comments: "", client_id: 3, project_type_code_id: 96, project_status_id: 108, business_unit_id: 3, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, pipeline_id: 9, sales_person_id: 9, name: "Billing App", updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
 ])
 ProjectOverhead.create!([
   {amount_date: "2016-11-30", amount: 54000.0, comments: "", cost_adder_type_id: 80, project_id: 5},
