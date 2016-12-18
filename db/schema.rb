@@ -162,6 +162,7 @@ SELECT lookups.id,
     t.integer  "delivery_manager_id",   :index=>{:name=>"index_pipelines_on_delivery_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_pipelines_delivery_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.string   "updated_by"
     t.string   "ip_address"
+    t.datetime "deleted_at",            :index=>{:name=>"index_pipelines_on_deleted_at"}
   end
 
   create_table "projects", force: :cascade do |t|

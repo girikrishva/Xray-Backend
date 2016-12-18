@@ -24,15 +24,38 @@ ActiveAdmin.register Pipeline do
     link_to I18n.t('label.new'), new_admin_pipeline_path
   end
 
-  action_item only:  [:show, :edit, :new] do |resource|
+  action_item only: [:show, :edit, :new] do |resource|
     link_to I18n.t('label.back'), admin_pipelines_path
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      Pipeline.destroy(id)
+    end
+    redirect_to admin_pipelines_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      Pipeline.restore(id)
+    end
+    redirect_to admin_pipelines_path
   end
 
   scope I18n.t('label.sales_view'), :sales_view, default: true do |pipelines|
     Pipeline.all
   end
+
   scope I18n.t('label.delivery_view'), :delivery_view, default: false do |pipelines|
     Pipeline.all
+  end
+
+  scope I18n.t('label.active'), default: false do |resources|
+    Pipeline.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    Pipeline.only_deleted
   end
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do
@@ -72,10 +95,16 @@ ActiveAdmin.register Pipeline do
       end
     end
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item I18n.t('actions.audit_trail'), admin_pipelines_audits_path(pipeline_id: resource.id)
-      item I18n.t('actions.staffing_requirements'), admin_staffing_requirements_path(pipeline_id: resource.id)
-      item I18n.t('actions.convert_pipeline'), admin_api_convert_pipeline_path(pipeline_id: resource.id), method: :post
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_pipeline_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.audit_trail'), admin_pipelines_audits_path(pipeline_id: resource.id)
+        item I18n.t('actions.staffing_requirements'), admin_staffing_requirements_path(pipeline_id: resource.id)
+        item I18n.t('actions.convert_pipeline'), admin_api_convert_pipeline_path(pipeline_id: resource.id), method: :post
+      end
     end
   end
 
@@ -156,6 +185,11 @@ ActiveAdmin.register Pipeline do
         pipeline.convert_pipeline(pipeline)
         redirect_to collection_url
       end
+    end
+
+    def restore
+      Pipeline.restore(params[:id])
+      redirect_to admin_pipelines_path
     end
   end
 
