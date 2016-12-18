@@ -20,6 +20,14 @@ ActiveAdmin.register InvoicingDeliveryMilestone do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    InvoicingDeliveryMilestone.without_deleted.where('invoicing_milestone_id = ?', params[:invoicing_milestone_id]).order('delivery_milestone_id')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    InvoicingDeliveryMilestone.only_deleted.where('invoicing_milestone_id = ?', params[:invoicing_milestone_id]).order('delivery_milestone_id')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_invoicing_delivery_milestone_path(project_id: session[:project_id], invoicing_milestone_id: session[:invoicing_milestone_id]) if session.has_key?(:project_id) and session.has_key?(:invoicing_milestone_id)
   end
@@ -29,7 +37,23 @@ ActiveAdmin.register InvoicingDeliveryMilestone do
   end
 
   action_item only: [:show, :edit, :new, :create] do |resource|
-    link_to I18n.t('label.back'), admin_invoicing_delivery_milestones_path(project_id: session[:project_id],  invoicing_milestone_id: session[:invoicing_milestone_id]) if session.has_key?(:project_id) and session.has_key?(:invoicing_milestone_id)
+    link_to I18n.t('label.back'), admin_invoicing_delivery_milestones_path(project_id: session[:project_id], invoicing_milestone_id: session[:invoicing_milestone_id]) if session.has_key?(:project_id) and session.has_key?(:invoicing_milestone_id)
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    invoicing_milestone_id = InvoicingDeliveryMilestone.without_deleted.find(ids.first).invoicing_milestone_id
+    ids.each do |id|
+      InvoicingDeliveryMilestone.destroy(id)
+    end
+    redirect_to admin_invoicing_delivery_milestones_path(invoicing_milestone_id: invoicing_milestone_id, project_id: session[:project_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    invoicing_milestone_id = InvoicingDeliveryMilestone.with_deleted.find(ids.first).invoicing_milestone_id
+    ids.each do |id|
+      InvoicingDeliveryMilestone.restore(id)
+    end
+    redirect_to admin_invoicing_delivery_milestones_path(invoicing_milestone_id: invoicing_milestone_id, project_id: session[:project_id])
   end
 
   index as: :grouped_table, group_by_attribute: :project_name do
@@ -42,7 +66,13 @@ ActiveAdmin.register InvoicingDeliveryMilestone do
       resource.delivery_milestone.delivery_milestone_name
     end
     column :comments
-    actions defaults: true, dropdown: true
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_invoicing_delivery_milestone_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true
+    end
   end
 
   filter :delivery_milestone, collection: proc { DeliveryMilestone.ordered_lookup(session[:project_id]) }
@@ -102,6 +132,18 @@ ActiveAdmin.register InvoicingDeliveryMilestone do
       super do |format|
         redirect_to collection_url(project_id: session[:project_id], invoicing_milestone_id: session[:invoicing_milestone_id]) and return if resource.valid?
       end
+    end
+
+    def destroy
+      super do |format|
+        redirect_to collection_url(project_id: session[:project_id], invoicing_milestone_id: session[:invoicing_milestone_id]) and return if resource.valid?
+      end
+    end
+
+    def restore
+      InvoicingDeliveryMilestone.restore(params[:id])
+      invoicing_delivery_milestone = InvoicingDeliveryMilestone.find(params[:id])
+      redirect_to admin_invoicing_delivery_milestones_path(invoicing_milestone_id: invoicing_delivery_milestone.invoicing_milestone_id, project_id: session[:project_id])
     end
   end
 

@@ -21,11 +21,11 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
   config.clear_action_items!
 
   scope I18n.t('label.active'), default: true do |resources|
-    DeliveryInvoicingMilestone.without_deleted
+    DeliveryInvoicingMilestone.without_deleted.where('delivery_milestone_id = ?', params[:delivery_milestone_id]).order('invoicing_milestone_id')
   end
 
   scope I18n.t('label.deleted'), default: false do |resources|
-    DeliveryInvoicingMilestone.only_deleted
+    DeliveryInvoicingMilestone.only_deleted.where('delivery_milestone_id = ?', params[:delivery_milestone_id]).order('invoicing_milestone_id')
   end
 
   action_item only: :index do |resource|
@@ -41,17 +41,19 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
   end
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    delivery_milestone_id = DeliveryInvoicingMilestone.without_deleted.find(ids.first).delivery_milestone_id
     ids.each do |id|
       DeliveryInvoicingMilestone.destroy(id)
     end
-    redirect_to admin_delivery_invoicing_milestones_path(project_id: session[:project_id])
+    redirect_to admin_delivery_invoicing_milestones_path(delivery_milestone_id: delivery_milestone_id, project_id: session[:project_id])
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    delivery_milestone_id = DeliveryInvoicingMilestone.with_deleted.find(ids.first).delivery_milestone_id
     ids.each do |id|
       DeliveryInvoicingMilestone.restore(id)
     end
-    redirect_to admin_delivery_invoicing_milestones_path(project_id: session[:project_id])
+    redirect_to admin_delivery_invoicing_milestones_path(delivery_milestone_id: delivery_milestone_id, project_id: session[:project_id])
   end
 
   index as: :grouped_table, group_by_attribute: :project_name do
@@ -134,13 +136,14 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
 
     def destroy
       super do |format|
-        redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
+        redirect_to collection_url(project_id: session[:project_id], delivery_milestone_id: session[:delivery_milestone_id]) and return if resource.valid?
       end
     end
 
     def restore
       DeliveryInvoicingMilestone.restore(params[:id])
-      redirect_to admin_delivery_invoicing_milestones_path(project_id: session[:project_id])
+      delivery_invoicing_milestone = DeliveryInvoicingMilestone.find(params[:id])
+      redirect_to admin_delivery_invoicing_milestones_path(delivery_milestone_id: delivery_invoicing_milestone.delivery_milestone_id, project_id: session[:project_id])
     end
   end
 

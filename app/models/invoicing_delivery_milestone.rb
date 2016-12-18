@@ -1,4 +1,6 @@
 class InvoicingDeliveryMilestone < ActiveRecord::Base
+  acts_as_paranoid
+
   self.table_name = 'delivery_invoicing_milestones'
 
   belongs_to :delivery_milestone, class_name: 'DeliveryMilestone', foreign_key: :delivery_milestone_id
