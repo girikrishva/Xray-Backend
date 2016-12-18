@@ -194,8 +194,8 @@ DeliveryInvoicingMilestone.create!([
   {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1}
 ])
 DeliveryMilestone.create!([
-  {name: "Release 2", description: "", due_date: "2016-11-30", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5},
-  {name: "Release 1", description: "", due_date: "2016-10-31", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5}
+  {name: "Release 1", description: "", due_date: "2016-10-31", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, deleted_at: nil},
+  {name: "Release 2", description: "", due_date: "2016-11-30", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, deleted_at: nil}
 ])
 HolidayCalendar.create!([
   {name: "Christmas", as_on: "2016-12-25", description: "Christmas", comments: "", business_unit_id: 4, updated_by: nil, ip_address: nil, deleted_at: nil},

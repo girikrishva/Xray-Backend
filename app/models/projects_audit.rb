@@ -1,4 +1,6 @@
 class ProjectsAudit < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :client, class_name: 'Client', foreign_key: :client_id
   belongs_to :project_type_code, class_name: 'ProjectTypeCode', foreign_key: :project_type_code_id
   belongs_to :project_status, class_name: 'ProjectStatus', foreign_key: :project_status_id

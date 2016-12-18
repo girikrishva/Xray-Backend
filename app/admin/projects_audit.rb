@@ -28,12 +28,36 @@ ActiveAdmin.register ProjectsAudit do
     link_to I18n.t('label.back'), :back
   end
 
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    project_id = ProjectsAudit.without_deleted.find(ids.first).project_id
+    ids.each do |id|
+      ProjectsAudit.destroy(id)
+    end
+    redirect_to admin_projects_audits_path(project_id: project_id)
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    project_id = ProjectsAudit.with_deleted.find(ids.first).project_id
+    ids.each do |id|
+      ProjectsAudit.restore(id)
+    end
+    redirect_to admin_projects_audits_path(project_id: project_id)
+  end
+
   scope I18n.t('label.delivery_view'), :delivery_view, default: true do |pipelines|
     ProjectsAudit.all.order('id desc')
   end
 
   scope I18n.t('label.sales_view'), :sales_view, default: false do |pipelines|
     ProjectsAudit.all.order('id desc')
+  end
+
+  scope I18n.t('label.active'), default: false do |resources|
+    ProjectsAudit.without_deleted.where('project_id = ?', params[:project_id]).order('id desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    ProjectsAudit.only_deleted.where('project_id = ?', params[:project_id]).order('id desc')
   end
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do

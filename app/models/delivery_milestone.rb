@@ -1,4 +1,6 @@
 class DeliveryMilestone < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :project, class_name: 'Project', foreign_key: :project_id
 
   has_many :delivery_invoicing_milestones, class_name: 'DeliveryInvoicingMilestone'

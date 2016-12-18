@@ -20,6 +20,14 @@ ActiveAdmin.register DeliveryMilestone do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    DeliveryMilestone.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    DeliveryMilestone.only_deleted
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_delivery_milestone_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
@@ -32,6 +40,20 @@ ActiveAdmin.register DeliveryMilestone do
     link_to I18n.t('label.back'), admin_delivery_milestones_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
 
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      DeliveryMilestone.destroy(id)
+    end
+    redirect_to admin_delivery_milestones_path(project_id: session[:project_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      DeliveryMilestone.restore(id)
+    end
+    redirect_to admin_delivery_milestones_path(project_id: session[:project_id])
+  end
+
   index as: :grouped_table, group_by_attribute: :project_name do
     selectable_column
     column :id
@@ -41,8 +63,14 @@ ActiveAdmin.register DeliveryMilestone do
     column :last_reminder_date
     column :completion_date
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item I18n.t('actions.invoicing_milestones'), admin_delivery_invoicing_milestones_path(project_id: session[:project_id], delivery_milestone_id: resource.id)
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_delivery_milestone_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.invoicing_milestones'), admin_delivery_invoicing_milestones_path(project_id: session[:project_id], delivery_milestone_id: resource.id)
+      end
     end
   end
 
@@ -101,6 +129,17 @@ ActiveAdmin.register DeliveryMilestone do
       super do |format|
         redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
       end
+    end
+
+    def destroy
+      super do |format|
+        redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
+      end
+    end
+
+    def restore
+      DeliveryMilestone.restore(params[:id])
+      redirect_to admin_delivery_milestones_path(project_id: session[:project_id])
     end
   end
 

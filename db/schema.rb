@@ -288,6 +288,7 @@ SELECT lookups.id,
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "project_id",         :null=>false, :index=>{:name=>"index_delivery_milestones_on_project_id"}, :foreign_key=>{:references=>"projects", :name=>"fk_delivery_milestones_project_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at",         :index=>{:name=>"index_delivery_milestones_on_deleted_at"}
   end
 
   create_table "invoicing_milestones", force: :cascade do |t|

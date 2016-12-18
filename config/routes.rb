@@ -72,6 +72,7 @@ Rails.application.routes.draw do
   match '/admin/api/restore_project', to: 'admin/projects#restore', via: [:post]
   match '/admin/api/restore_assigned_resource', to: 'admin/assigned_resources#restore', via: [:post]
   match '/admin/api/restore_project_overhead', to: 'admin/project_overheads#restore', via: [:post]
+  match '/admin/api/restore_delivery_milestone', to: 'admin/delivery_milestones#restore', via: [:post]
 
   match '/admin/api/project_type_description' => 'admin/project_types#description_for_lookup', via: [:get]
   match '/admin/api/vacation_policy_description' => 'admin/vacation_policies#description_for_lookup', via: [:get]
