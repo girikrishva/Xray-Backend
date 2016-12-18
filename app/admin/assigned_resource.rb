@@ -33,19 +33,19 @@ ActiveAdmin.register AssignedResource do
   end
 
   scope I18n.t('label.summary_view'), :summary_view, default: true do |assigned_resources|
-    AssignedResource.all
+    AssignedResource.without_deleted.where('project_id = ?', params[:project_id]).order('start_date asc, end_date asc')
   end
 
   scope I18n.t('label.detailed_view'), :detailed_view, default: false do |assigned_resources|
-    AssignedResource.all
+    AssignedResource.without_deleted.where('project_id = ?', params[:project_id]).order('start_date asc, end_date asc')
   end
 
   scope I18n.t('label.active'), default: false do |resources|
-    AssignedResource.without_deleted
+    AssignedResource.without_deleted.where('project_id = ?', params[:project_id]).order('start_date asc, end_date asc')
   end
 
   scope I18n.t('label.deleted'), default: false do |resources|
-    AssignedResource.only_deleted
+    AssignedResource.only_deleted.where('project_id = ?', params[:project_id]).order('start_date asc, end_date asc')
   end
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
