@@ -21,12 +21,12 @@ ActiveAdmin.register ProjectOverhead do
   config.clear_action_items!
 
 
-  scope I18n.t('label.active'), default: false do |resources|
-    ProjectOverhead.without_deleted
+  scope I18n.t('label.active'), default: true do |resources|
+    ProjectOverhead.without_deleted.where('project_id = ?', params[:project_id]).order('amount_date desc')
   end
 
   scope I18n.t('label.deleted'), default: false do |resources|
-    ProjectOverhead.only_deleted
+    ProjectOverhead.only_deleted.where('project_id = ?', params[:project_id]).order('amount_date desc')
   end
 
   action_item only: :index do |resource|
