@@ -21,11 +21,11 @@ ActiveAdmin.register InvoicingMilestone do
   config.clear_action_items!
 
   scope I18n.t('label.active'), default: true do |resources|
-    InvoicingMilestone.without_deleted
+    InvoicingMilestone.without_deleted.where('project_id = ?', params[:project_id]).order('due_date desc')
   end
 
   scope I18n.t('label.deleted'), default: false do |resources|
-    InvoicingMilestone.only_deleted
+    InvoicingMilestone.only_deleted.where('project_id = ?', params[:project_id]).order('due_date desc')
   end
 
   action_item only: :index do |resource|
