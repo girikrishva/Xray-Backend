@@ -20,6 +20,14 @@ ActiveAdmin.register PaymentLine do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    PaymentLine.without_deleted.where('payment_header_id = ?', params[:payment_header_id]).order('narrative asc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    PaymentLine.only_deleted.where('payment_header_id = ?', params[:payment_header_id]).order('narrative asc')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_payment_line_path(payment_header_id: session[:payment_header_id]) if session.has_key?(:payment_header_id)
   end
@@ -30,6 +38,20 @@ ActiveAdmin.register PaymentLine do
 
   action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_payment_lines_path(payment_header_id: session[:payment_header_id]) if session.has_key?(:payment_header_id)
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      PaymentLine.destroy(id)
+    end
+    redirect_to admin_payment_lines_path(payment_header_id: session[:payment_header_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      PaymentLine.restore(id)
+    end
+    redirect_to admin_payment_lines_path(payment_header_id: session[:payment_header_id])
   end
 
   index as: :grouped_table, group_by_attribute: :payment_header_name do
@@ -48,8 +70,14 @@ ActiveAdmin.register PaymentLine do
       end
     end
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item "Audit Trail", admin_payment_lines_audits_path(payment_line_id: resource.id)
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_payment_line_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item "Audit Trail", admin_payment_lines_audits_path(payment_line_id: resource.id)
+      end
     end
   end
 
@@ -107,6 +135,17 @@ ActiveAdmin.register PaymentLine do
       super do |format|
         redirect_to collection_url(payment_header_id: session[:payment_header_id]) and return if resource.valid?
       end
+    end
+
+    def destroy
+      super do |format|
+        redirect_to collection_url(payment_header_id: session[:payment_header_id]) and return if resource.valid?
+      end
+    end
+
+    def restore
+      PaymentLine.restore(params[:id])
+      redirect_to admin_payment_lines_path(payment_header_id: session[:payment_header_id])
     end
   end
 

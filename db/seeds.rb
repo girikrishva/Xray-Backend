@@ -350,8 +350,8 @@ PaymentHeadersAudit.create!([
   {narrative: "Advance payment", payment_date: "2016-12-05", header_amount: 47000.0, comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", client_id: 3, payment_status_id: 119, payment_header_id: 1, deleted_at: nil}
 ])
 PaymentLine.create!([
-  {narrative: "Interim payment", line_amount: 50000.0, comments: "", payment_header_id: 2, invoice_line_id: 16, invoice_header_id: 7, updated_by: nil, ip_address: nil},
-  {narrative: "Test", line_amount: 42000.0, comments: "", payment_header_id: 1, invoice_line_id: 12, invoice_header_id: 2, updated_by: "System Administrator", ip_address: "127.0.0.1"}
+  {narrative: "Interim payment", line_amount: 50000.0, comments: "", payment_header_id: 2, invoice_line_id: 16, invoice_header_id: 7, updated_by: nil, ip_address: nil, deleted_at: nil},
+  {narrative: "Test", line_amount: 42000.0, comments: "", payment_header_id: 1, invoice_line_id: 12, invoice_header_id: 2, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
 ])
 PaymentLinesAudit.create!([
   {narrative: "Test", line_amount: 42000.0, comments: "", updated_by: "System Administrator", ip_address: "127.0.0.1", payment_line_id: 1, payment_header_id: 1, invoice_header_id: 2, invoice_line_id: 12}

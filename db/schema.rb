@@ -536,6 +536,7 @@ SELECT lookups.id,
     t.integer  "invoice_header_id", :null=>false, :index=>{:name=>"index_payment_lines_on_invoice_header_id"}, :foreign_key=>{:references=>"invoice_headers", :name=>"fk_payment_lines_invoice_header_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.string   "updated_by"
     t.string   "ip_address"
+    t.datetime "deleted_at",        :index=>{:name=>"index_payment_lines_on_deleted_at"}
   end
 
   create_table "payment_lines_audits", force: :cascade do |t|
