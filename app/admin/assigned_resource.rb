@@ -40,6 +40,28 @@ ActiveAdmin.register AssignedResource do
     AssignedResource.all
   end
 
+  scope I18n.t('label.active'), default: false do |resources|
+    AssignedResource.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    AssignedResource.only_deleted
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      AssignedResource.destroy(id)
+    end
+    redirect_to admin_assigned_resources_path(project_id: session[:project_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      AssignedResource.restore(id)
+    end
+    redirect_to admin_assigned_resources_path(project_id: session[:project_id])
+  end
+
   index as: :grouped_table, group_by_attribute: :skill_name, default: :true do
     if params[:scope] == 'detailed_view'
       actions defaults: true, dropdown: true do |resource|
@@ -51,7 +73,7 @@ ActiveAdmin.register AssignedResource do
       r.staffing_requirement.name
     end
     column :fulfilled, sortable: 'staffing_requirements.fulfilled' do |r|
-      r.staffing_requirement.fulfilled ? status_tag(:yes, :ok ) : status_tag(:no)
+      r.staffing_requirement.fulfilled ? status_tag(:yes, :ok) : status_tag(:no)
     end
     column :id
     column :project, sortable: 'projects.name' do |resource|
@@ -80,8 +102,14 @@ ActiveAdmin.register AssignedResource do
       column :payment_due_alert
     end
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item I18n.t('actions.staffing_fulfilled'), admin_api_staffing_fulfilled_path(staffing_requirement_id: resource.staffing_requirement_id), method: :post
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_assigned_resource_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.staffing_fulfilled'), admin_api_staffing_fulfilled_path(staffing_requirement_id: resource.staffing_requirement_id), method: :post
+      end
     end
   end
 
@@ -162,6 +190,12 @@ ActiveAdmin.register AssignedResource do
       end
     end
 
+    def destroy
+      super do |format|
+        redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
+      end
+    end
+
     def skill_for_staffing
       staffing_requirement_id = params[:staffing_requirement_id]
       skill_id = Skill.find(StaffingRequirement.find(staffing_requirement_id).skill_id).id
@@ -200,6 +234,11 @@ ActiveAdmin.register AssignedResource do
         staffing_requirement.save
         redirect_to admin_assigned_resources_path(project_id: session[:project_id])
       end
+    end
+
+    def restore
+      AssignedResource.restore(params[:id])
+      redirect_to admin_assigned_resources_path(project_id: session[:project_id])
     end
   end
 

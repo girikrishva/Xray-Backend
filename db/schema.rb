@@ -232,6 +232,7 @@ SELECT lookups.id,
     t.integer  "staffing_requirement_id", :null=>false, :index=>{:name=>"index_assigned_resources_on_staffing_requirement_id"}, :foreign_key=>{:references=>"staffing_requirements", :name=>"fk_assigned_resources_staffing_requirement_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.float    "bill_rate",               :null=>false
     t.float    "cost_rate",               :null=>false
+    t.datetime "deleted_at",              :index=>{:name=>"index_assigned_resources_on_deleted_at"}
   end
 
   create_view "business_units", <<-'END_VIEW_BUSINESS_UNITS', :force => true

@@ -1,4 +1,6 @@
 class AssignedResource < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :project, class_name: 'Project', foreign_key: :project_id
   belongs_to :skill_code, :class_name => 'Skill', :foreign_key => :skill_id
   belongs_to :designation_code, :class_name => 'Designation', :foreign_key => :designation_id
