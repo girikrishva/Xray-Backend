@@ -418,6 +418,7 @@ SELECT lookups.id,
     t.integer  "invoice_status_id", :null=>false, :index=>{:name=>"index_invoice_headers_audits_on_invoice_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_audits_invoice_status_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoice_term_id",   :null=>false, :index=>{:name=>"index_invoice_headers_audits_on_invoice_term_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_headers_audits_invoice_term_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoice_header_id", :null=>false, :index=>{:name=>"fk__invoice_headers_audits_invoice_header_id"}, :foreign_key=>{:references=>"invoice_headers", :name=>"fk_invoice_headers_audits_invoice_header_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at",        :index=>{:name=>"index_invoice_headers_audits_on_deleted_at"}
   end
 
   create_table "invoice_lines", force: :cascade do |t|

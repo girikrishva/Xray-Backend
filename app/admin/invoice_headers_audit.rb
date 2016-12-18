@@ -20,12 +20,36 @@ ActiveAdmin.register InvoiceHeadersAudit do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: false do |resources|
+    InvoiceHeadersAudit.without_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('id desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    InvoiceHeadersAudit.only_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('id desc')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.back'), admin_invoice_headers_path
   end
 
   action_item only: :show do |resource|
     link_to I18n.t('label.back'), :back
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    invoice_header_id = InvoiceHeadersAudit.without_deleted.find(ids.first).invoice_header_id
+    ids.each do |id|
+      InvoiceHeadersAudit.destroy(id)
+    end
+    redirect_to admin_invoice_headers_audits_path(invoice_header_id: invoice_header_id)
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    invoice_header_id = InvoiceHeadersAudit.with_deleted.find(ids.first).invoice_header_id
+    ids.each do |id|
+      InvoiceHeadersAudit.restore(id)
+    end
+    redirect_to admin_invoice_headers_audits_path(invoice_header_id: invoice_header_id)
   end
 
   index as: :grouped_table, group_by_attribute: :invoice_header_name do
