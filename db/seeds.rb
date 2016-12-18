@@ -214,16 +214,18 @@ InvoiceHeader.create!([
   {narrative: "Final invoice", invoice_date: "2016-11-09", comments: "", client_id: 4, invoice_status_id: 113, invoice_term_id: 140, due_date: "2016-12-09", header_amount: 0.0, updated_by: nil, ip_address: nil, deleted_at: nil},
   {narrative: "Proforma invoice", invoice_date: "2016-12-03", comments: "", client_id: 3, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-02", header_amount: 93000.0, updated_by: nil, ip_address: nil, deleted_at: nil},
   {narrative: "Test invoice", invoice_date: "2016-12-05", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-04", header_amount: 0.0, updated_by: nil, ip_address: nil, deleted_at: nil},
-  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", comments: "Test.", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, due_date: "2016-12-20", header_amount: 66000.0, updated_by: nil, ip_address: nil, deleted_at: nil},
-  {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", header_amount: 0.0, updated_by: nil, ip_address: nil, deleted_at: nil}
+  {narrative: "Test invoice", invoice_date: "2016-12-02", comments: "", client_id: 5, invoice_status_id: 113, invoice_term_id: 140, due_date: "2017-01-01", header_amount: 0.0, updated_by: nil, ip_address: nil, deleted_at: nil},
+  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", comments: "Test.", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, due_date: "2016-12-20", header_amount: 0.0, updated_by: nil, ip_address: nil, deleted_at: nil}
 ])
 InvoiceHeadersAudit.create!([
-  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", due_date: "2016-12-20", header_amount: 66000.0, comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, invoice_header_id: 7, deleted_at: nil}
+  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", due_date: "2016-12-20", header_amount: 66000.0, comments: "Test.", updated_by: "System Administrator", ip_address: "127.0.0.1", client_id: 3, invoice_status_id: 113, invoice_term_id: 141, invoice_header_id: 7, deleted_at: nil},
+  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", due_date: "2016-12-20", header_amount: 0.0, comments: "Test.", updated_by: nil, ip_address: nil, client_id: 3, invoice_status_id: 113, invoice_term_id: 141, invoice_header_id: 7, deleted_at: nil},
+  {narrative: "Mobile App Advance Invoice", invoice_date: "2016-12-05", due_date: "2016-12-20", header_amount: 0.0, comments: "Test.", updated_by: nil, ip_address: nil, client_id: 3, invoice_status_id: 113, invoice_term_id: 141, invoice_header_id: 7, deleted_at: nil}
 ])
 InvoiceLine.create!([
-  {narrative: "Advance Invoice", line_amount: 88000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: 1, invoice_adder_type_id: nil, updated_by: nil, ip_address: nil},
-  {narrative: "Service Tax", line_amount: 5000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: nil, invoice_adder_type_id: 76, updated_by: nil, ip_address: nil},
-  {narrative: "Interim payment", line_amount: 66000.0, comments: "Tester.", invoice_header_id: 7, project_id: 5, invoicing_milestone_id: 3, invoice_adder_type_id: nil, updated_by: "System Administrator", ip_address: "127.0.0.1"}
+  {narrative: "Advance Invoice", line_amount: 88000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: 1, invoice_adder_type_id: nil, updated_by: nil, ip_address: nil, deleted_at: nil},
+  {narrative: "Service Tax", line_amount: 5000.0, comments: "", invoice_header_id: 2, project_id: 5, invoicing_milestone_id: nil, invoice_adder_type_id: 76, updated_by: nil, ip_address: nil, deleted_at: nil},
+  {narrative: "Interim payment", line_amount: 66000.0, comments: "Tester.", invoice_header_id: 7, project_id: 5, invoicing_milestone_id: 3, invoice_adder_type_id: nil, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
 ])
 InvoiceLinesAudit.create!([
   {narrative: "Interim payment", line_amount: 66000.0, comments: "Tester.", updated_by: "System Administrator", ip_address: "127.0.0.1", invoice_line_id: 16, invoice_header_id: 7, project_id: 5, invoicing_milestone_id: 3, invoice_adder_type_id: nil}

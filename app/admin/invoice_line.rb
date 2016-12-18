@@ -20,6 +20,14 @@ ActiveAdmin.register InvoiceLine do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    InvoiceLine.without_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('narrative asc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    InvoiceLine.only_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('narrative asc')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_invoice_line_path(invoice_header_id: session[:invoice_header_id]) if session.has_key?(:invoice_header_id)
   end
@@ -30,6 +38,20 @@ ActiveAdmin.register InvoiceLine do
 
   action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_invoice_lines_path(invoice_header_id: session[:invoice_header_id]) if session.has_key?(:invoice_header_id)
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      InvoiceLine.destroy(id)
+    end
+    redirect_to admin_invoice_lines_path(invoice_header_id: session[:invoice_header_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      InvoiceLine.restore(id)
+    end
+    redirect_to admin_invoice_lines_path(invoice_header_id: session[:invoice_header_id])
   end
 
   index as: :grouped_table, group_by_attribute: :invoice_header_name do
@@ -66,8 +88,14 @@ ActiveAdmin.register InvoiceLine do
       end
     end
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item "Audit Trail", admin_invoice_lines_audits_path(invoice_line_id: resource.id)
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_invoice_line_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item "Audit Trail", admin_invoice_lines_audits_path(invoice_line_id: resource.id)
+      end
     end
   end
 
@@ -185,6 +213,17 @@ ActiveAdmin.register InvoiceLine do
       end
       render json: '{"invoice_lines": ' + invoice_lines.to_json + '}'
     end
+
+    def destroy
+      super do |format|
+        redirect_to collection_url(invoice_header_id: session[:invoice_header_id]) and return if resource.valid?
+      end
+    end
+
+    def restore
+      InvoiceLine.restore(params[:id])
+      redirect_to admin_invoice_lines_path(invoice_header_id: session[:invoice_header_id])
+    end
   end
 
   form do |f|
@@ -201,7 +240,7 @@ ActiveAdmin.register InvoiceLine do
         f.input :project_id, as: :hidden
       end
       f.input :invoicing_milestone, label: I18n.t('label.invoicing_milestone'), input_html: {disabled: true}
-      f.input :invoice_adder_type, label: I18n.t('label.invoice_adder_type'), collection: InvoiceAdderType.all.map {|a| [a.invoice_adder_type_name, a.id] }, input_html: {disabled: true}
+      f.input :invoice_adder_type, label: I18n.t('label.invoice_adder_type'), collection: InvoiceAdderType.all.map { |a| [a.invoice_adder_type_name, a.id] }, input_html: {disabled: true}
       f.input :narrative, label: I18n.t('label.narrative'), required: true
       f.input :line_amount, label: I18n.t('label.line_amount'), required: true
       f.input :comments, label: I18n.t('label.comments')

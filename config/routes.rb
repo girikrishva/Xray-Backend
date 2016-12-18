@@ -79,6 +79,7 @@ Rails.application.routes.draw do
   match '/admin/api/restore_pipeline', to: 'admin/pipelines#restore', via: [:post]
   match '/admin/api/restore_staffing_requirement', to: 'admin/staffing_requirements#restore', via: [:post]
   match '/admin/api/restore_invoice_header', to: 'admin/invoice_headers#restore', via: [:post]
+  match '/admin/api/restore_invoice_line', to: 'admin/invoice_lines#restore', via: [:post]
 
   match '/admin/api/project_type_description' => 'admin/project_types#description_for_lookup', via: [:get]
   match '/admin/api/vacation_policy_description' => 'admin/vacation_policies#description_for_lookup', via: [:get]

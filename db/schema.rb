@@ -433,6 +433,7 @@ SELECT lookups.id,
     t.integer  "invoice_adder_type_id",  :index=>{:name=>"index_invoice_lines_on_invoice_adder_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_lines_invoice_adder_type_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.string   "updated_by"
     t.string   "ip_address"
+    t.datetime "deleted_at",             :index=>{:name=>"index_invoice_lines_on_deleted_at"}
   end
 
   create_table "invoice_lines_audits", force: :cascade do |t|
