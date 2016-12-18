@@ -21,12 +21,12 @@ ActiveAdmin.register StaffingRequirement do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: false do |resources|
-    StaffingRequirement.without_deleted
+  scope I18n.t('label.active'), default: true do |resources|
+    StaffingRequirement.without_deleted.where('pipeline_id = ?', session[:pipeline_id]).order('start_date asc, end_date asc')
   end
 
   scope I18n.t('label.deleted'), default: false do |resources|
-    StaffingRequirement.only_deleted
+    StaffingRequirement.only_deleted.where('pipeline_id = ?', session[:pipeline_id]).order('start_date asc, end_date asc')
   end
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_staffing_requirement_path(pipeline_id: session[:pipeline_id]) if session.has_key?(:pipeline_id)
