@@ -1,4 +1,6 @@
 class PaymentLinesAudit < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :payment_header, class_name: 'PaymentHeader', foreign_key: :payment_header_id
   belongs_to :payment_line, class_name: 'PaymentLine', foreign_key: :payment_line_id
   belongs_to :invoice_header, class_name: 'InvoiceHeader', foreign_key: :invoice_header_id

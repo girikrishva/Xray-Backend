@@ -354,7 +354,7 @@ PaymentLine.create!([
   {narrative: "Test", line_amount: 42000.0, comments: "", payment_header_id: 1, invoice_line_id: 12, invoice_header_id: 2, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
 ])
 PaymentLinesAudit.create!([
-  {narrative: "Test", line_amount: 42000.0, comments: "", updated_by: "System Administrator", ip_address: "127.0.0.1", payment_line_id: 1, payment_header_id: 1, invoice_header_id: 2, invoice_line_id: 12}
+  {narrative: "Test", line_amount: 42000.0, comments: "", updated_by: "System Administrator", ip_address: "127.0.0.1", payment_line_id: 1, payment_header_id: 1, invoice_header_id: 2, invoice_line_id: 12, deleted_at: nil}
 ])
 Pipeline.create!([
   {name: "Billing App", expected_start: "2016-11-01", expected_end: "2016-11-30", expected_value: 10000.0, comments: "", business_unit_id: 3, client_id: 3, project_type_code_id: 96, pipeline_status_id: 104, sales_person_id: 9, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil},

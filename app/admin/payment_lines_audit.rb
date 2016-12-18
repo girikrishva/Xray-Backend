@@ -20,12 +20,36 @@ ActiveAdmin.register PaymentLinesAudit do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    PaymentLinesAudit.without_deleted.where('payment_line_id = ?', params[:payment_line_id]).order('id desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    PaymentLinesAudit.only_deleted.where('payment_line_id = ?', params[:payment_line_id]).order('id desc')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.back'), admin_payment_lines_path(payment_header_id: PaymentLine.find(params[:payment_line_id]).payment_header_id)
   end
 
   action_item only: :show do |resource|
     link_to I18n.t('label.back'), :back
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    payment_line_id = PaymentLinesAudit.without_deleted.find(ids.first).payment_line_id
+    ids.each do |id|
+      PaymentLinesAudit.destroy(id)
+    end
+    redirect_to admin_payment_lines_audits_path(payment_line_id: payment_line_id)
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    payment_line_id = PaymentLinesAudit.with_deleted.find(ids.first).payment_line_id
+    ids.each do |id|
+      PaymentLinesAudit.restore(id)
+    end
+    redirect_to admin_payment_lines_audits_path(payment_line_id: payment_line_id)
   end
 
   index as: :grouped_table, group_by_attribute: :payment_line_name do
