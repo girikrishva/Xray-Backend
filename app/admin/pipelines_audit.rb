@@ -32,10 +32,10 @@ ActiveAdmin.register PipelinesAudit do
   end
 
   scope I18n.t('label.sales_view'), :sales_view, default: true do |pipelines|
-    PipelinesAudit.all.order('id desc')
+    PipelinesAudit.without_deleted.where('pipeline_id = ?', params[:pipeline_id]).order('id desc')
   end
   scope I18n.t('label.delivery_view'), :delivery_view, default: false do |pipelines|
-    PipelinesAudit.all.order('id desc')
+    PipelinesAudit.without_deleted.where('pipeline_id = ?', params[:pipeline_id]).order('id desc')
   end
 
   scope I18n.t('label.active'), default: false do |resources|

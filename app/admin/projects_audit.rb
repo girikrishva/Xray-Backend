@@ -45,11 +45,11 @@ ActiveAdmin.register ProjectsAudit do
   end
 
   scope I18n.t('label.delivery_view'), :delivery_view, default: true do |pipelines|
-    ProjectsAudit.all.order('id desc')
+    ProjectsAudit.without_deleted.where('project_id = ?', params[:project_id]).order('id desc')
   end
 
   scope I18n.t('label.sales_view'), :sales_view, default: false do |pipelines|
-    ProjectsAudit.all.order('id desc')
+    ProjectsAudit.without_deleted.where('project_id = ?', params[:project_id]).order('id desc')
   end
 
   scope I18n.t('label.active'), default: false do |resources|

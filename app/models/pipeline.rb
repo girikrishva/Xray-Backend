@@ -80,6 +80,8 @@ class Pipeline < ActiveRecord::Base
     project.delivery_manager_id = pipeline.delivery_manager_id
     project.pipeline_id = pipeline.id
     project.sales_person_id = pipeline.sales_person_id
+    project.updated_by = pipeline.updated_by
+    project.ip_address = pipeline.ip_address
     project.save
     pipeline.pipeline_status_id = PipelineStatus.where(name: I18n.t('label.delivery')).first.id
     pipeline.save
