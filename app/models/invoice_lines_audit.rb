@@ -1,4 +1,6 @@
 class InvoiceLinesAudit < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :invoice_line, class_name: 'InvoiceLine', foreign_key: :invoice_line_id
   belongs_to :invoice_header, class_name: 'InvoiceHeader', foreign_key: :invoice_header_id
   belongs_to :project, class_name: 'Project', foreign_key: :project_id

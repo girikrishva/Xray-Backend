@@ -228,7 +228,7 @@ InvoiceLine.create!([
   {narrative: "Interim payment", line_amount: 66000.0, comments: "Tester.", invoice_header_id: 7, project_id: 5, invoicing_milestone_id: 3, invoice_adder_type_id: nil, updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
 ])
 InvoiceLinesAudit.create!([
-  {narrative: "Interim payment", line_amount: 66000.0, comments: "Tester.", updated_by: "System Administrator", ip_address: "127.0.0.1", invoice_line_id: 16, invoice_header_id: 7, project_id: 5, invoicing_milestone_id: 3, invoice_adder_type_id: nil}
+  {narrative: "Interim payment", line_amount: 66000.0, comments: "Tester.", updated_by: "System Administrator", ip_address: "127.0.0.1", invoice_line_id: 16, invoice_header_id: 7, project_id: 5, invoicing_milestone_id: 3, invoice_adder_type_id: nil, deleted_at: nil}
 ])
 InvoicingDeliveryMilestone.create!([
   {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2, deleted_at: nil},

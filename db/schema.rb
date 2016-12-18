@@ -449,6 +449,7 @@ SELECT lookups.id,
     t.integer  "project_id",             :null=>false, :index=>{:name=>"index_invoice_lines_audits_on_project_id"}, :foreign_key=>{:references=>"projects", :name=>"fk_invoice_lines_audits_project_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoicing_milestone_id", :index=>{:name=>"index_invoice_lines_audits_on_invoicing_milestone_id"}, :foreign_key=>{:references=>"invoicing_milestones", :name=>"fk_invoice_lines_audits_invoicing_milestone_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoice_adder_type_id",  :index=>{:name=>"index_invoice_lines_audits_on_invoice_adder_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_invoice_lines_audits_invoice_adder_type_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at",             :index=>{:name=>"index_invoice_lines_audits_on_deleted_at"}
   end
 
   create_view "invoice_statuses", <<-'END_VIEW_INVOICE_STATUSES', :force => true
