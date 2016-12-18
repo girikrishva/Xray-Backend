@@ -20,7 +20,7 @@ ActiveAdmin.register InvoiceHeadersAudit do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: false do |resources|
+  scope I18n.t('label.active'), default: true do |resources|
     InvoiceHeadersAudit.without_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('id desc')
   end
 

@@ -20,12 +20,36 @@ ActiveAdmin.register PaymentHeadersAudit do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    PaymentHeadersAudit.without_deleted.where('payment_header_id = ?', params[:payment_header_id]).order('id desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    PaymentHeadersAudit.only_deleted.where('payment_header_id = ?', params[:payment_header_id]).order('id desc')
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.back'), admin_payment_headers_path
   end
 
   action_item only: :show do |resource|
     link_to I18n.t('label.back'), :back
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    payment_header_id = PaymentHeadersAudit.without_deleted.find(ids.first).payment_header_id
+    ids.each do |id|
+      PaymentHeadersAudit.destroy(id)
+    end
+    redirect_to admin_payment_headers_audits_path(payment_header_id: payment_header_id)
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    payment_header_id = PaymentHeadersAudit.with_deleted.find(ids.first).payment_header_id
+    ids.each do |id|
+      PaymentHeadersAudit.restore(id)
+    end
+    redirect_to admin_payment_headers_audits_path(payment_header_id: payment_header_id)
   end
 
   index as: :grouped_table, group_by_attribute: :payment_header_name do
