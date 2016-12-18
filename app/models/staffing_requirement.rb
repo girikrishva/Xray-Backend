@@ -1,4 +1,6 @@
 class StaffingRequirement < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :pipeline, class_name: 'Pipeline', foreign_key: :pipeline_id
   belongs_to :skill, :class_name => 'Skill', :foreign_key => :skill_id
   belongs_to :designation, :class_name => 'Designation', :foreign_key => :designation_id

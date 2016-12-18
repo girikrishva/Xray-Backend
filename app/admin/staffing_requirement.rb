@@ -21,6 +21,13 @@ ActiveAdmin.register StaffingRequirement do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: false do |resources|
+    StaffingRequirement.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    StaffingRequirement.only_deleted
+  end
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_staffing_requirement_path(pipeline_id: session[:pipeline_id]) if session.has_key?(:pipeline_id)
   end
@@ -31,6 +38,20 @@ ActiveAdmin.register StaffingRequirement do
 
   action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_staffing_requirements_path(pipeline_id: session[:pipeline_id]) if session.has_key?(:pipeline_id)
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      StaffingRequirement.destroy(id)
+    end
+    redirect_to admin_staffing_requirements_path(pipeline_id: session[:pipeline_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      StaffingRequirement.restore(id)
+    end
+    redirect_to admin_staffing_requirements_path(pipeline_id: session[:pipeline_id])
   end
 
   index as: :grouped_table, group_by_attribute: :skill_name do
@@ -48,7 +69,13 @@ ActiveAdmin.register StaffingRequirement do
     column :end_date
     column :fulfilled
     column :comments
-    actions defaults: true, dropdown: true
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_staffing_requirement_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true
+    end
   end
 
   filter :skill
@@ -109,6 +136,17 @@ ActiveAdmin.register StaffingRequirement do
       super do |format|
         redirect_to collection_url(pipeline_id: session[:pipeline_id]) and return if resource.valid?
       end
+    end
+
+    def destroy
+      super do |format|
+        redirect_to collection_url(pipeline_id: session[:pipeline_id]) and return if resource.valid?
+      end
+    end
+
+    def restore
+      StaffingRequirement.restore(params[:id])
+      redirect_to admin_staffing_requirements_path(pipeline_id: session[:pipeline_id])
     end
   end
 

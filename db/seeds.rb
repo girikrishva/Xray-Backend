@@ -368,10 +368,10 @@ ProjectOverhead.create!([
   {amount_date: "2016-11-30", amount: 54000.0, comments: "", cost_adder_type_id: 80, project_id: 5, deleted_at: nil}
 ])
 StaffingRequirement.create!([
-  {start_date: "2016-11-22", end_date: "2016-11-25", number_required: 1, hours_per_day: 8.0, fulfilled: nil, pipeline_id: 9, skill_id: 86, designation_id: 133, comments: ""},
-  {start_date: "2016-11-22", end_date: "2016-11-22", number_required: 1, hours_per_day: 8.0, fulfilled: false, pipeline_id: 9, skill_id: 87, designation_id: 133, comments: ""},
-  {start_date: "2016-11-10", end_date: "2016-11-16", number_required: 2, hours_per_day: 8.0, fulfilled: true, pipeline_id: 9, skill_id: 87, designation_id: 133, comments: ""},
-  {start_date: "2016-11-22", end_date: "2016-11-30", number_required: 3, hours_per_day: 8.0, fulfilled: true, pipeline_id: 9, skill_id: 87, designation_id: 133, comments: ""}
+  {start_date: "2016-11-22", end_date: "2016-11-25", number_required: 1, hours_per_day: 8.0, fulfilled: nil, pipeline_id: 9, skill_id: 86, designation_id: 133, comments: "", deleted_at: nil},
+  {start_date: "2016-11-10", end_date: "2016-11-16", number_required: 2, hours_per_day: 8.0, fulfilled: true, pipeline_id: 9, skill_id: 87, designation_id: 133, comments: "", deleted_at: nil},
+  {start_date: "2016-11-22", end_date: "2016-11-22", number_required: 1, hours_per_day: 8.0, fulfilled: false, pipeline_id: 9, skill_id: 87, designation_id: 133, comments: "", deleted_at: nil},
+  {start_date: "2016-11-22", end_date: "2016-11-30", number_required: 3, hours_per_day: 8.0, fulfilled: true, pipeline_id: 9, skill_id: 87, designation_id: 133, comments: "", deleted_at: nil}
 ])
 ProjectType.create!([
   {billed: true, comments: "", business_unit_id: 1, project_type_code_id: 97, description: "Time and Material", deleted_at: nil},

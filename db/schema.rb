@@ -213,6 +213,7 @@ SELECT lookups.id,
     t.integer  "skill_id",        :null=>false, :index=>{:name=>"index_staffing_requirements_on_skill_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_staffing_requirements_skill_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "designation_id",  :null=>false, :index=>{:name=>"index_staffing_requirements_on_designation_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_staffing_requirements_designation_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.string   "comments"
+    t.datetime "deleted_at",      :index=>{:name=>"index_staffing_requirements_on_deleted_at"}
   end
 
   create_table "assigned_resources", force: :cascade do |t|
