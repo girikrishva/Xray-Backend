@@ -310,6 +310,7 @@ SELECT lookups.id,
     t.datetime "updated_at"
     t.integer  "delivery_milestone_id",  :null=>false, :index=>{:name=>"index_delivery_invoicing_milestones_on_delivery_milestone_id"}, :foreign_key=>{:references=>"delivery_milestones", :name=>"fk_delivery_invoicing_milestones_delivery_milestone_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "invoicing_milestone_id", :null=>false, :index=>{:name=>"index_delivery_invoicing_milestones_on_invoicing_milestone_id"}, :foreign_key=>{:references=>"invoicing_milestones", :name=>"fk_delivery_invoicing_milestones_invoicing_milestone_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at",             :index=>{:name=>"index_delivery_invoicing_milestones_on_deleted_at"}
   end
 
   create_view "departments", <<-'END_VIEW_DEPARTMENTS', :force => true

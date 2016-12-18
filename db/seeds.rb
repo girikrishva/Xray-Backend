@@ -190,8 +190,8 @@ ClientsAudit.create!([
   {name: "Yatra ", contact_name: "Abhilekh Kumar", contact_email: "", contact_phone: "", comments: "Moon.", updated_by: "System Administrator", ip_address: "127.0.0.1", business_unit_id: 1, client_id: 1, deleted_at: nil}
 ])
 DeliveryInvoicingMilestone.create!([
-  {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2},
-  {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1}
+  {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1, deleted_at: nil},
+  {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2, deleted_at: nil}
 ])
 DeliveryMilestone.create!([
   {name: "Release 1", description: "", due_date: "2016-10-31", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, deleted_at: nil},
@@ -228,8 +228,8 @@ InvoiceLinesAudit.create!([
   {narrative: "Interim payment", line_amount: 66000.0, comments: "Tester.", updated_by: "System Administrator", ip_address: "127.0.0.1", invoice_line_id: 16, invoice_header_id: 7, project_id: 5, invoicing_milestone_id: 3, invoice_adder_type_id: nil}
 ])
 InvoicingDeliveryMilestone.create!([
-  {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2},
-  {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1}
+  {comments: "", delivery_milestone_id: 1, invoicing_milestone_id: 1, deleted_at: nil},
+  {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2, deleted_at: nil}
 ])
 InvoicingMilestone.create!([
   {name: "Advance Invoice", description: "", due_date: "2016-11-30", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 100000.0},

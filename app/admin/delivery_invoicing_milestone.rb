@@ -20,6 +20,14 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    DeliveryInvoicingMilestone.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    DeliveryInvoicingMilestone.only_deleted
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_delivery_invoicing_milestone_path(project_id: session[:project_id], delivery_milestone_id: session[:delivery_milestone_id]) if session.has_key?(:project_id) and session.has_key?(:delivery_milestone_id)
   end
@@ -32,6 +40,20 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
     link_to I18n.t('label.back'), admin_delivery_invoicing_milestones_path(project_id: session[:project_id], delivery_milestone_id: session[:delivery_milestone_id]) if session.has_key?(:project_id) and session.has_key?(:delivery_milestone_id)
   end
 
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      DeliveryInvoicingMilestone.destroy(id)
+    end
+    redirect_to admin_delivery_invoicing_milestones_path(project_id: session[:project_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      DeliveryInvoicingMilestone.restore(id)
+    end
+    redirect_to admin_delivery_invoicing_milestones_path(project_id: session[:project_id])
+  end
+
   index as: :grouped_table, group_by_attribute: :project_name do
     selectable_column
     column :id
@@ -42,10 +64,16 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
       resource.invoicing_milestone.invoicing_milestone_name
     end
     column :comments
-    actions defaults: true, dropdown: true
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_delivery_invoicing_milestone_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true
+    end
   end
 
-  filter :invoicing_milestone, collection: proc {InvoicingMilestone.ordered_lookup(session[:project_id]).map { |a| [a.invoicing_milestone_name, a.id] } }
+  filter :invoicing_milestone, collection: proc { InvoicingMilestone.ordered_lookup(session[:project_id]).map { |a| [a.invoicing_milestone_name, a.id] } }
   filter :comments
 
   show do |r|
@@ -102,6 +130,17 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
       super do |format|
         redirect_to collection_url(project_id: session[:project_id], delivery_milestone_id: session[:delivery_milestone_id]) and return if resource.valid?
       end
+    end
+
+    def destroy
+      super do |format|
+        redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
+      end
+    end
+
+    def restore
+      DeliveryInvoicingMilestone.restore(params[:id])
+      redirect_to admin_delivery_invoicing_milestones_path(project_id: session[:project_id])
     end
   end
 
