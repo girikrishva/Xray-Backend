@@ -1,4 +1,6 @@
 class ProjectOverhead < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :project, class_name: 'Project', foreign_key: :project_id
   belongs_to :cost_adder_type, class_name: 'CostAdderType', foreign_key: :cost_adder_type_id
 

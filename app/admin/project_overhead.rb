@@ -20,6 +20,15 @@ ActiveAdmin.register ProjectOverhead do
 
   config.clear_action_items!
 
+
+  scope I18n.t('label.active'), default: false do |resources|
+    ProjectOverhead.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    ProjectOverhead.only_deleted
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_project_overhead_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
@@ -30,6 +39,20 @@ ActiveAdmin.register ProjectOverhead do
 
   action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_project_overheads_path(project_id: session[:project_id]) if session.has_key?(:project_id)
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      ProjectOverhead.destroy(id)
+    end
+    redirect_to admin_project_overheads_path(project_id: session[:project_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      ProjectOverhead.restore(id)
+    end
+    redirect_to admin_project_overheads_path(project_id: session[:project_id])
   end
 
   index as: :grouped_table, group_by_attribute: :project_name do
@@ -43,7 +66,13 @@ ActiveAdmin.register ProjectOverhead do
       end
     end
     column :comments
-    actions defaults: true, dropdown: true
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_project_overhead_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true
+    end
   end
 
   filter :cost_adder_type, collection: proc { CostAdderType.all.order(:name) }
@@ -102,6 +131,17 @@ ActiveAdmin.register ProjectOverhead do
         redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
       end
     end
+
+    def destroy
+      super do |format|
+        redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
+      end
+    end
+
+    def restore
+      ProjectOverhead.restore(params[:id])
+      redirect_to admin_project_overheads_path(project_id: session[:project_id])
+    end
   end
 
   form do |f|
@@ -114,8 +154,8 @@ ActiveAdmin.register ProjectOverhead do
       f.input :project_id, as: :hidden
       if f.object.cost_adder_type_id.blank?
         f.input :cost_adder_type, required: true, as: :select, collection:
-                                         CostAdderType.all.order(:name)
-                                             .map { |a| [a.name, a.id] }, include_blank: true
+                                    CostAdderType.all.order(:name)
+                                        .map { |a| [a.name, a.id] }, include_blank: true
       else
         f.input :cost_adder_type, required: true, input_html: {disabled: :true}
         f.input :cost_adder_type_id, as: :hidden

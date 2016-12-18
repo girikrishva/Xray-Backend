@@ -363,8 +363,8 @@ Project.create!([
   {description: nil, start_date: "2016-11-01", end_date: "2016-11-30", booking_value: 10000.0, comments: "", client_id: 3, project_type_code_id: 96, project_status_id: 108, business_unit_id: 3, estimator_id: 9, engagement_manager_id: 9, delivery_manager_id: 9, pipeline_id: 9, sales_person_id: 9, name: "Billing App", updated_by: "System Administrator", ip_address: "127.0.0.1", deleted_at: nil}
 ])
 ProjectOverhead.create!([
-  {amount_date: "2016-11-30", amount: 54000.0, comments: "", cost_adder_type_id: 80, project_id: 5},
-  {amount_date: "2016-11-30", amount: 2000.0, comments: "", cost_adder_type_id: 83, project_id: 5}
+  {amount_date: "2016-11-30", amount: 2000.0, comments: "", cost_adder_type_id: 83, project_id: 5, deleted_at: nil},
+  {amount_date: "2016-11-30", amount: 54000.0, comments: "", cost_adder_type_id: 80, project_id: 5, deleted_at: nil}
 ])
 StaffingRequirement.create!([
   {start_date: "2016-11-22", end_date: "2016-11-25", number_required: 1, hours_per_day: 8.0, fulfilled: nil, pipeline_id: 9, skill_id: 86, designation_id: 133, comments: ""},

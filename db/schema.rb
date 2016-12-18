@@ -600,6 +600,7 @@ SELECT lookups.id,
     t.datetime "updated_at"
     t.integer  "cost_adder_type_id", :null=>false, :index=>{:name=>"index_project_overheads_on_cost_adder_type_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_project_overheads_cost_adder_type_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "project_id",         :null=>false, :index=>{:name=>"index_project_overheads_on_project_id"}, :foreign_key=>{:references=>"projects", :name=>"fk_project_overheads_project_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at",         :index=>{:name=>"index_project_overheads_on_deleted_at"}
   end
 
   create_view "project_statuses", <<-'END_VIEW_PROJECT_STATUSES', :force => true
