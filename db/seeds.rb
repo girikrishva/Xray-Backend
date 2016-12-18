@@ -232,9 +232,9 @@ InvoicingDeliveryMilestone.create!([
   {comments: "", delivery_milestone_id: 2, invoicing_milestone_id: 2, deleted_at: nil}
 ])
 InvoicingMilestone.create!([
-  {name: "Advance Invoice", description: "", due_date: "2016-11-30", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 100000.0},
-  {name: "Interim payment", description: "", due_date: "2016-12-05", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 66000.0},
-  {name: "Final Payment", description: "", due_date: "2016-12-23", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 300000.0}
+  {name: "Interim payment", description: "", due_date: "2016-12-05", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 66000.0, deleted_at: nil},
+  {name: "Final Payment", description: "", due_date: "2016-12-23", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 300000.0, deleted_at: nil},
+  {name: "Advance Invoice", description: "", due_date: "2016-11-30", last_reminder_date: nil, completion_date: nil, comments: "", project_id: 5, amount: 100000.0, deleted_at: nil}
 ])
 Lookup.create!([
   {name: "Engineering", description: "Engineering", rank: 1.0, comments: "", lookup_type_id: 3, extra: nil, deleted_at: nil},

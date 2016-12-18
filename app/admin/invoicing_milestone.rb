@@ -20,12 +20,34 @@ ActiveAdmin.register InvoicingMilestone do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    InvoicingMilestone.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    InvoicingMilestone.only_deleted
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_invoicing_milestone_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
 
   action_item only: :index do |resource|
     link_to I18n.t('label.back'), admin_invoicing_milestones_path(project_id: nil)
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      InvoicingMilestone.destroy(id)
+    end
+    redirect_to admin_invoicing_milestones_path(project_id: session[:project_id])
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      InvoicingMilestone.restore(id)
+    end
+    redirect_to admin_invoicing_milestones_path(project_id: session[:project_id])
   end
 
   action_item only: [:show, :edit, :new, :create] do |resource|
@@ -51,8 +73,14 @@ ActiveAdmin.register InvoicingMilestone do
     column :last_reminder_date
     column :completion_date
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item I18n.t('actions.delivery_milestones'), admin_invoicing_delivery_milestones_path(project_id: session[:project_id], invoicing_milestone_id: resource.id)
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_invoicing_milestone_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item I18n.t('actions.delivery_milestones'), admin_invoicing_delivery_milestones_path(project_id: session[:project_id], invoicing_milestone_id: resource.id)
+      end
     end
   end
 
@@ -124,6 +152,17 @@ ActiveAdmin.register InvoicingMilestone do
         uninvoiced << im.uninvoiced
       end
       render json: '{"invoicing_milestones": ' + invoicing_milestones.to_json.to_json + ', "uninvoiced": ' + uninvoiced.to_json + '}'
+    end
+
+    def destroy
+      super do |format|
+        redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
+      end
+    end
+
+    def restore
+      InvoicingMilestone.restore(params[:id])
+      redirect_to admin_invoicing_milestones_path(project_id: session[:project_id])
     end
   end
 
