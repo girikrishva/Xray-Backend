@@ -401,6 +401,7 @@ SELECT lookups.id,
     t.float    "header_amount",     :null=>false
     t.string   "updated_by"
     t.string   "ip_address"
+    t.datetime "deleted_at",        :index=>{:name=>"index_invoice_headers_on_deleted_at"}
   end
 
   create_table "invoice_headers_audits", force: :cascade do |t|

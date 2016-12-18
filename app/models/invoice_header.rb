@@ -1,4 +1,6 @@
 class InvoiceHeader < ActiveRecord::Base
+  acts_as_paranoid
+
   belongs_to :client, class_name: 'Client', foreign_key: :client_id
   belongs_to :invoice_term, class_name: 'InvoiceTerm', foreign_key: :invoice_term_id
   belongs_to :invoice_status, class_name: 'InvoiceStatus', foreign_key: :invoice_status_id

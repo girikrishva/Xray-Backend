@@ -20,12 +20,34 @@ ActiveAdmin.register InvoiceHeader do
 
   config.clear_action_items!
 
+  scope I18n.t('label.active'), default: true do |resources|
+    InvoiceHeader.without_deleted
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    InvoiceHeader.only_deleted
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_invoice_header_path
   end
 
-  action_item only:  [:show, :edit, :new] do |resource|
+  action_item only: [:show, :edit, :new] do |resource|
     link_to I18n.t('label.back'), admin_invoice_headers_path
+  end
+
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    ids.each do |id|
+      InvoiceHeader.destroy(id)
+    end
+    redirect_to admin_invoice_headers_path
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    ids.each do |id|
+      InvoiceHeader.restore(id)
+    end
+    redirect_to admin_invoice_headers_path
   end
 
   index do
@@ -54,9 +76,15 @@ ActiveAdmin.register InvoiceHeader do
       end
     end
     column :comments
-    actions defaults: true, dropdown: true do |resource|
-      item "Audit Trail", admin_invoice_headers_audits_path(invoice_header_id: resource.id)
-      item I18n.t('actions.invoice_lines'), admin_invoice_lines_path(invoice_header_id: resource.id)
+    if params[:scope] == 'deleted'
+      actions defaults: false, dropdown: true do |resource|
+        item I18n.t('actions.restore'), admin_api_restore_invoice_header_path(id: resource.id), method: :post
+      end
+    else
+      actions defaults: true, dropdown: true do |resource|
+        item "Audit Trail", admin_invoice_headers_audits_path(invoice_header_id: resource.id)
+        item I18n.t('actions.invoice_lines'), admin_invoice_lines_path(invoice_header_id: resource.id)
+      end
     end
   end
 
@@ -110,6 +138,11 @@ ActiveAdmin.register InvoiceHeader do
       super do |format|
         redirect_to collection_url and return if resource.valid?
       end
+    end
+
+    def restore
+      InvoiceHeader.restore(params[:id])
+      redirect_to admin_invoice_headers_path
     end
   end
 
