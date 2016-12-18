@@ -7,6 +7,22 @@ ActiveAdmin.register PipelinesAudit do
 
   config.clear_action_items!
 
+  batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
+    pipeline_id = PipelinesAudit.without_deleted.find(ids.first).pipeline_id
+    ids.each do |id|
+      PipelinesAudit.destroy(id)
+    end
+    redirect_to admin_pipelines_audits_path(pipeline_id: pipeline_id)
+  end
+
+  batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
+    pipeline_id = PipelinesAudit.with_deleted.find(ids.first).pipeline_id
+    ids.each do |id|
+      PipelinesAudit.restore(id)
+    end
+    redirect_to admin_pipelines_audits_path(pipeline_id: pipeline_id)
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.back'), admin_pipelines_path
   end
@@ -20,6 +36,14 @@ ActiveAdmin.register PipelinesAudit do
   end
   scope I18n.t('label.delivery_view'), :delivery_view, default: false do |pipelines|
     PipelinesAudit.all.order('id desc')
+  end
+
+  scope I18n.t('label.active'), default: false do |resources|
+    PipelinesAudit.without_deleted.where('pipeline_id = ?', params[:pipeline_id]).order('id desc')
+  end
+
+  scope I18n.t('label.deleted'), default: false do |resources|
+    PipelinesAudit.only_deleted.where('pipeline_id = ?', params[:pipeline_id]).order('id desc')
   end
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do
