@@ -23,7 +23,7 @@ ActiveAdmin.register Lookup do
     Lookup.only_deleted.where('lookup_type_id = ?', session[:lookup_type_id]).order('rank desc')
   end
 
-  action_item only: :index do |resource|
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
     link_to I18n.t('label.all'), admin_lookups_path(lookup_type_id: params[:lookup_type_id])
   end
 

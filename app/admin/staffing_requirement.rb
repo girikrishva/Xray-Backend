@@ -25,7 +25,7 @@ ActiveAdmin.register StaffingRequirement do
     StaffingRequirement.only_deleted.where('pipeline_id = ?', session[:pipeline_id]).order('start_date asc, end_date asc')
   end
 
-  action_item only: :index do |resource|
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
     link_to I18n.t('label.all'), admin_staffing_requirements_path(pipeline_id: params[:pipeline_id])
   end
 

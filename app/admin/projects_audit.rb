@@ -24,7 +24,7 @@ ActiveAdmin.register ProjectsAudit do
     ProjectsAudit.only_deleted.where('project_id = ?', params[:project_id]).order('id desc')
   end
 
-  action_item only: :index do |resource|
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
     link_to I18n.t('label.all'), admin_projects_audits_path(project_id: params[:project_id])
   end
 

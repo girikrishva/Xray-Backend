@@ -7,7 +7,7 @@ ActiveAdmin.register HolidayCalendarsAudit do
     HolidayCalendarsAudit.only_deleted.where('holiday_calendar_id = ?', params[:holiday_calendar_id]).order('id desc')
   end
 
-  action_item only: :index do |resource|
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
     link_to I18n.t('label.all'), admin_holiday_calendars_audits_path(holiday_calendar_id: params[:holiday_calendar_id])
   end
 

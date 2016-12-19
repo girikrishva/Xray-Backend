@@ -14,12 +14,26 @@ ActiveAdmin.register Timesheet do
 #   permitted
 # end
 
+  permit_params :assigned_resource_id, :timesheet_date, :hours, :approval_status_id, :comments
+
+  config.clear_action_items!
+
+  config.sort_order = 'timesheet_date_desc'
+
   scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
     Timesheet.only_deleted
   end
 
   action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
     link_to I18n.t('label.all'), admin_timesheets_path
+  end
+
+  action_item only: :index do |resource|
+    link_to I18n.t('label.new'), new_admin_timesheet_path
+  end
+
+  action_item only: [:show, :edit, :new] do |resource|
+    link_to I18n.t('label.back'), admin_timesheets_path
   end
 
   batch_action :revert, if: proc { params[:scope] != 'deleted' }, priority: 4 do |ids|
@@ -70,28 +84,6 @@ ActiveAdmin.register Timesheet do
       Timesheet.restore(id)
     end
     redirect_to admin_timesheets_path
-  end
-
-  permit_params :assigned_resource_id, :timesheet_date, :hours, :approval_status_id, :comments
-
-  config.clear_action_items!
-
-  config.sort_order = 'timesheet_date_desc'
-
-  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
-    Timesheet.only_deleted
-  end
-
-  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
-    link_to I18n.t('label.all'), admin_timesheets_path
-  end
-
-  action_item only: :index do |resource|
-    link_to I18n.t('label.new'), new_admin_timesheet_path
-  end
-
-  action_item only: [:show, :edit, :new] do |resource|
-    link_to I18n.t('label.back'), admin_timesheets_path
   end
 
   index do
