@@ -20,6 +20,14 @@ ActiveAdmin.register AssignedResource do
 
   config.clear_action_items!
 
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    AssignedResource.only_deleted.where('project_id = ?', params[:project_id]).order('start_date asc, end_date asc')
+  end
+
+  action_item only: :index do |resource|
+    link_to I18n.t('label.all'), admin_assigned_resources_path(project_id: params[:project_id])
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_assigned_resource_path(project_id: session[:project_id]) if session.has_key?(:project_id)
   end
@@ -30,22 +38,6 @@ ActiveAdmin.register AssignedResource do
 
   action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_assigned_resources_path(project_id: session[:project_id]) if session.has_key?(:project_id)
-  end
-
-  scope I18n.t('label.summary_view'), :summary_view, default: true do |assigned_resources|
-    AssignedResource.without_deleted.where('project_id = ?', params[:project_id]).order('start_date asc, end_date asc')
-  end
-
-  scope I18n.t('label.detailed_view'), :detailed_view, default: false do |assigned_resources|
-    AssignedResource.without_deleted.where('project_id = ?', params[:project_id]).order('start_date asc, end_date asc')
-  end
-
-  scope I18n.t('label.active'), default: false do |resources|
-    AssignedResource.without_deleted.where('project_id = ?', params[:project_id]).order('start_date asc, end_date asc')
-  end
-
-  scope I18n.t('label.deleted'), default: false do |resources|
-    AssignedResource.only_deleted.where('project_id = ?', params[:project_id]).order('start_date asc, end_date asc')
   end
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
@@ -72,9 +64,6 @@ ActiveAdmin.register AssignedResource do
     column :staffing_requirement, sortable: 'staffing_requirements.name' do |r|
       r.staffing_requirement.name
     end
-    column :fulfilled, sortable: 'staffing_requirements.fulfilled' do |r|
-      r.staffing_requirement.fulfilled ? status_tag(:yes, :ok) : status_tag(:no)
-    end
     column :id
     column :project, sortable: 'projects.name' do |resource|
       resource.project.name
@@ -96,11 +85,6 @@ ActiveAdmin.register AssignedResource do
         number_with_precision element.cost_rate, precision: 0, delimiter: ','
       end
     end
-    if params[:scope] == 'detailed_view'
-      column :delivery_due_alert
-      column :invoicing_due_alert
-      column :payment_due_alert
-    end
     column :comments
     if params[:scope] == 'deleted'
       actions defaults: false, dropdown: true do |resource|
@@ -114,6 +98,7 @@ ActiveAdmin.register AssignedResource do
   end
 
   filter :staffing_requirement, collection: proc { StaffingRequirement.ordered_lookup(Project.find(session[:project_id]).pipeline_id) }
+  filter :fulfilled
   filter :skill_code
   filter :designation_code
   filter :as_on
@@ -122,9 +107,9 @@ ActiveAdmin.register AssignedResource do
   filter :end_date
   filter :bill_rate
   filter :cost_rate
-  filter :delivery_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
-  filter :invoicing_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
-  filter :payment_due_alert, if: proc { params.has_key?('scope') && params[:scope] == 'detailed_view' }
+  filter :delivery_due_alert
+  filter :invoicing_due_alert
+  filter :payment_due_alert
   filter :comments
 
   show do |r|
@@ -173,6 +158,7 @@ ActiveAdmin.register AssignedResource do
       end
     end
 
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       AssignedResource.includes [:project, :skill_code, :designation_code, :resource, :staffing_requirement]
