@@ -3,12 +3,12 @@ ActiveAdmin.register HolidayCalendarsAudit do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    HolidayCalendarsAudit.without_deleted.where('holiday_calendar_id = ?', params[:holiday_calendar_id]).order('id desc')
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    HolidayCalendarsAudit.only_deleted.where('holiday_calendar_id = ?', params[:holiday_calendar_id]).order('id desc')
   end
 
-  scope I18n.t('label.deleted'), default: false do |resources|
-    HolidayCalendarsAudit.only_deleted.where('holiday_calendar_id = ?', params[:holiday_calendar_id]).order('id desc')
+  action_item only: :index do |resource|
+    link_to I18n.t('label.all'), admin_holiday_calendars_audits_path(holiday_calendar_id: params[:holiday_calendar_id])
   end
 
   action_item only: :index do |resource|
@@ -61,6 +61,8 @@ ActiveAdmin.register HolidayCalendarsAudit do
         params.merge! extra_params
       end
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_action
       HolidayCalendarsAudit.includes [:business_unit, :holiday_calendar]
