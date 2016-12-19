@@ -20,6 +20,14 @@ ActiveAdmin.register Pipeline do
 
   config.clear_action_items!
 
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    Pipeline.only_deleted
+  end
+
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_pipelines_path
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_pipeline_path
   end
@@ -42,22 +50,6 @@ ActiveAdmin.register Pipeline do
     redirect_to admin_pipelines_path
   end
 
-  scope I18n.t('label.sales_view'), :sales_view, default: true do |pipelines|
-    Pipeline.all
-  end
-
-  scope I18n.t('label.delivery_view'), :delivery_view, default: false do |pipelines|
-    Pipeline.all
-  end
-
-  scope I18n.t('label.active'), default: false do |resources|
-    Pipeline.without_deleted
-  end
-
-  scope I18n.t('label.deleted'), default: false do |resources|
-    Pipeline.only_deleted
-  end
-
   index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
     column :id
@@ -77,22 +69,6 @@ ActiveAdmin.register Pipeline do
     end
     column I18n.t('label.status'), :pipeline_status, sortable: 'pipeline_statuses.name' do |resource|
       resource.pipeline_status.name
-    end
-    if !params.has_key?('scope') || params[:scope] == 'sales_view'
-      column I18n.t('label.sales_by'), :sales_person, sortable: 'admin_users.name' do |resource|
-        resource.sales_person.name
-      end
-      column I18n.t('label.estimated_by'), :estimator, sortable: 'admin_users.name' do |resource|
-        resource.estimator.name
-      end
-    end
-    if params[:scope] == 'delivery_view'
-      column I18n.t('label.engagement_by'), :engagement_manager, sortable: 'admin_users.name' do |resource|
-        resource.engagement_manager.name rescue nil
-      end
-      column I18n.t('label.delivery_by'), :delivery_manager, sortable: 'admin_users.name' do |resource|
-        resource.delivery_manager.name rescue nil
-      end
     end
     column :comments
     if params[:scope] == 'deleted'
@@ -120,13 +96,13 @@ ActiveAdmin.register Pipeline do
                                proc { Lookup.lookups_for_name(I18n.t('models.project_code_types')) }
   filter :pipeline_status, label: I18n.t('label.status')
   filter :sales_person, label: I18n.t('label.sales_by'), collection:
-                          proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'sales_view' }
+                          proc { AdminUser.ordered_lookup }
   filter :estimator, label: I18n.t('label.estimated_by'), collection:
-                       proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'sales_view' }
+                       proc { AdminUser.ordered_lookup }
   filter :engagement_manager, label: I18n.t('label.engagement_by'), collection:
-                                proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'delivery_view' }
+                                proc { AdminUser.ordered_lookup }
   filter :delivery_manager, label: I18n.t('label.delivery_by'), collection:
-                              proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'delivery_view' }
+                              proc { AdminUser.ordered_lookup }
   filter :comments
 
   show do |r|
@@ -162,6 +138,8 @@ ActiveAdmin.register Pipeline do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       Pipeline.includes [:business_unit, :client, :pipeline_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager]

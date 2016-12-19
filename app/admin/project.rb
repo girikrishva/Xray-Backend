@@ -115,7 +115,7 @@ ActiveAdmin.register Project do
   filter :engagement_manager, label: I18n.t('label.engagement_by'), collection:
                                 proc { AdminUser.ordered_lookup }
   filter :delivery_manager, label: I18n.t('label.delivery_by'), collection:
-                              proc { AdminUser.ordered_lookup }
+                              proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
   filter :comments
 
   show do |r|
