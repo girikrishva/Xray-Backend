@@ -20,24 +20,24 @@ ActiveAdmin.register Resource do
 
   config.clear_action_items!
 
+  scope :latest, default: false do |resources|
+    resources.latest
+  end
+
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    Resource.only_deleted
+  end
+
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_resources_path
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_resource_path
   end
 
   action_item only: [:show, :edit, :new, :create] do |resource|
     link_to I18n.t('label.back'), admin_resources_path
-  end
-
-  scope :latest, default: true do |resources|
-    resources.latest
-  end
-
-  scope I18n.t('label.active'), default: false do |resources|
-    Resource.without_deleted
-  end
-
-  scope I18n.t('label.deleted'), default: false do |resources|
-    Resource.only_deleted
   end
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
@@ -124,6 +124,8 @@ ActiveAdmin.register Resource do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       Resource.includes [:admin_user, :skill]
