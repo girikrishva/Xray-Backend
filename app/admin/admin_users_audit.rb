@@ -3,12 +3,12 @@ ActiveAdmin.register AdminUsersAudit do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    AdminUsersAudit.without_deleted.where('admin_user_id = ?', params[:admin_user_id]).order('id desc')
-  end
-
   scope I18n.t('label.deleted'), default: false do |resources|
     AdminUsersAudit.only_deleted.where('admin_user_id = ?', params[:admin_user_id]).order('id desc')
+  end
+
+  action_item only: :index do |resource|
+    link_to I18n.t('label.all'), admin_admin_users_audits_path(admin_user_id: params[:admin_user_id])
   end
 
   action_item only: :index do |resource|
@@ -73,6 +73,8 @@ ActiveAdmin.register AdminUsersAudit do
         params.merge! extra_params
       end
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_action
       AdminUsersAudit.includes [:role, :business_unit, :department, :designation]
