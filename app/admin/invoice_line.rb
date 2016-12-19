@@ -20,12 +20,12 @@ ActiveAdmin.register InvoiceLine do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    InvoiceLine.without_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('narrative asc')
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    InvoiceLine.only_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('narrative asc')
   end
 
-  scope I18n.t('label.deleted'), default: false do |resources|
-    InvoiceLine.only_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('narrative asc')
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_invoice_lines_path(invoice_header_id: params[:invoice_header_id])
   end
 
   action_item only: :index do |resource|
@@ -151,6 +151,8 @@ ActiveAdmin.register InvoiceLine do
         params.merge! extra_params
       end
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
 
     def scoped_collection

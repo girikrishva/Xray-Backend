@@ -20,12 +20,12 @@ ActiveAdmin.register InvoiceLinesAudit do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    InvoiceLinesAudit.without_deleted.where('invoice_line_id = ?', params[:invoice_line_id]).order('id desc')
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    InvoiceLinesAudit.only_deleted.where('invoice_line_id = ?', params[:invoice_line_id]).order('id desc')
   end
 
-  scope I18n.t('label.deleted'), default: false do |resources|
-    InvoiceLinesAudit.only_deleted.where('invoice_line_id = ?', params[:invoice_line_id]).order('id desc')
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_invoice_lines_audits_path(invoice_header_id: params[:invoice_header_id], invoice_line_id: params[:invoice_line_id])
   end
 
   action_item only: :index do |resource|
@@ -143,6 +143,8 @@ ActiveAdmin.register InvoiceLinesAudit do
         params.merge! extra_params
       end
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       InvoiceLinesAudit.includes [:invoice_header, :project, :invoicing_milestone, :invoice_adder_type, :invoice_line]
