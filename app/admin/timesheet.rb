@@ -14,6 +14,14 @@ ActiveAdmin.register Timesheet do
 #   permitted
 # end
 
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    Timesheet.only_deleted
+  end
+
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_timesheets_path
+  end
+
   batch_action :revert, if: proc { params[:scope] != 'deleted' }, priority: 4 do |ids|
     ids.each do |id|
       timesheet = Timesheet.find(id)
@@ -64,39 +72,19 @@ ActiveAdmin.register Timesheet do
     redirect_to admin_timesheets_path
   end
 
-  scope I18n.t('label.pending'), :pending_view, default: true do |timesheets|
-    Timesheet.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.pending')).first.id).order('timesheet_date desc')
-  end
-
-  scope I18n.t('label.approved'), :approved_view, default: false do |timesheets|
-    Timesheet.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.approved')).first.id).order('timesheet_date desc')
-  end
-
-  scope I18n.t('label.rejected'), :rejected_view, default: false do |timesheets|
-    Timesheet.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.rejected')).first.id).order('timesheet_date desc')
-  end
-
-  scope I18n.t('label.canceled'), :canceled_view, default: false do |timesheets|
-    Timesheet.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.canceled')).first.id).order('timesheet_date desc')
-  end
-
-  scope I18n.t('label.all'), :all_view, default: false do |timesheets|
-    Timesheet.all.order('timesheet_date desc')
-  end
-
-  scope I18n.t('label.active'), default: true do |resources|
-    Timesheet.without_deleted
-  end
-
-  scope I18n.t('label.deleted'), default: false do |resources|
-    Timesheet.only_deleted
-  end
-
   permit_params :assigned_resource_id, :timesheet_date, :hours, :approval_status_id, :comments
 
   config.clear_action_items!
 
   config.sort_order = 'timesheet_date_desc'
+
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    Timesheet.only_deleted
+  end
+
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_timesheets_path
+  end
 
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_timesheet_path
@@ -153,6 +141,8 @@ ActiveAdmin.register Timesheet do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.user')])
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       Timesheet.includes [:assigned_resource]
