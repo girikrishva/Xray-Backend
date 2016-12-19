@@ -14,6 +14,23 @@ ActiveAdmin.register Vacation do
 #   permitted
 # end
 
+  config.clear_action_items!
+
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    Vacation.only_deleted.order('request_date desc')
+  end
+
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_vacations_path
+  end
+
+  action_item only: :index do |resource|
+    link_to I18n.t('label.new'), new_admin_vacation_path
+  end
+
+  action_item only: [:show, :edit, :new] do |resource|
+    link_to I18n.t('label.back'), admin_vacations_path
+  end
 
   batch_action :revert, if: proc { params[:scope] != 'deleted' }, priority: 4 do |ids|
     ids.each do |id|
@@ -51,45 +68,7 @@ ActiveAdmin.register Vacation do
     redirect_to collection_url
   end
 
-  scope I18n.t('label.pending'), :pending_view, default: true do |vacations|
-    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.pending')).first.id).order('request_date desc')
-  end
-
-  scope I18n.t('label.approved'), :approved_view, default: false do |vacations|
-    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.approved')).first.id).order('request_date desc')
-  end
-
-  scope I18n.t('label.rejected'), :rejected_view, default: false do |vacations|
-    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.rejected')).first.id).order('request_date desc')
-  end
-
-  scope I18n.t('label.canceled'), :canceled_view, default: false do |vacations|
-    Vacation.where(approval_status_id: ApprovalStatus.where(name: I18n.t('label.canceled')).first.id).order('request_date desc')
-  end
-
-  scope I18n.t('label.all'), :all_view, default: false do |vacations|
-    Vacation.all.order('request_date desc')
-  end
-
-  scope I18n.t('label.active'), default: false do |resources|
-    Vacation.without_deleted.order('request_date desc')
-  end
-
-  scope I18n.t('label.deleted'), default: false do |resources|
-    Vacation.only_deleted.order('request_date desc')
-  end
-
   permit_params :admin_user_id, :vacation_code_id, :narrative, :request_date, :start_date, :end_date, :hours_per_day, :approval_status_id, :comments
-
-  config.clear_action_items!
-
-  action_item only: :index do |resource|
-    link_to I18n.t('label.new'), new_admin_vacation_path
-  end
-
-  action_item only: [:show, :edit, :new] do |resource|
-    link_to I18n.t('label.back'), admin_vacations_path
-  end
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
@@ -176,6 +155,8 @@ ActiveAdmin.register Vacation do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.user')])
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       Vacation.includes [:user, :vacation_code, :approval_status]
