@@ -20,6 +20,25 @@ ActiveAdmin.register Project do
 
   config.clear_action_items!
 
+  scope I18n.t('label.delivery_view'), :delivery_view, default: false do |projects|
+    Project.all
+  end
+
+  scope I18n.t('label.sales_view'), :sales_view, default: false do |projects|
+    Project.all
+  end
+
+  scope I18n.t('label.financial_view'), :financial_view, default: false do |projects|
+    Project.all
+  end
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    Project.only_deleted
+  end
+
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_projects_path
+  end
+
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
       Project.destroy(id)
@@ -36,27 +55,6 @@ ActiveAdmin.register Project do
 
   action_item only: [:show, :edit, :new] do |resource|
     link_to I18n.t('label.back'), admin_projects_path
-  end
-
-
-  scope I18n.t('label.delivery_view'), :delivery_view, default: true do |projects|
-    Project.all
-  end
-
-  scope I18n.t('label.sales_view'), :sales_view, default: false do |projects|
-    Project.all
-  end
-
-  scope I18n.t('label.financial_view'), :financial_view, default: false do |projects|
-    Project.all
-  end
-
-  scope I18n.t('label.active'), default: true do |resources|
-    Project.without_deleted
-  end
-
-  scope I18n.t('label.deleted'), default: false do |resources|
-    Project.only_deleted
   end
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do
@@ -184,6 +182,8 @@ ActiveAdmin.register Project do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.manager')])
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       Project.includes [:business_unit, :client, :project_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager, :pipeline]

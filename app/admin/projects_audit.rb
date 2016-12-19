@@ -20,6 +20,22 @@ ActiveAdmin.register ProjectsAudit do
 
   config.clear_action_items!
 
+  scope I18n.t('label.delivery_view'), :delivery_view, default: false do |pipelines|
+    ProjectsAudit.without_deleted.where('project_id = ?', params[:project_id]).order('id desc')
+  end
+
+  scope I18n.t('label.sales_view'), :sales_view, default: false do |pipelines|
+    ProjectsAudit.without_deleted.where('project_id = ?', params[:project_id]).order('id desc')
+  end
+
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    ProjectsAudit.only_deleted.where('project_id = ?', params[:project_id]).order('id desc')
+  end
+
+  action_item only: :index do |resource|
+    link_to I18n.t('label.all'), admin_projects_audits_path(project_id: params[:project_id])
+  end
+
   action_item only: :index do |resource|
     link_to I18n.t('label.back'), admin_projects_path
   end
@@ -42,22 +58,6 @@ ActiveAdmin.register ProjectsAudit do
       ProjectsAudit.restore(id)
     end
     redirect_to admin_projects_audits_path(project_id: project_id)
-  end
-
-  scope I18n.t('label.delivery_view'), :delivery_view, default: true do |pipelines|
-    ProjectsAudit.without_deleted.where('project_id = ?', params[:project_id]).order('id desc')
-  end
-
-  scope I18n.t('label.sales_view'), :sales_view, default: false do |pipelines|
-    ProjectsAudit.without_deleted.where('project_id = ?', params[:project_id]).order('id desc')
-  end
-
-  scope I18n.t('label.active'), default: false do |resources|
-    ProjectsAudit.without_deleted.where('project_id = ?', params[:project_id]).order('id desc')
-  end
-
-  scope I18n.t('label.deleted'), default: false do |resources|
-    ProjectsAudit.only_deleted.where('project_id = ?', params[:project_id]).order('id desc')
   end
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do
@@ -165,6 +165,8 @@ ActiveAdmin.register ProjectsAudit do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.manager')])
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     before_filter only: :index do |resource|
       if !params.has_key?(:project_id)
