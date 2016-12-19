@@ -20,12 +20,12 @@ ActiveAdmin.register InvoicingMilestone do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    InvoicingMilestone.without_deleted.where('project_id = ?', params[:project_id]).order('due_date desc')
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    InvoicingMilestone.only_deleted.where('project_id = ?', params[:project_id]).order('due_date desc')
   end
 
-  scope I18n.t('label.deleted'), default: false do |resources|
-    InvoicingMilestone.only_deleted.where('project_id = ?', params[:project_id]).order('due_date desc')
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_invoicing_milestones_path(project_id: params[:project_id])
   end
 
   action_item only: :index do |resource|
@@ -127,6 +127,7 @@ ActiveAdmin.register InvoicingMilestone do
       end
     end
 
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       InvoicingMilestone.includes [:project]
