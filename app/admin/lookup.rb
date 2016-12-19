@@ -19,12 +19,12 @@ ActiveAdmin.register Lookup do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    Lookup.without_deleted.where('lookup_type_id = ?', session[:lookup_type_id]).order('rank desc')
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    Lookup.only_deleted.where('lookup_type_id = ?', session[:lookup_type_id]).order('rank desc')
   end
 
-  scope I18n.t('label.deleted'), default: false do |resources|
-    Lookup.only_deleted.where('lookup_type_id = ?', session[:lookup_type_id]).order('rank desc')
+  action_item only: :index do |resource|
+    link_to I18n.t('label.all'), admin_lookups_path(lookup_type_id: params[:lookup_type_id])
   end
 
   action_item only: :index do |resource|
@@ -99,6 +99,8 @@ ActiveAdmin.register Lookup do
         params.merge! extra_params
       end
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       resource_class.includes(:lookup_type)

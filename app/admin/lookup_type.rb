@@ -20,13 +20,14 @@ ActiveAdmin.register LookupType do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    LookupType.without_deleted
-  end
-
-  scope I18n.t('label.deleted'), default: false do |resources|
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
     LookupType.only_deleted
   end
+
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_lookup_types_path
+  end
+
 
   action_item only: :index do |resource|
     link_to I18n.t('label.new'), new_admin_lookup_type_path
@@ -75,6 +76,8 @@ ActiveAdmin.register LookupType do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.director')])
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def create
       super do |format|

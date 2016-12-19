@@ -7,7 +7,7 @@ ActiveAdmin.register AdminUsersAudit do
     AdminUsersAudit.only_deleted.where('admin_user_id = ?', params[:admin_user_id]).order('id desc')
   end
 
-  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+  action_item only: :index do |resource|
     link_to I18n.t('label.all'), admin_admin_users_audits_path(admin_user_id: params[:admin_user_id])
   end
 
