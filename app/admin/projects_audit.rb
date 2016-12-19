@@ -154,8 +154,6 @@ ActiveAdmin.register ProjectsAudit do
       c.send(:is_resource_authorized?, [I18n.t('role.manager')])
     end
 
-    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
-
     before_filter only: :index do |resource|
       if !params.has_key?(:project_id)
         redirect_to admin_projects_path
@@ -166,6 +164,8 @@ ActiveAdmin.register ProjectsAudit do
         params.merge! extra_params
       end
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       ProjectsAudit.includes [:business_unit, :client, :project_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager, :pipeline, :project]
