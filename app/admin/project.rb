@@ -20,17 +20,6 @@ ActiveAdmin.register Project do
 
   config.clear_action_items!
 
-  scope I18n.t('label.delivery_view'), :delivery_view, default: false do |projects|
-    Project.all
-  end
-
-  scope I18n.t('label.sales_view'), :sales_view, default: false do |projects|
-    Project.all
-  end
-
-  scope I18n.t('label.financial_view'), :financial_view, default: false do |projects|
-    Project.all
-  end
   scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
     Project.only_deleted
   end
@@ -77,39 +66,20 @@ ActiveAdmin.register Project do
     column I18n.t('label.status'), :project_status, sortable: 'project_statuses.name' do |resource|
       resource.project_status.name
     end
-    if params[:scope] == 'sales_view'
-      column I18n.t('label.sales_by'), :sales_person, sortable: 'admin_users.name' do |resource|
-        resource.sales_person.name
-      end
-      column I18n.t('label.estimated_by'), :estimator, sortable: 'admin_users.name' do |resource|
-        resource.estimator.name
+    column I18n.t('label.invoiced_amount'), :invoiced_amount do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.invoiced_amount, precision: 0, delimiter: ','
       end
     end
-    if params[:scope] == 'financial_view'
-      column I18n.t('label.invoiced_amount'), :invoiced_amount do |element|
-        div :style => "text-align: right;" do
-          number_with_precision element.invoiced_amount, precision: 0, delimiter: ','
-        end
-      end
-      column I18n.t('label.paid_amount'), :paid_amount do |element|
-        div :style => "text-align: right;" do
-          number_with_precision element.paid_amount, precision: 0, delimiter: ','
-        end
-      end
-      column I18n.t('label.unpaid_amount'), :unpaid_amount do |element|
-        div :style => "text-align: right;" do
-          number_with_precision element.unpaid_amount, precision: 0, delimiter: ','
-        end
+    column I18n.t('label.paid_amount'), :paid_amount do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.paid_amount, precision: 0, delimiter: ','
       end
     end
-    if !params.has_key?('scope') || params[:scope] == 'delivery_view'
-      column I18n.t('label.engagement_by'), :engagement_manager, sortable: 'admin_users.name' do |resource|
-        resource.engagement_manager.name rescue nil
+    column I18n.t('label.unpaid_amount'), :unpaid_amount do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.unpaid_amount, precision: 0, delimiter: ','
       end
-      column I18n.t('label.delivery_by'), :delivery_manager, sortable: 'admin_users.name' do |resource|
-        resource.delivery_manager.name rescue nil
-      end
-      column :comments
     end
     if params[:scope] == 'deleted'
       actions defaults: false, dropdown: true do |resource|
@@ -139,13 +109,13 @@ ActiveAdmin.register Project do
                                proc { Lookup.lookups_for_name(I18n.t('models.project_code_types')) }
   filter :project_status, label: I18n.t('label.status')
   filter :sales_person, label: I18n.t('label.sales_by'), collection:
-                          proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'sales_view' }
+                          proc { AdminUser.ordered_lookup }
   filter :estimator, label: I18n.t('label.estimated_by'), collection:
-                       proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'sales_view' }
+                       proc { AdminUser.ordered_lookup }
   filter :engagement_manager, label: I18n.t('label.engagement_by'), collection:
-                                proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
+                                proc { AdminUser.ordered_lookup }
   filter :delivery_manager, label: I18n.t('label.delivery_by'), collection:
-                              proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
+                              proc { AdminUser.ordered_lookup }
   filter :comments
 
   show do |r|

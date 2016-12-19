@@ -20,14 +20,6 @@ ActiveAdmin.register ProjectsAudit do
 
   config.clear_action_items!
 
-  scope I18n.t('label.delivery_view'), :delivery_view, default: false do |pipelines|
-    ProjectsAudit.without_deleted.where('project_id = ?', params[:project_id]).order('id desc')
-  end
-
-  scope I18n.t('label.sales_view'), :sales_view, default: false do |pipelines|
-    ProjectsAudit.without_deleted.where('project_id = ?', params[:project_id]).order('id desc')
-  end
-
   scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
     ProjectsAudit.only_deleted.where('project_id = ?', params[:project_id]).order('id desc')
   end
@@ -80,21 +72,17 @@ ActiveAdmin.register ProjectsAudit do
     column I18n.t('label.status'), :project_status, sortable: 'project_statuses.name' do |resource|
       resource.project_status.name
     end
-    if params[:scope] == 'sales_view'
-      column I18n.t('label.sales_by'), :sales_person, sortable: 'admin_users.name' do |resource|
-        resource.sales_person.name
-      end
-      column I18n.t('label.estimated_by'), :estimator, sortable: 'admin_users.name' do |resource|
-        resource.estimator.name
-      end
+    column I18n.t('label.sales_by'), :sales_person, sortable: 'admin_users.name' do |resource|
+      resource.sales_person.name
     end
-    if !params.has_key?('scope') || params[:scope] == 'delivery_view'
-      column I18n.t('label.engagement_by'), :engagement_manager, sortable: 'admin_users.name' do |resource|
-        resource.engagement_manager.name rescue nil
-      end
-      column I18n.t('label.delivery_by'), :delivery_manager, sortable: 'admin_users.name' do |resource|
-        resource.delivery_manager.name rescue nil
-      end
+    column I18n.t('label.estimated_by'), :estimator, sortable: 'admin_users.name' do |resource|
+      resource.estimator.name
+    end
+    column I18n.t('label.engagement_by'), :engagement_manager, sortable: 'admin_users.name' do |resource|
+      resource.engagement_manager.name rescue nil
+    end
+    column I18n.t('label.delivery_by'), :delivery_manager, sortable: 'admin_users.name' do |resource|
+      resource.delivery_manager.name rescue nil
     end
     column :comments
     column :audit_details
@@ -115,13 +103,13 @@ ActiveAdmin.register ProjectsAudit do
                                proc { Lookup.lookups_for_name(I18n.t('models.project_code_types')) }
   filter :project_status, label: I18n.t('label.status')
   filter :sales_person, label: I18n.t('label.sales_by'), collection:
-                          proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'sales_view' }
+                          proc { AdminUser.ordered_lookup }
   filter :estimator, label: I18n.t('label.estimated_by'), collection:
-                       proc { AdminUser.ordered_lookup }, if: proc { params[:scope] == 'sales_view' }
+                       proc { AdminUser.ordered_lookup }
   filter :engagement_manager, label: I18n.t('label.engagement_by'), collection:
-                                proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
+                                proc { AdminUser.ordered_lookup }
   filter :delivery_manager, label: I18n.t('label.delivery_by'), collection:
-                              proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
+                              proc { AdminUser.ordered_lookup }
   filter :comments
   filter :updated_at
   filter :updated_by
