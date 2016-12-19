@@ -20,12 +20,12 @@ ActiveAdmin.register Client do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    Client.without_deleted
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    Client.only_deleted
   end
 
-  scope I18n.t('label.deleted'), default: false do |resources|
-    Client.only_deleted
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_clients_path
   end
 
   action_item only: :index do |resource|
@@ -98,6 +98,8 @@ ActiveAdmin.register Client do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       Client.includes [:business_unit]

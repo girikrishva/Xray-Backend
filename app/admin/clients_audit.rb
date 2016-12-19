@@ -3,12 +3,12 @@ ActiveAdmin.register ClientsAudit do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    ClientsAudit.without_deleted.where('client_id = ?', params[:client_id]).order('id desc')
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    ClientsAudit.only_deleted.where('client_id = ?', params[:client_id]).order('id desc')
   end
 
-  scope I18n.t('label.deleted'), default: false do |resources|
-    ClientsAudit.only_deleted.where('client_id = ?', params[:client_id]).order('id desc')
+  action_item only: :index do |resource|
+    link_to I18n.t('label.all'), admin_clients_audits_path(client_id: params[:client_id])
   end
 
   action_item only: :index do |resource|
@@ -51,6 +51,8 @@ ActiveAdmin.register ClientsAudit do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.executive')])
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     before_filter only: :index do |resource|
       if !params.has_key?(:client_id)
