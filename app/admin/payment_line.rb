@@ -20,12 +20,12 @@ ActiveAdmin.register PaymentLine do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    PaymentLine.without_deleted.where('payment_header_id = ?', params[:payment_header_id]).order('narrative asc')
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    PaymentLine.only_deleted.where('payment_header_id = ?', params[:payment_header_id]).order('narrative asc')
   end
 
-  scope I18n.t('label.deleted'), default: false do |resources|
-    PaymentLine.only_deleted.where('payment_header_id = ?', params[:payment_header_id]).order('narrative asc')
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_payment_lines_path(payment_header_id: params[:payment_header_id])
   end
 
   action_item only: :index do |resource|
@@ -119,6 +119,8 @@ ActiveAdmin.register PaymentLine do
         params.merge! extra_params
       end
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
 
     def scoped_collection
