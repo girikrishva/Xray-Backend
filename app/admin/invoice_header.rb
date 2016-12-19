@@ -159,7 +159,7 @@ ActiveAdmin.register InvoiceHeader do
       f.object.invoice_date = Date.today
     end
     if f.object.new_record?
-      f.object.amount = 0
+      f.object.header_amount = 0
     end
     f.inputs do
       f.input :client, required: true, as: :select, collection:
