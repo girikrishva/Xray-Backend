@@ -3,7 +3,7 @@ ActiveAdmin.register AdminUsersAudit do
 
   config.clear_action_items!
 
-  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+  scope I18n.t('label.deleted'), default: false do |resources|
     AdminUsersAudit.only_deleted.where('admin_user_id = ?', params[:admin_user_id]).order('id desc')
   end
 
