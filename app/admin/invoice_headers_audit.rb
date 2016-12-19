@@ -20,12 +20,12 @@ ActiveAdmin.register InvoiceHeadersAudit do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    InvoiceHeadersAudit.without_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('id desc')
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    InvoiceHeadersAudit.only_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('id desc')
   end
 
-  scope I18n.t('label.deleted'), default: false do |resources|
-    InvoiceHeadersAudit.only_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('id desc')
+  action_item only: :index do |resource|
+    link_to I18n.t('label.all'), admin_invoice_headers_audits_path(invoice_header_id: params[:invoice_header_id])
   end
 
   action_item only: :index do |resource|
@@ -131,6 +131,8 @@ ActiveAdmin.register InvoiceHeadersAudit do
         params.merge! extra_params
       end
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       InvoiceHeadersAudit.includes [:client, :invoice_term, :invoice_status, :invoice_header]

@@ -20,12 +20,12 @@ ActiveAdmin.register InvoiceHeader do
 
   config.clear_action_items!
 
-  scope I18n.t('label.active'), default: true do |resources|
-    InvoiceHeader.without_deleted
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
+    InvoiceHeader.only_deleted
   end
 
-  scope I18n.t('label.deleted'), default: false do |resources|
-    InvoiceHeader.only_deleted
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+    link_to I18n.t('label.all'), admin_invoice_headers_path
   end
 
   action_item only: :index do |resource|
@@ -123,6 +123,8 @@ ActiveAdmin.register InvoiceHeader do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.manager')])
     end
+
+    before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
       InvoiceHeader.includes [:client, :invoice_term, :invoice_status]
