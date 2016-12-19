@@ -3,11 +3,11 @@ ActiveAdmin.register AdminUsersAudit do
 
   config.clear_action_items!
 
-  scope I18n.t('label.deleted'), default: false do |resources|
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
     AdminUsersAudit.only_deleted.where('admin_user_id = ?', params[:admin_user_id]).order('id desc')
   end
 
-  action_item only: :index do |resource|
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
     link_to I18n.t('label.all'), admin_admin_users_audits_path(admin_user_id: params[:admin_user_id])
   end
 

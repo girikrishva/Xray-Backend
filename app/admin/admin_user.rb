@@ -3,11 +3,11 @@ ActiveAdmin.register AdminUser do
 
   config.clear_action_items!
 
-  scope I18n.t('label.deleted'), default: false do |resources|
+  scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
     AdminUser.only_deleted
   end
 
-  action_item only: :index do |resource|
+  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
     link_to I18n.t('label.all'), admin_admin_users_path
   end
 
