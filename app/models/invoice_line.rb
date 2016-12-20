@@ -38,7 +38,8 @@ class InvoiceLine < ActiveRecord::Base
 
   def invoicing_milestone_invoice_adder_type_arc_check
     if self.invoicing_milestone_id.blank? and self.invoice_adder_type_id.blank?
-      raise I18n.t('errors.invoicing_milestone_invoice_adder_type_arc_error')
+      errors.add(:base, I18n.t('errors.invoicing_milestone_invoice_adder_type_arc_error'))
+      return false
     end
   end
 
