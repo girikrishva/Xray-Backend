@@ -38,6 +38,10 @@ ActiveAdmin.register AdminUser do
       admin_user = AdminUser.find(id)
       admin_user.active = true
       admin_user.save
+      if !admin_user.errors.empty?
+        flash[:error] = admin_user.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to collection_url
   end
@@ -47,6 +51,10 @@ ActiveAdmin.register AdminUser do
       admin_user = AdminUser.find(id)
       admin_user.active = false
       admin_user.save
+      if !admin_user.errors.empty?
+        flash[:error] = admin_user.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to collection_url
   end
