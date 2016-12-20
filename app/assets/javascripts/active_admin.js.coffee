@@ -5,3 +5,4 @@
 //= require invoice_lines.coffee
 //= require payment_lines.coffee
 //= require vacations.coffee
+//= require pipelines.coffee

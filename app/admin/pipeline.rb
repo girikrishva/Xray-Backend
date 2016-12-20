@@ -184,6 +184,12 @@ ActiveAdmin.register Pipeline do
       Pipeline.restore(params[:id])
       redirect_to admin_pipelines_path
     end
+
+    def clients_for_business_unit
+      business_unit_id = params[:business_unit_id]
+      resources = Client.where('business_unit_id = ?', business_unit_id).order(:name)
+      render json: '{"resources": ' + resources.to_json.to_json + '}'
+    end
   end
 
   form do |f|
@@ -195,7 +201,7 @@ ActiveAdmin.register Pipeline do
     f.inputs do
       f.input :business_unit, required: true
       f.input :client, required: true, as: :select, collection:
-                         Client.all.order('name asc').map { |a| [a.name, a.id] }, include_blank: true
+                         Client.all.order('name asc').map { |a| [a.name, a.id] }, include_blank: true, input_html: {disabled: true}
       f.input :name
       f.input :expected_start, as: :datepicker
       f.input :expected_end, as: :datepicker
