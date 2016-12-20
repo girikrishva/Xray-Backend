@@ -176,6 +176,9 @@ ActiveAdmin.register Pipeline do
       if params.has_key?(:pipeline_id)
         pipeline = Pipeline.find(params[:pipeline_id])
         pipeline.convert_pipeline(pipeline)
+        if !pipeline.errors.empty?
+          flash[:error] = pipeline.errors.full_messages.to_sentence
+        end
         redirect_to collection_url
       end
     end
@@ -199,7 +202,12 @@ ActiveAdmin.register Pipeline do
       f.object.pipeline_status_id = PipelineStatus.where(name: I18n.t('label.new')).first.id
     end
     f.inputs do
-      f.input :business_unit, required: true
+      if f.object.new_record?
+        f.input :business_unit, required: true
+      else
+        f.input :business_unit, required: true, input_html: {disabled: true}
+        f.input :business_unit_id, as: :hidden
+      end
       f.input :client, required: true, as: :select, collection:
                          Client.all.order('name asc').map { |a| [a.name, a.id] }, include_blank: true, input_html: {disabled: true}
       f.input :name
@@ -207,7 +215,11 @@ ActiveAdmin.register Pipeline do
       f.input :expected_end, as: :datepicker
       f.input :expected_value
       f.input :project_type_code, required: true
-      f.input :pipeline_status, required: true
+      if f.object.new_record?
+        f.input :pipeline_status_id, as: :hidden
+      else
+        f.input :pipeline_status, required: true
+      end
       f.input :sales_person, required: true, label: I18n.t('label.sales_by'), as: :select, collection:
                                AdminUser.ordered_lookup.map { |a| [a.name, a.id] }, include_blank: true
       f.input :estimator, required: true, label: I18n.t('label.estimated_by'), as: :select, collection:

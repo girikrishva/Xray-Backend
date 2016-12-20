@@ -61,10 +61,11 @@ class Pipeline < ActiveRecord::Base
   def convert_pipeline(pipeline)
     if self.engagement_manager.blank?
       errors.add(:base, I18n.t('errors.convert_pipeline_engagement_manager_missing'))
-      return false
     end
     if self.delivery_manager.blank?
       errors.add(:base, I18n.t('errors.convert_pipeline_delivery_manager_missing'))
+    end
+    if !errors.empty?
       return false
     end
     project = Project.new
