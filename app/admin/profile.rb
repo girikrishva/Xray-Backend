@@ -16,6 +16,9 @@ ActiveAdmin.register AdminUser, as: I18n.t('menu.profile') do
 
     def update
       super do |format|
+        if !resource.errors.empty?
+          flash[:error] = resource.errors.full_messages.to_sentence
+        end
         redirect_to admin_dashboard_path and return if resource.valid?
       end
     end
