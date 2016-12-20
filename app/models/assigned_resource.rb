@@ -54,7 +54,6 @@ class AssignedResource < ActiveRecord::Base
       if over_assigned_hours > 0
         admin_user_name = AdminUser.find(self.resource.admin_user_id).name
         AssignedResource.find(self.id).destroy
-        # AssignedResource.connection.commit_db_transaction
         errors.add(:base, I18n.t('errors.over_assignment', admin_user_name: admin_user_name, as_on: loop_date, over_assigned_hours: over_assigned_hours))
       end
       loop_date += 1
