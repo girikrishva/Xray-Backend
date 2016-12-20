@@ -32,7 +32,8 @@ class AdminUser < ActiveRecord::Base
     role_id_for_super_admin = Role.where(super_admin: true).first.id
     super_admin_user_count = AdminUser.where(role_id: role_id_for_super_admin).where.not(id: self.id).count
     if super_admin_user_count == 0 and self.role_id != role_id_for_super_admin
-      raise "At least one user must be a super_admin."
+      AdminUser.connection.rollback_db_transaction
+      errors.add(:base, I18n.t('errors.min_one_super_admin'))
     end
   end
 
@@ -70,7 +71,8 @@ class AdminUser < ActiveRecord::Base
 
   def super_admin_cannot_be_inactive
     if Role.find(self.role_id).super_admin and !self.active
-      raise "super_admin cannot be inactive."
+      errors.add(:base, I18n.t('errors.super_admin_inactive'))
+      return false
     end
   end
 

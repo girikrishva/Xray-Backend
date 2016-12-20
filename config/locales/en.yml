@@ -179,6 +179,8 @@ en:
     vacation_codes: "Vacation Codes"
     designations: "Designations"
   errors:
+    min_one_super_admin: "ERROR: At least one user must be a super_admin."
+    super_admin_inactive: "ERROR: Super admin cannot be made inactive."
     date_check: "ERROR: Start must be on or before End dates."
     hours_per_day: "ERROR: Hours per day must be between 0 and 24."
     convert_pipeline_engagement_manager_missing: "ERROR: Engagement manager must be defined before conversion."
