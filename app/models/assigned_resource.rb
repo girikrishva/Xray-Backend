@@ -50,9 +50,12 @@ class AssignedResource < ActiveRecord::Base
   def over_assignment_check
     loop_date = self.start_date
     while loop_date <= self.end_date
-      if AssignedResource.assigned_hours(self.resource.admin_user_id, loop_date) > Rails.configuration.max_work_hours_per_day
+      over_assigned_hours = AssignedResource.assigned_hours(self.resource.admin_user_id, loop_date) - Rails.configuration.max_work_hours_per_day
+      if over_assigned_hours > 0
+        admin_user_name = AdminUser.find(self.resource.admin_user_id).name
         AssignedResource.find(self.id).destroy
-        break
+        AssignedResource.connection.commit_db_transaction
+        raise I18n.t('errors.over_assignment', admin_user_name: admin_user_name, as_on: loop_date, over_assigned_hours: over_assigned_hours)
       end
       loop_date += 1
     end
