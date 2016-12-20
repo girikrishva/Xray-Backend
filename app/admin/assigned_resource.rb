@@ -166,6 +166,7 @@ ActiveAdmin.register AssignedResource do
 
     def create
       super do |format|
+        flash[:error] = resource.errors.full_messages.to_sentence
         redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
       end
     end
