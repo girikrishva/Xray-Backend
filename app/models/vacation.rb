@@ -20,7 +20,8 @@ class Vacation < ActiveRecord::Base
   def request_validity_check
     Vacation.where('admin_user_id = ? and approval_status_id != ?', self.admin_user_id, ApprovalStatus.where(name: I18n.t('label.canceled')).first.id).each do |v|
       if (self.id != v.id) and (self.start_date >= v.start_date and self.start_date <= v.end_date) or (self.end_date >= v.start_date and self.end_date <= v.end_date)
-        raise I18n.t('errors.request_validity_check_error')
+        errors.add(:base, I18n.t('errors.request_validity_check_error'))
+        return false
       end
     end
     return true
@@ -28,7 +29,8 @@ class Vacation < ActiveRecord::Base
 
   def date_check
     if self.start_date > self.end_date
-      raise I18n.t('errors.date_check')
+      errors.add(:base, I18n.t('errors.date_check'))
+      return false
     end
   end
 

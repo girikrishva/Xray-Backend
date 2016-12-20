@@ -191,3 +191,5 @@ en:
     timesheet_outside_assignment_date_range: "ERROR: Timesheet date outside of assignment date range."
     over_assignment: "ERROR: User '%{admin_user_name}' over assigned on '%{as_on}' by '%{over_assigned_hours}' hours."
     cannot_destroy_last_super_admin: "ERROR: Cannot destroy last super_admin user."
+    one_primary_skill: "ERROR: User cannot have more than one primary skill."
+    one_super_admin_role: "Cannot have more than one super_admin role in application."

@@ -71,7 +71,8 @@ class Project < ActiveRecord::Base
 
   def date_check
     if self.start_date > self.end_date
-      raise I18n.t('errors.date_check')
+      errors.add(:base, I18n.t('errors.date_check'))
+      return false
     end
   end
 

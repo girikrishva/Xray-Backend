@@ -23,7 +23,8 @@ class Resource < ActiveRecord::Base
 
   def only_one_primary_skill_allowed_per_user
     if self.deleted_at.blank? and self.primary_skill and Resource.where(admin_user_id: self.admin_user_id, primary_skill: self.primary_skill).count > 1
-      raise "User cannot have more than one primary skill."
+      errors.add(:base, I18n.t('errors.one_primary_skill'))
+      return false
     end
   end
 

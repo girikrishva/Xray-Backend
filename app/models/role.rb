@@ -24,14 +24,16 @@ class Role < ActiveRecord::Base
   def cannot_have_more_than_one_super_admin
     super_admin_count = Role.where(super_admin: true).count
     if super_admin_count == 1 and self.super_admin
-      raise "Cannot have more than one super_admin in application."
+      errors.add(:base, I18n.t('errors.cannot_destroy_last_super_admin'))
+      return false
     end
   end
 
   def cannot_destroy_last_super_admin
     super_admin_count = Role.where(super_admin: true).count
     if super_admin_count == 1 and self.super_admin
-      raise "Must have at least one super_admin in application."
+      errors.add(:base, I18n.t('errors.one_super_admin_role'))
+      return false
     end
   end
 

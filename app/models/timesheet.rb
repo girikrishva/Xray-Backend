@@ -17,7 +17,8 @@ class Timesheet < ActiveRecord::Base
 
   def date_check
     if self.timesheet_date < self.assigned_resource.start_date or self.timesheet_date > self.assigned_resource.end_date
-      raise I18n.t('errors.timesheet_outside_assignment_date_range')
+      errors.add(:base, I18n.t('errors.timesheet_outside_assignment_date_range'))
+      return false
     end
   end
 end
