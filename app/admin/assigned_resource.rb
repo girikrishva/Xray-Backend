@@ -175,12 +175,18 @@ ActiveAdmin.register AssignedResource do
 
     def update
       super do |format|
+        if !resource.errors.empty?
+          flash[:error] = resource.errors.full_messages.to_sentence
+        end
         redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
       end
     end
 
     def destroy
       super do |format|
+        if !resource.errors.empty?
+          flash[:error] = resource.errors.full_messages.to_sentence
+        end
         redirect_to collection_url(project_id: session[:project_id]) and return if resource.valid?
       end
     end

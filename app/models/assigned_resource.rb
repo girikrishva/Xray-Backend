@@ -29,13 +29,15 @@ class AssignedResource < ActiveRecord::Base
 
   def date_check
     if self.start_date > self.end_date
-      raise I18n.t('errors.date_check')
+      errors.add(:base, I18n.t('errors.date_check'))
+      return false
     end
   end
 
   def hours_check
     if self.hours_per_day < 0 || self.hours_per_day > 24
-      raise I18n.t('errors.hours_per_day')
+      errors.add(:base, I18n.t('errors.hours_per_day'))
+      return false
     end
   end
 
