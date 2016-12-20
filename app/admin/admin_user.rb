@@ -113,6 +113,15 @@ ActiveAdmin.register AdminUser do
       end
     end
 
+    def destroy
+      super do |format|
+        if !resource.errors.empty?
+          flash[:error] = resource.errors.full_messages.to_sentence
+        end
+        redirect_to collection_url and return if resource.valid?
+      end
+    end
+
     def restore
       AdminUser.restore(params[:id])
       redirect_to admin_users_path

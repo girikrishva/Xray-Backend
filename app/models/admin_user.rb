@@ -32,8 +32,8 @@ class AdminUser < ActiveRecord::Base
     role_id_for_super_admin = Role.where(super_admin: true).first.id
     super_admin_user_count = AdminUser.where(role_id: role_id_for_super_admin).where.not(id: self.id).count
     if super_admin_user_count == 0 and self.role_id != role_id_for_super_admin
-      AdminUser.connection.rollback_db_transaction
       errors.add(:base, I18n.t('errors.min_one_super_admin'))
+      return false
     end
   end
 
@@ -41,7 +41,8 @@ class AdminUser < ActiveRecord::Base
     role_id_for_super_admin = Role.where(super_admin: true).first.id
     super_admin_user_count = AdminUser.where(role_id: role_id_for_super_admin).count
     if super_admin_user_count == 1 and self.role_id == role_id_for_super_admin
-      raise "Cannot destroy last super_admin user."
+      errors.add(:base, I18n.t('errors.cannot_destroy_last_super_admin'))
+      return false
     end
   end
 
@@ -70,8 +71,10 @@ class AdminUser < ActiveRecord::Base
   end
 
   def super_admin_cannot_be_inactive
-    if Role.find(self.role_id).super_admin and !self.active
-      errors.add(:base, I18n.t('errors.super_admin_inactive'))
+    role_id_for_super_admin = Role.where(super_admin: true).first.id
+    super_admin_user_count = AdminUser.where(role_id: role_id_for_super_admin).count
+    if super_admin_user_count == 0 and Role.find(self.role_id).super_admin and !self.active
+      errors.add(:base, I18n.t('errors.last_super_admin_inactive'))
       return false
     end
   end
@@ -104,7 +107,8 @@ class AdminUser < ActiveRecord::Base
   def doj_dol_date_check
     if !self.date_of_joining.blank? and !self.date_of_leaving.blank?
       if self.date_of_joining > self.date_of_leaving
-        raise I18n.t('errors.doj_dol_date_check')
+        errors.add(:base, I18n.t('errors.doj_dol_date_check'))
+        return false
       end
     end
   end
