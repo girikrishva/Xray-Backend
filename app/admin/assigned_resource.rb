@@ -21,7 +21,7 @@ ActiveAdmin.register AssignedResource do
   config.clear_action_items!
 
   scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
-    AssignedResource.only_deleted.where('project_id = ?', params[:project_id]).order('start_date asc, end_date asc')
+    AssignedResource.only_deleted.where('project_id = ?', params[:project_id]).order('deleted_at desc')
   end
 
   action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
