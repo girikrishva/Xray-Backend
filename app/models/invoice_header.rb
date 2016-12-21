@@ -70,4 +70,8 @@ class InvoiceHeader < ActiveRecord::Base
     audit_record.ip_address = self.ip_address
     audit_record.save
   end
+
+  def business_unit_name
+    self.client.business_unit.name
+  end
 end

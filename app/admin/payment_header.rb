@@ -58,7 +58,7 @@ ActiveAdmin.register PaymentHeader do
     redirect_to admin_payment_headers_path
   end
 
-  index do
+  index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
     column :id
     column :client, sortable: 'client.name' do |resource|
