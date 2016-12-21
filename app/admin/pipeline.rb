@@ -94,8 +94,7 @@ ActiveAdmin.register Pipeline do
 
   filter :business_unit, collection:
                            proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
-  filter :client, collection:
-                    proc { Client.ordered_lookup }
+  filter :client, collection:  proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}
   filter :name, label: I18n.t('label.project')
   filter :expected_start, label: I18n.t('label.start')
   filter :expected_end, label: I18n.t('label.end')

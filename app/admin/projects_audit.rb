@@ -101,8 +101,7 @@ ActiveAdmin.register ProjectsAudit do
 
   filter :business_unit, collection:
                            proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
-  filter :client, collection:
-                    proc { Client.ordered_lookup }
+  filter :client, collection: proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}
   filter :name, label: I18n.t('label.project')
   filter :start_date, label: I18n.t('label.start')
   filter :end_date, label: I18n.t('label.end')

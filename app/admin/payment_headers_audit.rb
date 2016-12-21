@@ -88,8 +88,7 @@ ActiveAdmin.register PaymentHeadersAudit do
     end
   end
 
-  filter :client, collection:
-                    proc { Client.ordered_lookup }
+  filter :client, collection: proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}
   filter :narrative
   filter :payment_date
   filter :payment_status

@@ -92,8 +92,7 @@ ActiveAdmin.register InvoiceHeadersAudit do
     end
   end
 
-  filter :client, collection:
-                    proc { Client.ordered_lookup }
+  filter :client, collection: proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}
   filter :narrative
   filter :invoice_date
   filter :invoice_term

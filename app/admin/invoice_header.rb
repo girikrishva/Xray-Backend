@@ -88,8 +88,7 @@ ActiveAdmin.register InvoiceHeader do
     end
   end
 
-  filter :client, collection:
-                    proc { Client.ordered_lookup }
+  filter :client, collection: proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}
   filter :narrative
   filter :invoice_date
   filter :invoice_term
@@ -179,8 +178,7 @@ ActiveAdmin.register InvoiceHeader do
       f.object.header_amount = 0
     end
     f.inputs do
-      f.input :client, required: true, as: :select, collection:
-                         Client.ordered_lookup.map { |a| [a.name + ' [' + a.business_unit_name + ']', a.id] }, include_blank: true
+      f.input :client, required: true, as: :select, collection:proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}, include_blank: true
       f.input :narrative
       f.input :invoice_date, required: true, label: I18n.t('label.invoice_date'), as: :datepicker
       f.input :invoice_term

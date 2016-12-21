@@ -32,6 +32,10 @@ class Client < ActiveRecord::Base
     audit_record.save
   end
 
+  def client_name
+    self.name + ' [' + self.business_unit_name + ']'
+  end
+
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name
   end
