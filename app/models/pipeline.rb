@@ -65,6 +65,10 @@ class Pipeline < ActiveRecord::Base
     if self.delivery_manager.blank?
       errors.add(:base, I18n.t('errors.convert_pipeline_delivery_manager_missing'))
     end
+    already_converted = Project.where(pipeline_id: pipeline.id).first
+    if !already_converted.blank?
+      errors.add(:base, I18n.t('errors.already_converted', pipeline_id: already_converted.pipeline_id, project_id: already_converted.id))
+    end
     if !errors.empty?
       return false
     end

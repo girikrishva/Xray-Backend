@@ -193,3 +193,4 @@ en:
     cannot_destroy_last_super_admin: "ERROR: Cannot destroy last super_admin user."
     one_primary_skill: "ERROR: User cannot have more than one primary skill."
     one_super_admin_role: "Cannot have more than one super_admin role in application."
+    already_converted: "Pipeline with id '%{pipeline_id}' has already been converted into Project with id '%{project_id}'."
