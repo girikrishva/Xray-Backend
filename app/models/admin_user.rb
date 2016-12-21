@@ -31,7 +31,7 @@ class AdminUser < ActiveRecord::Base
   def at_least_one_user_must_be_super_admin
     role_id_for_super_admin = Role.where(super_admin: true).first.id
     super_admin_user_count = AdminUser.where(role_id: role_id_for_super_admin).where.not(id: self.id).count
-    if super_admin_user_count == 1 and self.role_id != role_id_for_super_admin
+    if super_admin_user_count == 1 and self.role_id != role_id_for_super_admin and !self.active
       errors.add(:base, I18n.t('errors.min_one_super_admin'))
       return false
     end
