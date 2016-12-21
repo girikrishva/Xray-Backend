@@ -24,7 +24,7 @@ ActiveAdmin.register PaymentLinesAudit do
     PaymentLinesAudit.only_deleted.where('payment_line_id = ?', params[:payment_line_id]).order('id desc')
   end
 
-  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+  action_item only: :index do |resource|
     link_to I18n.t('label.all'), admin_payment_lines_audits_path(payment_header_id: params[:payment_header_id], payment_line_id: params[:payment_line_id])
   end
 

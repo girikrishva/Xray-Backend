@@ -11,7 +11,7 @@ ActiveAdmin.register PipelinesAudit do
     PipelinesAudit.only_deleted.where('pipeline_id = ?', params[:pipeline_id]).order('id desc')
   end
 
-  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+  action_item only: :index do |resource|
     link_to I18n.t('label.all'), admin_pipelines_audits_path(pipeline_id: params[:pipeline_id])
   end
 

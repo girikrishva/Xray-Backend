@@ -24,7 +24,7 @@ ActiveAdmin.register Role do
     Role.only_deleted
   end
 
-  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+  action_item only: :index do |resource|
     link_to I18n.t('label.all'), admin_roles_path
   end
 

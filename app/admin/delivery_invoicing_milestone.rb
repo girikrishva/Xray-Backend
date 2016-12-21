@@ -24,7 +24,7 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
     DeliveryInvoicingMilestone.only_deleted.where('delivery_milestone_id = ?', params[:delivery_milestone_id]).order('invoicing_milestone_id')
   end
 
-  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+  action_item only: :index do |resource|
     link_to I18n.t('label.all'), admin_delivery_invoicing_milestones_path(project_id: params[:project_id], delivery_milestone_id: params[:delivery_milestone_id])
   end
 

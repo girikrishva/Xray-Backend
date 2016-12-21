@@ -24,7 +24,7 @@ ActiveAdmin.register PaymentLine do
     PaymentLine.only_deleted.where('payment_header_id = ?', params[:payment_header_id]).order('narrative asc')
   end
 
-  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+  action_item only: :index do |resource|
     link_to I18n.t('label.all'), admin_payment_lines_path(payment_header_id: params[:payment_header_id])
   end
 

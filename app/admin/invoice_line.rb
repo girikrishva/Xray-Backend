@@ -24,7 +24,7 @@ ActiveAdmin.register InvoiceLine do
     InvoiceLine.only_deleted.where('invoice_header_id = ?', params[:invoice_header_id]).order('narrative asc')
   end
 
-  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+  action_item only: :index do |resource|
     link_to I18n.t('label.all'), admin_invoice_lines_path(invoice_header_id: params[:invoice_header_id])
   end
 

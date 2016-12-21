@@ -7,7 +7,7 @@ ActiveAdmin.register ClientsAudit do
     ClientsAudit.only_deleted.where('client_id = ?', params[:client_id]).order('id desc')
   end
 
-  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+  action_item only: :index do |resource|
     link_to I18n.t('label.all'), admin_clients_audits_path(client_id: params[:client_id])
   end
 

@@ -24,7 +24,7 @@ ActiveAdmin.register InvoiceLinesAudit do
     InvoiceLinesAudit.only_deleted.where('invoice_line_id = ?', params[:invoice_line_id]).order('id desc')
   end
 
-  action_item only: :index, if: proc { current_admin_user.role.super_admin } do |resource|
+  action_item only: :index do |resource|
     link_to I18n.t('label.all'), admin_invoice_lines_audits_path(invoice_header_id: params[:invoice_header_id], invoice_line_id: params[:invoice_line_id])
   end
 
