@@ -20,10 +20,6 @@ ActiveAdmin.register Resource do
 
   config.clear_action_items!
 
-  scope :latest, default: false do |resources|
-    resources.latest
-  end
-
   scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
     Resource.only_deleted
   end
@@ -65,6 +61,7 @@ ActiveAdmin.register Resource do
   index as: :grouped_table, group_by_attribute: :skill_name do
     selectable_column
     column :id
+    column :primary_skill
     column I18n.t('label.user'), :admin_user, sortable: 'admin_users.name' do |resource|
       resource.admin_user.name
     end
@@ -72,9 +69,6 @@ ActiveAdmin.register Resource do
     #   resource.skill.name
     # end
     column :as_on
-    column I18n.t('label.latest'), (:is_latest) do |resource|
-      resource.is_latest ? status_tag(:yes, :ok) : status_tag(:no)
-    end
     column :bill_rate, :sortable => 'bill_rate' do |element|
       div :style => "text-align: right;" do
         number_with_precision element.bill_rate, precision: 0, delimiter: ','
@@ -85,7 +79,6 @@ ActiveAdmin.register Resource do
         number_with_precision element.cost_rate, precision: 0, delimiter: ','
       end
     end
-    column :primary_skill
     column :comments
     if params[:scope] == 'deleted'
       actions defaults: false, dropdown: true do |resource|
@@ -97,18 +90,19 @@ ActiveAdmin.register Resource do
     end
   end
 
+  filter :primary_skill
   filter :skill, collection:
                    proc { Lookup.lookups_for_name(I18n.t('models.skills')) }
   filter :admin_user, label: 'User'
   filter :as_on
   filter :bill_rate
   filter :cost_rate
-  filter :primary_skill
   filter :comments
 
   show do |r|
     attributes_table_for r do
       row :id
+      row :primary_skill
       row :skill do
         r.skill.name
       end
@@ -123,7 +117,6 @@ ActiveAdmin.register Resource do
       row :cost_rate do
         number_with_precision r.cost_rate, precision: 0, delimiter: ','
       end
-      row :primary_skill
       row :comments
     end
   end
@@ -182,6 +175,11 @@ ActiveAdmin.register Resource do
       Resource.restore(params[:id])
       redirect_to admin_resources_path
     end
+
+    def latest
+      Resource.where('bill_rate = 2000')
+      redirect_to admin_resources_path
+    end
   end
 
   form do |f|
@@ -189,6 +187,12 @@ ActiveAdmin.register Resource do
       f.object.as_on = Date.today
     end
     f.inputs do
+      if !f.object.new_record?
+        f.input :primary_skill, input_html: {disabled: :true}
+        f.input :primary_skill, as: :hidden
+      else
+        f.input :primary_skill
+      end
       if f.object.skill_id.blank?
         f.input :skill, required: true, as: :select, collection:
                           Lookup.lookups_for_name(I18n.t('models.skills'))
@@ -220,12 +224,6 @@ ActiveAdmin.register Resource do
         f.input :cost_rate, input_html: {readonly: true}
       else
         f.input :cost_rate
-      end
-      if !f.object.new_record?
-        f.input :primary_skill, input_html: {disabled: :true}
-        f.input :primary_skill, as: :hidden
-      else
-        f.input :primary_skill
       end
       f.input :comments
     end

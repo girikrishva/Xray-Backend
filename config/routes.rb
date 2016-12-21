@@ -56,6 +56,8 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
+  match 'admin/resources/latest', to: 'admin/resources#latest', via: [:get]
+
   match '/admin/api/restore_role', to: 'admin/roles#restore', via: [:post]
   match '/admin/api/restore_admin_user', to: 'admin/admin_users#restore', via: [:post]
   match '/admin/api/restore_admin_users_audit', to: 'admin/admin_users_audits#restore', via: [:post]

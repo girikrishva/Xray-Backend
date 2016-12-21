@@ -44,16 +44,6 @@ class Resource < ActiveRecord::Base
     end
   end
 
-  def self.latest
-    latest_ids = []
-    Resource.all.each do |resource|
-      if resource.id == Resource.where(skill_id: resource.skill_id, admin_user_id: resource.admin_user_id).order(:as_on).last.id
-        latest_ids << resource.id
-      end
-    end
-    Resource.where(id: latest_ids)
-  end
-
   def self.ordered_lookup
     AdminUser.select("resources.id, admin_users.name").joins(:resources)
   end
