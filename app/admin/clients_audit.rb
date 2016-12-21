@@ -18,7 +18,11 @@ ActiveAdmin.register ClientsAudit do
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     client_id = ClientsAudit.without_deleted.find(ids.first).client_id
     ids.each do |id|
-      ClientsAudit.destroy(id)
+      object = ClientsAudit.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_clients_audits_path(client_id: client_id)
   end
@@ -26,7 +30,11 @@ ActiveAdmin.register ClientsAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     client_id = ClientsAudit.with_deleted.find(ids.first).client_id
     ids.each do |id|
-      ClientsAudit.restore(id)
+      object = ClientsAudit.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_clients_audits_path(client_id: client_id)
   end

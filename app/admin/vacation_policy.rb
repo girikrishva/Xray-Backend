@@ -30,14 +30,22 @@ ActiveAdmin.register VacationPolicy do
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      VacationPolicy.destroy(id)
+      object = VacationPolicy.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_vacation_policies_path
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      VacationPolicy.restore(id)
+      object = VacationPolicy.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_vacation_policies_path
   end

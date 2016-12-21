@@ -38,14 +38,22 @@ ActiveAdmin.register Pipeline do
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      Pipeline.destroy(id)
+      object = Pipeline.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_pipelines_path
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      Pipeline.restore(id)
+      object = Pipeline.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_pipelines_path
   end

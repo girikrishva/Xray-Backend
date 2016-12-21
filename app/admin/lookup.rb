@@ -41,14 +41,22 @@ ActiveAdmin.register Lookup do
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      Lookup.destroy(id)
+      object = Lookup.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_lookups_path(lookup_type_id: session[:lookup_type_id])
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      Lookup.restore(id)
+      object = Lookup.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_lookups_path(lookup_type_id: session[:lookup_type_id])
   end

@@ -42,14 +42,22 @@ ActiveAdmin.register ProjectOverhead do
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      ProjectOverhead.destroy(id)
+      object = ProjectOverhead.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_project_overheads_path(project_id: session[:project_id])
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      ProjectOverhead.restore(id)
+      object = ProjectOverhead.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_project_overheads_path(project_id: session[:project_id])
   end

@@ -18,7 +18,11 @@ ActiveAdmin.register VacationPoliciesAudit do
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     vacation_policy_id = VacationPoliciesAudit.without_deleted.find(ids.first).vacation_policy_id
     ids.each do |id|
-      VacationPoliciesAudit.destroy(id)
+      object = VacationPoliciesAudit.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_vacation_policies_audits_path(vacation_policy_id: vacation_policy_id)
   end
@@ -26,7 +30,11 @@ ActiveAdmin.register VacationPoliciesAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     vacation_policy_id = VacationPoliciesAudit.with_deleted.find(ids.first).vacation_policy_id
     ids.each do |id|
-      VacationPoliciesAudit.restore(id)
+      object = VacationPoliciesAudit.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_vacation_policies_audits_path(vacation_policy_id: vacation_policy_id)
   end

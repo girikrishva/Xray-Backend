@@ -41,6 +41,10 @@ ActiveAdmin.register Timesheet do
       timesheet = Timesheet.find(id)
       timesheet.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.pending')).first.id
       timesheet.save
+      if !timesheet.errors.empty?
+        flash[:error] = timesheet.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to collection_url
   end
@@ -50,6 +54,10 @@ ActiveAdmin.register Timesheet do
       timesheet = Timesheet.find(id)
       timesheet.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.canceled')).first.id
       timesheet.save
+      if !timesheet.errors.empty?
+        flash[:error] = timesheet.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to collection_url
   end
@@ -59,6 +67,10 @@ ActiveAdmin.register Timesheet do
       timesheet = Timesheet.find(id)
       timesheet.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.rejected')).first.id
       timesheet.save
+      if !timesheet.errors.empty?
+        flash[:error] = timesheet.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to collection_url
   end
@@ -68,20 +80,32 @@ ActiveAdmin.register Timesheet do
       timesheet = Timesheet.find(id)
       timesheet.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.approved')).first.id
       timesheet.save
+      if !timesheet.errors.empty?
+        flash[:error] = timesheet.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to collection_url
   end
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      Timesheet.destroy(id)
+      object = Timesheet.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_timesheets_path
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      Timesheet.restore(id)
+      object = Timesheet.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_timesheets_path
   end

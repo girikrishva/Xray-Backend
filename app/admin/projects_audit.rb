@@ -39,7 +39,11 @@ ActiveAdmin.register ProjectsAudit do
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     project_id = ProjectsAudit.without_deleted.find(ids.first).project_id
     ids.each do |id|
-      ProjectsAudit.destroy(id)
+      object = ProjectsAudit.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_projects_audits_path(project_id: project_id)
   end
@@ -47,7 +51,11 @@ ActiveAdmin.register ProjectsAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     project_id = ProjectsAudit.with_deleted.find(ids.first).project_id
     ids.each do |id|
-      ProjectsAudit.restore(id)
+      object = ProjectsAudit.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_projects_audits_path(project_id: project_id)
   end

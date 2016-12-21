@@ -42,14 +42,22 @@ ActiveAdmin.register PaymentLine do
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      PaymentLine.destroy(id)
+      object = PaymentLine.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_payment_lines_path(payment_header_id: session[:payment_header_id])
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      PaymentLine.restore(id)
+      object = PaymentLine.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_payment_lines_path(payment_header_id: session[:payment_header_id])
   end

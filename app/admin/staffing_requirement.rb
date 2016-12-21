@@ -43,14 +43,22 @@ ActiveAdmin.register StaffingRequirement do
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      StaffingRequirement.destroy(id)
+      object = StaffingRequirement.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_staffing_requirements_path(pipeline_id: session[:pipeline_id])
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      StaffingRequirement.restore(id)
+      object = StaffingRequirement.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_staffing_requirements_path(pipeline_id: session[:pipeline_id])
   end

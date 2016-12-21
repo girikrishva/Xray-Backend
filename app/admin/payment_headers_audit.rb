@@ -39,7 +39,11 @@ ActiveAdmin.register PaymentHeadersAudit do
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     payment_header_id = PaymentHeadersAudit.without_deleted.find(ids.first).payment_header_id
     ids.each do |id|
-      PaymentHeadersAudit.destroy(id)
+      object = PaymentHeadersAudit.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_payment_headers_audits_path(payment_header_id: payment_header_id)
   end
@@ -47,7 +51,11 @@ ActiveAdmin.register PaymentHeadersAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     payment_header_id = PaymentHeadersAudit.with_deleted.find(ids.first).payment_header_id
     ids.each do |id|
-      PaymentHeadersAudit.restore(id)
+      object = PaymentHeadersAudit.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_payment_headers_audits_path(payment_header_id: payment_header_id)
   end

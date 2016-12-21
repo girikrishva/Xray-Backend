@@ -38,14 +38,22 @@ ActiveAdmin.register PaymentHeader do
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      PaymentHeader.destroy(id)
+      object = PaymentHeader.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_payment_headers_path
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      PaymentHeader.restore(id)
+      object = PaymentHeader.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_payment_headers_path
   end

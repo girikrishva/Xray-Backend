@@ -43,7 +43,11 @@ ActiveAdmin.register InvoicingDeliveryMilestone do
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     invoicing_milestone_id = InvoicingDeliveryMilestone.without_deleted.find(ids.first).invoicing_milestone_id
     ids.each do |id|
-      InvoicingDeliveryMilestone.destroy(id)
+      object = InvoicingDeliveryMilestone.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_invoicing_delivery_milestones_path(invoicing_milestone_id: invoicing_milestone_id, project_id: session[:project_id])
   end
@@ -51,7 +55,11 @@ ActiveAdmin.register InvoicingDeliveryMilestone do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     invoicing_milestone_id = InvoicingDeliveryMilestone.with_deleted.find(ids.first).invoicing_milestone_id
     ids.each do |id|
-      InvoicingDeliveryMilestone.restore(id)
+      object = InvoicingDeliveryMilestone.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_invoicing_delivery_milestones_path(invoicing_milestone_id: invoicing_milestone_id, project_id: session[:project_id])
   end

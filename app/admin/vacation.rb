@@ -37,6 +37,10 @@ ActiveAdmin.register Vacation do
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.pending')).first.id
       vacation.save
+      if !vacation.errors.empty?
+        flash[:error] = vacation.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to collection_url
   end
@@ -46,6 +50,10 @@ ActiveAdmin.register Vacation do
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.canceled')).first.id
       vacation.save
+      if !vacation.errors.empty?
+        flash[:error] = vacation.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to collection_url
   end
@@ -55,6 +63,10 @@ ActiveAdmin.register Vacation do
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.rejected')).first.id
       vacation.save
+      if !vacation.errors.empty?
+        flash[:error] = vacation.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to collection_url
   end
@@ -64,6 +76,10 @@ ActiveAdmin.register Vacation do
       vacation = Vacation.find(id)
       vacation.approval_status_id = ApprovalStatus.where('name = ?', I18n.t('label.approved')).first.id
       vacation.save
+      if !vacation.errors.empty?
+        flash[:error] = vacation.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to collection_url
   end
@@ -72,14 +88,22 @@ ActiveAdmin.register Vacation do
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      Vacation.destroy(id)
+      object = Vacation.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_vacations_path
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      Vacation.restore(id)
+      object = Vacation.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_vacations_path
   end

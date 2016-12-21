@@ -18,7 +18,11 @@ ActiveAdmin.register HolidayCalendarsAudit do
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     holiday_calendar_id = HolidayCalendarsAudit.without_deleted.find(ids.first).holiday_calendar_id
     ids.each do |id|
-      HolidayCalendarsAudit.destroy(id)
+      object = HolidayCalendarsAudit.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_holiday_calendars_audits_path(holiday_calendar_id: holiday_calendar_id)
   end
@@ -26,7 +30,11 @@ ActiveAdmin.register HolidayCalendarsAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     holiday_calendar_id = HolidayCalendarsAudit.with_deleted.find(ids.first).holiday_calendar_id
     ids.each do |id|
-      HolidayCalendarsAudit.restore(id)
+      object = HolidayCalendarsAudit.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_holiday_calendars_audits_path(holiday_calendar_id: holiday_calendar_id)
   end

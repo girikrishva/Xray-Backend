@@ -42,14 +42,22 @@ ActiveAdmin.register DeliveryMilestone do
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      DeliveryMilestone.destroy(id)
+      object = DeliveryMilestone.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_delivery_milestones_path(project_id: session[:project_id])
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      DeliveryMilestone.restore(id)
+      object = DeliveryMilestone.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_delivery_milestones_path(project_id: session[:project_id])
   end

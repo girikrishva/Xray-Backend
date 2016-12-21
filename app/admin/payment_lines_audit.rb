@@ -39,7 +39,11 @@ ActiveAdmin.register PaymentLinesAudit do
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     payment_line_id = PaymentLinesAudit.without_deleted.find(ids.first).payment_line_id
     ids.each do |id|
-      PaymentLinesAudit.destroy(id)
+      object = PaymentLinesAudit.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_payment_lines_audits_path(payment_line_id: payment_line_id)
   end
@@ -47,7 +51,11 @@ ActiveAdmin.register PaymentLinesAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     payment_line_id = PaymentLinesAudit.with_deleted.find(ids.first).payment_line_id
     ids.each do |id|
-      PaymentLinesAudit.restore(id)
+      object = PaymentLinesAudit.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_payment_lines_audits_path(payment_line_id: payment_line_id)
   end

@@ -42,14 +42,22 @@ ActiveAdmin.register InvoiceLine do
 
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     ids.each do |id|
-      InvoiceLine.destroy(id)
+      object = InvoiceLine.destroy(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_invoice_lines_path(invoice_header_id: session[:invoice_header_id])
   end
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      InvoiceLine.restore(id)
+      object = InvoiceLine.restore(id)
+      if !object.errors.empty?
+        flash[:error] = object.errors.full_messages.to_sentence
+        break
+      end
     end
     redirect_to admin_invoice_lines_path(invoice_header_id: session[:invoice_header_id])
   end
