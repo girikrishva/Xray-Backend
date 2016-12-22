@@ -69,6 +69,14 @@ ActiveAdmin.register Resource do
     #   resource.skill.name
     # end
     column :as_on
+    column :is_latest do |resource|
+      as_on_filter_date = params[:q][:as_on_lteq_date]
+      if as_on_filter_date.blank?
+        resource.is_latest ? status_tag('yes') : status_tag('no ')
+      else
+        resource.is_latest(as_on_filter_date) ? status_tag('yes') : status_tag('no ')
+      end
+    end
     column :bill_rate, :sortable => 'bill_rate' do |element|
       div :style => "text-align: right;" do
         number_with_precision element.bill_rate, precision: 0, delimiter: ','

@@ -36,8 +36,8 @@ class Resource < ActiveRecord::Base
     self.admin_user.name + ' [Bill Rate: ' + self.bill_rate.to_s + ', Cost Rate: ' + self.cost_rate.to_s + ']'
   end
 
-  def is_latest
-    if self.deleted_at.blank? and self.id == Resource.where(skill_id: self.skill_id, admin_user_id: self.admin_user_id).order(:as_on).last.id
+  def is_latest(as_on = Date.today)
+    if self.deleted_at.blank? and self.id == Resource.where('skill_id = ? and admin_user_id = ? and as_on <= ?', self.skill_id, self.admin_user_id, as_on).order(:as_on).last.id
       return true
     else
       return false
