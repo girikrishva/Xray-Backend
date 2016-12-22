@@ -37,7 +37,7 @@ class Resource < ActiveRecord::Base
   end
 
   def is_latest
-    if self.deleted_at.blank? and self.id == Resource.where('skill_id = ? and admin_user_id = ?', self.skill_id, self.admin_user_id).order(:as_on).last.id
+    if self.deleted_at.blank? and self.id == Resource.where('admin_user_id = ?', self.admin_user_id).order(:as_on).last.id
       return true
     else
       return false
