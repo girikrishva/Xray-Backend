@@ -147,6 +147,8 @@ en:
     ip_address: "IP Address"
     active: "Active"
     deleted: "Deleted"
+    yes_t: "Yes"
+    no_t: "No"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"

@@ -36,8 +36,8 @@ class Resource < ActiveRecord::Base
     self.admin_user.name + ' [Bill Rate: ' + self.bill_rate.to_s + ', Cost Rate: ' + self.cost_rate.to_s + ']'
   end
 
-  def is_latest(as_on = Date.today)
-    if self.deleted_at.blank? and self.id == Resource.where('skill_id = ? and admin_user_id = ? and as_on <= ?', self.skill_id, self.admin_user_id, as_on).order(:as_on).last.id
+  def is_latest
+    if self.deleted_at.blank? and self.id == Resource.where('skill_id = ? and admin_user_id = ?', self.skill_id, self.admin_user_id).order(:as_on).last.id
       return true
     else
       return false
@@ -70,5 +70,36 @@ class Resource < ActiveRecord::Base
     else
       nil
     end
+  end
+
+  ransacker :is_latest,
+            :formatter => ->(v) {
+              if v == 'true'
+                Resource.latest.map(&:id)
+              else
+                Resource.not_latest.map(&:id)
+              end
+            } do |parent|
+    parent.table[:id]
+  end
+
+  def self.latest
+    resource_ids = []
+    Resource.all.each do |resource|
+      if resource.is_latest
+        resource_ids << resource.id
+      end
+    end
+    Resource.where('id in (?)', resource_ids)
+  end
+
+  def self.not_latest
+    resource_ids = []
+    Resource.all.each do |resource|
+      if !resource.is_latest
+        resource_ids << resource.id
+      end
+    end
+    Resource.where('id in (?)', resource_ids)
   end
 end

@@ -70,12 +70,7 @@ ActiveAdmin.register Resource do
     # end
     column :as_on
     column :is_latest do |resource|
-      as_on_filter_date = params[:q][:as_on_lteq_date]
-      if as_on_filter_date.blank?
-        resource.is_latest ? status_tag('yes') : status_tag('no ')
-      else
-        resource.is_latest(as_on_filter_date) ? status_tag('yes') : status_tag('no ')
-      end
+      resource.is_latest ? status_tag('yes') : status_tag('no ')
     end
     column :bill_rate, :sortable => 'bill_rate' do |element|
       div :style => "text-align: right;" do
@@ -103,6 +98,7 @@ ActiveAdmin.register Resource do
                    proc { Lookup.lookups_for_name(I18n.t('models.skills')) }
   filter :admin_user, label: 'User'
   filter :as_on
+  filter :is_latest_in, label: I18n.t('label.latest'), as: :select, collection: [[I18n.t('label.yes_t'), true], [I18n.t('label.no_t'), false]]
   filter :bill_rate
   filter :cost_rate
   filter :comments
