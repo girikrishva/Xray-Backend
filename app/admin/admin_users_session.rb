@@ -39,18 +39,21 @@ ActiveAdmin.register AdminUsersSession do
     redirect_to admin_admin_users_sessions_path(admin_user_id: admin_user_id)
   end
 
+  permit_params :session_ended
+
   config.sort_order = 'id_desc'
 
   index as: :grouped_table, group_by_attribute: :admin_user_details do
     selectable_column
     column :id
-    column :session_started
-    column :session_ended
+    column :session_started do |resource|
+      datetime_as_string(resource.session_started)
+    end
+    column :session_started do |resource|
+      datetime_as_string(resource.session_ended)
+    end
     column :from_ip_address
     column :comments
-    actions defaults: false, dropdown: true do |resource|
-      item I18n.t('actions.view'), admin_admin_users_session_path(resource.id)
-    end
   end
 
   controller do

@@ -21,7 +21,7 @@ class AdminUser < ActiveRecord::Base
 
   before_create :last_super_admin_cannot_be_inactive
   after_create :create_audit_record
-  before_update :at_least_one_user_must_be_super_admin, :last_super_admin_cannot_be_inactive
+  before_update :at_least_one_user_must_be_super_admin, :last_super_admin_cannot_be_inactive, :create_user_session, :update_user_session
   after_update :create_audit_record
   before_destroy :cannot_destroy_last_super_admin_user
   before_create :doj_dol_date_check
@@ -69,6 +69,20 @@ class AdminUser < ActiveRecord::Base
     audit_record.updated_by = self.updated_by
     audit_record.ip_address = self.ip_address
     audit_record.save
+  end
+
+  def create_user_session
+    current_sign_in_at_in_db = AdminUser.find(self.id).current_sign_in_at
+    if self.current_sign_in_at != current_sign_in_at_in_db
+      admin_users_session = AdminUsersSession.create(admin_user_id: self.id, session_started: self.current_sign_in_at, session_ended: self.current_sign_in_at, from_ip_address: self.ip_address)
+      admin_users_session.save
+    end
+  end
+
+  def update_user_session
+    admin_users_session = AdminUsersSession.where('admin_user_id = ? and session_started = ?', self.id, self.current_sign_in_at).first
+    admin_users_session.session_ended = DateTime.now
+    admin_users_session.save
   end
 
   def last_super_admin_cannot_be_inactive
