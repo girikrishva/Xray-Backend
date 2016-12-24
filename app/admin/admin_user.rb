@@ -95,6 +95,7 @@ ActiveAdmin.register AdminUser do
     else
       actions defaults: true, dropdown: true do |resource|
         item I18n.t('actions.audit_trail'), admin_admin_users_audits_path(admin_user_id: resource.id)
+        item I18n.t('actions.user_sessions'), admin_admin_users_sessions_path(admin_user_id: resource.id)
         item I18n.t('actions.change_qualifiers'), edit_admin_admin_user_path(id: resource.id, suppress_password: true)
       end
     end

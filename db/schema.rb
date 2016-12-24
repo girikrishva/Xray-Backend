@@ -114,6 +114,17 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "deleted_at",             :index=>{:name=>"index_admin_users_audits_on_deleted_at"}
   end
 
+  create_table "admin_users_sessions", force: :cascade do |t|
+    t.datetime "session_started", :null=>false
+    t.datetime "session_ended",   :null=>false
+    t.string   "from_ip_address", :null=>false
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "admin_user_id",   :null=>false, :index=>{:name=>"index_admin_user_sessions_on_admin_user_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_admin_user_sessions_admin_user_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.datetime "deleted_at"
+  end
+
   create_view "approval_statuses", <<-'END_VIEW_APPROVAL_STATUSES', :force => true
 SELECT lookups.id,
     lookups.name,
@@ -151,7 +162,7 @@ SELECT lookups.id,
     t.float    "expected_value",        :null=>false
     t.string   "comments"
     t.integer  "business_unit_id",      :null=>false, :index=>{:name=>"index_pipelines_on_business_unit_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_business_unit_id", :on_update=>:no_action, :on_delete=>:no_action}
-    t.integer  "client_id",             :null=>false, :index=>{:name=>"index_pipelines_on_client_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_client_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.integer  "client_id",             :null=>false, :index=>{:name=>"index_pipelines_on_client_id"}, :foreign_key=>{:references=>"clients", :name=>"fk_pipelines_client_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "project_type_code_id",  :null=>false, :index=>{:name=>"index_pipelines_on_project_type_code_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_project_type_code_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.integer  "pipeline_status_id",    :null=>false, :index=>{:name=>"index_pipelines_on_pipeline_status_id"}, :foreign_key=>{:references=>"lookups", :name=>"fk_pipelines_pipeline_status_id", :on_update=>:no_action, :on_delete=>:no_action}
     t.datetime "created_at"

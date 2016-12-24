@@ -4,7 +4,7 @@ class AdminUser < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable, :timeoutable
 
   belongs_to :role, class_name: 'Role', foreign_key: :role_id
   belongs_to :business_unit, class_name: 'BusinessUnit', foreign_key: :business_unit_id
@@ -17,6 +17,7 @@ class AdminUser < ActiveRecord::Base
   has_many :pipelines_audits, class_name: 'PipelinesAudit'
   has_many :projects, class_name: 'Project'
   has_many :vacations, class_name: 'Vacation'
+  has_many :admin_users_sessions, class_name: 'AdminUsersSession'
 
   before_create :last_super_admin_cannot_be_inactive
   after_create :create_audit_record
