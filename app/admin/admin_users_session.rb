@@ -4,11 +4,11 @@ ActiveAdmin.register AdminUsersSession do
   config.clear_action_items!
 
   scope I18n.t('label.deleted'), default: false do |resources|
-    AdminUsersAudit.only_deleted.where('admin_user_id = ?', params[:admin_user_id]).order('id desc')
+    AdminUsersSession.only_deleted.where('admin_user_id = ?', params[:admin_user_id]).order('id desc')
   end
 
   action_item only: :index do |resource|
-    link_to I18n.t('label.all'), admin_admin_users_audits_path(admin_user_id: params[:admin_user_id])
+    link_to I18n.t('label.all'), admin_admin_users_sessions_path(admin_user_id: params[:admin_user_id])
   end
 
   action_item only: :index do |resource|
@@ -52,6 +52,10 @@ ActiveAdmin.register AdminUsersSession do
     column :session_started do |resource|
       datetime_as_string(resource.session_ended)
     end
+    column :session_length
+    column :avg_session_length
+    column :min_session_length
+    column :max_session_length
     column :from_ip_address
     column :comments
   end
