@@ -49,7 +49,7 @@ ActiveAdmin.register AdminUsersSession do
     column :session_started do |resource|
       datetime_as_string(resource.session_started)
     end
-    column :session_started do |resource|
+    column :session_ended do |resource|
       datetime_as_string(resource.session_ended)
     end
     column :session_length
