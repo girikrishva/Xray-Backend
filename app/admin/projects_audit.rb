@@ -51,11 +51,7 @@ ActiveAdmin.register ProjectsAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     project_id = ProjectsAudit.with_deleted.find(ids.first).project_id
     ids.each do |id|
-      object = ProjectsAudit.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      ProjectsAudit.restore(id)
     end
     redirect_to admin_projects_audits_path(project_id: project_id)
   end

@@ -49,11 +49,7 @@ ActiveAdmin.register Resource do
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      object = Resource.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      Resource.restore(id)
     end
     redirect_to admin_resources_path
   end

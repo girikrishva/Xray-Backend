@@ -51,11 +51,7 @@ ActiveAdmin.register InvoiceHeadersAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     invoice_header_id = InvoiceHeadersAudit.with_deleted.find(ids.first).invoice_header_id
     ids.each do |id|
-      object = InvoiceHeadersAudit.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      InvoiceHeadersAudit.restore(id)
     end
     redirect_to admin_invoice_headers_audits_path(invoice_header_id: invoice_header_id)
   end

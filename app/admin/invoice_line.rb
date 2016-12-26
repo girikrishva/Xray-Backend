@@ -53,11 +53,7 @@ ActiveAdmin.register InvoiceLine do
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      object = InvoiceLine.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      InvoiceLine.restore(id)
     end
     redirect_to admin_invoice_lines_path(invoice_header_id: session[:invoice_header_id])
   end

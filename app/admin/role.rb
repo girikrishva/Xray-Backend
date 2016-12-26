@@ -49,11 +49,7 @@ ActiveAdmin.register Role do
 
   batch_action :restore, if: proc{ params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      object = Role.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      Role.restore(id)
     end
     redirect_to admin_roles_path
   end

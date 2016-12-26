@@ -30,11 +30,7 @@ ActiveAdmin.register AdminUsersSession do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     admin_user_id = AdminUsersSession.with_deleted.find(ids.first).admin_user_id
     ids.each do |id|
-      object = AdminUsersSession.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      AdminUsersSession.restore(id)
     end
     redirect_to admin_admin_users_sessions_path(admin_user_id: admin_user_id)
   end

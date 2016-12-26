@@ -30,11 +30,7 @@ ActiveAdmin.register PipelinesAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     pipeline_id = PipelinesAudit.with_deleted.find(ids.first).pipeline_id
     ids.each do |id|
-      object = PipelinesAudit.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      PipelinesAudit.restore(id)
     end
     redirect_to admin_pipelines_audits_path(pipeline_id: pipeline_id)
   end

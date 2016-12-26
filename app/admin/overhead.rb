@@ -49,11 +49,7 @@ ActiveAdmin.register Overhead do
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      object = Overhead.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      Overhead.restore(id)
     end
     redirect_to admin_overheads_path
   end

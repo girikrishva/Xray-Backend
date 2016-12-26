@@ -51,11 +51,7 @@ ActiveAdmin.register PaymentLinesAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     payment_line_id = PaymentLinesAudit.with_deleted.find(ids.first).payment_line_id
     ids.each do |id|
-      object = PaymentLinesAudit.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      PaymentLinesAudit.restore(id)
     end
     redirect_to admin_payment_lines_audits_path(payment_line_id: payment_line_id)
   end

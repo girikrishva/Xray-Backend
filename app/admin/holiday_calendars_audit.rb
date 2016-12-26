@@ -30,11 +30,7 @@ ActiveAdmin.register HolidayCalendarsAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     holiday_calendar_id = HolidayCalendarsAudit.with_deleted.find(ids.first).holiday_calendar_id
     ids.each do |id|
-      object = HolidayCalendarsAudit.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      HolidayCalendarsAudit.restore(id)
     end
     redirect_to admin_holiday_calendars_audits_path(holiday_calendar_id: holiday_calendar_id)
   end

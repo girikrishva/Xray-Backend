@@ -41,11 +41,7 @@ ActiveAdmin.register VacationPolicy do
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      object = VacationPolicy.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      VacationPolicy.restore(id)
     end
     redirect_to admin_vacation_policies_path
   end

@@ -32,11 +32,7 @@ ActiveAdmin.register AdminUser do
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      object = AdminUser.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      AdminUser.restore(id)
     end
     redirect_to admin_admin_users_path
   end
@@ -141,7 +137,7 @@ ActiveAdmin.register AdminUser do
 
     def restore
       AdminUser.restore(params[:id])
-      redirect_to admin_users_path
+      redirect_to admin_admin_users_path
     end
   end
 

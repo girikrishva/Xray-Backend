@@ -51,11 +51,7 @@ ActiveAdmin.register InvoiceLinesAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     invoice_line_id = InvoiceLinesAudit.with_deleted.find(ids.first).invoice_line_id
     ids.each do |id|
-      object = InvoiceLinesAudit.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      InvoiceLinesAudit.restore(id)
     end
     redirect_to admin_invoice_lines_audits_path(invoice_line_id: invoice_line_id)
   end

@@ -53,11 +53,7 @@ ActiveAdmin.register ProjectOverhead do
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      object = ProjectOverhead.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      ProjectOverhead.restore(id)
     end
     redirect_to admin_project_overheads_path(project_id: session[:project_id])
   end

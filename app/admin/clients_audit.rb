@@ -30,11 +30,7 @@ ActiveAdmin.register ClientsAudit do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     client_id = ClientsAudit.with_deleted.find(ids.first).client_id
     ids.each do |id|
-      object = ClientsAudit.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      ClientsAudit.restore(id)
     end
     redirect_to admin_clients_audits_path(client_id: client_id)
   end

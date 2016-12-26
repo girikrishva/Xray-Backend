@@ -9,7 +9,7 @@ class AdminUsersSession < ActiveRecord::Base
 
   def session_length
     session_seconds = self.session_ended - self.session_started
-    Time.at(session_seconds).utc.strftime("%H:%M:%S:[%L]")
+    Time.at(session_seconds).utc.strftime("%H:%M:%S:[%L]") rescue 0
   end
 
   def avg_session_length
@@ -20,7 +20,7 @@ class AdminUsersSession < ActiveRecord::Base
       session_seconds += (s.session_ended - s.session_started)
       session_count += 1.0
     end
-    Time.at(session_seconds / session_count).utc.strftime("%H:%M:%S:[%L]")
+    Time.at(session_seconds / session_count).utc.strftime("%H:%M:%S:[%L]") rescue 0
   end
 
   def min_session_length
@@ -32,7 +32,7 @@ class AdminUsersSession < ActiveRecord::Base
         min_session_seconds = session_seconds
       end
     end
-    Time.at(min_session_seconds).utc.strftime("%H:%M:%S:[%L]")
+    Time.at(min_session_seconds).utc.strftime("%H:%M:%S:[%L]") rescue 0
   end
 
   def max_session_length
@@ -44,6 +44,6 @@ class AdminUsersSession < ActiveRecord::Base
         max_session_seconds = session_seconds
       end
     end
-    Time.at(max_session_seconds).utc.strftime("%H:%M:%S:[%L]")
+    Time.at(max_session_seconds).utc.strftime("%H:%M:%S:[%L]") rescue 0
   end
 end

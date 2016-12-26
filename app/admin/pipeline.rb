@@ -49,11 +49,7 @@ ActiveAdmin.register Pipeline do
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      object = Pipeline.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      Pipeline.restore(id)
     end
     redirect_to admin_pipelines_path
   end

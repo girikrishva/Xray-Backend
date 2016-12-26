@@ -54,11 +54,7 @@ ActiveAdmin.register StaffingRequirement do
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      object = StaffingRequirement.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      StaffingRequirement.restore(id)
     end
     redirect_to admin_staffing_requirements_path(pipeline_id: session[:pipeline_id])
   end

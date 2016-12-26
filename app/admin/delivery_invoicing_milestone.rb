@@ -55,11 +55,7 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     delivery_milestone_id = DeliveryInvoicingMilestone.with_deleted.find(ids.first).delivery_milestone_id
     ids.each do |id|
-      object = DeliveryInvoicingMilestone.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      DeliveryInvoicingMilestone.restore(id)
     end
     redirect_to admin_delivery_invoicing_milestones_path(delivery_milestone_id: delivery_milestone_id, project_id: session[:project_id])
   end

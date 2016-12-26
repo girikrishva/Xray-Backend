@@ -41,11 +41,7 @@ ActiveAdmin.register Project do
 
   batch_action :restore, if: proc { params[:scope] == 'deleted' } do |ids|
     ids.each do |id|
-      object = Project.restore(id)
-      if !object.errors.empty?
-        flash[:error] = object.errors.full_messages.to_sentence
-        break
-      end
+      Project.restore(id)
     end
     redirect_to admin_projects_path
   end
