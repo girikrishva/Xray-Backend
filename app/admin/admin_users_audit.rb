@@ -56,6 +56,7 @@ ActiveAdmin.register AdminUsersAudit do
     end
     column :date_of_joining
     column :date_of_leaving
+    column :comments
     column :audit_details
     actions defaults: false, dropdown: true do |resource|
       item I18n.t('actions.view'), admin_admin_users_audit_path(resource.id)
@@ -96,4 +97,5 @@ ActiveAdmin.register AdminUsersAudit do
   filter :updated_at
   filter :updated_by
   filter :ip_address
+  filter :comments
 end

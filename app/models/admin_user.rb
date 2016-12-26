@@ -68,6 +68,7 @@ class AdminUser < ActiveRecord::Base
     audit_record.updated_at = DateTime.now
     audit_record.updated_by = self.updated_by
     audit_record.ip_address = self.ip_address
+    audit_record.comments = self.comments
     audit_record.save
   end
 

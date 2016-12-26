@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20161226130520) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "updated_by"
     t.string   "ip_address"
     t.datetime "deleted_at",             :index=>{:name=>"index_admin_users_on_deleted_at"}
+    t.string   "comments"
   end
 
   create_table "admin_users_audits", force: :cascade do |t|
@@ -112,6 +113,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "updated_by"
     t.string   "ip_address"
     t.datetime "deleted_at",             :index=>{:name=>"index_admin_users_audits_on_deleted_at"}
+    t.string   "comments"
   end
 
   create_table "admin_users_sessions", force: :cascade do |t|

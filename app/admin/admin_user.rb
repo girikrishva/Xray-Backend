@@ -84,6 +84,7 @@ ActiveAdmin.register AdminUser do
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
     end
+    column :comments
     if params[:scope] == 'deleted'
       actions defaults: false, dropdown: true do |resource|
         item I18n.t('actions.restore'), admin_api_restore_admin_user_path(id: resource.id), method: :post
@@ -150,6 +151,7 @@ ActiveAdmin.register AdminUser do
   filter :role
   filter :department
   filter :designation
+  filter :comments
 
   form do |f|
     f.object.updated_by = current_admin_user.name
@@ -169,6 +171,7 @@ ActiveAdmin.register AdminUser do
         f.input :business_unit, required: true
         f.input :department, required: true
         f.input :designation, required: true
+        f.input :comments
       else
         f.input :password
         f.input :password_confirmation
@@ -181,6 +184,7 @@ ActiveAdmin.register AdminUser do
           f.input :business_unit, required: true
           f.input :department, required: true
           f.input :designation, required: true
+          f.input :comments
         end
       end
       f.input :updated_by, as: :hidden
