@@ -49,10 +49,10 @@ ActiveAdmin.register AdminUsersSession do
       datetime_as_string(resource.session_ended)
     end
     column :session_length
+    column :from_ip_address
     column :avg_session_length
     column :min_session_length
     column :max_session_length
-    column :from_ip_address
     column :comments
   end
 
