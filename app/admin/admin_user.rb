@@ -63,7 +63,7 @@ ActiveAdmin.register AdminUser do
     redirect_to collection_url
   end
 
-  permit_params :email, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active, :date_of_joining, :date_of_leaving, :updated_by, :ip_address
+  permit_params :email, :name, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active, :date_of_joining, :date_of_leaving, :updated_by, :ip_address
 
   config.sort_order = 'email_asc'
 
