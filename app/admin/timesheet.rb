@@ -113,7 +113,11 @@ ActiveAdmin.register Timesheet do
       resource.assigned_resource.assigned_resource_name
     end
     column :timesheet_date
-    column :hours
+    column :hours do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.hours, precision: 1, delimiter: ','
+      end
+    end
     column :approval_status
     column :comments
     if params[:scope] == 'deleted'

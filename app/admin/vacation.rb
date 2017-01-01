@@ -117,9 +117,21 @@ ActiveAdmin.register Vacation do
     column :narrative
     column :start_date
     column :end_date
-    column :hours_per_day
-    column :balance_days
-    column :requested_days
+    column :hours_per_day do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.hours_per_day, precision: 1, delimiter: ','
+      end
+    end
+    column :balance_days do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.balance_days, precision: 1, delimiter: ','
+      end
+    end
+    column :requested_days do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.requested_days, precision: 1, delimiter: ','
+      end
+    end
     column :comments
     if params[:scope] == 'deleted'
       actions defaults: false, dropdown: true do |resource|
