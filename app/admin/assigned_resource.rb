@@ -76,7 +76,11 @@ ActiveAdmin.register AssignedResource do
       r.resource.admin_user.name
     end
     column :as_on
-    column :hours_per_day
+    column :hours_per_day do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.hours_per_day, precision: 1, delimiter: ','
+      end
+    end
     column :start_date
     column :end_date
     column :bill_rate, :sortable => 'bill_rate' do |element|

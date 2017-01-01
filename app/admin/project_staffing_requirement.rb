@@ -42,8 +42,16 @@ ActiveAdmin.register StaffingRequirement, as: 'ProjectStaffingRequirement' do
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
     end
-    column :number_required
-    column :hours_per_day
+    column :number_required do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.number_required, precision: 0, delimiter: ','
+      end
+    end
+    column :hours_per_day do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.hours_per_day, precision: 1, delimiter: ','
+      end
+    end
     column :start_date
     column :end_date
     column :fulfilled
