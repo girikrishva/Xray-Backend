@@ -129,10 +129,18 @@ ActiveAdmin.register Pipeline do
         r.project_type_code.name
       end
       row :pipeline_status
-      row I18n.t('label.sales_by'), :sales_person
-      row I18n.t('label.estimated_by'), :estimator
-      row I18n.t('label.engagement_by'), :engagement_manager
-      row I18n.t('label.delivery_by'), :delivery_manager
+      row I18n.t('label.sales_by'), :sales_person do
+        r.sales_person.name
+      end
+      row I18n.t('label.estimated_by'), :estimator do
+        r.estimator.name
+      end
+      row I18n.t('label.engagement_by'), :engagement_manager do
+        r.engagement_manager.name rescue nil
+      end
+      row I18n.t('label.delivery_by'), :delivery_manager do
+        r.delivery_manager.name rescue nil
+      end
       row :comments
     end
   end
