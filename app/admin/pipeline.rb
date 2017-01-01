@@ -121,7 +121,7 @@ ActiveAdmin.register Pipeline do
       row :expected_start
       row :expected_end
       row :expected_value do |element|
-        div :style => "text-align: right;" do
+        div :style => "text-align: left;" do
           number_with_precision element.expected_value, precision: 0, delimiter: ','
         end
       end

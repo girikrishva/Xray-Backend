@@ -106,7 +106,7 @@ ActiveAdmin.register Overhead do
       end
       row :amount_date
       row :amount do |element|
-        div :style => "text-align: right;" do
+        div :style => "text-align: left;" do
           number_with_precision element.amount, precision: 0, delimiter: ','
         end
       end

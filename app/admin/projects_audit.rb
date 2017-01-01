@@ -131,7 +131,7 @@ ActiveAdmin.register ProjectsAudit do
       row :start_date
       row :end_date
       row :booking_value do |element|
-        div :style => "text-align: right;" do
+        div :style => "text-align: left;" do
           number_with_precision element.booking_value, precision: 0, delimiter: ','
         end
       end
