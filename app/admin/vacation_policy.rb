@@ -63,7 +63,11 @@ ActiveAdmin.register VacationPolicy do
     column :description
     column :as_on
     column :paid
-    column :days_allowed
+    column :days_allowed do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.days_allowed, precision: 1, delimiter: ','
+      end
+    end
     column :comments
     if params[:scope] == 'deleted'
       actions defaults: false, dropdown: true do |resource|

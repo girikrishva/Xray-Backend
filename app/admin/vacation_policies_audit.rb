@@ -15,6 +15,10 @@ ActiveAdmin.register VacationPoliciesAudit do
     link_to I18n.t('label.back'), admin_vacation_policies_path
   end
 
+  action_item only: :show do |resource|
+    link_to I18n.t('label.back'), :back
+  end
+
   batch_action :destroy, if: proc { params[:scope] != 'deleted' } do |ids|
     vacation_policy_id = VacationPoliciesAudit.without_deleted.find(ids.first).vacation_policy_id
     ids.each do |id|
@@ -44,7 +48,11 @@ ActiveAdmin.register VacationPoliciesAudit do
     column :description
     column :as_on
     column :paid
-    column :days_allowed
+    column :days_allowed do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.days_allowed, precision: 1, delimiter: ','
+      end
+    end
     column :comments
     column :audit_details
     actions defaults: false, dropdown: true do |resource|
