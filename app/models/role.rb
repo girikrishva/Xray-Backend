@@ -38,6 +38,6 @@ class Role < ActiveRecord::Base
   end
 
   def populate_parent_name
-    self.parent_name = Role.find(self.parent_id).name
+    self.parent_name = Role.find(self.parent_id).name rescue nil
   end
 end
