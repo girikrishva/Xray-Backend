@@ -198,3 +198,4 @@ en:
     one_primary_skill: "ERROR: User cannot have more than one primary skill."
     one_super_admin_role: "Cannot have more than one super_admin role in application."
     already_converted: "Pipeline with id '%{pipeline_id}' has already been converted into Project with id '%{project_id}'."
+    reporting_loop: "Making user 'Name: [%{manager_name}], Id: [%{manager_id}]' the manager of user 'Name: [%{name}], Id: [%{id}]' will create a reporting loop."

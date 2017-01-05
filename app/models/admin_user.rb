@@ -10,6 +10,7 @@ class AdminUser < ActiveRecord::Base
   belongs_to :business_unit, class_name: 'BusinessUnit', foreign_key: :business_unit_id
   belongs_to :department, class_name: 'Department', foreign_key: :department_id
   belongs_to :designation, class_name: 'Designation', foreign_key: :designation_id
+  belongs_to :manager, class_name: 'AdminUser', foreign_key: :manager_id
 
   has_many :admin_users_audits, class_name: 'AdminUsersAudit'
   has_many :resources, class_name: 'Resource'
@@ -28,6 +29,8 @@ class AdminUser < ActiveRecord::Base
   before_update :doj_dol_date_check
   before_create :deactivate_left_user
   before_update :deactivate_left_user
+  before_create :check_reporting_loop
+  before_update :check_reporting_loop
 
   def at_least_one_user_must_be_super_admin
     role_id_for_super_admin = Role.where(super_admin: true).first.id
@@ -82,8 +85,10 @@ class AdminUser < ActiveRecord::Base
 
   def update_user_session
     admin_users_session = AdminUsersSession.where('admin_user_id = ? and session_started = ?', self.id, self.current_sign_in_at).first
-    admin_users_session.session_ended = DateTime.now
-    admin_users_session.save
+    if !admin_users_session.nil?
+      admin_users_session.session_ended = DateTime.now
+      admin_users_session.save
+    end
   end
 
   def last_super_admin_cannot_be_inactive
@@ -132,6 +137,24 @@ class AdminUser < ActiveRecord::Base
   def deactivate_left_user
     if !self.date_of_leaving.blank?
       self.active = false
+    end
+  end
+
+  def check_reporting_loop
+    @child_ids = []
+    traverse_reportees(self.id)
+    if @child_ids.include?(self.manager_id)
+      errors.add(:base, I18n.t('errors.reporting_loop', manager_name: AdminUser.find(self.manager_id).name, manager_id: self.id, name: self.name, id: self.id))
+      return false
+    end
+  end
+
+  private
+
+  def traverse_reportees(root_id)
+    AdminUser.where('manager_id = ?', root_id).each do |child|
+      @child_ids << child.id
+      traverse_reportees(child.id)
     end
   end
 end

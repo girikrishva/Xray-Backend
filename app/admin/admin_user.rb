@@ -63,7 +63,7 @@ ActiveAdmin.register AdminUser do
     redirect_to collection_url
   end
 
-  permit_params :email, :name, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active, :date_of_joining, :date_of_leaving, :updated_by, :ip_address
+  permit_params :email, :name, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active, :date_of_joining, :date_of_leaving, :updated_by, :ip_address, :manager_id
 
   config.sort_order = 'email_asc'
 
@@ -77,6 +77,9 @@ ActiveAdmin.register AdminUser do
     column :active
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
+    end
+    column :manager, sortable: 'admin_users.name' do |resource|
+      resource.manager.name rescue nil
     end
     column :department, sortable: 'departments.name' do |resource|
       resource.department.name
@@ -106,7 +109,7 @@ ActiveAdmin.register AdminUser do
     before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_action
-      AdminUser.includes [:role, :business_unit, :department, :designation]
+      AdminUser.includes [:role, :business_unit, :department, :designation, :admin_user]
     end
 
     def create
@@ -149,6 +152,7 @@ ActiveAdmin.register AdminUser do
   filter :date_of_leaving, label: I18n.t('label.leaving_date')
   filter :active
   filter :role
+  filter :manager
   filter :department
   filter :designation
   filter :comments
@@ -168,6 +172,7 @@ ActiveAdmin.register AdminUser do
         f.input :date_of_leaving, as: :datepicker, label: I18n.t('label.leaving_date')
         f.input :active, required: true
         f.input :role, required: true
+        f.input :manager, collection: AdminUser.ordered_lookup.map {|a| [a.name, a.id]}, include_blank: true
         f.input :business_unit, required: true
         f.input :department, required: true
         f.input :designation, required: true
@@ -181,6 +186,7 @@ ActiveAdmin.register AdminUser do
           f.input :date_of_leaving, as: :datepicker, label: I18n.t('label.leaving_date')
           f.input :active
           f.input :role, required: true
+          f.input :manager, collection: AdminUser.ordered_lookup.map {|a| [a.name, a.id]}, include_blank: true
           f.input :business_unit, required: true
           f.input :department, required: true
           f.input :designation, required: true
