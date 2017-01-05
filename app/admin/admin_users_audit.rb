@@ -45,6 +45,9 @@ ActiveAdmin.register AdminUsersAudit do
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
     end
+    column :manager, sortable: 'admin_users.name' do |resource|
+      resource.manager.name rescue nil
+    end
     column :business_unit, sortable: 'business_units.name' do |resource|
       resource.business_unit.name
     end
@@ -82,13 +85,14 @@ ActiveAdmin.register AdminUsersAudit do
     before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_action
-      AdminUsersAudit.includes [:role, :business_unit, :department, :designation]
+      AdminUsersAudit.includes [:role, :business_unit, :department, :designation, :admin_user]
     end
   end
 
   filter :name
   filter :active
   filter :role
+  filter :manager
   filter :business_unit
   filter :department
   filter :designation
