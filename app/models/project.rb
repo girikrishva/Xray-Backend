@@ -90,29 +90,24 @@ class Project < ActiveRecord::Base
   end
 
   def missed_delivery(as_on)
-    ids = []
-    DeliveryMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).each do |dm|
-      ids << dm.id
-    end
-    ids
+    as_on = Date.today.to_s if as_on.nil?
+    DeliveryMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date)
   end
 
   def missed_invoicing(as_on)
-    ids = []
-    InvoicingMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).each do |im|
-      ids << im.id
-    end
-    ids
+    as_on = Date.today.to_s if as_on.nil?
+    InvoicingMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date)
   end
 
   def missed_payments(as_on)
+    as_on = Date.today.to_s if as_on.nil?
     ids = []
     InvoiceLine.where('project_id = ?', self.id).each do |il|
-      if il.invoice_header.due_date < as_on and il.unpaid_amount > 0
+      if il.invoice_header.due_date < Date.parse(as_on) and il.unpaid_amount > 0
         ids << il.id
       end
     end
-    ids
+    InvoiceLine.where('invoice_lines.id in (?)', ids).joins(:invoice_header).order('invoice_headers.id, invoice_headers.due_date')
   end
 
   # def direct_resource_cost(as_on)

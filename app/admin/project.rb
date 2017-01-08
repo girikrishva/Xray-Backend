@@ -203,6 +203,27 @@ ActiveAdmin.register Project do
       Project.restore(params[:id])
       redirect_to admin_projects_path
     end
+
+    def missed_delivery
+      project_id = params[:id]
+      as_on = params[:as_on]
+      result = Project.find(project_id).missed_delivery(as_on)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
+
+    def missed_invoicing
+      project_id = params[:id]
+      as_on = params[:as_on]
+      result = Project.find(project_id).missed_invoicing(as_on)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
+
+    def missed_payments
+      project_id = params[:id]
+      as_on = params[:as_on]
+      result = Project.find(project_id).missed_payments(as_on)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
   end
 
   form do |f|
