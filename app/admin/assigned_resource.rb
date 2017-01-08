@@ -14,7 +14,7 @@ ActiveAdmin.register AssignedResource do
 #   permitted
 # end
 
-  permit_params :start_date, :end_date, :number_required, :hours_per_day, :fulfilled, :created_at, :updated_at, :project, :skill_id, :designation_id, :resource_id, :delivery_due_alert, :invoicing_due_alert, :payment_due_alert, :comments, :staffing_requirement_id, :project_id, :skill_code, :designation_code, :as_on, :bill_rate, :cost_rate
+  permit_params :start_date, :end_date, :number_required, :hours_per_day, :fulfilled, :created_at, :updated_at, :project, :skill_id, :designation_id, :resource_id, :delivery_due_alert, :invoicing_due_alert, :payment_due_alert, :comments, :staffing_requirement_id, :project_id, :skill_code, :designation_code, :bill_rate, :cost_rate
 
   config.sort_order = 'skills.name_asc_and_start_date_asc_and_end_date_asc'
 
@@ -75,7 +75,6 @@ ActiveAdmin.register AssignedResource do
     column :resource, sortable: 'resources.admin_user.name' do |r|
       r.resource.admin_user.name
     end
-    column :as_on
     column :hours_per_day do |element|
       div :style => "text-align: right;" do
         number_with_precision element.hours_per_day, precision: 1, delimiter: ','
@@ -109,7 +108,6 @@ ActiveAdmin.register AssignedResource do
   filter :fulfilled
   filter :skill_code
   filter :designation_code
-  filter :as_on
   filter :hours_per_day
   filter :start_date
   filter :end_date
@@ -128,7 +126,6 @@ ActiveAdmin.register AssignedResource do
       end
       row :skill_code
       row :designation_code
-      row :as_on
       row :hours_per_day
       row :start_date
       row :end_date
@@ -247,9 +244,6 @@ ActiveAdmin.register AssignedResource do
 
   form do |f|
     f.object.project_id = session[:project_id]
-    if f.object.new_record?
-      f.object.as_on = Date.today
-    end
     f.inputs do
       f.input :project, required: true, input_html: {disabled: :true}
       f.input :project_id, as: :hidden
@@ -279,11 +273,6 @@ ActiveAdmin.register AssignedResource do
         f.input :end_date, as: :hidden
       else
         f.input :end_date, label: I18n.t('label.end'), as: :datepicker
-      end
-      if !f.object.new_record?
-        f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :string, input_html: {readonly: :true}
-      else
-        f.input :as_on, required: true, label: I18n.t('label.as_on'), as: :datepicker
       end
       f.input :resource, required: true, input_html: {disabled: :true}
       if f.object.new_record?

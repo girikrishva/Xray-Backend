@@ -88,4 +88,83 @@ class Project < ActiveRecord::Base
   def unpaid_amount
     self.invoiced_amount - self.paid_amount
   end
+
+  def missed_delivery(as_on)
+    ids = []
+    DeliveryMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).each do |dm|
+      ids << dm.id
+    end
+    ids
+  end
+
+  def missed_invoicing(as_on)
+    ids = []
+    InvoicingMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).each do |im|
+      ids << im.id
+    end
+    ids
+  end
+
+  def missed_payments(as_on)
+    ids = []
+    InvoiceLine.where('project_id = ?', self.id).each do |il|
+      if il.invoice_header.due_date < as_on and il.unpaid_amount > 0
+        ids << il.id
+      end
+    end
+    ids
+  end
+
+  # def direct_resource_cost(as_on)
+  #   result = 0
+  #   AssignedResource.where('project_id = ?', self.id).each do |ar|
+  #     result += ar.assignment_cost(as_on)
+  #   end
+  #   result
+  # end
+  #
+  # def direct_overhead_cost(as_on)
+  #   result = 0
+  #   result
+  # end
+  #
+  # def total_direct_cost(as_on)
+  #   direct_resource_cost(as_on) + direct_overhead_cost(as_on)
+  # end
+  #
+  # def indirect_resource_cost_share(as_on)
+  #   result = 0
+  #   result
+  # end
+  #
+  # def indirect_overhead_cost_share(as_on)
+  #   result = 0
+  #   result
+  # end
+  #
+  # def total_indirect_cost_share(as_on)
+  #   indirect_resource_cost_share(as_on) + indirect_overhead_cost_share(as_on)
+  # end
+  #
+  # def total_cost(as_on)
+  #   total_direct_cost(as_on) + total_indirect_cost_share(as_on)
+  # end
+  #
+  # def total_revenue(as_on)
+  #   result = 0
+  #   InvoiceLine.where('project_id = ?', self.id).each do |il|
+  #     if il.invoice_header.invoice_date <= as_on
+  #       result += il.line_amount
+  #     end
+  #   end
+  #   result
+  # end
+  #
+  # def contribution(as_on)
+  #   total_revenue(as_on) - total_direct_cost(as_on)
+  # end
+  #
+  # def gross_profit(as_on)
+  #   contribution(as_on) - total_indirect_cost_share(as_on)
+  # end
 end
