@@ -113,4 +113,5 @@ Rails.application.routes.draw do
   match '/admin/api/missed_delivery' => 'admin/projects#missed_delivery', via: [:get]
   match '/admin/api/missed_invoicing' => 'admin/projects#missed_invoicing', via: [:get]
   match '/admin/api/missed_payments' => 'admin/projects#missed_payments', via: [:get]
+  match '/admin/api/direct_resource_cost' => 'admin/projects#direct_resource_cost', via: [:get]
 end

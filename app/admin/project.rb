@@ -224,6 +224,13 @@ ActiveAdmin.register Project do
       result = Project.find(project_id).missed_payments(as_on)
       render json: '{"result": "' + result.to_json + '"}'
     end
+
+    def direct_resource_cost
+      project_id = params[:id]
+      as_on = params[:as_on]
+      result = Project.find(project_id).direct_resource_cost(as_on)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
   end
 
   form do |f|

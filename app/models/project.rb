@@ -91,33 +91,55 @@ class Project < ActiveRecord::Base
 
   def missed_delivery(as_on)
     as_on = Date.today.to_s if as_on.nil?
-    DeliveryMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date)
+    data = []
+    DeliveryMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date).each do |dm|
+      details = {}
+      details['base'] = dm
+      data << details
+    end
+    result = {}
+    result['data'] = data
+    result['size'] = data.size
+    result
   end
 
   def missed_invoicing(as_on)
     as_on = Date.today.to_s if as_on.nil?
-    InvoicingMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date)
+    data = []
+    InvoicingMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date).each do |im|
+      details = {}
+      details['base'] = im
+      details['uninvoiced'] = im.uninvoiced
+      data << details
+    end
+    result = {}
+    result['data'] = data
+    result['size'] = data.size
+    result
   end
 
   def missed_payments(as_on)
     as_on = Date.today.to_s if as_on.nil?
-    ids = []
-    InvoiceLine.where('project_id = ?', self.id).each do |il|
-      if il.invoice_header.due_date < Date.parse(as_on) and il.unpaid_amount > 0
-        ids << il.id
+    data = []
+    InvoiceLine.where('project_id = ? and invoice_headers.due_date < ?', self.id, Date.parse(as_on)).joins(:invoice_header).order('invoice_headers.id, invoice_headers.due_date').each do |il|
+      if il.unpaid_amount > 0
+        details = {}
+        details['invoice_line'] = il
+        details['invoice_header'] = il.invoice_header
+        details['unpaid_amount'] = il.unpaid_amount
+        data << details
       end
     end
-    InvoiceLine.where('invoice_lines.id in (?)', ids).joins(:invoice_header).order('invoice_headers.id, invoice_headers.due_date')
+    result = {}
+    result['data'] = data
+    result['size'] = data.size
+    result
   end
 
-  # def direct_resource_cost(as_on)
-  #   result = 0
-  #   AssignedResource.where('project_id = ?', self.id).each do |ar|
-  #     result += ar.assignment_cost(as_on)
-  #   end
-  #   result
-  # end
-  #
+  def direct_resource_cost(as_on)
+    AssignedResource.where('project_id = ?', self.id).order('start_date, end_date')
+  end
+
   # def direct_overhead_cost(as_on)
   #   result = 0
   #   result

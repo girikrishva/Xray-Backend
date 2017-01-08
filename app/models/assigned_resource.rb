@@ -71,13 +71,14 @@ class AssignedResource < ActiveRecord::Base
     AssignedResource.where('resource_id in (?) and start_date <= ? and end_date >= ?', resource_ids, as_on, as_on).sum(:hours_per_day)
   end
 
-  # def hours_assigned(as_on)
-  #   lower_date = (self.start_date <= as_on) ? self.start_date : as_on
-  #   upper_date = (as_on <= self.end_date) ? as_on : self.end_date
-  #   (upper_date - lower_date) * self.hours_per_day
-  # end
-  #
-  # def assignment_cost(as_on)
-  #   self.hours_assigned(as_on) * self.cost_rate
-  # end
+  def hours_assigned(as_on)
+    as_on = Date.today.to_s if as_on.nil?
+    lower_date = [self.start_date, as_on].max
+    upper_date = [self.end_date, as_on].min
+    (upper_date - lower_date) * self.hours_per_day
+  end
+
+  def assignment_cost(as_on)
+    self.hours_assigned(as_on) * self.cost_rate
+  end
 end
