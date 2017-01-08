@@ -73,9 +73,17 @@ class AssignedResource < ActiveRecord::Base
 
   def hours_assigned(as_on)
     as_on = Date.today.to_s if as_on.nil?
-    lower_date = [self.start_date, as_on].max
-    upper_date = [self.end_date, as_on].min
-    (upper_date - lower_date) * self.hours_per_day
+    if self.start_date < Date.parse(as_on)
+      lower_date = self.start_date
+    else
+      lower_date = Date.parse(as_on)
+    end
+    if Date.parse(as_on) > self.end_date
+      upper_date = self.end_date
+    else
+      upper_date = Date.parse(as_on)
+    end
+    (upper_date - lower_date + 1) * self.hours_per_day
   end
 
   def assignment_cost(as_on)

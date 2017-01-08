@@ -137,7 +137,19 @@ class Project < ActiveRecord::Base
   end
 
   def direct_resource_cost(as_on)
-    AssignedResource.where('project_id = ?', self.id).order('start_date, end_date')
+    as_on = Date.today.to_s if as_on.nil?
+    data = []
+    AssignedResource.where('project_id = ?', self.id).order('start_date, end_date').each do |ar|
+      details = {}
+      details['assigned_resource'] = ar
+      details['assigned_hours'] = ar.hours_assigned(as_on)
+      details['assigned_cost'] = ar.assignment_cost(as_on)
+      data << details
+    end
+    result = {}
+    result['data'] = data
+    result['size'] = data.size
+    result
   end
 
   # def direct_overhead_cost(as_on)
