@@ -99,28 +99,32 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['data'] = data
-    result['size'] = data.size
+    result['count'] = data.size
     result
   end
 
   def missed_invoicing(as_on)
     as_on = Date.today.to_s if as_on.nil?
     data = []
+    total_uninvoiced = 0
     InvoicingMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date).each do |im|
       details = {}
       details['base'] = im
       details['uninvoiced'] = im.uninvoiced
       data << details
+      total_uninvoiced += details['uninvoiced']
     end
     result = {}
     result['data'] = data
-    result['size'] = data.size
+    result['count'] = data.size
+    result['total_uninvoiced'] = total_uninvoiced
     result
   end
 
   def missed_payments(as_on)
     as_on = Date.today.to_s if as_on.nil?
     data = []
+    total_unpaid = 0
     InvoiceLine.where('project_id = ? and invoice_headers.due_date < ?', self.id, Date.parse(as_on)).joins(:invoice_header).order('invoice_headers.id, invoice_headers.due_date').each do |il|
       if il.unpaid_amount > 0
         details = {}
@@ -128,27 +132,32 @@ class Project < ActiveRecord::Base
         details['invoice_header'] = il.invoice_header
         details['unpaid_amount'] = il.unpaid_amount
         data << details
+        total_unpaid += details['unpaid_amount']
       end
     end
     result = {}
     result['data'] = data
-    result['size'] = data.size
+    result['count'] = data.size
+    result['total_unpaid'] = total_unpaid
     result
   end
 
   def direct_resource_cost(as_on)
     as_on = Date.today.to_s if as_on.nil?
     data = []
+    total_assigned_cost = 0
     AssignedResource.where('project_id = ?', self.id).order('start_date, end_date').each do |ar|
       details = {}
       details['assigned_resource'] = ar
       details['assigned_hours'] = ar.hours_assigned(as_on)
       details['assigned_cost'] = ar.assignment_cost(as_on)
       data << details
+      total_assigned_cost += details['assigned_cost']
     end
     result = {}
     result['data'] = data
-    result['size'] = data.size
+    result['count'] = data.size
+    result['total_assigned_cost'] = total_assigned_cost
     result
   end
 
