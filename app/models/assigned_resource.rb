@@ -75,12 +75,29 @@ class AssignedResource < ActiveRecord::Base
     as_on = Date.today.to_s if as_on.nil?
     lower_date = (self.start_date < Date.parse(as_on)) ? self.start_date : Date.parse(as_on)
     upper_date = (Date.parse(as_on) > self.end_date) ? self.end_date : Date.parse(as_on)
-    weekdays_assigned = lower_date.weekdays_until(upper_date)
-    weekdays_assigned -= HolidayCalendar.holidays_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)
+    days_assigned = lower_date.weekdays_until(upper_date)
+    days_assigned -= holidays_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)
+    days_assigned -= unpaid_vacation_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)
     hours_assigned = weekdays_assigned * self.hours_per_day
   end
 
   def assignment_cost(as_on)
     self.hours_assigned(as_on) * self.cost_rate
+  end
+
+  private
+
+  def holidays_between(business_unit_id, start_date, end_date)
+    HolidayCalendar.holidays_between(business_unit_id, start_date, end_date)
+  end
+
+  def unpaid_vacation_between(business_unit_id, start_date, end_date)
+    unpaid_days = 0
+    VacationPolicy.where('business_unit_id = ?', business_unit_id).each do |vp|
+      if !vp.paid
+        unpaid_days = Vacation.availed_days(self.id, vp.vacation_code_id, end_date) - Vacation.availed_days(self.id, vp.vacation_code_id, start_date)
+      end
+    end
+    unpaid_days
   end
 end
