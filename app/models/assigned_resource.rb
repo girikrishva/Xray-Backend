@@ -78,7 +78,7 @@ class AssignedResource < ActiveRecord::Base
     days_assigned = lower_date.weekdays_until(upper_date)
     days_assigned -= holidays_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)
     days_assigned -= unpaid_vacation_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)
-    hours_assigned = weekdays_assigned * self.hours_per_day
+    hours_assigned = days_assigned * self.hours_per_day
   end
 
   def assignment_cost(as_on)
