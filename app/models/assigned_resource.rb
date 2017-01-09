@@ -76,6 +76,7 @@ class AssignedResource < ActiveRecord::Base
     lower_date = (self.start_date < Date.parse(as_on)) ? self.start_date : Date.parse(as_on)
     upper_date = (Date.parse(as_on) > self.end_date) ? self.end_date : Date.parse(as_on)
     weekdays_assigned = lower_date.weekdays_until(upper_date)
+    weekdays_assigned -= HolidayCalendar.holidays_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)
     hours_assigned = weekdays_assigned * self.hours_per_day
   end
 

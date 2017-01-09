@@ -33,6 +33,12 @@ class HolidayCalendar < ActiveRecord::Base
   end
 
   def self.holidays_between(business_unit_id, start_date, end_date)
-    HolidayCalendar.where('business_unit_id = ? and as_on between ? and ?', business_unit_id, start_date, end_date).count
+    count = 0
+    HolidayCalendar.where('business_unit_id = ? and as_on between ? and ?', business_unit_id, start_date, end_date).each do |hc|
+      if hc.as_on.weekday?
+        count += 1
+      end
+    end
+    count
   end
 end
