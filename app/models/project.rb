@@ -99,16 +99,13 @@ class Project < ActiveRecord::Base
         details = {}
         details['base'] = dm
         data << details
-      else
-        count += 1
       end
+      count += 1
     end
     result = {}
-    if with_details ==
+    result['count'] = count
+    if with_details
       result['data'] = data
-      result['count'] = data.size
-    else
-      result['count'] = count
     end
     result
   end
@@ -125,18 +122,16 @@ class Project < ActiveRecord::Base
         details['base'] = im
         details['uninvoiced'] = im.uninvoiced
         data << details
-        total_uninvoiced += details['uninvoiced']
-      else
-        count += 1
+
       end
+      count += 1
+      total_uninvoiced += im.uninvoiced
     end
     result = {}
+    result['count'] = count
+    result['total_uninvoiced'] = total_uninvoiced
     if with_details
       result['data'] = data
-      result['count'] = data.size
-      result['total_uninvoiced'] = total_uninvoiced
-    else
-      result['count'] = count
     end
     result
   end
@@ -157,57 +152,69 @@ class Project < ActiveRecord::Base
           details['unpaid_amount'] = il.unpaid_amount
           data << details
           total_unpaid += details['unpaid_amount']
-        else
-          count += 1
         end
+        count += 1
+        total_unpaid += il.unpaid_amount
       end
     end
     result = {}
+    result['count'] = count
+    result['total_unpaid'] = total_unpaid
     if with_details
       result['data'] = data
-      result['count'] = data.size
-      result['total_unpaid'] = total_unpaid
-    else
-      result['count'] = count
     end
     result
   end
 
-  def direct_resource_cost(as_on)
+  def direct_resource_cost(as_on, with_details)
     as_on = Date.today.to_s if as_on.nil?
+    with_details = (with_details == 'true') ? true : false
     data = []
+    count = 0
     total_direct_resource_cost = 0
     AssignedResource.where('project_id = ?', self.id).order('start_date, end_date').each do |ar|
-      details = {}
-      details['assigned_resource'] = ar
-      details['assigned_hours'] = ar.hours_assigned(as_on)
-      details['direct_resource_cost'] = ar.assignment_cost(as_on)
-      data << details
-      total_direct_resource_cost += details['direct_resource_cost']
+      if with_details
+        details = {}
+        details['assigned_resource'] = ar
+        details['assigned_hours'] = ar.hours_assigned(as_on)
+        details['direct_resource_cost'] = ar.assignment_cost(as_on)
+        data << details
+      end
+      count += 1
+      total_direct_resource_cost += ar.assignment_cost(as_on)
     end
     result = {}
-    result['data'] = data
-    result['count'] = data.size
+    result['count'] = count
     result['total_direct_resource_cost'] = total_direct_resource_cost
+    if with_details
+      result['data'] = data
+    end
     result
   end
 
-  def direct_overhead_cost(as_on)
+  def direct_overhead_cost(as_on, with_details)
     as_on = Date.today.to_s if as_on.nil?
+    with_details = (with_details == 'true') ? true : false
     data = []
+    count = 0
     total_direct_overhead_cost = 0
     ProjectOverhead.where('project_id = ? and amount_date <= ?', self.id, Date.parse(as_on)).joins(:cost_adder_type).order('amount_date').each do |po|
-      details = {}
-      details['project_overhead'] = po
-      details['cost_adder_type'] = po.cost_adder_type
-      details['direct_overhead_cost'] = po.amount
-      data << details
-      total_direct_overhead_cost += details['direct_overhead_cost']
+      if with_details
+        details = {}
+        details['project_overhead'] = po
+        details['cost_adder_type'] = po.cost_adder_type
+        details['direct_overhead_cost'] = po.amount
+        data << details
+      end
+      count += 1
+      total_direct_overhead_cost += po.amount
     end
     result = {}
-    result['data'] = data
-    result['count'] = data.size
+    result['count'] = count
     result['total_direct_overhead_cost'] = total_direct_overhead_cost
+    if with_details
+      result['data'] = data
+    end
     result
   end
 
