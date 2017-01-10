@@ -130,6 +130,7 @@ class Project < ActiveRecord::Base
         details = {}
         details['invoice_line'] = il
         details['invoice_header'] = il.invoice_header
+        details['client'] = il.invoice_header.client
         details['unpaid_amount'] = il.unpaid_amount
         data << details
         total_unpaid += details['unpaid_amount']
@@ -145,26 +146,40 @@ class Project < ActiveRecord::Base
   def direct_resource_cost(as_on)
     as_on = Date.today.to_s if as_on.nil?
     data = []
-    total_assigned_cost = 0
+    total_direct_resource_cost = 0
     AssignedResource.where('project_id = ?', self.id).order('start_date, end_date').each do |ar|
       details = {}
       details['assigned_resource'] = ar
       details['assigned_hours'] = ar.hours_assigned(as_on)
-      details['assigned_cost'] = ar.assignment_cost(as_on)
+      details['direct_resource_cost'] = ar.assignment_cost(as_on)
       data << details
-      total_assigned_cost += details['assigned_cost']
+      total_direct_resource_cost += details['direct_resource_cost']
     end
     result = {}
     result['data'] = data
     result['count'] = data.size
-    result['total_assigned_cost'] = total_assigned_cost
+    result['total_direct_resource_cost'] = total_direct_resource_cost
     result
   end
 
-  # def direct_overhead_cost(as_on)
-  #   result = 0
-  #   result
-  # end
+  def direct_overhead_cost(as_on)
+    as_on = Date.today.to_s if as_on.nil?
+    data = []
+    total_direct_overhead_cost = 0
+    ProjectOverhead.where('project_id = ? and amount_date <= ?', self.id, Date.parse(as_on)).joins(:cost_adder_type).order('amount_date').each do |po|
+      details = {}
+      details['project_overhead'] = po
+      details['cost_adder_type'] = po.cost_adder_type
+      details['direct_overhead_cost'] = po.amount
+      data << details
+      total_direct_overhead_cost += details['direct_overhead_cost']
+    end
+    result = {}
+    result['data'] = data
+    result['count'] = data.size
+    result['total_direct_overhead_cost'] = total_direct_overhead_cost
+    result
+  end
   #
   # def total_direct_cost(as_on)
   #   direct_resource_cost(as_on) + direct_overhead_cost(as_on)
