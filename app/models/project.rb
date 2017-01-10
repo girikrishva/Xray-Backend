@@ -217,9 +217,13 @@ class Project < ActiveRecord::Base
     result
   end
 
-  # def total_direct_cost(as_on)
-  #   0
-  # end
+  def total_direct_cost(as_on)
+    result = {}
+    direct_resource_cost = direct_resource_cost(as_on, false)
+    direct_overhead_cost = direct_overhead_cost(as_on, false)
+    result['total_direct_cost'] = direct_resource_cost['total_direct_resource_cost'] + direct_overhead_cost['total_direct_overhead_cost']
+    result
+  end
   #
   # def indirect_resource_cost_share(as_on)
   #   result = 0

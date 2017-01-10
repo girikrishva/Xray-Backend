@@ -244,12 +244,12 @@ ActiveAdmin.register Project do
       render json: '{"result": "' + result.to_json + '"}'
     end
 
-    # def total_direct_cost
-    #   project_id = params[:id]
-    #   as_on = params[:as_on]
-    #   result = Project.find(project_id).total_direct_cost(as_on)
-    #   render json: '{"result": "' + result.to_json + '"}'
-    # end
+    def total_direct_cost
+      project_id = params[:id]
+      as_on = params[:as_on]
+      result = Project.find(project_id).total_direct_cost(as_on)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
   end
 
   form do |f|
