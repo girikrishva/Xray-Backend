@@ -89,57 +89,87 @@ class Project < ActiveRecord::Base
     self.invoiced_amount - self.paid_amount
   end
 
-  def missed_delivery(as_on)
+  def missed_delivery(as_on, with_details)
     as_on = Date.today.to_s if as_on.nil?
+    with_details = (with_details == 'true') ? true : false
     data = []
+    count = 0
     DeliveryMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date).each do |dm|
-      details = {}
-      details['base'] = dm
-      data << details
-    end
-    result = {}
-    result['data'] = data
-    result['count'] = data.size
-    result
-  end
-
-  def missed_invoicing(as_on)
-    as_on = Date.today.to_s if as_on.nil?
-    data = []
-    total_uninvoiced = 0
-    InvoicingMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date).each do |im|
-      details = {}
-      details['base'] = im
-      details['uninvoiced'] = im.uninvoiced
-      data << details
-      total_uninvoiced += details['uninvoiced']
-    end
-    result = {}
-    result['data'] = data
-    result['count'] = data.size
-    result['total_uninvoiced'] = total_uninvoiced
-    result
-  end
-
-  def missed_payments(as_on)
-    as_on = Date.today.to_s if as_on.nil?
-    data = []
-    total_unpaid = 0
-    InvoiceLine.where('project_id = ? and invoice_headers.due_date < ?', self.id, Date.parse(as_on)).joins(:invoice_header).order('invoice_headers.id, invoice_headers.due_date').each do |il|
-      if il.unpaid_amount > 0
+      if with_details
         details = {}
-        details['invoice_line'] = il
-        details['invoice_header'] = il.invoice_header
-        details['client'] = il.invoice_header.client
-        details['unpaid_amount'] = il.unpaid_amount
+        details['base'] = dm
         data << details
-        total_unpaid += details['unpaid_amount']
+      else
+        count += 1
       end
     end
     result = {}
-    result['data'] = data
-    result['count'] = data.size
-    result['total_unpaid'] = total_unpaid
+    if with_details ==
+      result['data'] = data
+      result['count'] = data.size
+    else
+      result['count'] = count
+    end
+    result
+  end
+
+  def missed_invoicing(as_on, with_details)
+    as_on = Date.today.to_s if as_on.nil?
+    with_details = (with_details == 'true') ? true : false
+    data = []
+    count = 0
+    total_uninvoiced = 0
+    InvoicingMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date).each do |im|
+      if with_details
+        details = {}
+        details['base'] = im
+        details['uninvoiced'] = im.uninvoiced
+        data << details
+        total_uninvoiced += details['uninvoiced']
+      else
+        count += 1
+      end
+    end
+    result = {}
+    if with_details
+      result['data'] = data
+      result['count'] = data.size
+      result['total_uninvoiced'] = total_uninvoiced
+    else
+      result['count'] = count
+    end
+    result
+  end
+
+  def missed_payments(as_on, with_details)
+    as_on = Date.today.to_s if as_on.nil?
+    with_details = (with_details == 'true') ? true : false
+    data = []
+    count = 0
+    total_unpaid = 0
+    InvoiceLine.where('project_id = ? and invoice_headers.due_date < ?', self.id, Date.parse(as_on)).joins(:invoice_header).order('invoice_headers.id, invoice_headers.due_date').each do |il|
+      if il.unpaid_amount > 0
+        if with_details
+          details = {}
+          details['invoice_line'] = il
+          details['invoice_header'] = il.invoice_header
+          details['client'] = il.invoice_header.client
+          details['unpaid_amount'] = il.unpaid_amount
+          data << details
+          total_unpaid += details['unpaid_amount']
+        else
+          count += 1
+        end
+      end
+    end
+    result = {}
+    if with_details
+      result['data'] = data
+      result['count'] = data.size
+      result['total_unpaid'] = total_unpaid
+    else
+      result['count'] = count
+    end
     result
   end
 
@@ -180,9 +210,9 @@ class Project < ActiveRecord::Base
     result['total_direct_overhead_cost'] = total_direct_overhead_cost
     result
   end
-  #
+
   # def total_direct_cost(as_on)
-  #   direct_resource_cost(as_on) + direct_overhead_cost(as_on)
+  #   0
   # end
   #
   # def indirect_resource_cost_share(as_on)
