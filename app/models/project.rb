@@ -151,7 +151,6 @@ class Project < ActiveRecord::Base
           details['client'] = il.invoice_header.client
           details['unpaid_amount'] = il.unpaid_amount
           data << details
-          total_unpaid += details['unpaid_amount']
         end
         count += 1
         total_unpaid += il.unpaid_amount
