@@ -90,14 +90,14 @@ class Project < ActiveRecord::Base
   end
 
   def missed_delivery(as_on, with_details)
-    as_on = Date.today.to_s if as_on.nil?
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on)
     with_details = (with_details == 'true') ? true : false
     data = []
     count = 0
     DeliveryMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date).each do |dm|
       if with_details
         details = {}
-        details['base'] = dm
+        details['delivery_milestone'] = dm
         data << details
       end
       count += 1
@@ -111,7 +111,7 @@ class Project < ActiveRecord::Base
   end
 
   def missed_invoicing(as_on, with_details)
-    as_on = Date.today.to_s if as_on.nil?
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on)
     with_details = (with_details == 'true') ? true : false
     data = []
     count = 0
@@ -119,7 +119,7 @@ class Project < ActiveRecord::Base
     InvoicingMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date).each do |im|
       if with_details
         details = {}
-        details['base'] = im
+        details['invoicing_milestone'] = im
         details['uninvoiced'] = im.uninvoiced
         data << details
 
@@ -137,7 +137,7 @@ class Project < ActiveRecord::Base
   end
 
   def missed_payments(as_on, with_details)
-    as_on = Date.today.to_s if as_on.nil?
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on)
     with_details = (with_details == 'true') ? true : false
     data = []
     count = 0
@@ -166,7 +166,7 @@ class Project < ActiveRecord::Base
   end
 
   def direct_resource_cost(as_on, with_details)
-    as_on = Date.today.to_s if as_on.nil?
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on)
     with_details = (with_details == 'true') ? true : false
     data = []
     count = 0
@@ -192,7 +192,7 @@ class Project < ActiveRecord::Base
   end
 
   def direct_overhead_cost(as_on, with_details)
-    as_on = Date.today.to_s if as_on.nil?
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on)
     with_details = (with_details == 'true') ? true : false
     data = []
     count = 0
@@ -224,16 +224,43 @@ class Project < ActiveRecord::Base
     result['total_direct_cost'] = direct_resource_cost['total_direct_resource_cost'] + direct_overhead_cost['total_direct_overhead_cost']
     result
   end
-  #
+
   # def indirect_resource_cost_share(as_on)
   #   result = 0
   #   result
   # end
   #
-  # def indirect_overhead_cost_share(as_on)
-  #   result = 0
-  #   result
-  # end
+
+  def indirect_overhead_cost_share(as_on, with_details)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on)
+    with_details = (with_details == 'true') ? true : false
+    total_indirect_overhead_cost = 0
+    data = []
+    count = 0
+    Overhead.total_overhead_cost(self.business_unit_id, as_on) do |o|
+      if with_details
+        details = {}
+        details['overhead'] = o
+      end
+      count += 1
+      total_indirect_overhead_cost += o.amount
+    end
+    total_direct_resource_cost = self.direct_resource_cost(as_on, false)['total_direct_resource_cost']
+    total_direct_resource_cost_for_all_projects = 0
+    Project.where('status_id = ?', ProjectStatus.id_for_status(I18n.t('label.delivery'))).each do |p|
+      if with_details
+        details = {}
+      end
+      total_direct_resource_cost_for_all_projects += p.direct_resource_cost(as_on, false)['total_direct_resource_cost']
+    end
+    result = {}
+    result['count'] = count
+    result['indirect_overhead_cost_share'] = (total_direct_resource_cost / total_direct_resource_cost_for_all_projects) * total_indirect_overhead_cost
+    if with_details
+      result['data'] = data
+    end
+    result
+  end
   #
   # def total_indirect_cost_share(as_on)
   #   indirect_resource_cost_share(as_on) + indirect_overhead_cost_share(as_on)

@@ -250,6 +250,14 @@ ActiveAdmin.register Project do
       result = Project.find(project_id).total_direct_cost(as_on)
       render json: '{"result": "' + result.to_json + '"}'
     end
+
+    def total_indirect_overhead_cost_share
+      project_id = params[:id]
+      as_on = params[:as_on]
+      with_details = params[:with_details]
+      result = Project.find(project_id).indirect_overhead_cost_share(as_on, with_details)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
   end
 
   form do |f|

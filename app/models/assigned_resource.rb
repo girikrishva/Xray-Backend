@@ -52,7 +52,7 @@ class AssignedResource < ActiveRecord::Base
   def over_assignment_check
     loop_date = self.start_date
     while loop_date <= self.end_date
-      over_assigned_hours = AssignedResource.assigned_hours(self.resource.admin_user_id, loop_date) - Rails.configuration.max_work_hours_per_day
+      over_assigned_hours = AssignedResource.assigned_hours(self.resource.admin_user_id, loop_date, loop_date) - Rails.configuration.max_work_hours_per_day
       if over_assigned_hours > 0
         admin_user_name = AdminUser.find(self.resource.admin_user_id).name
         AssignedResource.find(self.id).destroy
@@ -66,15 +66,15 @@ class AssignedResource < ActiveRecord::Base
     AssignedResource.all.order(:start_date)
   end
 
-  def self.assigned_hours(admin_user_id, as_on)
+  def self.assigned_hours(admin_user_id, from_date, to_date)
     resource_ids = Resource.where(admin_user_id: admin_user_id).pluck(:id).to_a
-    AssignedResource.where('resource_id in (?) and start_date <= ? and end_date >= ?', resource_ids, as_on, as_on).sum(:hours_per_day)
+    AssignedResource.where('resource_id in (?) and start_date <= ? and end_date >= ?', resource_ids, from_date, to_date).sum(:hours_per_day)
   end
 
-  def hours_assigned(as_on)
-    as_on = Date.today.to_s if as_on.nil?
-    lower_date = (self.start_date < Date.parse(as_on)) ? self.start_date : Date.parse(as_on)
-    upper_date = (Date.parse(as_on) > self.end_date) ? self.end_date : Date.parse(as_on)
+  def assignment_hours(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on)
+    lower_date = (self.start_date < Date.parse(as_on)) ? self.start_date : as_on
+    upper_date = (as_on > self.end_date) ? self.end_date : as_on
     days_assigned = lower_date.weekdays_until(upper_date)
     days_assigned -= holidays_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)
     days_assigned -= unpaid_vacation_between(self.resource.admin_user.business_unit_id, self.resource.admin_user.id,  lower_date, upper_date)
@@ -82,7 +82,7 @@ class AssignedResource < ActiveRecord::Base
   end
 
   def assignment_cost(as_on)
-    self.hours_assigned(as_on) * self.cost_rate
+    self.assignment_hours(as_on) * self.cost_rate
   end
 
   private
