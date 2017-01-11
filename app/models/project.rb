@@ -225,7 +225,7 @@ class Project < ActiveRecord::Base
     result
   end
 
-  def indirect_resource_cost_share(as_on, with_details)
+  def total_indirect_resource_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details == 'true') ? true : false
     total_direct_resource_cost_for_project = self.direct_resource_cost(as_on, false)['total_direct_resource_cost']
