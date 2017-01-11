@@ -72,8 +72,8 @@ class AssignedResource < ActiveRecord::Base
   end
 
   def assignment_hours(as_on)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on)
-    lower_date = (self.start_date < Date.parse(as_on)) ? self.start_date : as_on
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    lower_date = (self.start_date < as_on) ? self.start_date : as_on
     upper_date = (as_on > self.end_date) ? self.end_date : as_on
     days_assigned = lower_date.weekdays_until(upper_date)
     days_assigned -= holidays_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)

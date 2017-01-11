@@ -21,7 +21,7 @@ class Overhead < ActiveRecord::Base
   end
 
   def self.total_overhead_cost(business_unit_id, as_on)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on)
-    Overhead.where('business_unit_id = ? and amount_date <= ?', business_unit_id, as_on).sum(amount)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    Overhead.where('business_unit_id = ? and amount_date <= ?', business_unit_id, as_on).sum(:amount)
   end
 end
