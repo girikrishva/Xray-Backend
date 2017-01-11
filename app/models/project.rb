@@ -251,7 +251,7 @@ class Project < ActiveRecord::Base
           data << details
         end
         count += 1
-        total_indirect_overhead_cost_share += resource_cost_share
+        total_indirect_resource_cost_share += resource_cost_share
       end
     end
     result = {}
