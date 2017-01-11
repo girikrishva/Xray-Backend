@@ -118,4 +118,5 @@ Rails.application.routes.draw do
   match '/admin/api/total_direct_cost' => 'admin/projects#total_direct_cost', via: [:get]
   match '/admin/api/total_indirect_resource_cost_share' => 'admin/projects#total_indirect_resource_cost_share', via: [:get]
   match '/admin/api/total_indirect_overhead_cost_share' => 'admin/projects#total_indirect_overhead_cost_share', via: [:get]
+  match '/admin/api/total_indirect_cost_share' => 'admin/projects#total_indirect_cost_share', via: [:get]
 end

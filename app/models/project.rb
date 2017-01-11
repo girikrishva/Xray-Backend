@@ -301,10 +301,14 @@ class Project < ActiveRecord::Base
     end
     result
   end
-  #
-  # def total_indirect_cost_share(as_on)
-  #   indirect_resource_cost_share(as_on) + indirect_overhead_cost_share(as_on)
-  # end
+
+  def total_indirect_cost_share(as_on)
+    result = {}
+    total_indirect_resource_cost_share = total_indirect_resource_cost_share(as_on, false)
+    total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
+    result['total_indirect_cost'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']
+    result
+  end
   #
   # def total_cost(as_on)
   #   total_direct_cost(as_on) + total_indirect_cost_share(as_on)
