@@ -225,11 +225,27 @@ class Project < ActiveRecord::Base
     result
   end
 
-  # def indirect_resource_cost_share(as_on)
-  #   result = 0
+  # def indirect_resource_cost_share(as_on, with_details)
+  #   as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+  #   with_details = (with_details == 'true') ? true : false
+  #   total_direct_resource_cost_for_project = self.direct_resource_cost(as_on, false)['total_direct_resource_cost']
+  #   total_direct_resource_cost_for_all_projects = 0
+  #   Project.where('project_status_id = ?', ProjectStatus.id_for_status(I18n.t('label.delivery'))).each do |p|
+  #     total_direct_resource_cost_for_all_projects += p.direct_resource_cost(as_on, false)['total_direct_resource_cost']
+  #   end
+  #   if total_direct_resource_cost_for_all_projects > 0
+  #     total_indirect_resource_cost_share = 0
+  #     data = []
+  #     count = 0
+  #   end
+  #   result = {}
+  #   result['count'] = count
+  #   result['total_indirect_resource_cost_share'] = total_indirect_resource_cost_share
+  #   if with_details
+  #     result['data'] = data
+  #   end
   #   result
   # end
-  #
 
   def total_indirect_overhead_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
@@ -243,7 +259,9 @@ class Project < ActiveRecord::Base
       total_indirect_overhead_cost_share = 0
       data = []
       count = 0
-      Overhead.where('business_unit_id = ? and amount_date <= ?', self.delivery_manager.business_unit_id, as_on).each do |o|
+      lower_date = self.start_date
+      upper_date = [self.end_date, as_on].min
+      Overhead.where('business_unit_id = ? and amount_date between ? and ?', self.delivery_manager.business_unit_id, lower_date, upper_date).each do |o| #gk need to decide from_date for overhead
         overhead_cost_share = (total_direct_resource_cost_for_project / total_direct_resource_cost_for_all_projects) * o.amount
         if with_details
           details = {}
