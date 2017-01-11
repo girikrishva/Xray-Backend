@@ -243,12 +243,13 @@ class Project < ActiveRecord::Base
       total_indirect_overhead_cost_share = 0
       data = []
       count = 0
-      Overhead.where('business_unit_id = ? and amount_date <= ?', self.delivery_manager.business_unit_id, as_on) do |o|
-        overhead_cost_share = (total_direct_resource_cost / total_direct_resource_cost_for_all_projects) * o.amount
+      Overhead.where('business_unit_id = ? and amount_date <= ?', 1, as_on).each do |o| #self.delivery_manager.business_unit_id, as_on) do |o|
+        overhead_cost_share = (total_direct_resource_cost_for_project / total_direct_resource_cost_for_all_projects) * o.amount
         if with_details
           details = {}
           details['overhead'] = o
           details['overhead_cost_share'] = overhead_cost_share
+          data << details
         end
         count += 1
         total_indirect_overhead_cost_share += overhead_cost_share
@@ -257,6 +258,9 @@ class Project < ActiveRecord::Base
     result = {}
     result['count'] = count
     result['total_indirect_overhead_cost_share'] = total_indirect_overhead_cost_share
+    if with_details
+      result['data'] = data
+    end
     result
   end
   #
