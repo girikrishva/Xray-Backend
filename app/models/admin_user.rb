@@ -150,6 +150,11 @@ class AdminUser < ActiveRecord::Base
     end
   end
 
+  def self.active_users(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    AdminUser.where('active = ?', :true)
+  end
+
   private
 
   def traverse_reportees(root_id)

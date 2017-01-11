@@ -36,8 +36,9 @@ class Resource < ActiveRecord::Base
     self.admin_user.name + ' [Bill Rate: ' + self.bill_rate.to_s + ', Cost Rate: ' + self.cost_rate.to_s + ']'
   end
 
-  def is_latest
-    if self.deleted_at.blank? and self.id == Resource.where('admin_user_id = ?', self.admin_user_id).order(:as_on).last.id
+  def is_latest(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    if self.deleted_at.blank? and self.id == Resource.where('admin_user_id = ? and as_on <= ?', self.admin_user_id, as_on).order(:as_on).last.id
       return true
     else
       return false
@@ -83,10 +84,11 @@ class Resource < ActiveRecord::Base
     parent.table[:id]
   end
 
-  def self.latest
+  def self.latest(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     resource_ids = []
     Resource.all.each do |resource|
-      if resource.is_latest
+      if resource.is_latest(as_on)
         resource_ids << resource.id
       end
     end
