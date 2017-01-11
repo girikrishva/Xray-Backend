@@ -256,6 +256,8 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
+    result['total_direct_resource_cost_for_project'] = total_direct_resource_cost_for_project
+    result['total_direct_resource_cost_for_all_projects'] = total_direct_resource_cost_for_all_projects
     result['total_indirect_resource_cost_share'] = total_indirect_resource_cost_share
     if with_details
       result['data'] = data
@@ -291,6 +293,8 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
+    result['total_direct_resource_cost_for_project'] = total_direct_resource_cost_for_project
+    result['total_direct_resource_cost_for_all_projects'] = total_direct_resource_cost_for_all_projects
     result['total_indirect_overhead_cost_share'] = total_indirect_overhead_cost_share
     if with_details
       result['data'] = data
