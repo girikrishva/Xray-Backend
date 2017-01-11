@@ -335,8 +335,12 @@ class Project < ActiveRecord::Base
     result['contribution'] = total_revenue['total_revenue'] - total_direct_cost['total_direct_cost']
     result
   end
-  #
-  # def gross_profit(as_on)
-  #   contribution(as_on) - total_indirect_cost_share(as_on)
-  # end
+
+  def gross_profit(as_on)
+    result = {}
+    total_revenue = total_revenue(as_on)
+    total_cost = total_cost(as_on)
+    result['total_cost'] = total_revenue['total_revenue'] - total_cost['total_cost']
+    result
+  end
 end
