@@ -197,7 +197,7 @@ class Project < ActiveRecord::Base
     data = []
     count = 0
     total_direct_overhead_cost = 0
-    ProjectOverhead.where('project_id = ? and amount_date <= ?', self.id, Date.parse(as_on)).joins(:cost_adder_type).order('amount_date').each do |po|
+    ProjectOverhead.where('project_id = ? and amount_date <= ?', self.id, as_on).joins(:cost_adder_type).order('amount_date').each do |po|
       if with_details
         details = {}
         details['project_overhead'] = po
@@ -306,13 +306,17 @@ class Project < ActiveRecord::Base
     result = {}
     total_indirect_resource_cost_share = total_indirect_resource_cost_share(as_on, false)
     total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
-    result['total_indirect_cost'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']
+    result['total_indirect_cost_share'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']
     result
   end
-  #
-  # def total_cost(as_on)
-  #   total_direct_cost(as_on) + total_indirect_cost_share(as_on)
-  # end
+
+  def total_cost(as_on)
+    result = {}
+    total_direct_cost = total_direct_cost(as_on)
+    total_indirect_cost_share = total_indirect_cost_share(as_on)
+    result['total_cost'] = total_direct_cost['total_direct_cost'] + total_indirect_cost_share['total_indirect_cost_share']
+    result
+  end
   #
   # def total_revenue(as_on)
   #   result = 0
