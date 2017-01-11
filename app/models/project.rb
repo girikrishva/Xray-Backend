@@ -317,20 +317,24 @@ class Project < ActiveRecord::Base
     result['total_cost'] = total_direct_cost['total_direct_cost'] + total_indirect_cost_share['total_indirect_cost_share']
     result
   end
-  #
-  # def total_revenue(as_on)
-  #   result = 0
-  #   InvoiceLine.where('project_id = ?', self.id).each do |il|
-  #     if il.invoice_header.invoice_date <= as_on
-  #       result += il.line_amount
-  #     end
-  #   end
-  #   result
-  # end
-  #
-  # def contribution(as_on)
-  #   total_revenue(as_on) - total_direct_cost(as_on)
-  # end
+
+  def total_revenue(as_on)
+    result = 0
+    InvoiceLine.where('project_id = ?', self.id).each do |il|
+      if il.invoice_header.invoice_date <= as_on
+        result += il.line_amount
+      end
+    end
+    result
+  end
+
+  def contribution(as_on)
+    result = {}
+    total_revenue = total_revenue(as_on)
+    total_direct_cost = total_direct_cost(as_on)
+    result['contribution'] = total_revenue['total_revenue'] + total_indirect_cost_share['total_indirect_cost_share']
+    result
+  end
   #
   # def gross_profit(as_on)
   #   contribution(as_on) - total_indirect_cost_share(as_on)

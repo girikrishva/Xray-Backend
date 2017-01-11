@@ -280,6 +280,13 @@ ActiveAdmin.register Project do
       result = Project.find(project_id).total_cost(as_on)
       render json: '{"result": "' + result.to_json + '"}'
     end
+
+    def total_revenue
+      project_id = params[:id]
+      as_on = params[:as_on]
+      result = Project.find(project_id).total_revenue(as_on)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
   end
 
   form do |f|
