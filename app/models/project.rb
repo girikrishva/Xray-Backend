@@ -142,7 +142,7 @@ class Project < ActiveRecord::Base
     data = []
     count = 0
     total_unpaid = 0
-    InvoiceLine.where('project_id = ? and invoice_headers.due_date < ?', self.id, Date.parse(as_on)).joins(:invoice_header).order('invoice_headers.id, invoice_headers.due_date').each do |il|
+    InvoiceLine.where('project_id = ? and invoice_headers.due_date < ?', self.id, as_on).joins(:invoice_header).order('invoice_headers.id, invoice_headers.due_date').each do |il|
       if il.unpaid_amount > 0
         if with_details
           details = {}
@@ -175,7 +175,7 @@ class Project < ActiveRecord::Base
       if with_details
         details = {}
         details['assigned_resource'] = ar
-        details['assigned_hours'] = ar.hours_assigned(as_on)
+        details['assignment_hours'] = ar.assignment_hours(as_on)
         details['direct_resource_cost'] = ar.assignment_cost(as_on)
         data << details
       end
@@ -319,6 +319,7 @@ class Project < ActiveRecord::Base
   end
 
   def total_revenue(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     result = 0
     InvoiceLine.where('project_id = ?', self.id).each do |il|
       if il.invoice_header.invoice_date <= as_on
@@ -332,7 +333,7 @@ class Project < ActiveRecord::Base
     result = {}
     total_revenue = total_revenue(as_on)
     total_direct_cost = total_direct_cost(as_on)
-    result['contribution'] = total_revenue['total_revenue'] - total_direct_cost['total_direct_cost']
+    result['contribution'] = total_revenue['total_revenue'].to_f - total_direct_cost['total_direct_cost'].to_f
     result
   end
 
@@ -340,7 +341,7 @@ class Project < ActiveRecord::Base
     result = {}
     total_revenue = total_revenue(as_on)
     total_cost = total_cost(as_on)
-    result['total_cost'] = total_revenue['total_revenue'] - total_cost['total_cost']
+    result['total_cost'] = total_revenue['total_revenue'].to_f - total_cost['total_cost'].to_f
     result
   end
 end
