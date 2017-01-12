@@ -320,20 +320,22 @@ class Project < ActiveRecord::Base
 
   def total_revenue(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    result = 0
+    result = {}
+    total_revenue = 0
     InvoiceLine.where('project_id = ?', self.id).each do |il|
       if il.invoice_header.invoice_date <= as_on
-        result += il.line_amount
+        total_revenue += il.line_amount
       end
     end
+    result['total_revenue'] = total_revenue
     result
   end
 
   def contribution(as_on)
     result = {}
-    total_revenue = total_revenue(as_on)
-    total_direct_cost = total_direct_cost(as_on)
-    result['contribution'] = total_revenue['total_revenue'].to_f - total_direct_cost['total_direct_cost'].to_f
+    total_revenue = total_revenue(as_on)['total_revenue']
+    total_direct_cost = total_direct_cost(as_on)['total_direct_cost']
+    result['contribution'] = total_revenue - total_direct_cost
     result
   end
 
