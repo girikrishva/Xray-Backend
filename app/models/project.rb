@@ -243,6 +243,7 @@ class Project < ActiveRecord::Base
       lower_date = self.start_date
       upper_date = [self.end_date, as_on].min
       working_hours = (lower_date.weekdays_until(upper_date) * 8)
+      #gk need to derive bench cost 1 per admin_user and not 1 per resource row
       #gk need to subtract unpaid vacation hours from working hours
       Resource.latest(as_on).each do |r|
         resource_cost_share = (total_direct_resource_cost_for_project / total_direct_resource_cost_for_all_projects) * (working_hours * r.cost_rate)
