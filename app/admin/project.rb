@@ -205,7 +205,7 @@ ActiveAdmin.register Project do
     end
 
     def missed_delivery
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       with_details = params[:with_details]
       result = Project.find(project_id).missed_delivery(as_on, with_details)
@@ -213,7 +213,7 @@ ActiveAdmin.register Project do
     end
 
     def missed_invoicing
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       with_details = params[:with_details]
       result = Project.find(project_id).missed_invoicing(as_on, with_details)
@@ -221,7 +221,7 @@ ActiveAdmin.register Project do
     end
 
     def missed_payments
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       with_details = params[:with_details]
       result = Project.find(project_id).missed_payments(as_on, with_details)
@@ -229,7 +229,7 @@ ActiveAdmin.register Project do
     end
 
     def direct_resource_cost
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       with_details = params[:with_details]
       result = Project.find(project_id).direct_resource_cost(as_on, with_details)
@@ -237,7 +237,7 @@ ActiveAdmin.register Project do
     end
 
     def direct_overhead_cost
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       with_details = params[:with_details]
       result = Project.find(project_id).direct_overhead_cost(as_on, with_details)
@@ -245,14 +245,14 @@ ActiveAdmin.register Project do
     end
 
     def total_direct_cost
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       result = Project.find(project_id).total_direct_cost(as_on)
       render json: '{"result": "' + result.to_json + '"}'
     end
 
     def total_indirect_resource_cost_share
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       with_details = params[:with_details]
       result = Project.find(project_id).total_indirect_resource_cost_share(as_on, with_details)
@@ -260,7 +260,7 @@ ActiveAdmin.register Project do
     end
 
     def total_indirect_overhead_cost_share
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       with_details = params[:with_details]
       result = Project.find(project_id).total_indirect_overhead_cost_share(as_on, with_details)
@@ -268,35 +268,35 @@ ActiveAdmin.register Project do
     end
 
     def total_indirect_cost_share
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       result = Project.find(project_id).total_indirect_cost_share(as_on)
       render json: '{"result": "' + result.to_json + '"}'
     end
 
     def total_cost
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       result = Project.find(project_id).total_cost(as_on)
       render json: '{"result": "' + result.to_json + '"}'
     end
 
     def total_revenue
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       result = Project.find(project_id).total_revenue(as_on)
       render json: '{"result": "' + result.to_json + '"}'
     end
 
     def contribution
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       result = Project.find(project_id).contribution(as_on)
       render json: '{"result": "' + result.to_json + '"}'
     end
 
     def gross_profit
-      project_id = params[:id]
+      project_id = params[:project_id]
       as_on = params[:as_on]
       result = Project.find(project_id).gross_profit(as_on)
       render json: '{"result": "' + result.to_json + '"}'

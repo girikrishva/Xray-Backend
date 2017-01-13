@@ -204,6 +204,14 @@ ActiveAdmin.register Pipeline do
       resources = Client.where('business_unit_id = ?', business_unit_id).order(:name)
       render json: '{"resources": ' + resources.to_json.to_json + '}'
     end
+
+    def pipeline_for_status
+      status_id = params[:status_id]
+      as_on = params[:as_on]
+      with_details = params[:with_details]
+      result = Pipeline.pipeline_for_status(status_id, as_on, with_details)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
   end
 
   form do |f|

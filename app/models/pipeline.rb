@@ -100,4 +100,34 @@ class Pipeline < ActiveRecord::Base
       return false
     end
   end
+
+  def self.pipeline_for_status(status_id, as_on, with_details)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    with_details = (with_details == 'true') ? true : false
+    data = []
+    count = 0
+    total_pipeline = 0
+    Pipeline.where('pipeline_status_id = ? and expected_start <= ?', status_id, as_on).each do |p|
+      count += 1
+      total_pipeline += p.expected_value
+      if with_details
+        details = {}
+        details['pipeline'] = p
+        details['business_unit'] = p.business_unit.name
+        details['client'] = p.client.name
+        details['project_type'] = p.project_type_code.name
+        details['pipeline_status'] = p.pipeline_status.name
+        details['sales_person'] = p.sales_person.name
+        details['estimator'] = p.estimator.name
+        data << details
+      end
+    end
+    result = {}
+    result['count'] = count
+    result['total_pipeline'] = total_pipeline
+    if with_details
+      result['data'] = data
+    end
+    result
+  end
 end
