@@ -284,7 +284,8 @@ ActiveAdmin.register Project do
     def total_revenue
       project_id = params[:project_id]
       as_on = params[:as_on]
-      result = Project.find(project_id).total_revenue(as_on)
+      with_details = params[:with_details]
+      result = Project.find(project_id).total_revenue(as_on, with_details)
       render json: '{"result": "' + result.to_json + '"}'
     end
 
