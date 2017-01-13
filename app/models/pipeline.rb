@@ -113,12 +113,12 @@ class Pipeline < ActiveRecord::Base
       if with_details
         details = {}
         details['pipeline'] = p
-        details['business_unit'] = p.business_unit.name
-        details['client'] = p.client.name
-        details['project_type'] = p.project_type_code.name
-        details['pipeline_status'] = p.pipeline_status.name
-        details['sales_person'] = p.sales_person.name
-        details['estimator'] = p.estimator.name
+        details['business_unit'] = p.business_unit
+        details['client'] = p.client
+        details['project_type'] = p.project_type_code
+        details['pipeline_status'] = p.pipeline_status
+        details['sales_person'] = p.sales_person
+        details['estimator'] = p.estimator
         data << details
       end
     end
