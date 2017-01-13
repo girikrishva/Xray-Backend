@@ -175,6 +175,9 @@ class Project < ActiveRecord::Base
       if with_details
         details = {}
         details['assigned_resource'] = ar
+        details['skill'] = ar.resource.skill.name
+        details['user'] = ar.resource.admin_user.name
+        details['designation'] = ar.resource.admin_user.designation.name
         details['assignment_hours'] = ar.assignment_hours(as_on)
         details['direct_resource_cost'] = ar.assignment_cost(as_on)
         data << details
@@ -201,7 +204,7 @@ class Project < ActiveRecord::Base
       if with_details
         details = {}
         details['project_overhead'] = po
-        details['cost_adder_type'] = po.cost_adder_type
+        details['cost_adder_type'] = po.cost_adder_type.name
         details['direct_overhead_cost'] = po.amount
         data << details
       end
@@ -284,6 +287,9 @@ class Project < ActiveRecord::Base
         if with_details
           details = {}
           details['overhead'] = o
+          details['business_unit'] = o.business_unit.name
+          details['department'] = o.department.name
+          details['cost_adder_type'] = o.cost_adder_type.name
           details['overhead_cost_share'] = overhead_cost_share
           data << details
         end
