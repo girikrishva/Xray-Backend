@@ -180,6 +180,16 @@ ActiveAdmin.register Resource do
       Resource.where('bill_rate = 2000')
       redirect_to admin_resources_path
     end
+
+    def resource_details
+      business_unit_id = params[:business_unit_id]
+      skill_id = params[:skill_id]
+      designation_id = params[:designation_id]
+      as_on = params[:as_on]
+      with_details = params[:with_details]
+      result = Resource.resource_details(business_unit_id, skill_id, designation_id, as_on, with_details)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
   end
 
   form do |f|

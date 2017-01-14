@@ -273,7 +273,7 @@ ActiveAdmin.register Vacation do
       f.object.request_date = Date.today
       f.object.start_date = Date.today
       f.object.end_date = Date.today
-      f.object.hours_per_day = 8
+      f.object.hours_per_day = Rails.configuration.max_work_hours_per_day
       f.object.approval_status_id = ApprovalStatus.where(name: I18n.t('label.pending')).first.id
     end
     f.inputs do

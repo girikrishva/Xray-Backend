@@ -104,4 +104,37 @@ class Resource < ActiveRecord::Base
     end
     Resource.where('id in (?)', resource_ids)
   end
+
+  def self.resource_details(business_unit_id, skill_id, designation_id, as_on, with_details)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    with_details = (with_details == 'true') ? true : false
+    data = []
+    count = 0
+    total_resource_cost = 0
+    Resource.latest(as_on).each do |r|
+      if r.admin_user.business_unit_id == business_unit_id and r.skill_id == skill_id and r.designation_id == designation_id
+        resource_cost = (Rails.configuration.max_work_days_per_month * Rails.configuration.max_work_hours_per_day * r.cost_rate)
+        if with_details
+          details = {}
+          details['resource'] = r
+          details['user'] = r.admin_user.name
+          details['business_unit'] = r.admin_user.business_unit.name
+          details['skill'] = r.skill.name
+          details['designation'] = r.admin_user.designation.name
+          details['resource_cost'] = resource_cost
+          data << details
+        end
+        count += 1
+        total_resource_cost += resource_cost
+      end
+    end
+    result = {}
+    result['count'] = count
+    result['total_resource_cost'] = total_resource_cost
+    result['average_resource_cost'] = (count > 0) ? (total_resource_cost / count) : 0
+    if with_details
+      result['data'] = data
+    end
+    result
+  end
 end

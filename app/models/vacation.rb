@@ -55,7 +55,7 @@ class Vacation < ActiveRecord::Base
   end
 
   def requested_days
-    ((((self.end_date - self.start_date + 1) * 8) / 8) * 2).round / 2.0
+    ((((self.end_date - self.start_date + 1) * Rails.configuration.max_work_hours_per_day) / Rails.configuration.max_work_hours_per_day) * 2).round / 2.0
   end
 
   def self.eligible_days(admin_user_id, vacation_code_id, start_date = Date.today)
@@ -88,7 +88,7 @@ class Vacation < ActiveRecord::Base
     else
       to_date = start_date
     end
-    availed_days = (((availed_hours / 8) * 2).round / 2.0)
+    availed_days = (((availed_hours / Rails.configuration.max_work_hours_per_day) * 2).round / 2.0)
   end
 
   def self.holidays(admin_user_id, start_date = Date.today)

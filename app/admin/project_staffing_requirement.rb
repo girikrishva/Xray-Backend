@@ -139,7 +139,7 @@ ActiveAdmin.register StaffingRequirement, as: 'ProjectStaffingRequirement' do
     f.object.pipeline_id = session[:pipeline_id]
     if f.object.new_record?
       f.object.number_required = 1
-      f.object.hours_per_day = 8
+      f.object.hours_per_day = Rails.configuration.max_work_hours_per_day
       f.object.start_date = Date.today
       f.object.end_date = Date.today
     end

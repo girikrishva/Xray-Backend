@@ -242,7 +242,7 @@ class Project < ActiveRecord::Base
       count = 0
       lower_date = self.start_date
       upper_date = [self.end_date, as_on].min
-      working_hours = (lower_date.weekdays_until(upper_date) * 8)
+      working_hours = (lower_date.weekdays_until(upper_date) * Rails.configuration.max_work_hours_per_day)
       Resource.latest(as_on).each do |r|
         resource_cost_share = (total_direct_resource_cost_for_project / total_direct_resource_cost_for_all_projects) * (working_hours * r.cost_rate)
         if with_details

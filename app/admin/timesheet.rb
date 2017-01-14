@@ -240,7 +240,7 @@ ActiveAdmin.register Timesheet do
   form do |f|
     if f.object.new_record?
       f.object.timesheet_date = Date.today
-      f.object.hours = 8
+      f.object.hours = Rails.configuration.max_work_hours_per_day
       f.object.approval_status_id = ApprovalStatus.where(name: I18n.t('label.pending')).first.id
     end
     f.inputs do
