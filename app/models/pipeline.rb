@@ -103,7 +103,7 @@ class Pipeline < ActiveRecord::Base
 
   def self.pipeline_for_status(status_id, as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    with_details = (with_details == 'true') ? true : false
+    with_details = (with_details.to_s == 'true') ? true : false
     data = []
     count = 0
     total_pipeline = 0

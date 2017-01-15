@@ -105,9 +105,31 @@ class Resource < ActiveRecord::Base
     Resource.where('id in (?)', resource_ids)
   end
 
+  def self.resource_distribution_combos(as_on, with_details)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    with_details = (with_details.to_s == 'true') ? true : false
+    data = []
+    count = 0
+    Resource.latest(as_on).each do |r|
+      details = {}
+      details['business_unit'] = r.admin_user.business_unit.name
+      details['skill'] = r.skill.name
+      details['designation'] = r.admin_user.designation.name
+      details['resource_details'] = Resource.resource_details(r.admin_user.business_unit.id, r.skill_id, r.admin_user.designation_id, as_on, with_details)
+      count += 1
+      data << details
+    end
+    result = {}
+    result['count'] = count
+    result['data'] = data
+    result
+  end
+
+  private
+
   def self.resource_details(business_unit_id, skill_id, designation_id, as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    with_details = (with_details == 'true') ? true : false
+    with_details = (with_details.to_s == 'true') ? true : false
     data = []
     count = 0
     total_resource_cost = 0
@@ -118,9 +140,9 @@ class Resource < ActiveRecord::Base
           details = {}
           details['resource'] = r
           details['user'] = r.admin_user.name
-          details['business_unit'] = r.admin_user.business_unit.id
-          details['skill'] = r.skill.id
-          details['designation'] = r.admin_user.designation.id
+          details['business_unit'] = r.admin_user.business_unit.name
+          details['skill'] = r.skill.name
+          details['designation'] = r.admin_user.designation.name
           details['resource_cost'] = resource_cost
           data << details
         end
