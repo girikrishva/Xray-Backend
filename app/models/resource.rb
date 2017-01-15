@@ -112,15 +112,15 @@ class Resource < ActiveRecord::Base
     count = 0
     total_resource_cost = 0
     Resource.latest(as_on).each do |r|
-      if r.admin_user.business_unit_id == business_unit_id and r.skill_id == skill_id and r.designation_id == designation_id
+      if r.admin_user.business_unit_id == business_unit_id.to_i and r.skill_id == skill_id.to_i and r.admin_user.designation_id == designation_id.to_i
         resource_cost = (Rails.configuration.max_work_days_per_month * Rails.configuration.max_work_hours_per_day * r.cost_rate)
         if with_details
           details = {}
           details['resource'] = r
           details['user'] = r.admin_user.name
-          details['business_unit'] = r.admin_user.business_unit.name
-          details['skill'] = r.skill.name
-          details['designation'] = r.admin_user.designation.name
+          details['business_unit'] = r.admin_user.business_unit.id
+          details['skill'] = r.skill.id
+          details['designation'] = r.admin_user.designation.id
           details['resource_cost'] = resource_cost
           data << details
         end
