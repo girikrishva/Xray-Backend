@@ -124,5 +124,5 @@ Rails.application.routes.draw do
   match '/admin/api/contribution' => 'admin/projects#contribution', via: [:get]
   match '/admin/api/gross_profit' => 'admin/projects#gross_profit', via: [:get]
   match '/admin/api/pipeline_for_status' => 'admin/pipelines#pipeline_for_status', via: [:get]
-  match '/admin/api/resource_details' => 'admin/resources#resource_details', via: [:get]
+  match '/admin/api/resource_distribution_combos' => 'admin/resources#resource_distribution_combos', via: [:get]
 end

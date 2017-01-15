@@ -190,6 +190,13 @@ ActiveAdmin.register Resource do
       result = Resource.resource_details(business_unit_id, skill_id, designation_id, as_on, with_details)
       render json: '{"result": "' + result.to_json + '"}'
     end
+
+    def resource_distribution_combos
+      as_on = params[:as_on]
+      with_details = params[:with_details]
+      result = Resource.resource_distribution_combos(as_on, with_details)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
   end
 
   form do |f|
