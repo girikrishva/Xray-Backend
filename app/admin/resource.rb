@@ -2,7 +2,7 @@ ActiveAdmin.register Resource do
   menu if: proc { is_menu_authorized? [I18n.t('role.executive')] }, label: I18n.t('menu.resources'), parent: I18n.t('menu.masters'), priority: 10
 
 # See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
+# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters.
 #
 # permit_params :list, :of, :attributes, :on, :model
 #
