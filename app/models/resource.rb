@@ -36,7 +36,7 @@ class Resource < ActiveRecord::Base
     self.admin_user.name + ' [Bill Rate: ' + self.bill_rate.to_s + ', Cost Rate: ' + self.cost_rate.to_s + ']'
   end
 
-  def is_latest(as_on)
+  def is_latest(as_on = Date.today)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     if self.deleted_at.blank? and self.id == Resource.where('admin_user_id = ? and as_on <= ?', self.admin_user_id, as_on).order(:as_on).last.id
       return true
@@ -109,19 +109,16 @@ class Resource < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
     data = []
-    count = 0
     Resource.latest(as_on).each do |r|
       details = {}
       details['business_unit'] = r.admin_user.business_unit.name
       details['skill'] = r.skill.name
       details['designation'] = r.admin_user.designation.name
       details['resource_details'] = Resource.resource_details(r.admin_user.business_unit.id, r.skill_id, r.admin_user.designation_id, as_on, with_details)
-      count += 1
       data << details
     end
     result = {}
-    result['count'] = count
-    result['data'] = data
+    result['data'] = data.sort_by{|x| [x['business_unit'], x['skill'], x['designation']]}
     result
   end
 
@@ -138,11 +135,7 @@ class Resource < ActiveRecord::Base
         resource_cost = (Rails.configuration.max_work_days_per_month * Rails.configuration.max_work_hours_per_day * r.cost_rate)
         if with_details
           details = {}
-          details['resource'] = r
           details['user'] = r.admin_user.name
-          details['business_unit'] = r.admin_user.business_unit.name
-          details['skill'] = r.skill.name
-          details['designation'] = r.admin_user.designation.name
           details['resource_cost'] = resource_cost
           data << details
         end
