@@ -19,7 +19,6 @@ ActiveAdmin.register Project do
   config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
 
   config.clear_action_items!
-
   scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
     Project.only_deleted
   end
@@ -50,7 +49,8 @@ ActiveAdmin.register Project do
     link_to I18n.t('label.back'), admin_projects_path
   end
 
-  index as: :grouped_table, group_by_attribute: :business_unit_name do
+  index do #as: :grouped_table, group_by_attribute: :business_unit_name do
+    script :src => javascript_path('pop_up.js'), :type => "text/javascript"
     selectable_column
     column :id
     column :client, sortable: 'clients.name' do |resource|
@@ -97,6 +97,16 @@ ActiveAdmin.register Project do
         item I18n.t('actions.project_overheads'), admin_project_overheads_path(project_id: resource.id)
         item I18n.t('actions.delivery_milestones'), admin_delivery_milestones_path(project_id: resource.id)
         item I18n.t('actions.invoicing_milestones'), admin_invoicing_milestones_path(project_id: resource.id)
+        item "Delivery Health", "#",class: "delivery_health","data-popup-open":"popup-1",id: resource.id
+      end
+    end
+    div class:"popup","data-popup": "popup-1" do
+      div class:"popup-inner",style:"overflow : auto;" do
+        span class:"ajax_content" do 
+        end
+          a class:"popup-close","data-popup-close":"popup-1","href":"#" do
+            "X"
+          end
       end
     end
   end
@@ -167,6 +177,22 @@ ActiveAdmin.register Project do
     end
 
     before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
+
+    def pop_up_view
+      @project = {}
+      response = admin_api_missed_delivery_path(params["id"])
+      raise response.inspect
+      @project_value = Project.where(id:params["id"]).first
+      direct_required_attributes=["name","description","booking_value","updated_by","unpaid_amount","paid_amount","invoiced_amount"]
+      in_direct_required_attributes = ["client","project_type_code","project_status","business_unit","engagement_manager","delivery_manager","sales_person"]
+      direct_required_attributes.each do |x|
+       @project["#{x.split("_").join(" ").capitalize}"] = @project_value.send(x)
+      end
+      in_direct_required_attributes.each do |x|
+       @project["#{x.split("_").join(" ").capitalize}"] = @project_value.send(x).name
+      end
+      render json: @project
+    end
 
     def scoped_collection
       Project.includes [:business_unit, :client, :project_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager, :pipeline]
