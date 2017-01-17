@@ -143,6 +143,12 @@ ActiveAdmin.register AdminUser do
       AdminUser.restore(params[:id])
       redirect_to admin_admin_users_path
     end
+
+    def admin_user_details
+      admin_user_id = params[:admin_user_id]
+      result = AdminUser.find(admin_user_id).admin_user_details
+      render json: '{"result": "' + result.to_json + '"}'
+    end
   end
 
   filter :business_unit

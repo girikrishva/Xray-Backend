@@ -89,6 +89,21 @@ class Project < ActiveRecord::Base
     self.invoiced_amount - self.paid_amount
   end
 
+  def project_details
+    result = {}
+    result['project_details'] = self
+    result['client'] = self.client.name
+    result['project_type'] = self.project_type_code.name
+    result['project_status'] = self.project_status.name
+    result['business_unit'] = self.business_unit.name
+    result['sales_person'] = self.sales_person.name
+    result['estimator'] = self.estimator.name
+    result['delivery_manager'] = self.delivery_manager.name
+    result['engagement_manager'] = self.engagement_manager.name
+    result['pipeline_details'] = self.pipeline.name
+    result
+  end
+
   def missed_delivery(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
@@ -336,7 +351,8 @@ class Project < ActiveRecord::Base
           details = {}
           details['invoice_line'] = il
           details['invoice_header'] = il.invoice_header
-          details['client'] = il.invoice_header.client
+          details['client'] = il.invoice_header.client.name
+          details['business_unit'] = il.invoice_header.client.business_unit.name
           data << details
         end
         total_revenue += il.line_amount

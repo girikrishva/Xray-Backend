@@ -110,6 +110,8 @@ Rails.application.routes.draw do
   match '/admin/api/cancel_timesheet', to: 'admin/timesheets#cancel_timesheet', via: [:post]
   match '/admin/api/make_timesheet_pending', to: 'admin/timesheets#make_timesheet_pending', via: [:post]
   match '/admin/api/clients_for_business_unit' => 'admin/pipelines#clients_for_business_unit', via: [:get]
+  match '/admin/api/admin_user_details' => 'admin/admin_users#admin_user_details', via: [:get]
+  match '/admin/api/project_details' => 'admin/projects#project_details', via: [:get]
   match '/admin/api/missed_delivery' => 'admin/projects#missed_delivery', via: [:get]
   match '/admin/api/missed_invoicing' => 'admin/projects#missed_invoicing', via: [:get]
   match '/admin/api/missed_payments' => 'admin/projects#missed_payments', via: [:get]
