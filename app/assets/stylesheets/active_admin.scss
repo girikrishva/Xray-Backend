@@ -27,10 +27,12 @@
 
 /* Inner */
 .popup-inner {
-    max-width:700px;
+    max-width:1200px;
+    max-height:400px;
     width:100%;
     padding:40px;
-    position:absolute;
+    position:fixed;
+    margin-top:50px;
     top:50%;
     left:50%;
     -webkit-transform:translate(-50%, -50%);
@@ -47,7 +49,7 @@
     padding-top:22px;
     display:inline-block;
     position:absolute;
-    top:0px;
+    top: 8px;
     transition:ease 0.25s all;
     -webkit-transform:translate(50%, -50%);
     transform:translate(50%, -50%);
@@ -58,11 +60,15 @@
     text-align:center;
     line-height:100%;
     color:#fff;
+    left: 1100px;
 }
 
-.popup-close:hover {
-    -webkit-transform:translate(50%, -50%) rotate(180deg);
-    transform:translate(50%, -50%) rotate(180deg);
-    background:rgba(0,0,0,1);
-    text-decoration:none;
+
+.text_link{
+    color: #39a5ad;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.remove_pointer{
+    cursor: none;
 }

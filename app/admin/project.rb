@@ -178,18 +178,30 @@ ActiveAdmin.register Project do
 
     before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
-    def pop_up_view
+  def pop_up_view
       @project = {}
-      response = admin_api_missed_delivery_path(params["id"])
-      raise response.inspect
       @project_value = Project.where(id:params["id"]).first
-      direct_required_attributes=["name","description","booking_value","updated_by","unpaid_amount","paid_amount","invoiced_amount"]
-      in_direct_required_attributes = ["client","project_type_code","project_status","business_unit","engagement_manager","delivery_manager","sales_person"]
+      @get_details = Project.new()
+      api_attributes = ["missed_delivery","missed_invoicing","missed_payments"]
+      direct_required_attributes=["name","start_date","end_date"]
+      in_direct_required_attributes = ["project_type_code","project_status","delivery_manager"]
       direct_required_attributes.each do |x|
        @project["#{x.split("_").join(" ").capitalize}"] = @project_value.send(x)
       end
       in_direct_required_attributes.each do |x|
        @project["#{x.split("_").join(" ").capitalize}"] = @project_value.send(x).name
+      end
+      @project["Delivery Health"] = @project_value.delivery_health(Date.today.strftime("%Y-%m-%d"))["delivery_health"]
+      @project["Overdue Invoicing"] = @get_details.missed_invoicing(nil,nil)["total_uninvoiced"]
+      @project["Overdue Payments"] = @get_details.missed_payments(nil,nil)["total_unpaid"]
+      contribution = @project_value.contribution(Date.today.strftime("%Y-%m-%d"))["contribution"]
+      gross_profit = @project_value.gross_profit(Date.today.strftime("%Y-%m-%d"))["gross_profit"]
+      @project["contribution"] = "$#{contribution.abs}"
+      @project["Contribution Status"] = (contribution > 0) ? "+ve" : "-ve" 
+      @project["Gross Profit"] = "$#{gross_profit.abs}"
+      @project["Gross Profit Status"] = (gross_profit > 0) ? "+ve" : "-ve" 
+      api_attributes.each do |x|
+       @project["#{x.split("_").join(" ").capitalize}"] = @get_details.send(x.to_sym,nil,nil)["count"]
       end
       render json: @project
     end
