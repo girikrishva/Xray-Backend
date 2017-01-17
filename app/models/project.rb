@@ -365,4 +365,23 @@ class Project < ActiveRecord::Base
     result['gross_profit'] = total_revenue - total_cost
     result
   end
+
+  def delivery_health(as_on)
+    contribution_amount = contribution(as_on)['contribution']
+    gross_profit_amount = gross_profit(as_on)['gross_profit']
+    missed_delivery_count = missed_delivery(as_on, false)['count']
+    missed_invoicing_count = missed_invoicing(as_on, false)['count']
+    missed_payments_count = missed_payments(as_on, false)['count']
+    result = {}
+    if contribution_amount < 0
+      result['delivery_health'] = I18n.t('label.red')
+    elsif contribution_amount >= 0 and gross_profit_amount >= 0 and (missed_delivery_count > 0 or missed_invoicing_count > 0 or missed_payments_count > 0)
+      result['delivery_health'] = I18n.t('label.yellow')
+    elsif contribution_amount >= 0 and gross_profit_amount < 0 and (missed_delivery_count > 0 or missed_invoicing_count > 0 or missed_payments_count > 0)
+      result['delivery_health'] = I18n.t('label.orange')
+    else
+      result['delivery_health'] = I18n.t('label.green')
+    end
+    result
+  end
 end

@@ -150,6 +150,10 @@ en:
     deleted: "Deleted"
     yes_t: "Yes"
     no_t: "No"
+    red: "RED"
+    orange: "ORANGE"
+    yellow: "YELLOW"
+    green: "GREEN"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"
