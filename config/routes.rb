@@ -111,6 +111,8 @@ Rails.application.routes.draw do
   match '/admin/api/cancel_timesheet', to: 'admin/timesheets#cancel_timesheet', via: [:post]
   match '/admin/api/make_timesheet_pending', to: 'admin/timesheets#make_timesheet_pending', via: [:post]
   match '/admin/api/clients_for_business_unit' => 'admin/pipelines#clients_for_business_unit', via: [:get]
+  match '/admin/api/admin_user_details' => 'admin/admin_users#admin_user_details', via: [:get]
+  match '/admin/api/project_details' => 'admin/projects#project_details', via: [:get]
   match '/admin/api/missed_delivery' => 'admin/projects#missed_delivery', via: [:get]
   match '/admin/api/missed_invoicing' => 'admin/projects#missed_invoicing', via: [:get]
   match '/admin/api/missed_payments' => 'admin/projects#missed_payments', via: [:get]
@@ -124,6 +126,7 @@ Rails.application.routes.draw do
   match '/admin/api/total_revenue' => 'admin/projects#total_revenue', via: [:get]
   match '/admin/api/contribution' => 'admin/projects#contribution', via: [:get]
   match '/admin/api/gross_profit' => 'admin/projects#gross_profit', via: [:get]
+  match '/admin/api/delivery_health' => 'admin/projects#delivery_health', via: [:get]
   match '/admin/api/pipeline_for_status' => 'admin/pipelines#pipeline_for_status', via: [:get]
   match '/admin/api/resource_distribution_combos' => 'admin/resources#resource_distribution_combos', via: [:get]
 end

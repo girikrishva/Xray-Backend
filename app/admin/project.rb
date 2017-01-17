@@ -230,6 +230,12 @@ ActiveAdmin.register Project do
       redirect_to admin_projects_path
     end
 
+    def project_details
+      project_id = params[:project_id]
+      result = Project.find(project_id).project_details
+      render json: '{"result": "' + result.to_json + '"}'
+    end
+
     def missed_delivery
       project_id = params[:project_id]
       as_on = params[:as_on]
@@ -326,6 +332,13 @@ ActiveAdmin.register Project do
       project_id = params[:project_id]
       as_on = params[:as_on]
       result = Project.find(project_id).gross_profit(as_on)
+      render json: '{"result": "' + result.to_json + '"}'
+    end
+
+    def delivery_health
+      project_id = params[:project_id]
+      as_on = params[:as_on]
+      result = Project.find(project_id).delivery_health(as_on)
       render json: '{"result": "' + result.to_json + '"}'
     end
   end

@@ -155,6 +155,17 @@ class AdminUser < ActiveRecord::Base
     AdminUser.where('active = ?', :true)
   end
 
+  def admin_user_details
+    result = {}
+    result['admin_user_details'] = self
+    result['business_unit'] = self.business_unit.name
+    result['department'] = self.department.name
+    result['designation'] = self.designation.name
+    result['role'] = self.role.name
+    result['manager'] = self.manager.name rescue nil
+    result
+  end
+
   private
 
   def traverse_reportees(root_id)
