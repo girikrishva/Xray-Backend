@@ -14,7 +14,7 @@
            $(".project_detail,.finance").click()
            $(".Delivery_Health").last().css('background',$(".Delivery_Health").last().text());
            $(".contribution").last().addClass("text_link")
-           $(".Gross_Profit").last().addClass("text_link")
+           $(".Gross_Profit:eq(2)").addClass("text_link")
            $(".contribution").last().on('click',function(){
             $(".hide_it").html("")
             if (current_element != null){current_element.css('background','white')}
@@ -34,16 +34,23 @@
             $(".ajax_content").append(html_value)
             $(".hide_it").hide()
             $(".hide_it").show(1000)
-            $( "th:gt(-1)" ).hide()
             $(".data").hide()
            
             $(".assigned_resource").hide()
               })
-              $(".Gross_Profit").last().on('click',function(){
+              $(".Gross_Profit:eq(2)").on('click',function(){
+              if (current_element != null){current_element.css('background','white')}
              $(".hide_it").fadeOut( 1000, function(){
               $(this).remove()
-              if (current_element != null){current_element.css('background','white')}
              })
+              current_element = $(this)
+              current_element.css('background','yellow')
+              responce  = ajax_call("http://beta.json-generator.com/api/json/get/4k0ezyvLf")
+              var html_value = "<div class= 'hide_it'><span id='close' style='cursor:pointer' hidden></span>"+ convert_ajax_to_htm(responce["result"])
+             $(".ajax_content").append(html_value)
+            $(".hide_it").hide()
+            $(".hide_it").show(1000)
+            $(".data").hide()
           })
            })
 
