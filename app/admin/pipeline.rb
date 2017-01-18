@@ -210,7 +210,7 @@ ActiveAdmin.register Pipeline do
       as_on = params[:as_on]
       with_details = params[:with_details]
       result = Pipeline.pipeline_for_status(status_id, as_on, with_details)
-      render json: '{"result": "' + result.to_json + '"}'
+      render json: result
     end
   end
 

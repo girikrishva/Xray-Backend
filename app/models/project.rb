@@ -186,7 +186,7 @@ class Project < ActiveRecord::Base
     data = []
     count = 0
     total_direct_resource_cost = 0
-    AssignedResource.where('project_id = ?', self.id).order('start_date, end_date').each do |ar|
+    AssignedResource.where('project_id = ? and ? between start_date and end_date', self.id, as_on).order('start_date, end_date').each do |ar|
       if with_details
         details = {}
         details['assigned_resource'] = ar
