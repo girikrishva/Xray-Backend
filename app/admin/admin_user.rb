@@ -147,7 +147,7 @@ ActiveAdmin.register AdminUser do
     def admin_user_details
       admin_user_id = params[:admin_user_id]
       result = AdminUser.find(admin_user_id).admin_user_details
-      render json: '{"result": "' + result.to_json + '"}'
+      render json: result
     end
   end
 
