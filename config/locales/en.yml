@@ -66,6 +66,7 @@ en:
     manager: "Manager"
   menu:
     define_users: "Define Users"
+    reports: "Reports"
     security: "Security"
     clients: "Clients"
     masters: "Masters"
