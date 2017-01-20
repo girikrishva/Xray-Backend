@@ -1,5 +1,12 @@
 class Project < ActiveRecord::Base
   acts_as_paranoid
+  ransacker :project_health do
+  end
+  ransacker :gross_profit_status do
+  end
+
+   ransacker :contribution_status do
+  end
 
   belongs_to :client, class_name: 'Client', foreign_key: :client_id
   belongs_to :project_type_code, class_name: 'ProjectTypeCode', foreign_key: :project_type_code_id
@@ -328,7 +335,7 @@ class Project < ActiveRecord::Base
     result = {}
     total_indirect_resource_cost_share = total_indirect_resource_cost_share(as_on, false)
     total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
-    result['total_indirect_cost_share'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']
+    result['total_indirect_cost_share'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] rescue 0 + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share'] rescue 0
     result
   end
 
@@ -336,7 +343,7 @@ class Project < ActiveRecord::Base
     result = {}
     total_direct_cost = total_direct_cost(as_on)
     total_indirect_cost_share = total_indirect_cost_share(as_on)
-    result['total_cost'] = total_direct_cost['total_direct_cost'] + total_indirect_cost_share['total_indirect_cost_share']
+    result['total_cost'] = total_direct_cost['total_direct_cost'] rescue 0 + total_indirect_cost_share['total_indirect_cost_share'] rescue 0
     result
   end
 
