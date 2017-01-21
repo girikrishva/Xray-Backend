@@ -58,14 +58,18 @@ class StaffingRequirement < ActiveRecord::Base
       details = {}
       details['skill_name'] = skill_name
       details['designation_name'] = designation_name
-      details['staffing_required'] = StaffingRequirement.where('skill_id = ? and designation_id = ? and ? between start_date and end_date', skill_id, designation_id, as_on).count
+      staffing_required = StaffingRequirement.staffing_required(skill_id, designation_id, as_on, with_details)
+      details['staffing_required_count'] = staffing_required['count']
+      if with_details
+        details['staffing_required_details'] = staffing_required['details']
+      end
       details['staffing_fulfilled'] = StaffingRequirement.where('skill_id = ? and designation_id = ? and ? between start_date and end_date and fulfilled is true', skill_id, designation_id, as_on).count
-      details['staffing_gap'] = details['staffing_required'] - details['staffing_fulfilled']
+      details['staffing_gap'] = staffing_required['count'] - details['staffing_fulfilled']
       deployable_resources = StaffingRequirement.deployable_resources(skill_id, designation_id, start_date, end_date, as_on, with_details)
       details['deployable_resources_count'] = deployable_resources['count']
       details['recruitment_need'] = [(details['staffing_gap'] - details['deployable_resources_count']), 0].max
       if with_details
-        details['deployable_resources'] = deployable_resources['details']
+        details['deployable_resources_details'] = deployable_resources['details']
       end
       data << details
     end
@@ -75,6 +79,35 @@ class StaffingRequirement < ActiveRecord::Base
   end
 
   private
+
+  def self.staffing_required(skill_id, designation_id, as_on, with_details)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    with_details = (with_details.to_s == 'true') ? true : false
+    staffing_required = []
+    count = 0
+    StaffingRequirement.where('skill_id = ? and designation_id = ? and ? between start_date and end_date', skill_id, designation_id, as_on).each do |sr|
+      count += sr.number_required
+      if with_details
+        staffing_required_details = {}
+        staffing_required_details['id'] = sr.id
+        staffing_required_details['pipeline_business_unit'] = sr.pipeline.business_unit.name
+        staffing_required_details['client'] = sr.pipeline.client.name
+        staffing_required_details['pipeline'] = sr.pipeline.name
+        staffing_required_details['start_date'] = sr.start_date
+        staffing_required_details['end_date'] = sr.end_date
+        staffing_required_details['number_required'] = sr.number_required
+        staffing_required_details['hours_per_day'] = sr.hours_per_day
+        staffing_required_details['fulfilled'] = sr.fulfilled
+        staffing_required << staffing_required_details
+      end
+    end
+    result = {}
+    result['count'] = count
+    if with_details
+      result['details'] = staffing_required
+    end
+    result
+  end
 
   def self.deployable_resources(skill_id, designation_id, start_date, end_date, as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
