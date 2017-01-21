@@ -71,10 +71,10 @@ class StaffingRequirement < ActiveRecord::Base
       details['staffing_gap'] = staffing_required['count'] - staffing_fulfilled['count']
       deployable_resources = StaffingRequirement.deployable_resources(skill_id, designation_id, start_date, end_date, as_on, with_details)
       details['deployable_resources_count'] = deployable_resources['count']
-      details['recruitment_need'] = [(details['staffing_gap'] - details['deployable_resources_count']), 0].max
       if with_details
         details['deployable_resources_details'] = deployable_resources['details']
       end
+      details['recruitment_need'] = [(details['staffing_gap'] - details['deployable_resources_count']), 0].max
       data << details
     end
     result = {}
@@ -170,7 +170,7 @@ class StaffingRequirement < ActiveRecord::Base
       end
     end
     result = {}
-    result['count'] = deployable_resources.count
+    result['count'] = count
     if with_details
       result['details'] = deployable_resources
     end
