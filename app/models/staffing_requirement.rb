@@ -59,22 +59,23 @@ class StaffingRequirement < ActiveRecord::Base
       details['skill_name'] = skill_name
       details['designation_name'] = designation_name
       staffing_required = StaffingRequirement.staffing_required(skill_id, designation_id, as_on, with_details)
-      details['staffing_required_count'] = staffing_required['count']
+      details['staffing_required'] = staffing_required['count']
       if with_details
         details['staffing_required_details'] = staffing_required['details']
       end
       staffing_fulfilled = StaffingRequirement.staffing_fulfilled(skill_id, designation_id, as_on, with_details)
-      details['staffing_fulfilled_count'] = staffing_fulfilled['count']
+      details['staffing_fulfilled'] = staffing_fulfilled['count']
       if with_details
         details['staffing_fulfilled_details'] = staffing_fulfilled['details']
       end
-      details['staffing_gap'] = staffing_required['count'] - staffing_fulfilled['count']
+      staffing_gap = staffing_required['count'] - staffing_fulfilled['count']
+      details['staffing_gap'] = staffing_gap
       deployable_resources = StaffingRequirement.deployable_resources(skill_id, designation_id, start_date, end_date, as_on, with_details)
-      details['deployable_resources_count'] = deployable_resources['count']
+      details['deployable_resources'] = deployable_resources['count']
       if with_details
         details['deployable_resources_details'] = deployable_resources['details']
       end
-      details['recruitment_need'] = [(details['staffing_gap'] - details['deployable_resources_count']), 0].max
+      details['recruitment_need'] = [(staffing_gap - deployable_resources['count']), 0].max
       data << details
     end
     result = {}
