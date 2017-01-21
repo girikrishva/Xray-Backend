@@ -61,7 +61,8 @@ class StaffingRequirement < ActiveRecord::Base
       details['staffing_required'] = StaffingRequirement.where('skill_id = ? and designation_id = ? and ? between start_date and end_date', skill_id, designation_id, as_on).count
       details['staffing_fulfilled'] = StaffingRequirement.where('skill_id = ? and designation_id = ? and ? between start_date and end_date and fulfilled is true', skill_id, designation_id, as_on).count
       details['staffing_gap'] = details['staffing_required'] - details['staffing_fulfilled']
-      details['deployable_resources_count'] = StaffingRequirement.deployable_resources(skill_id, designation_id, start_date, end_date, as_on, with_details)
+      details['deployable_resources'] = StaffingRequirement.deployable_resources(skill_id, designation_id, start_date, end_date, as_on, with_details)
+      details['recruitment_need'] = [(details['staffing_gap'] - details['deployable_resources']['count']), 0].max
       data << details
     end
     result = {}
