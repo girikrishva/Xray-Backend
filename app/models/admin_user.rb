@@ -170,11 +170,6 @@ class AdminUser < ActiveRecord::Base
     to_date = Date.parse(to_date)
     result = {}
     admin_user = AdminUser.find(admin_user_id).latest_snapshot(to_date)
-    result['business_unit'] = admin_user.business_unit.name
-    result['admin_user_name'] = admin_user.name
-    result['active'] = admin_user.active
-    result['designation'] = admin_user.designation.name
-    result['manager'] = AdminUser.find(admin_user.manager_id).name rescue nil
     result['details'] = AdminUser.efficiency_details(admin_user, from_date, to_date)
     result
   end
@@ -214,7 +209,12 @@ class AdminUser < ActiveRecord::Base
     clocked_hours = Timesheet.clocked_hours(admin_user_id, from_date, to_date)
     clocked_percentage = (clocked_hours / assigned_hours) * 100 rescue 0
     utilization_percentage = (clocked_hours / working_hours) * 100 rescue 0
-    bill_rate = Resource.latest_for(admin_user_id, to_date).bill_rate
+    bill_rate = Resource.latest_for(admin_user_id, to_date).bill_rate rescue 0
+    details['business_unit'] = admin_user.business_unit.name
+    details['admin_user_name'] = admin_user.name
+    details['active'] = admin_user.active
+    details['designation'] = admin_user.designation.name
+    details['manager'] = AdminUser.find(admin_user.manager_id).name rescue nil
     details['assigned_hours'] = assigned_hours
     details['clocked_hours'] = clocked_hours
     details['working_hours'] = working_hours
@@ -230,8 +230,8 @@ class AdminUser < ActiveRecord::Base
     details = []
     AdminUser.all.each do |au|
       admin_user = au.latest_snapshot(to_date)
-      if !admin_user.blank?
-        details << (AdminUser.efficiency_details(admin_user, from_date, to_date)['details'])
+      if !admin_user.nil? and !admin_user.blank?
+        details << (AdminUser.efficiency_details(admin_user, from_date, to_date))
       end
     end
     details
