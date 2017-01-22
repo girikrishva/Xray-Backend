@@ -209,7 +209,7 @@ class AdminUser < ActiveRecord::Base
     clocked_hours = Timesheet.clocked_hours(admin_user_id, from_date, to_date)
     clocked_percentage = (clocked_hours / assigned_hours) * 100 rescue 0
     utilization_percentage = (clocked_hours / working_hours) * 100 rescue 0
-    bill_rate = Resource.latest_for(admin_user_id, to_date).bill_rate rescue 0
+    bill_rate = Resource.latest_for(admin_user_id, to_date).bill_rate rescue 0 #gk
     details['business_unit'] = admin_user.business_unit.name
     details['admin_user_name'] = admin_user.name
     details['active'] = admin_user.active
@@ -228,7 +228,7 @@ class AdminUser < ActiveRecord::Base
 
   def self.business_unit_details(business_unit_id, from_date, to_date)
     details = []
-    AdminUser.all.each do |au|
+    AdminUser.joins(:business_unit).order('business_units.name, admin_users.name').each do |au|
       admin_user = au.latest_snapshot(to_date)
       if !admin_user.nil? and !admin_user.blank?
         details << (AdminUser.efficiency_details(admin_user, from_date, to_date))
