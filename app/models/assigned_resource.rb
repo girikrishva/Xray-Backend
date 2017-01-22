@@ -68,7 +68,18 @@ class AssignedResource < ActiveRecord::Base
 
   def self.assigned_hours(admin_user_id, from_date, to_date)
     resource_ids = Resource.where(admin_user_id: admin_user_id).pluck(:id).to_a
-    AssignedResource.where('resource_id in (?) and start_date <= ? and end_date >= ?', resource_ids, from_date, to_date).sum(:hours_per_day)
+    assigned_hours = 0
+    AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
+      assigned_hours += (ar.assignment_hours(to_date) - ar.assignment_hours(from_date) + 1)
+    end
+    assigned_hours
+  end
+
+  def self.working_hours(admin_user_id, from_date, to_date)
+    working_days = from_date.weekdays_until(to_date)
+    working_days -= AssignedResource.holidays_between(AdminUser.find(admin_user_id).business_unit_id, from_date, to_date)
+    working_hours = (working_days * Rails.configuration.max_work_hours_per_day)
+    working_hours
   end
 
   def assignment_hours(as_on)
@@ -77,7 +88,7 @@ class AssignedResource < ActiveRecord::Base
     upper_date = (as_on > self.end_date) ? self.end_date : as_on
     days_assigned = lower_date.weekdays_until(upper_date)
     days_assigned -= holidays_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)
-    days_assigned -= unpaid_vacation_between(self.resource.admin_user.business_unit_id, self.resource.admin_user.id,  lower_date, upper_date)
+    days_assigned -= unpaid_vacation_between(self.resource.admin_user.business_unit_id, self.resource.admin_user.id, lower_date, upper_date)
     hours_assigned = days_assigned * self.hours_per_day
   end
 
@@ -91,6 +102,10 @@ class AssignedResource < ActiveRecord::Base
     HolidayCalendar.holidays_between(business_unit_id, start_date, end_date)
   end
 
+  def self.holidays_between(business_unit_id, start_date, end_date)
+    HolidayCalendar.holidays_between(business_unit_id, start_date, end_date)
+  end
+
   def unpaid_vacation_between(business_unit_id, admin_user_id, start_date, end_date)
     unpaid_days = 0
     VacationPolicy.where('business_unit_id = ?', business_unit_id).each do |vp|
@@ -100,4 +115,5 @@ class AssignedResource < ActiveRecord::Base
     end
     unpaid_days
   end
+
 end

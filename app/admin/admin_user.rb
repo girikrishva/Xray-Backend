@@ -149,6 +149,14 @@ ActiveAdmin.register AdminUser do
       result = AdminUser.find(admin_user_id).admin_user_details
       render json: result
     end
+
+    def resource_efficiency
+      admin_user_id = params[:admin_user_id]
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUser.resource_efficiency(admin_user_id, from_date, to_date)
+      render json: result
+    end
   end
 
   filter :business_unit
