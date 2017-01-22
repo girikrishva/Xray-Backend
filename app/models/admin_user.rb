@@ -175,15 +175,16 @@ class AdminUser < ActiveRecord::Base
     result['active'] = admin_user.active
     result['designation'] = admin_user.designation.name
     result['manager'] = AdminUser.find(admin_user.manager_id).name rescue nil
-    result['assigned_percentage'] = AdminUser.assigned_percentage(admin_user_id, from_date, to_date)
-    result['clocked_percentage'] = AdminUser.clocked_percentage(admin_user_id, from_date, to_date)
-    result['utilization_percentage'] = AdminUser.utilization_percentage(admin_user_id, from_date, to_date)
-    result['billing_delta'] = AdminUser.billing_delta(admin_user_id, from_date, to_date)
+    result['details'] = AdminUser.efficiency_details(admin_user, from_date, to_date)
     result
   end
 
-  def self.business_unit_efficiency(business_unit_id, from_date, to_date, with_details)
-
+  def self.business_unit_efficiency(business_unit_id, from_date, to_date)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    result = {}
+    result['details'] = AdminUser.business_unit_details(business_unit_id, from_date, to_date)
+    result
   end
 
   def self.overall_efficiency(from_date, to_date, with_details)
@@ -204,105 +205,35 @@ class AdminUser < ActiveRecord::Base
     end
   end
 
-  def self.assigned_percentage(admin_user_id, from_date, to_date)
+  def self.efficiency_details(admin_user, from_date, to_date)
+    details = {}
+    admin_user_id = admin_user.admin_user_id
     assigned_hours = AssignedResource.assigned_hours(admin_user_id, from_date, to_date)
     working_hours = AssignedResource.working_hours(admin_user_id, from_date, to_date)
-    assigned_percentage = (assigned_hours / working_hours) * 100
-    assigned_percentage.round(2)
-  end
-
-  def self.clocked_percentage(admin_user_id, from_date, to_date)
+    assigned_percentage = (assigned_hours / working_hours) * 100 rescue 0
     clocked_hours = Timesheet.clocked_hours(admin_user_id, from_date, to_date)
-    assigned_hours = AssignedResource.assigned_hours(admin_user_id, from_date, to_date)
-    clocked_percentage = (clocked_hours / assigned_hours) * 100
-    clocked_percentage
+    clocked_percentage = (clocked_hours / assigned_hours) * 100 rescue 0
+    utilization_percentage = (clocked_hours / working_hours) * 100 rescue 0
+    bill_rate = Resource.latest_for(admin_user_id, to_date).bill_rate
+    details['assigned_hours'] = assigned_hours
+    details['clocked_hours'] = clocked_hours
+    details['working_hours'] = working_hours
+    details['bill_rate'] = bill_rate
+    details['assigned_percentage'] = assigned_percentage.round(2)
+    details['clocked_percentage'] = clocked_percentage.round(2)
+    details['utilization_percentage'] = utilization_percentage.round(2)
+    details['billing_opportunity_loss'] = (working_hours - assigned_hours) * bill_rate
+    details
   end
 
-  def self.utilization_percentage(admin_user_id, from_date, to_date)
-    assigned_percentage = AdminUser.assigned_percentage(admin_user_id, from_date, to_date)
-    clocked_percentage = AdminUser.clocked_percentage(admin_user_id, from_date, to_date)
-    utilization_percentage = (assigned_percentage / 100) * (clocked_percentage / 100) * 100
-    utilization_percentage
-  end
-
-  def self.billing_delta(admin_user_id, from_date, to_date)
-    billing_delta = 0
-    (from_date..to_date).each do |d|
-      assigned_hours = AssignedResource.assigned_hours(admin_user_id, d, d)
-      working_hours = AssignedResource.working_hours(admin_user_id, d, d)
-      bill_rate = AdminUsersAudit.latest(admin_user_id, d).bill_rate rescue 0
-      billing_delta += ((working_hours - assigned_hours) * bill_rate)
+  def self.business_unit_details(business_unit_id, from_date, to_date)
+    details = []
+    AdminUser.all.each do |au|
+      admin_user = au.latest_snapshot(to_date)
+      if !admin_user.blank?
+        details << (AdminUser.efficiency_details(admin_user, from_date, to_date)['details'])
+      end
     end
-    billing_delta
-  end
-
-  def self.business_unit_assigned_percentage(business_unit_id, from_date, to_date)
-    count = 0
-    business_unit_percentage = 0
-    AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
-      business_unit_percentage += (AdminUser.assigned_percentage(au.id, from_date, to_date))
-    end
-    (business_unit_percentage / count) * 100 rescue 0
-  end
-
-  def self.business_unit_clocked_percentage(business_unit_id, from_date, to_date)
-    count = 0
-    business_unit_percentage = 0
-    AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
-      business_unit_percentage += (AdminUser.clocked_percentage(au.id, from_date, to_date))
-    end
-    (business_unit_percentage / count) * 100 rescue 0
-  end
-
-  def self.business_unit_utilization_percentage(business_unit_id, from_date, to_date)
-    count = 0
-    business_unit_percentage = 0
-    AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
-      business_unit_percentage += (AdminUser.utilization_percentage(au.id, from_date, to_date))
-    end
-    (business_unit_percentage / count) * 100 rescue 0
-  end
-
-  def self.business_unit_billing_delta(business_unit_id, from_date, to_date)
-    billing_delta = 0
-    AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
-      billing_delta += (AdminUser.billing_delta(au.id, from_date, to_date))
-    end
-    billing_delta
-  end
-
-  def self.overall_assigned_percentage(from_date, to_date)
-    count = 0
-    overall_percentage = 0
-    AdminUser.each do |au|
-      overall_percentage += (AdminUser.assigned_percentage(au.id, from_date, to_date))
-    end
-    (overall_percentage / count) * 100 rescue 0
-  end
-
-  def self.overall_clocked_percentage(from_date, to_date)
-    count = 0
-    overall_percentage = 0
-    AdminUser.each do |au|
-      overall_percentage += (AdminUser.clocked_percentage(au.id, from_date, to_date))
-    end
-    (overall_percentage / count) * 100 rescue 0
-  end
-
-  def self.overall_utilization_percentage(from_date, to_date)
-    count = 0
-    overall_percentage = 0
-    AdminUser.each do |au|
-      overall_percentage += (AdminUser.utilization_percentage(au.id, from_date, to_date))
-    end
-    (overall_percentage / count) * 100 rescue 0
-  end
-
-  def self.overall_billing_delta(from_date, to_date)
-    billing_delta = 0
-    AdminUser.each do |au|
-      billing_delta += (AdminUser.billing_delta(au.id, from_date, to_date))
-    end
-    billing_delta
+    details
   end
 end
