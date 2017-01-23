@@ -73,6 +73,9 @@ class AdminUser < ActiveRecord::Base
     audit_record.ip_address = self.ip_address
     audit_record.comments = self.comments
     audit_record.manager_id = self.manager_id
+    audit_record.associate_no = self.associate_no
+    audit_record.bill_rate = self.bill_rate
+    audit_record.cost_rate = self.cost_rate
     audit_record.save
   end
 

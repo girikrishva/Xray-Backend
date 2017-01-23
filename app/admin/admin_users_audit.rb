@@ -41,6 +41,7 @@ ActiveAdmin.register AdminUsersAudit do
     selectable_column
     column :id
     column :name
+    column :associate_no
     column :active
     column :role, sortable: 'roles.name' do |resource|
       resource.role.name
@@ -59,6 +60,16 @@ ActiveAdmin.register AdminUsersAudit do
     end
     column :date_of_joining
     column :date_of_leaving
+    column :bill_rate do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.bill_rate, precision: 0, delimiter: ','
+      end
+    end
+    column :cost_rate do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.cost_rate, precision: 0, delimiter: ','
+      end
+    end
     column :comments
     column :audit_details
     actions defaults: false, dropdown: true do |resource|
@@ -90,6 +101,7 @@ ActiveAdmin.register AdminUsersAudit do
   end
 
   filter :name
+  filter :associate_no
   filter :active
   filter :role
   filter :manager
@@ -101,5 +113,7 @@ ActiveAdmin.register AdminUsersAudit do
   filter :updated_at
   filter :updated_by
   filter :ip_address
+  filter :bill_rate
+  filter :cost_rate
   filter :comments
 end
