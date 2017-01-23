@@ -121,14 +121,6 @@ class AdminUser < ActiveRecord::Base
     self.business_unit.name
   end
 
-  def self.default_bill_rate(as_on = Date.today)
-    Resource.where('admin_user_id = ? and as_on <= ?', self.id, as_on).order('as_on desc').first.bill_rate rescue 0
-  end
-
-  def self.default_cost_rate(as_on = Date.today)
-    Resource.where('admin_user_id = ? and as_on <= ?', self.id, as_on).order('as_on desc').first.bill_rate rescue 0
-  end
-
   def doj_dol_date_check
     if !self.date_of_joining.blank? and !self.date_of_leaving.blank?
       if self.date_of_joining > self.date_of_leaving
