@@ -5,25 +5,17 @@ config.batch_actions = false
   config.clear_action_items!
   index do 
     script :src => javascript_path('delivery_health.js'), :type => "text/javascript"
-    column :id
+    # column :id
     column :client, sortable: 'clients.name' do |resource|
       resource.client.name
     end
     column I18n.t('label.project'), :name
-    column I18n.t('label.value'), :booking_value do |element|
-      div  do
-        number_with_precision element.booking_value, precision: 0, delimiter: ','
-      end
-    end
     if @@show_project_detail
       column I18n.t('label.start'), :start_date
       column I18n.t('label.end'), :end_date
       column I18n.t('label.type'), :project_type_code, sortable: 'project_type_codes.name' do |resource|
         resource.project_type_code.name
       end
-      column I18n.t('label.status'), :project_status, sortable: 'project_statuses.name' do |resource|
-        resource.project_status.name
-     end
     end
 
     column "Project Helth" do |element|
@@ -34,26 +26,27 @@ config.batch_actions = false
     end
   
     if @@financial_detail
-    column I18n.t('label.invoiced_amount'), :invoiced_amount do |element|
-      div :style => "text-align: right;" do
-        number_with_precision element.invoiced_amount, precision: 0, delimiter: ','
+    # column I18n.t('label.invoiced_amount'), :invoiced_amount do |element|
+    #   div :style => "text-align: right;" do
+    #     number_with_precision element.invoiced_amount, precision: 0, delimiter: ','
+    #   end
+    # end
+     column "Missed Delivery" do |element|
+      div class:"missed_delivery text_link",:style => "text-align: right;",id:"md_#{element.id}","data-popup-open":"popup-1" do
+        element.missed_delivery(nil,nil)["count"]
       end
     end
-    column I18n.t('label.paid_amount'), :paid_amount do |element|
-      div :style => "text-align: right;" do
-        number_with_precision element.paid_amount, precision: 0, delimiter: ','
+     column "Missed Invoicing" do |element|
+      div class:"missed_invoicing text_link",:style => "text-align: right;" ,id:"mi_#{element.id}","data-popup-open":"popup-1"do
+        element.missed_invoicing(nil,nil)["count"]
       end
     end
-       column "Project Contribution" do |element|
-      div :style => "text-align: right;" do
-        element.contribution(Date.today.strftime("%Y-%m-%d"))["contribution"].abs
+    column "Missed Payment" do |element|
+      div class:"missed_payments text_link",:style => "text-align: right;",id:"mp_#{element.id}","data-popup-open":"popup-1" do
+        element.missed_payments(nil,nil)["count"]
       end
     end
-     column "Gross Profit" do |element|
-      div :style => "text-align: right;" do
-        element.gross_profit(Date.today.strftime("%Y-%m-%d"))["gross_profit"].abs
-      end
-    end
+
        column "Project Contribution Status" do |element|
       div :style => "text-align: right;" do
         element.contribution(Date.today.strftime("%Y-%m-%d"))["contribution"] < 0 ? "-ve" : "+ve"
@@ -64,13 +57,37 @@ config.batch_actions = false
         element.gross_profit(Date.today.strftime("%Y-%m-%d"))["gross_profit"] < 0 ? "-ve" : "+ve"
       end
     end
-    column I18n.t('label.unpaid_amount'), :unpaid_amount do |element|
+    column "Overdue Invoicing" do |element|
       div :style => "text-align: right;" do
-        number_with_precision element.unpaid_amount, precision: 0, delimiter: ','
+        element.missed_invoicing(nil,nil)["total_uninvoiced"]
+      end
+    end
+    column "Overdue Payment" do |element|
+      div :style => "text-align: right;" do
+        element.missed_payments(nil,nil)["total_unpaid"]
+      end
+    end
+    column "Project Contribution" do |element|
+      div class:"contribution text_link",id:"contribution_#{element.id}","data-popup-open":"popup-1",:style => "text-align: right;" do
+        element.contribution(Date.today.strftime("%Y-%m-%d"))["contribution"].abs
+      end
+    end
+     column "Gross Profit" do |element|
+      div class:"gross_profit text_link",id:"gp_#{element.id}","data-popup-open":"popup-1",:style => "text-align: right;" do
+        element.gross_profit(Date.today.strftime("%Y-%m-%d"))["gross_profit"].abs
       end
     end
   end
   column :delivery_manager
+      div class:"popup","data-popup": "popup-1" do
+      div class:"popup-inner",style:"overflow : auto;" do
+        span class:"ajax_content" do 
+        end
+          a class:"popup-close","data-popup-close":"popup-1","href":"#" do
+            "Close"
+          end
+      end
+    end
   end
 
   filter :client, collection: proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}
