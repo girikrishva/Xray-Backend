@@ -176,6 +176,13 @@ ActiveAdmin.register AdminUser do
       result = AdminUser.business_unit_efficiency(business_unit_id, from_date, to_date)
       render json: result
     end
+
+    def overall_efficiency
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUser.overall_efficiency(from_date, to_date)
+      render json: result
+    end
   end
 
   filter :business_unit

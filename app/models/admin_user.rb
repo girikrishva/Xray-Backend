@@ -164,7 +164,7 @@ class AdminUser < ActiveRecord::Base
     to_date = Date.parse(to_date)
     result = {}
     admin_user = AdminUser.find(admin_user_id).latest_snapshot(to_date)
-    result['details'] = AdminUser.efficiency_details(admin_user, from_date, to_date)
+    result['details'] = AdminUser.resource_efficiency_details(admin_user, from_date, to_date)
     result
   end
 
@@ -172,12 +172,21 @@ class AdminUser < ActiveRecord::Base
     from_date = Date.parse(from_date)
     to_date = Date.parse(to_date)
     result = {}
-    result['details'] = AdminUser.business_unit_details(business_unit_id, from_date, to_date)
+    result['business_unit'] = BusinessUnit.find(business_unit_id).name
+    result['details'] = AdminUser.business_unit_efficiency_details(business_unit_id, from_date, to_date)
+    result['business_unit_assigned_percentage'] = (result['details'].map { |d| d['assigned_percentage'] }.sum / result['details'].map { |d| d['assigned_percentage'] }.count).round(2) rescue 0
+    result['business_unit_clocked_percentage'] = (result['details'].map { |d| d['clocked_percentage'] }.sum / result['details'].map { |d| d['clocked_percentage'] }.count).round(2) rescue 0
+    result['business_unit_utilization_percentage'] = (result['details'].map { |d| d['utilization_percentage'] }.sum / result['details'].map { |d| d['utilization_percentage'] }.count).round(2) rescue 0
+    result['business_unit_billing_opportunity_loss'] = result['details'].map { |d| d['billing_opportunity_loss'] }.sum.round(0)
     result
   end
 
-  def self.overall_efficiency(from_date, to_date, with_details)
-
+  def self.overall_efficiency(from_date, to_date)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    result = {}
+    result['details'] = AdminUser.overall_efficiency_details(from_date, to_date)
+    result
   end
 
   def latest_snapshot(as_on)
@@ -194,7 +203,7 @@ class AdminUser < ActiveRecord::Base
     end
   end
 
-  def self.efficiency_details(admin_user, from_date, to_date)
+  def self.resource_efficiency_details(admin_user, from_date, to_date)
     details = {}
     admin_user_id = admin_user.admin_user_id
     assigned_hours = AssignedResource.assigned_hours(admin_user_id, from_date, to_date)
@@ -209,25 +218,40 @@ class AdminUser < ActiveRecord::Base
     details['active'] = admin_user.active
     details['designation'] = admin_user.designation.name
     details['manager'] = AdminUser.find(admin_user.manager_id).name rescue nil
-    details['assigned_hours'] = assigned_hours
-    details['clocked_hours'] = clocked_hours
-    details['working_hours'] = working_hours
-    details['bill_rate'] = bill_rate
+    details['assigned_hours'] = assigned_hours.round(1)
+    details['clocked_hours'] = clocked_hours.round(1)
+    details['working_hours'] = working_hours.round(1)
+    details['bill_rate'] = bill_rate.round(0)
     details['assigned_percentage'] = assigned_percentage.round(2)
     details['clocked_percentage'] = clocked_percentage.round(2)
     details['utilization_percentage'] = utilization_percentage.round(2)
-    details['billing_opportunity_loss'] = (working_hours - assigned_hours) * bill_rate
+    details['billing_opportunity_loss'] = ((working_hours - assigned_hours) * bill_rate).round(0)
     details
   end
 
-  def self.business_unit_details(business_unit_id, from_date, to_date)
+  def self.business_unit_efficiency_details(business_unit_id, from_date, to_date)
     details = []
-    AdminUser.joins(:business_unit).order('business_units.name, admin_users.name').each do |au|
+    AdminUser.joins(:business_unit).where('business_unit_id = ?', business_unit_id).order('business_units.name, admin_users.name').each do |au|
       admin_user = au.latest_snapshot(to_date) rescue au
       if !admin_user.nil? and !admin_user.blank?
-        details << (AdminUser.efficiency_details(admin_user, from_date, to_date))
+        details << (AdminUser.resource_efficiency_details(admin_user, from_date, to_date))
       end
     end
     details
+  end
+
+  def self.overall_efficiency_details(from_date, to_date)
+    data = []
+    BusinessUnit.order('name').each do |bu|
+      details = {}
+      details['business_unit'] = bu.name
+      details['business_unit_details'] = AdminUser.business_unit_efficiency_details(bu.id, from_date, to_date)
+      details['business_unit_assigned_percentage'] = (details['business_unit_details'].map { |d| d['assigned_percentage'] }.sum / details['business_unit_details'].map { |d| d['assigned_percentage'] }.count).round(2) rescue 0
+      details['business_unit_clocked_percentage'] = (details['business_unit_details'].map { |d| d['clocked_percentage'] }.sum / details['business_unit_details'].map { |d| d['clocked_percentage'] }.count).round(2) rescue 0
+      details['business_unit_utilization_percentage'] = (details['business_unit_details'].map { |d| d['utilization_percentage'] }.sum / details['business_unit_details'].map { |d| d['utilization_percentage'] }.count).round(2) rescue 0
+      details['business_unit_billing_opportunity_loss'] = (details['business_unit_details'].map { |d| d['billing_opportunity_loss'] }.sum).round(0)
+      data << details
+    end
+    data
   end
 end
