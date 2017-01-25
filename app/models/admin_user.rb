@@ -250,6 +250,10 @@ class AdminUser < ActiveRecord::Base
   end
 
   def self.overall_efficiency_details(from_date, to_date)
+    BusinessUnit.order('name').each do |bu|
+
+    end
+
     data = []
     BusinessUnit.order('name').each do |bu|
       details = {}
