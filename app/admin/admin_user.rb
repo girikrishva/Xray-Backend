@@ -182,7 +182,8 @@ ActiveAdmin.register AdminUser do
     def overall_efficiency
       from_date = params[:from_date]
       to_date = params[:to_date]
-      result = AdminUser.overall_efficiency(from_date, to_date)
+      with_details = params[:with_details]
+      result = AdminUser.overall_efficiency(from_date, to_date, with_details)
       render json: result
     end
   end

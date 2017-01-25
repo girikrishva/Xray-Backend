@@ -178,11 +178,12 @@ class AdminUser < ActiveRecord::Base
     result
   end
 
-  def self.overall_efficiency(from_date, to_date)
+  def self.overall_efficiency(from_date, to_date, with_details)
     from_date = Date.parse(from_date)
     to_date = Date.parse(to_date)
+    with_details = (with_details.to_s == 'true') ? true : false
     result = {}
-    result['details'] = AdminUser.overall_efficiency_details(from_date, to_date)
+    result['data'] = AdminUser.overall_efficiency_details(from_date, to_date, with_details)
     result
   end
 
@@ -243,28 +244,28 @@ class AdminUser < ActiveRecord::Base
     business_unit_clocked_percentage = (resource_efficiency_details.map{|y| y['clocked_percentage']}.sum / resource_efficiency_details.size).round(2) rescue 0
     details['business_unit_clocked_percentage'] = business_unit_clocked_percentage
     details['business_unit_utilization_percentage'] = ((business_unit_assigned_percentage * business_unit_clocked_percentage) / 100).round(2)
+    details['business_unit_billing_opportunity_loss'] = resource_efficiency_details.map{|y| y['billing_opportunity_loss']}.sum.round(0)
     if with_details
       details['resource_efficiency_details'] = resource_efficiency_details
     end
     details
   end
 
-  def self.overall_efficiency_details(from_date, to_date)
+  def self.overall_efficiency_details(from_date, to_date, with_details)
+    details = {}
+    business_unit_efficiency_details = []
     BusinessUnit.order('name').each do |bu|
-
+      business_unit_efficiency_details << AdminUser.business_unit_efficiency_details(bu.id, from_date, to_date, with_details)
     end
-
-    data = []
-    BusinessUnit.order('name').each do |bu|
-      details = {}
-      details['business_unit'] = bu.name
-      business_unit_efficiency_details = AdminUser.business_unit_efficiency_details(bu.id, from_date, to_date)
-      details['business_unit_assigned_percentage'] = (business_unit_efficiency_details.map { |d| d['assigned_percentage'] }.sum / business_unit_efficiency_details.map { |d| d['assigned_percentage'] }.count).round(2) rescue 0
-      details['business_unit_clocked_percentage'] = (business_unit_efficiency_details.map { |d| d['clocked_percentage'] }.sum / business_unit_efficiency_details.map { |d| d['clocked_percentage'] }.count).round(2) rescue 0
-      details['business_unit_utilization_percentage'] = (business_unit_efficiency_details.map { |d| d['utilization_percentage'] }.sum / business_unit_efficiency_details.map { |d| d['utilization_percentage'] }.count).round(2) rescue 0
-      details['business_unit_billing_opportunity_loss'] = (business_unit_efficiency_details.map { |d| d['billing_opportunity_loss'] }.sum).round(0)
-      data << details
+    overall_assigned_percentage = (business_unit_efficiency_details.map{|y| y['business_unit_assigned_percentage']}.sum / business_unit_efficiency_details.size).round(2) rescue 0
+    details['overall_assigned_percentage'] = overall_assigned_percentage
+    overall_clocked_percentage = (business_unit_efficiency_details.map{|y| y['business_unit_clocked_percentage']}.sum / business_unit_efficiency_details.size).round(2) rescue 0
+    details['overall_clocked_percentage'] = overall_clocked_percentage
+    details['overall_utilization_percentage'] = ((overall_assigned_percentage * overall_clocked_percentage) / 100).round(2)
+    details['overall_billing_opportunity_loss'] = business_unit_efficiency_details.map{|y| y['business_unit_billing_opportunity_loss']}.sum.round(0)
+    if with_details
+      details['business_unit_efficiency_details'] = business_unit_efficiency_details
     end
-    data
+    details
   end
 end
