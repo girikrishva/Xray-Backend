@@ -215,6 +215,7 @@ class AdminUser < ActiveRecord::Base
     details['admin_user_name'] = admin_user.name
     details['active'] = admin_user.active
     details['designation'] = admin_user.designation.name
+    details['associate_no'] = admin_user.associate_no
     details['manager'] = AdminUser.find(admin_user.manager_id).name rescue nil
     if with_details
       details['assigned_hours'] = assigned_hours.round(1)
