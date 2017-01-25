@@ -68,11 +68,13 @@ class AdminUser < ActiveRecord::Base
     audit_record.name = self.name
     audit_record.date_of_joining = self.date_of_joining
     audit_record.date_of_leaving = self.date_of_leaving
-    audit_record.updated_at = DateTime.now
     audit_record.updated_by = self.updated_by
     audit_record.ip_address = self.ip_address
     audit_record.comments = self.comments
     audit_record.manager_id = self.manager_id
+    audit_record.associate_no = self.associate_no
+    audit_record.bill_rate = self.bill_rate
+    audit_record.cost_rate = self.cost_rate
     audit_record.save
   end
 
@@ -118,14 +120,6 @@ class AdminUser < ActiveRecord::Base
     self.business_unit.name
   end
 
-  def self.default_bill_rate(as_on = Date.today)
-    Resource.where('admin_user_id = ? and as_on <= ?', self.id, as_on).order('as_on desc').first.bill_rate rescue 0
-  end
-
-  def self.default_cost_rate(as_on = Date.today)
-    Resource.where('admin_user_id = ? and as_on <= ?', self.id, as_on).order('as_on desc').first.bill_rate rescue 0
-  end
-
   def doj_dol_date_check
     if !self.date_of_joining.blank? and !self.date_of_leaving.blank?
       if self.date_of_joining > self.date_of_leaving
@@ -150,11 +144,6 @@ class AdminUser < ActiveRecord::Base
     end
   end
 
-  def self.active_users(as_on)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    AdminUser.where('active = ?', :true)
-  end
-
   def admin_user_details
     result = {}
     result['admin_user_details'] = self
@@ -166,6 +155,43 @@ class AdminUser < ActiveRecord::Base
     result
   end
 
+  def self.active_users
+    AdminUser.where('active = ?', :true)
+  end
+
+  def self.resource_efficiency(admin_user_id, from_date, to_date, with_details)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    with_details = (with_details.to_s == 'true') ? true : false
+    result = {}
+    admin_user = AdminUser.find(admin_user_id).latest_snapshot(to_date)
+    result['data'] = AdminUser.resource_efficiency_details(admin_user, from_date, to_date, with_details)
+    result
+  end
+
+  def self.business_unit_efficiency(business_unit_id, from_date, to_date, with_details)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    with_details = (with_details.to_s == 'true') ? true : false
+    result = {}
+    result['data'] = AdminUser.business_unit_efficiency_details(business_unit_id, from_date, to_date, with_details)
+    result
+  end
+
+  def self.overall_efficiency(from_date, to_date, with_details)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    with_details = (with_details.to_s == 'true') ? true : false
+    result = {}
+    result['data'] = AdminUser.overall_efficiency_details(from_date, to_date, with_details)
+    result
+  end
+
+  def latest_snapshot(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    AdminUsersAudit.where('admin_user_id = ? and created_at <= ?', self.id, as_on).order('created_at').last
+  end
+
   private
 
   def traverse_reportees(root_id)
@@ -173,5 +199,74 @@ class AdminUser < ActiveRecord::Base
       @child_ids << child.id
       traverse_reportees(child.id)
     end
+  end
+
+  def self.resource_efficiency_details(admin_user, from_date, to_date, with_details)
+    details = {}
+    admin_user_id = admin_user.admin_user_id
+    assigned_hours = AssignedResource.assigned_hours(admin_user_id, from_date, to_date)
+    working_hours = AssignedResource.working_hours(admin_user_id, from_date, to_date)
+    assigned_percentage = (assigned_hours / working_hours) * 100 rescue 0
+    clocked_hours = Timesheet.clocked_hours(admin_user_id, from_date, to_date)
+    clocked_percentage = (clocked_hours / assigned_hours) * 100 rescue 0
+    utilization_percentage = (clocked_hours / working_hours) * 100 rescue 0
+    bill_rate = Resource.latest_for(admin_user_id, to_date).bill_rate rescue AdminUser.find(admin_user_id).bill_rate
+    details['business_unit'] = admin_user.business_unit.name
+    details['admin_user_name'] = admin_user.name
+    details['active'] = admin_user.active
+    details['designation'] = admin_user.designation.name
+    details['associate_no'] = admin_user.associate_no
+    details['manager'] = AdminUser.find(admin_user.manager_id).name rescue nil
+    if with_details
+      details['assigned_hours'] = assigned_hours.round(1)
+      details['clocked_hours'] = clocked_hours.round(1)
+      details['working_hours'] = working_hours.round(1)
+      details['bill_rate'] = bill_rate.round(0)
+    end
+    details['assigned_percentage'] = assigned_percentage.round(2)
+    details['clocked_percentage'] = clocked_percentage.round(2)
+    details['utilization_percentage'] = utilization_percentage.round(2)
+    details['billing_opportunity_loss'] = ((working_hours - assigned_hours) * bill_rate).round(0)
+    details
+  end
+
+  def self.business_unit_efficiency_details(business_unit_id, from_date, to_date, with_details)
+    details = {}
+    resource_efficiency_details = []
+    AdminUser.joins(:business_unit).where('business_unit_id = ?', business_unit_id).order('business_units.name, admin_users.name').each do |au|
+      admin_user = au.latest_snapshot(to_date) rescue au
+      if !admin_user.nil? and !admin_user.blank?
+        resource_efficiency_details << AdminUser.resource_efficiency_details(admin_user, from_date, to_date, with_details)
+      end
+    end
+    details['business_unit'] = BusinessUnit.find(business_unit_id).name
+    business_unit_assigned_percentage = (resource_efficiency_details.map{|y| y['assigned_percentage']}.sum / resource_efficiency_details.size).round(2) rescue 0
+    details['business_unit_assigned_percentage'] = business_unit_assigned_percentage
+    business_unit_clocked_percentage = (resource_efficiency_details.map{|y| y['clocked_percentage']}.sum / resource_efficiency_details.size).round(2) rescue 0
+    details['business_unit_clocked_percentage'] = business_unit_clocked_percentage
+    details['business_unit_utilization_percentage'] = ((business_unit_assigned_percentage * business_unit_clocked_percentage) / 100).round(2)
+    details['business_unit_billing_opportunity_loss'] = resource_efficiency_details.map{|y| y['billing_opportunity_loss']}.sum.round(0)
+    if with_details
+      details['resource_efficiency_details'] = resource_efficiency_details
+    end
+    details
+  end
+
+  def self.overall_efficiency_details(from_date, to_date, with_details)
+    details = {}
+    business_unit_efficiency_details = []
+    BusinessUnit.order('name').each do |bu|
+      business_unit_efficiency_details << AdminUser.business_unit_efficiency_details(bu.id, from_date, to_date, with_details)
+    end
+    overall_assigned_percentage = (business_unit_efficiency_details.map{|y| y['business_unit_assigned_percentage']}.sum / business_unit_efficiency_details.size).round(2) rescue 0
+    details['overall_assigned_percentage'] = overall_assigned_percentage
+    overall_clocked_percentage = (business_unit_efficiency_details.map{|y| y['business_unit_clocked_percentage']}.sum / business_unit_efficiency_details.size).round(2) rescue 0
+    details['overall_clocked_percentage'] = overall_clocked_percentage
+    details['overall_utilization_percentage'] = ((overall_assigned_percentage * overall_clocked_percentage) / 100).round(2)
+    details['overall_billing_opportunity_loss'] = business_unit_efficiency_details.map{|y| y['business_unit_billing_opportunity_loss']}.sum.round(0)
+    if with_details
+      details['business_unit_efficiency_details'] = business_unit_efficiency_details
+    end
+    details
   end
 end

@@ -21,4 +21,14 @@ class Timesheet < ActiveRecord::Base
       return false
     end
   end
+
+  def self.clocked_hours(admin_user_id, from_date, to_date)
+    clocked_hours = 0
+    Timesheet.where('timesheet_date between ? and ?', from_date, to_date).each do |timesheet|
+      if timesheet.assigned_resource.resource.admin_user_id == admin_user_id.to_i
+        clocked_hours += timesheet.hours
+      end
+    end
+    clocked_hours
+  end
 end

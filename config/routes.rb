@@ -129,4 +129,8 @@ Rails.application.routes.draw do
   match '/admin/api/delivery_health' => 'admin/projects#delivery_health', via: [:get]
   match '/admin/api/pipeline_for_status' => 'admin/pipelines#pipeline_for_status', via: [:get]
   match '/admin/api/resource_distribution_combos' => 'admin/resources#resource_distribution_combos', via: [:get]
+  match '/admin/api/staffing_forecast' => 'admin/staffing_requirements#staffing_forecast', via: [:get]
+  match '/admin/api/resource_efficiency' => 'admin/admin_users#resource_efficiency', via: [:get]
+  match '/admin/api/business_unit_efficiency' => 'admin/admin_users#business_unit_efficiency', via: [:get]
+  match '/admin/api/overall_efficiency' => 'admin/admin_users#overall_efficiency', via: [:get]
 end

@@ -172,6 +172,13 @@ ActiveAdmin.register StaffingRequirement do
       StaffingRequirement.restore(params[:id])
       redirect_to admin_staffing_requirements_path(pipeline_id: session[:pipeline_id])
     end
+
+    def staffing_forecast
+      as_on = params[:as_on]
+      with_details = params[:with_details]
+      result = StaffingRequirement.staffing_forecast(as_on, with_details)
+      render json: result
+    end
   end
 
   form do |f|

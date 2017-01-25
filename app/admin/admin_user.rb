@@ -63,7 +63,7 @@ ActiveAdmin.register AdminUser do
     redirect_to collection_url
   end
 
-  permit_params :email, :name, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active, :date_of_joining, :date_of_leaving, :updated_by, :ip_address, :manager_id
+  permit_params :email, :name, :password, :password_confirmation, :role_id, :business_unit_id, :department_id, :designation_id, :active, :date_of_joining, :date_of_leaving, :updated_by, :ip_address, :manager_id, :associate_no, :bill_rate, :cost_rate
 
   config.sort_order = 'email_asc'
 
@@ -72,6 +72,7 @@ ActiveAdmin.register AdminUser do
     column :id
     column :email
     column :name
+    column :associate_no
     column I18n.t('label.joining_date'), :date_of_joining
     column I18n.t('label.leaving_date'), :date_of_leaving
     column :active
@@ -86,6 +87,16 @@ ActiveAdmin.register AdminUser do
     end
     column :designation, sortable: 'designations.name' do |resource|
       resource.designation.name
+    end
+    column :bill_rate do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.bill_rate, precision: 0, delimiter: ','
+      end
+    end
+    column :cost_rate do |element|
+      div :style => "text-align: right;" do
+        number_with_precision element.cost_rate, precision: 0, delimiter: ','
+      end
     end
     column :comments
     if params[:scope] == 'deleted'
@@ -149,11 +160,38 @@ ActiveAdmin.register AdminUser do
       result = AdminUser.find(admin_user_id).admin_user_details
       render json: result
     end
+
+    def resource_efficiency
+      admin_user_id = params[:admin_user_id]
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      with_details = params[:with_details]
+      result = AdminUser.resource_efficiency(admin_user_id, from_date, to_date, with_details)
+      render json: result
+    end
+
+    def business_unit_efficiency
+      business_unit_id = params[:business_unit_id]
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      with_details = params[:with_details]
+      result = AdminUser.business_unit_efficiency(business_unit_id, from_date, to_date, with_details)
+      render json: result
+    end
+
+    def overall_efficiency
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      with_details = params[:with_details]
+      result = AdminUser.overall_efficiency(from_date, to_date, with_details)
+      render json: result
+    end
   end
 
   filter :business_unit
   filter :email
   filter :name
+  filter :associate_no
   filter :date_of_joining, label: I18n.t('label.joining_date')
   filter :date_of_leaving, label: I18n.t('label.leaving_date')
   filter :active
@@ -161,6 +199,8 @@ ActiveAdmin.register AdminUser do
   filter :manager
   filter :department
   filter :designation
+  filter :bill_rate
+  filter :cost_rate
   filter :comments
 
   form do |f|
@@ -182,6 +222,9 @@ ActiveAdmin.register AdminUser do
         f.input :business_unit, required: true
         f.input :department, required: true
         f.input :designation, required: true
+        f.input :associate_no, required: true
+        f.input :bill_rate, required: true
+        f.input :cost_rate, required: true
         f.input :comments
       else
         f.input :password
@@ -196,6 +239,9 @@ ActiveAdmin.register AdminUser do
           f.input :business_unit, required: true
           f.input :department, required: true
           f.input :designation, required: true
+          f.input :associate_no, required: true
+          f.input :bill_rate, required: true
+          f.input :cost_rate, required: true
           f.input :comments
         end
       end

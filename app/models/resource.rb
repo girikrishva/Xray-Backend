@@ -84,6 +84,15 @@ class Resource < ActiveRecord::Base
     parent.table[:id]
   end
 
+  def self.latest_for(admin_user_id, as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    Resource.where('admin_user_id = ?', admin_user_id).each do |resource|
+      if resource.is_latest(as_on)
+        return resource
+      end
+    end
+  end
+
   def self.latest(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     resource_ids = []

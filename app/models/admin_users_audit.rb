@@ -11,4 +11,8 @@ class AdminUsersAudit < ActiveRecord::Base
   def audit_details
     I18n.t('label.updated_at') + ': ['+ datetime_as_string(self.updated_at) + '], ' + I18n.t('label.updated_by') + ': [' + self.updated_by + '], ' + I18n.t('label.ip_address') + ': [' + self.ip_address + ']' rescue nil
   end
+
+  def self.latest(admin_user_id, as_on)
+    AdminUsersAudit.where('admin_user_id = ? and created_at <= ?', admin_user_id, as_on).order('created_at').last
+  end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170108120738) do
+ActiveRecord::Schema.define(version: 0) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,9 @@ ActiveRecord::Schema.define(version: 20170108120738) do
     t.datetime "deleted_at",             :index=>{:name=>"index_admin_users_on_deleted_at"}
     t.string   "comments"
     t.integer  "manager_id",             :index=>{:name=>"index_admin_users_on_manager_id"}, :foreign_key=>{:references=>"admin_users", :name=>"fk_admin_users_manager_id", :on_update=>:no_action, :on_delete=>:no_action}
+    t.string   "associate_no",           :null=>false
+    t.float    "bill_rate",              :null=>false
+    t.float    "cost_rate",              :null=>false
   end
 
   create_table "admin_users_audits", force: :cascade do |t|
@@ -116,6 +119,9 @@ ActiveRecord::Schema.define(version: 20170108120738) do
     t.datetime "deleted_at",             :index=>{:name=>"index_admin_users_audits_on_deleted_at"}
     t.string   "comments"
     t.integer  "manager_id"
+    t.string   "associate_no",           :null=>false
+    t.float    "bill_rate",              :null=>false
+    t.float    "cost_rate",              :null=>false
   end
 
   create_table "admin_users_sessions", force: :cascade do |t|
