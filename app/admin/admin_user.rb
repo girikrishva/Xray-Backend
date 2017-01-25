@@ -165,7 +165,8 @@ ActiveAdmin.register AdminUser do
       admin_user_id = params[:admin_user_id]
       from_date = params[:from_date]
       to_date = params[:to_date]
-      result = AdminUser.resource_efficiency(admin_user_id, from_date, to_date)
+      with_details = params[:with_details]
+      result = AdminUser.resource_efficiency(admin_user_id, from_date, to_date, with_details)
       render json: result
     end
 
@@ -173,7 +174,8 @@ ActiveAdmin.register AdminUser do
       business_unit_id = params[:business_unit_id]
       from_date = params[:from_date]
       to_date = params[:to_date]
-      result = AdminUser.business_unit_efficiency(business_unit_id, from_date, to_date)
+      with_details = params[:with_details]
+      result = AdminUser.business_unit_efficiency(business_unit_id, from_date, to_date, with_details)
       render json: result
     end
 
