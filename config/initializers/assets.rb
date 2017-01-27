@@ -6,6 +6,7 @@ Rails.application.config.assets.precompile += %w( pop_up.js )
 Rails.application.config.assets.precompile += %w( pop_up.css )
 Rails.application.config.assets.precompile += %w( delivery_health.js )
 Rails.application.config.assets.precompile += %w( pipeline_forecast.js )
+Rails.application.config.assets.precompile += %w( resource_forecast.js )
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path
 
