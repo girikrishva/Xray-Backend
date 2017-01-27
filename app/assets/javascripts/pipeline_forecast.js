@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	$(".col-expected_start,.col-pipeline_status_id").hide()
 	$(".text_link").on('click',function(){
 		var status_id = $(this).closest('tr').find('td:eq(-1)').text()
 		var as_on = $(this).closest('tr').find('td:eq(-2)').text()
