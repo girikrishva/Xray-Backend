@@ -132,4 +132,13 @@ Rails.application.routes.draw do
   match '/admin/api/resource_efficiency' => 'admin/admin_users#resource_efficiency', via: [:get]
   match '/admin/api/business_unit_efficiency' => 'admin/admin_users#business_unit_efficiency', via: [:get]
   match '/admin/api/overall_efficiency' => 'admin/admin_users#overall_efficiency', via: [:get]
+  match '/admin/api/active_users_outflow' => 'admin/admin_users_audits#active_users_outflow', via: [:get]
+  match '/admin/api/inactive_users_outflow' => 'admin/admin_users_audits#inactive_users_outflow', via: [:get]
+  match '/admin/api/all_users_outflow' => 'admin/admin_users_audits#all_users_outflow', via: [:get]
+  match '/admin/api/active_users_inflow' => 'admin/admin_users_audits#active_users_inflow', via: [:get]
+  match '/admin/api/inactive_users_inflow' => 'admin/admin_users_audits#inactive_users_inflow', via: [:get]
+  match '/admin/api/all_users_inflow' => 'admin/admin_users_audits#all_users_inflow', via: [:get]
+  match '/admin/api/active_users_netflow' => 'admin/admin_users_audits#active_users_netflow', via: [:get]
+  match '/admin/api/inactive_users_netflow' => 'admin/admin_users_audits#inactive_users_netflow', via: [:get]
+  match '/admin/api/all_users_netflow' => 'admin/admin_users_audits#all_users_netflow', via: [:get]
 end

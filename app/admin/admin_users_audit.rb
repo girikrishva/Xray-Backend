@@ -98,6 +98,69 @@ ActiveAdmin.register AdminUsersAudit do
     def scoped_action
       AdminUsersAudit.includes [:role, :business_unit, :department, :designation, :admin_user]
     end
+
+    def active_users_outflow
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUsersAudit.active_users_outflow(from_date, to_date)
+      render json: result
+    end
+
+    def inactive_users_outflow
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUsersAudit.inactive_users_outflow(from_date, to_date)
+      render json: result
+    end
+
+    def all_users_outflow
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUsersAudit.all_users_outflow(from_date, to_date)
+      render json: result
+    end
+
+    def active_users_inflow
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUsersAudit.active_users_inflow(from_date, to_date)
+      render json: result
+    end
+
+    def inactive_users_inflow
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUsersAudit.inactive_users_inflow(from_date, to_date)
+      render json: result
+    end
+
+    def all_users_inflow
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUsersAudit.all_users_inflow(from_date, to_date)
+      render json: result
+    end
+
+    def active_users_netflow
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUsersAudit.active_users_netflow(from_date, to_date)
+      render json: result
+    end
+
+    def inactive_users_netflow
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUsersAudit.inactive_users_netflow(from_date, to_date)
+      render json: result
+    end
+
+    def all_users_netflow
+      from_date = params[:from_date]
+      to_date = params[:to_date]
+      result = AdminUsersAudit.all_users_netflow(from_date, to_date)
+      render json: result
+    end
   end
 
   filter :name
