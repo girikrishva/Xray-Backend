@@ -71,10 +71,16 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = aua.cost_rate * Rails.configuration.max_work_hours_per_day
+          amount = aua.cost_rate * Rails.configuration.max_work_hours_per_day
+          if !data[user_key].has_key?('user_total')
+            data[user_key]['user_total'] = amount
           else
-            data[user_key][month_year_key] += (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+            data[user_key]['user_total'] += amount
+          end
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = amount
+          else
+            data[user_key][month_year_key] += amount
           end
         end
       end
@@ -105,10 +111,16 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = aua.cost_rate * Rails.configuration.max_work_hours_per_day
+          amount = aua.cost_rate * Rails.configuration.max_work_hours_per_day
+          if !data[user_key].has_key?('user_total')
+            data[user_key]['user_total'] = amount
           else
-            data[user_key][month_year_key] += (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+            data[user_key]['user_total'] += amount
+          end
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = amount
+          else
+            data[user_key][month_year_key] += amount
           end
         end
       end
@@ -138,10 +150,16 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = aua.cost_rate * Rails.configuration.max_work_hours_per_day
+          amount = aua.cost_rate * Rails.configuration.max_work_hours_per_day
+          if !data[user_key].has_key?('user_total')
+            data[user_key]['user_total'] = amount
           else
-            data[user_key][month_year_key] += (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+            data[user_key]['user_total'] += amount
+          end
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = amount
+          else
+            data[user_key][month_year_key] += amount
           end
         end
       end
@@ -171,10 +189,16 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          if !data[user_key].has_key?('user_total')
+            data[user_key]['user_total'] = amount
           else
-            data[user_key][month_year_key] += (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d))
+            data[user_key]['user_total'] += amount
+          end
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = amount
+          else
+            data[user_key][month_year_key] += amount
           end
         end
       end
@@ -204,10 +228,16 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          if !data[user_key].has_key?('user_total')
+            data[user_key]['user_total'] = amount
           else
-            data[user_key][month_year_key] += (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d))
+            data[user_key]['user_total'] += amount
+          end
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = amount
+          else
+            data[user_key][month_year_key] += amount
           end
         end
       end
@@ -237,10 +267,16 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          if !data[user_key].has_key?('user_total')
+            data[user_key]['user_total'] = amount
           else
-            data[user_key][month_year_key] += (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d))
+            data[user_key]['user_total'] += amount
+          end
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = amount
+          else
+            data[user_key][month_year_key] += amount
           end
         end
       end
@@ -270,10 +306,16 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+          amount = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+          if !data[user_key].has_key?('user_total')
+            data[user_key]['user_total'] = amount
           else
-            data[user_key][month_year_key] += ((aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day))
+            data[user_key]['user_total'] += amount
+          end
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = amount
+          else
+            data[user_key][month_year_key] += amount
           end
         end
       end
@@ -303,10 +345,16 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+          amount = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+          if !data[user_key].has_key?('user_total')
+            data[user_key]['user_total'] = amount
           else
-            data[user_key][month_year_key] += ((aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day))
+            data[user_key]['user_total'] += amount
+          end
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = amount
+          else
+            data[user_key][month_year_key] += amount
           end
         end
       end
@@ -336,10 +384,16 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+          amount = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+          if !data[user_key].has_key?('user_total')
+            data[user_key]['user_total'] = amount
           else
-            data[user_key][month_year_key] += ((aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day))
+            data[user_key]['user_total'] += amount
+          end
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = amount
+          else
+            data[user_key][month_year_key] += amount
           end
         end
       end
