@@ -65,6 +65,7 @@ class AdminUsersAudit < ActiveRecord::Base
         if !data.has_key?(user_key)
           data[user_key] = {}
         else
+          data[user_key]['id'] = user_key
           data[user_key]['name'] = aua.name
           data[user_key]['business_unit'] = aua.business_unit.name
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
@@ -98,6 +99,7 @@ class AdminUsersAudit < ActiveRecord::Base
         if !data.has_key?(user_key)
           data[user_key] = {}
         else
+          data[user_key]['id'] = user_key
           data[user_key]['name'] = aua.name
           data[user_key]['business_unit'] = aua.business_unit.name
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
@@ -117,7 +119,6 @@ class AdminUsersAudit < ActiveRecord::Base
   def self.all_users_outflow(from_date, to_date)
     from_date = Date.parse(from_date)
     to_date = Date.parse(to_date)
-    with_details = (with_details.to_s == 'true') ? true : false
     data = {}
     lower_date = from_date
     (from_date..to_date).each do |d|
@@ -131,6 +132,7 @@ class AdminUsersAudit < ActiveRecord::Base
         if !data.has_key?(user_key)
           data[user_key] = {}
         else
+          data[user_key]['id'] = user_key
           data[user_key]['name'] = aua.name
           data[user_key]['business_unit'] = aua.business_unit.name
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
@@ -147,6 +149,203 @@ class AdminUsersAudit < ActiveRecord::Base
     data
   end
 
+  def self.active_users_inflow(from_date, to_date)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    data = {}
+    lower_date = from_date
+    (from_date..to_date).each do |d|
+      if (d - lower_date) > 22
+        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
+        next
+      end
+      month_year_key = AdminUsersAudit.month_year(d)
+      AdminUsersAudit.active_users(d).each do |aua|
+        user_key = aua.admin_user_id
+        if !data.has_key?(user_key)
+          data[user_key] = {}
+        else
+          data[user_key]['id'] = user_key
+          data[user_key]['name'] = aua.name
+          data[user_key]['business_unit'] = aua.business_unit.name
+          data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
+          data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
+          data[user_key]['active'] = aua.active.to_s
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          else
+            data[user_key][month_year_key] += (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d))
+          end
+        end
+      end
+    end
+    data
+  end
+
+  def self.inactive_users_inflow(from_date, to_date)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    data = {}
+    lower_date = from_date
+    (from_date..to_date).each do |d|
+      if (d - lower_date) > 22
+        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
+        next
+      end
+      month_year_key = AdminUsersAudit.month_year(d)
+      AdminUsersAudit.inactive_users(d).each do |aua|
+        user_key = aua.admin_user_id
+        if !data.has_key?(user_key)
+          data[user_key] = {}
+        else
+          data[user_key]['id'] = user_key
+          data[user_key]['name'] = aua.name
+          data[user_key]['business_unit'] = aua.business_unit.name
+          data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
+          data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
+          data[user_key]['active'] = aua.active.to_s
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          else
+            data[user_key][month_year_key] += (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d))
+          end
+        end
+      end
+    end
+    data
+  end
+
+  def self.all_users_inflow(from_date, to_date)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    data = {}
+    lower_date = from_date
+    (from_date..to_date).each do |d|
+      if (d - lower_date) > 22
+        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
+        next
+      end
+      month_year_key = AdminUsersAudit.month_year(d)
+      AdminUsersAudit.all_users(d).each do |aua|
+        user_key = aua.admin_user_id
+        if !data.has_key?(user_key)
+          data[user_key] = {}
+        else
+          data[user_key]['id'] = user_key
+          data[user_key]['name'] = aua.name
+          data[user_key]['business_unit'] = aua.business_unit.name
+          data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
+          data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
+          data[user_key]['active'] = aua.active.to_s
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          else
+            data[user_key][month_year_key] += (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d))
+          end
+        end
+      end
+    end
+    data
+  end
+
+  def self.active_users_netflow(from_date, to_date)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    data = {}
+    lower_date = from_date
+    (from_date..to_date).each do |d|
+      if (d - lower_date) > 22
+        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
+        next
+      end
+      month_year_key = AdminUsersAudit.month_year(d)
+      AdminUsersAudit.active_users(d).each do |aua|
+        user_key = aua.admin_user_id
+        if !data.has_key?(user_key)
+          data[user_key] = {}
+        else
+          data[user_key]['id'] = user_key
+          data[user_key]['name'] = aua.name
+          data[user_key]['business_unit'] = aua.business_unit.name
+          data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
+          data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
+          data[user_key]['active'] = aua.active.to_s
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+          else
+            data[user_key][month_year_key] += ((aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day))
+          end
+        end
+      end
+    end
+    data
+  end
+
+  def self.inactive_users_netflow(from_date, to_date)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    data = {}
+    lower_date = from_date
+    (from_date..to_date).each do |d|
+      if (d - lower_date) > 22
+        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
+        next
+      end
+      month_year_key = AdminUsersAudit.month_year(d)
+      AdminUsersAudit.inactive_users(d).each do |aua|
+        user_key = aua.admin_user_id
+        if !data.has_key?(user_key)
+          data[user_key] = {}
+        else
+          data[user_key]['id'] = user_key
+          data[user_key]['name'] = aua.name
+          data[user_key]['business_unit'] = aua.business_unit.name
+          data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
+          data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
+          data[user_key]['active'] = aua.active.to_s
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+          else
+            data[user_key][month_year_key] += ((aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day))
+          end
+        end
+      end
+    end
+    data
+  end
+
+  def self.all_users_netflow(from_date, to_date)
+    from_date = Date.parse(from_date)
+    to_date = Date.parse(to_date)
+    data = {}
+    lower_date = from_date
+    (from_date..to_date).each do |d|
+      if (d - lower_date) > 22
+        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
+        next
+      end
+      month_year_key = AdminUsersAudit.month_year(d)
+      AdminUsersAudit.all_users(d).each do |aua|
+        user_key = aua.admin_user_id
+        if !data.has_key?(user_key)
+          data[user_key] = {}
+        else
+          data[user_key]['id'] = user_key
+          data[user_key]['name'] = aua.name
+          data[user_key]['business_unit'] = aua.business_unit.name
+          data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
+          data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
+          data[user_key]['active'] = aua.active.to_s
+          if !data[user_key].has_key?(month_year_key)
+            data[user_key][month_year_key] = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
+          else
+            data[user_key][month_year_key] += ((aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day))
+          end
+        end
+      end
+    end
+    data
+  end
 
   private
 
