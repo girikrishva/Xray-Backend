@@ -107,7 +107,7 @@ class Pipeline < ActiveRecord::Base
     data = []
     count = 0
     total_pipeline = 0
-    Pipeline.where('pipeline_status_id = ? and expected_start <= ?', status_id, as_on).each do |p|
+    Pipeline.where('pipeline_status_id = ? and expected_start between ? and ?', status_id, as_on.beginning_of_month, as_on.end_of_month).each do |p|
       count += 1
       total_pipeline += p.expected_value
       if with_details
