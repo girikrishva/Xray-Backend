@@ -155,6 +155,14 @@ ActiveAdmin.register DeliveryMilestone do
       DeliveryMilestone.restore(params[:id])
       redirect_to admin_delivery_milestones_path(project_id: session[:project_id])
     end
+
+    def delivery_milestones
+      as_on = params[:as_on]
+      due_status = params[:due_status]
+      completion_status = params[:completion_status]
+      result = DeliveryMilestone.delivery_milestones(as_on, due_status, completion_status)
+      render json: result
+    end
   end
 
   form do |f|
