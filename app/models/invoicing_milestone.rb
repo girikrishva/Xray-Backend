@@ -44,8 +44,8 @@ class InvoicingMilestone < ActiveRecord::Base
         details['id'] = im.id
         details['name'] = im.name
         details['amount'] = im.amount
-        details['uninvoiced'] = im.uninvoiced
-        details['remaining'] = im.amount - im.uninvoiced
+        details['invoiced'] = im.amount - im.uninvoiced
+        details['remaining'] = im.uninvoiced
         details['due_date'] = im.due_date.to_s
         details['last_reminder_date'] = im.last_reminder_date
         details['completion_date'] = im.completion_date.to_s
@@ -60,8 +60,8 @@ class InvoicingMilestone < ActiveRecord::Base
         details['id'] = im.id
         details['name'] = im.name
         details['amount'] = im.amount
-        details['uninvoiced'] = im.uninvoiced
-        details['remaining'] = im.amount - im.uninvoiced
+        details['invoiced'] = im.amount - im.uninvoiced
+        details['remaining'] = im.uninvoiced
         details['due_date'] = im.due_date.to_s
         details['last_reminder_date'] = im.last_reminder_date
         details['completion_date'] = im.completion_date.to_s
@@ -76,8 +76,8 @@ class InvoicingMilestone < ActiveRecord::Base
         details['id'] = im.id
         details['name'] = im.name
         details['amount'] = im.amount
-        details['uninvoiced'] = im.uninvoiced
-        details['remaining'] = im.amount - im.uninvoiced
+        details['invoiced'] = im.amount - im.uninvoiced
+        details['remaining'] = im.uninvoiced
         details['due_date'] = im.due_date.to_s
         details['last_reminder_date'] = im.last_reminder_date
         details['completion_date'] = im.completion_date.to_s
@@ -92,7 +92,7 @@ class InvoicingMilestone < ActiveRecord::Base
         details['id'] = im.id
         details['name'] = im.name
         details['amount'] = im.amount
-        details['uninvoiced'] = im.uninvoiced
+        details['invoiced'] = im.uninvoiced
         details['remaining'] = im.amount - im.uninvoiced
         details['due_date'] = im.due_date.to_s
         details['last_reminder_date'] = im.last_reminder_date
@@ -108,8 +108,8 @@ class InvoicingMilestone < ActiveRecord::Base
         details['id'] = im.id
         details['name'] = im.name
         details['amount'] = im.amount
-        details['uninvoiced'] = im.uninvoiced
-        details['remaining'] = im.amount - im.uninvoiced
+        details['invoiced'] = im.amount - im.uninvoiced
+        details['remaining'] = im.uninvoiced
         details['due_date'] = im.due_date.to_s
         details['last_reminder_date'] = im.last_reminder_date
         details['completion_date'] = im.completion_date.to_s
@@ -124,8 +124,8 @@ class InvoicingMilestone < ActiveRecord::Base
         details['id'] = im.id
         details['name'] = im.name
         details['amount'] = im.amount
-        details['uninvoiced'] = im.uninvoiced
-        details['remaining'] = im.amount - im.uninvoiced
+        details['invoiced'] = im.amount - im.uninvoiced
+        details['remaining'] = im.uninvoiced
         details['due_date'] = im.due_date.to_s
         details['last_reminder_date'] = im.last_reminder_date
         details['completion_date'] = im.completion_date.to_s
@@ -140,7 +140,7 @@ class InvoicingMilestone < ActiveRecord::Base
         details['id'] = im.id
         details['name'] = im.name
         details['amount'] = im.amount
-        details['uninvoiced'] = im.uninvoiced
+        details['invoiced'] = im.uninvoiced
         details['remaining'] = im.amount - im.uninvoiced
         details['due_date'] = im.due_date.to_s
         details['last_reminder_date'] = im.last_reminder_date
@@ -156,8 +156,8 @@ class InvoicingMilestone < ActiveRecord::Base
         details['id'] = im.id
         details['name'] = im.name
         details['amount'] = im.amount
-        details['uninvoiced'] = im.uninvoiced
-        details['remaining'] = im.amount - im.uninvoiced
+        details['invoiced'] = im.amount - im.uninvoiced
+        details['remaining'] = im.uninvoiced
         details['due_date'] = im.due_date.to_s
         details['last_reminder_date'] = im.last_reminder_date
         details['completion_date'] = im.completion_date.to_s
@@ -172,8 +172,8 @@ class InvoicingMilestone < ActiveRecord::Base
         details['id'] = im.id
         details['name'] = im.name
         details['amount'] = im.amount
-        details['uninvoiced'] = im.uninvoiced
-        details['remaining'] = im.amount - im.uninvoiced
+        details['invoiced'] = im.amount - im.uninvoiced
+        details['remaining'] = im.uninvoiced
         details['due_date'] = im.due_date.to_s
         details['last_reminder_date'] = im.last_reminder_date
         details['completion_date'] = im.completion_date.to_s
