@@ -74,4 +74,158 @@ class InvoiceHeader < ActiveRecord::Base
   def business_unit_name
     self.client.business_unit.name
   end
+
+  def self.invoice_headers(as_on, due_status, completion_status)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    data = []
+    if due_status.upcase == 'DUE' and completion_status.upcase == 'INCOMPLETE'
+      InvoiceHeader.where('due_date <= ?', as_on).order('due_date').order('due_date').each do |ih|
+        if ih.unpaid_amount > 0
+          details = {}
+          details['id'] = ih.id
+          details['narrative'] = ih.narrative
+          details['invoice_date'] = ih.invoice_date.to_s
+          details['due_date'] = ih.due_date.to_s
+          details['status'] = ih.invoice_status.name
+          details['amount'] = ih.header_amount
+          details['paid'] = ih.header_amount - ih.unpaid_amount
+          details['unpaid'] = ih.unpaid_amount
+          details['client'] = ih.client.name
+          details['business_unit'] = ih.client.business_unit.name
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'DUE' and completion_status.upcase == 'COMPLETE'
+      InvoiceHeader.where('due_date <= ?', as_on).order('due_date').order('due_date').each do |ih|
+        if ih.unpaid_amount <= 0
+          details = {}
+          details['id'] = ih.id
+          details['narrative'] = ih.narrative
+          details['invoice_date'] = ih.invoice_date.to_s
+          details['due_date'] = ih.due_date.to_s
+          details['status'] = ih.invoice_status.name
+          details['amount'] = ih.header_amount
+          details['paid'] = ih.header_amount - ih.unpaid_amount
+          details['unpaid'] = ih.unpaid_amount
+          details['client'] = ih.client.name
+          details['business_unit'] = ih.client.business_unit.name
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'DUE' and completion_status.upcase == 'ALL'
+      InvoiceHeader.where('due_date <= ?', as_on).order('due_date').each do |ih|
+        details = {}
+        details['id'] = ih.id
+        details['narrative'] = ih.narrative
+        details['invoice_date'] = ih.invoice_date.to_s
+        details['due_date'] = ih.due_date.to_s
+        details['status'] = ih.invoice_status.name
+        details['amount'] = ih.header_amount
+        details['paid'] = ih.header_amount - ih.unpaid_amount
+        details['unpaid'] = ih.unpaid_amount
+        details['client'] = ih.client.name
+        details['business_unit'] = ih.client.business_unit.name
+        data << details
+      end
+    elsif due_status.upcase == 'FUTURE' and completion_status.upcase == 'INCOMPLETE'
+      InvoiceHeader.where('due_date > ?', as_on).order('due_date').order('due_date').each do |ih|
+        if ih.unpaid_amount > 0
+          details = {}
+          details['id'] = ih.id
+          details['narrative'] = ih.narrative
+          details['invoice_date'] = ih.invoice_date.to_s
+          details['due_date'] = ih.due_date.to_s
+          details['status'] = ih.invoice_status.name
+          details['amount'] = ih.header_amount
+          details['paid'] = ih.header_amount - ih.unpaid_amount
+          details['unpaid'] = ih.unpaid_amount
+          details['client'] = ih.client.name
+          details['business_unit'] = ih.client.business_unit.name
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'FUTURE' and completion_status.upcase == 'COMPLETE'
+      InvoiceHeader.where('due_date > ?', as_on).order('due_date').order('due_date').each do |ih|
+        if ih.unpaid_amount <= 0
+          details = {}
+          details['id'] = ih.id
+          details['narrative'] = ih.narrative
+          details['invoice_date'] = ih.invoice_date.to_s
+          details['due_date'] = ih.due_date.to_s
+          details['status'] = ih.invoice_status.name
+          details['amount'] = ih.header_amount
+          details['paid'] = ih.header_amount - ih.unpaid_amount
+          details['unpaid'] = ih.unpaid_amount
+          details['client'] = ih.client.name
+          details['business_unit'] = ih.client.business_unit.name
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'FUTURE' and completion_status.upcase == 'ALL'
+      InvoiceHeader.where('due_date > ?', as_on).order('due_date').each do |ih|
+        details = {}
+        details['id'] = ih.id
+        details['narrative'] = ih.narrative
+        details['invoice_date'] = ih.invoice_date.to_s
+        details['due_date'] = ih.due_date.to_s
+        details['status'] = ih.invoice_status.name
+        details['amount'] = ih.header_amount
+        details['paid'] = ih.header_amount - ih.unpaid_amount
+        details['unpaid'] = ih.unpaid_amount
+        details['client'] = ih.client.name
+        details['business_unit'] = ih.client.business_unit.name
+        data << details
+      end
+    elsif due_status.upcase == 'ALL' and completion_status.upcase == 'INCOMPLETE'
+      InvoiceHeader.all.order('due_date').order('due_date').each do |ih|
+        if ih.unpaid_amount > 0
+          details = {}
+          details['id'] = ih.id
+          details['narrative'] = ih.narrative
+          details['invoice_date'] = ih.invoice_date.to_s
+          details['due_date'] = ih.due_date.to_s
+          details['status'] = ih.invoice_status.name
+          details['amount'] = ih.header_amount
+          details['paid'] = ih.header_amount - ih.unpaid_amount
+          details['unpaid'] = ih.unpaid_amount
+          details['client'] = ih.client.name
+          details['business_unit'] = ih.client.business_unit.name
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'ALL' and completion_status.upcase == 'COMPLETE'
+      InvoiceHeader.all.order('due_date').order('due_date').each do |ih|
+        if ih.unpaid_amount <= 0
+          details = {}
+          details['id'] = ih.id
+          details['narrative'] = ih.narrative
+          details['invoice_date'] = ih.invoice_date.to_s
+          details['due_date'] = ih.due_date.to_s
+          details['status'] = ih.invoice_status.name
+          details['amount'] = ih.header_amount
+          details['paid'] = ih.header_amount - ih.unpaid_amount
+          details['unpaid'] = ih.unpaid_amount
+          details['client'] = ih.client.name
+          details['business_unit'] = ih.client.business_unit.name
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'ALL' and completion_status.upcase == 'ALL'
+      InvoiceHeader.all.order('due_date').each do |ih|
+        details = {}
+        details['id'] = ih.id
+        details['narrative'] = ih.narrative
+        details['invoice_date'] = ih.invoice_date.to_s
+        details['due_date'] = ih.due_date.to_s
+        details['status'] = ih.invoice_status.name
+        details['amount'] = ih.header_amount
+        details['paid'] = ih.header_amount - ih.unpaid_amount
+        details['unpaid'] = ih.unpaid_amount
+        details['client'] = ih.client.name
+        details['business_unit'] = ih.client.business_unit.name
+        data << details
+      end
+    end
+    data
+  end
 end
