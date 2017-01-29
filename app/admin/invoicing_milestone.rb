@@ -183,7 +183,8 @@ ActiveAdmin.register InvoicingMilestone do
       as_on = params[:as_on]
       due_status = params[:due_status]
       completion_status = params[:completion_status]
-      result = InvoicingMilestone.invoicing_milestones(as_on, due_status, completion_status)
+      with_details = params[:with_details]
+      result = InvoicingMilestone.invoicing_milestones(as_on, due_status, completion_status, with_details)
       render json: result
     end
   end

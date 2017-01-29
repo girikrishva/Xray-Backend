@@ -35,8 +35,9 @@ class InvoicingMilestone < ActiveRecord::Base
     InvoicingMilestone.where(project_id: project_id).order(:due_date)
   end
 
-  def self.invoicing_milestones(as_on, due_status, completion_status)
+  def self.invoicing_milestones(as_on, due_status, completion_status, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    with_details = (with_details.to_s == 'true') ? true : false
     data = []
     if due_status.upcase == 'DUE' and completion_status.upcase == 'INCOMPLETE'
       InvoicingMilestone.where('due_date <= ? and completion_date is null', as_on).order('due_date').each do |im|
@@ -52,6 +53,23 @@ class InvoicingMilestone < ActiveRecord::Base
         details['project'] = im.project.name
         details['client'] = im.project.pipeline.client.name
         details['business_unit'] = im.project.business_unit_name
+        if with_details
+          ids = InvoicingDeliveryMilestone.where('invoicing_milestone_id = ?', im.id).pluck('delivery_milestone_id')
+          delivery_milestones = []
+          DeliveryMilestone.where('id in (?)', ids).order('due_date').each do |dm|
+            delivery_milestone = {}
+            delivery_milestone['id'] = dm.id
+            delivery_milestone['name'] = dm.name
+            delivery_milestone['due_date'] = dm.due_date.to_s
+            delivery_milestone['last_reminder_date'] = dm.last_reminder_date
+            delivery_milestone['completion_date'] = dm.completion_date.to_s
+            delivery_milestone['project'] = dm.project.name
+            delivery_milestone['client'] = dm.project.pipeline.client.name
+            delivery_milestone['business_unit'] = dm.project.business_unit_name
+            delivery_milestones << delivery_milestone
+          end
+          details['delivery_milestones'] = delivery_milestones
+        end
         data << details
       end
     elsif due_status.upcase == 'DUE' and completion_status.upcase == 'COMPLETE'
@@ -68,6 +86,23 @@ class InvoicingMilestone < ActiveRecord::Base
         details['project'] = im.project.name
         details['client'] = im.project.pipeline.client.name
         details['business_unit'] = im.project.business_unit_name
+        if with_details
+          ids = InvoicingDeliveryMilestone.where('invoicing_milestone_id = ?', im.id).pluck('delivery_milestone_id')
+          delivery_milestones = []
+          DeliveryMilestone.where('id in (?)', ids).order('due_date').each do |dm|
+            delivery_milestone = {}
+            delivery_milestone['id'] = dm.id
+            delivery_milestone['name'] = dm.name
+            delivery_milestone['due_date'] = dm.due_date.to_s
+            delivery_milestone['last_reminder_date'] = dm.last_reminder_date
+            delivery_milestone['completion_date'] = dm.completion_date.to_s
+            delivery_milestone['project'] = dm.project.name
+            delivery_milestone['client'] = dm.project.pipeline.client.name
+            delivery_milestone['business_unit'] = dm.project.business_unit_name
+            delivery_milestones << delivery_milestone
+          end
+          details['delivery_milestones'] = delivery_milestones
+        end
         data << details
       end
     elsif due_status.upcase == 'DUE' and completion_status.upcase == 'ALL'
@@ -84,6 +119,22 @@ class InvoicingMilestone < ActiveRecord::Base
         details['project'] = im.project.name
         details['client'] = im.project.pipeline.client.name
         details['business_unit'] = im.project.business_unit_name
+        if with_details
+          ids = InvoicingDeliveryMilestone.where('invoicing_milestone_id = ?', im.id).pluck('delivery_milestone_id')
+          delivery_milestones = []
+          DeliveryMilestone.where('id in (?)', ids).order('due_date').each do |dm|
+            delivery_milestone = {}
+            delivery_milestone['id'] = dm.id
+            delivery_milestone['name'] = dm.name
+            delivery_milestone['due_date'] = dm.due_date.to_s
+            delivery_milestone['last_reminder_date'] = dm.last_reminder_date
+            delivery_milestone['completion_date'] = dm.completion_date.to_s
+            delivery_milestone['project'] = dm.project.name
+            delivery_milestone['client'] = dm.project.pipeline.client.name
+            delivery_milestone['business_unit'] = dm.project.business_unit_name
+          end
+          details['delivery_milestones'] = delivery_milestones
+        end
         data << details
       end
     elsif due_status.upcase == 'FUTURE' and completion_status.upcase == 'INCOMPLETE'
@@ -100,6 +151,23 @@ class InvoicingMilestone < ActiveRecord::Base
         details['project'] = im.project.name
         details['client'] = im.project.pipeline.client.name
         details['business_unit'] = im.project.business_unit_name
+        if with_details
+          ids = InvoicingDeliveryMilestone.where('invoicing_milestone_id = ?', im.id).pluck('delivery_milestone_id')
+          delivery_milestones = []
+          DeliveryMilestone.where('id in (?)', ids).order('due_date').each do |dm|
+            delivery_milestone = {}
+            delivery_milestone['id'] = dm.id
+            delivery_milestone['name'] = dm.name
+            delivery_milestone['due_date'] = dm.due_date.to_s
+            delivery_milestone['last_reminder_date'] = dm.last_reminder_date
+            delivery_milestone['completion_date'] = dm.completion_date.to_s
+            delivery_milestone['project'] = dm.project.name
+            delivery_milestone['client'] = dm.project.pipeline.client.name
+            delivery_milestone['business_unit'] = dm.project.business_unit_name
+            delivery_milestones << delivery_milestone
+          end
+          details['delivery_milestones'] = delivery_milestones
+        end
         data << details
       end
     elsif due_status.upcase == 'FUTURE' and completion_status.upcase == 'COMPLETE'
@@ -116,6 +184,23 @@ class InvoicingMilestone < ActiveRecord::Base
         details['project'] = im.project.name
         details['client'] = im.project.pipeline.client.name
         details['business_unit'] = im.project.business_unit_name
+        if with_details
+          ids = InvoicingDeliveryMilestone.where('invoicing_milestone_id = ?', im.id).pluck('delivery_milestone_id')
+          delivery_milestones = []
+          DeliveryMilestone.where('id in (?)', ids).order('due_date').each do |dm|
+            delivery_milestone = {}
+            delivery_milestone['id'] = dm.id
+            delivery_milestone['name'] = dm.name
+            delivery_milestone['due_date'] = dm.due_date.to_s
+            delivery_milestone['last_reminder_date'] = dm.last_reminder_date
+            delivery_milestone['completion_date'] = dm.completion_date.to_s
+            delivery_milestone['project'] = dm.project.name
+            delivery_milestone['client'] = dm.project.pipeline.client.name
+            delivery_milestone['business_unit'] = dm.project.business_unit_name
+            delivery_milestones << delivery_milestone
+          end
+          details['delivery_milestones'] = delivery_milestones
+        end
         data << details
       end
     elsif due_status.upcase == 'FUTURE' and completion_status.upcase == 'ALL'
@@ -132,6 +217,23 @@ class InvoicingMilestone < ActiveRecord::Base
         details['project'] = im.project.name
         details['client'] = im.project.pipeline.client.name
         details['business_unit'] = im.project.business_unit_name
+        if with_details
+          ids = InvoicingDeliveryMilestone.where('invoicing_milestone_id = ?', im.id).pluck('delivery_milestone_id')
+          delivery_milestones = []
+          DeliveryMilestone.where('id in (?)', ids).order('due_date').each do |dm|
+            delivery_milestone = {}
+            delivery_milestone['id'] = dm.id
+            delivery_milestone['name'] = dm.name
+            delivery_milestone['due_date'] = dm.due_date.to_s
+            delivery_milestone['last_reminder_date'] = dm.last_reminder_date
+            delivery_milestone['completion_date'] = dm.completion_date.to_s
+            delivery_milestone['project'] = dm.project.name
+            delivery_milestone['client'] = dm.project.pipeline.client.name
+            delivery_milestone['business_unit'] = dm.project.business_unit_name
+            delivery_milestones << delivery_milestone
+          end
+          details['delivery_milestones'] = delivery_milestones
+        end
         data << details
       end
     elsif due_status.upcase == 'ALL' and completion_status.upcase == 'INCOMPLETE'
@@ -148,6 +250,23 @@ class InvoicingMilestone < ActiveRecord::Base
         details['project'] = im.project.name
         details['client'] = im.project.pipeline.client.name
         details['business_unit'] = im.project.business_unit_name
+        if with_details
+          ids = InvoicingDeliveryMilestone.where('invoicing_milestone_id = ?', im.id).pluck('delivery_milestone_id')
+          delivery_milestones = []
+          DeliveryMilestone.where('id in (?)', ids).order('due_date').each do |dm|
+            delivery_milestone = {}
+            delivery_milestone['id'] = dm.id
+            delivery_milestone['name'] = dm.name
+            delivery_milestone['due_date'] = dm.due_date.to_s
+            delivery_milestone['last_reminder_date'] = dm.last_reminder_date
+            delivery_milestone['completion_date'] = dm.completion_date.to_s
+            delivery_milestone['project'] = dm.project.name
+            delivery_milestone['client'] = dm.project.pipeline.client.name
+            delivery_milestone['business_unit'] = dm.project.business_unit_name
+            delivery_milestones << delivery_milestone
+          end
+          details['delivery_milestones'] = delivery_milestones
+        end
         data << details
       end
     elsif due_status.upcase == 'ALL' and completion_status.upcase == 'COMPLETE'
@@ -164,6 +283,23 @@ class InvoicingMilestone < ActiveRecord::Base
         details['project'] = im.project.name
         details['client'] = im.project.pipeline.client.name
         details['business_unit'] = im.project.business_unit_name
+        if with_details
+          ids = InvoicingDeliveryMilestone.where('invoicing_milestone_id = ?', im.id).pluck('delivery_milestone_id')
+          delivery_milestones = []
+          DeliveryMilestone.where('id in (?)', ids).order('due_date').each do |dm|
+            delivery_milestone = {}
+            delivery_milestone['id'] = dm.id
+            delivery_milestone['name'] = dm.name
+            delivery_milestone['due_date'] = dm.due_date.to_s
+            delivery_milestone['last_reminder_date'] = dm.last_reminder_date
+            delivery_milestone['completion_date'] = dm.completion_date.to_s
+            delivery_milestone['project'] = dm.project.name
+            delivery_milestone['client'] = dm.project.pipeline.client.name
+            delivery_milestone['business_unit'] = dm.project.business_unit_name
+            delivery_milestones << delivery_milestone
+          end
+          details['delivery_milestones'] = delivery_milestones
+        end
         data << details
       end
     elsif due_status.upcase == 'ALL' and completion_status.upcase == 'ALL'
@@ -180,6 +316,23 @@ class InvoicingMilestone < ActiveRecord::Base
         details['project'] = im.project.name
         details['client'] = im.project.pipeline.client.name
         details['business_unit'] = im.project.business_unit_name
+        if with_details
+          ids = InvoicingDeliveryMilestone.where('invoicing_milestone_id = ?', im.id).pluck('delivery_milestone_id')
+          delivery_milestones = []
+          DeliveryMilestone.where('id in (?)', ids).order('due_date').each do |dm|
+            delivery_milestone = {}
+            delivery_milestone['id'] = dm.id
+            delivery_milestone['name'] = dm.name
+            delivery_milestone['due_date'] = dm.due_date.to_s
+            delivery_milestone['last_reminder_date'] = dm.last_reminder_date
+            delivery_milestone['completion_date'] = dm.completion_date.to_s
+            delivery_milestone['project'] = dm.project.name
+            delivery_milestone['client'] = dm.project.pipeline.client.name
+            delivery_milestone['business_unit'] = dm.project.business_unit_name
+            delivery_milestones << delivery_milestone
+          end
+          details['delivery_milestones'] = delivery_milestones
+        end
         data << details
       end
     end
