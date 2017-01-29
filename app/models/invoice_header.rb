@@ -75,8 +75,9 @@ class InvoiceHeader < ActiveRecord::Base
     self.client.business_unit.name
   end
 
-  def self.invoice_headers(as_on, due_status, completion_status)
+  def self.invoice_headers(as_on, due_status, completion_status, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    with_details = (with_details.to_s == 'true') ? true : false
     data = []
     if due_status.upcase == 'DUE' and completion_status.upcase == 'INCOMPLETE'
       InvoiceHeader.where('due_date <= ?', as_on).order('due_date').order('due_date').each do |ih|
@@ -92,6 +93,22 @@ class InvoiceHeader < ActiveRecord::Base
           details['unpaid'] = ih.unpaid_amount
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
+          if with_details
+            invoice_lines = []
+            InvoiceLine.where('invoice_header_id = ?', ih.id).order('id').each do |il|
+              invoice_line = {}
+              invoice_line['id'] = il.id
+              invoice_line['narrative'] = il.narrative
+              invoice_line['amount'] = il.line_amount
+              invoice_line['paid'] = il.line_amount - il.unpaid_amount
+              invoice_line['unpaid'] = il.unpaid_amount
+              invoice_line['project'] = il.project.name
+              invoice_line['invoicing_milestone'] = il.invoicing_milestone.name rescue nil
+              invoice_line['adder_type'] = il.invoice_adder_type.name rescue nil
+              invoice_lines << invoice_line
+            end
+            details['invoice_lines'] = invoice_lines
+          end
           data << details
         end
       end
@@ -109,6 +126,22 @@ class InvoiceHeader < ActiveRecord::Base
           details['unpaid'] = ih.unpaid_amount
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
+          if with_details
+            invoice_lines = []
+            InvoiceLine.where('invoice_header_id = ?', ih.id).order('id').each do |il|
+              invoice_line = {}
+              invoice_line['id'] = il.id
+              invoice_line['narrative'] = il.narrative
+              invoice_line['amount'] = il.line_amount
+              invoice_line['paid'] = il.line_amount - il.unpaid_amount
+              invoice_line['unpaid'] = il.unpaid_amount
+              invoice_line['project'] = il.project.name
+              invoice_line['invoicing_milestone'] = il.invoicing_milestone.name rescue nil
+              invoice_line['adder_type'] = il.invoice_adder_type.name rescue nil
+              invoice_lines << invoice_line
+            end
+            details['invoice_lines'] = invoice_lines
+          end
           data << details
         end
       end
@@ -125,6 +158,22 @@ class InvoiceHeader < ActiveRecord::Base
         details['unpaid'] = ih.unpaid_amount
         details['client'] = ih.client.name
         details['business_unit'] = ih.client.business_unit.name
+        if with_details
+          invoice_lines = []
+          InvoiceLine.where('invoice_header_id = ?', ih.id).order('id').each do |il|
+            invoice_line = {}
+            invoice_line['id'] = il.id
+            invoice_line['narrative'] = il.narrative
+            invoice_line['amount'] = il.line_amount
+            invoice_line['paid'] = il.line_amount - il.unpaid_amount
+            invoice_line['unpaid'] = il.unpaid_amount
+            invoice_line['project'] = il.project.name
+            invoice_line['invoicing_milestone'] = il.invoicing_milestone.name rescue nil
+            invoice_line['adder_type'] = il.invoice_adder_type.name rescue nil
+            invoice_lines << invoice_line
+          end
+          details['invoice_lines'] = invoice_lines
+        end
         data << details
       end
     elsif due_status.upcase == 'FUTURE' and completion_status.upcase == 'INCOMPLETE'
@@ -141,6 +190,22 @@ class InvoiceHeader < ActiveRecord::Base
           details['unpaid'] = ih.unpaid_amount
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
+          if with_details
+            invoice_lines = []
+            InvoiceLine.where('invoice_header_id = ?', ih.id).order('id').each do |il|
+              invoice_line = {}
+              invoice_line['id'] = il.id
+              invoice_line['narrative'] = il.narrative
+              invoice_line['amount'] = il.line_amount
+              invoice_line['paid'] = il.line_amount - il.unpaid_amount
+              invoice_line['unpaid'] = il.unpaid_amount
+              invoice_line['project'] = il.project.name
+              invoice_line['invoicing_milestone'] = il.invoicing_milestone.name rescue nil
+              invoice_line['adder_type'] = il.invoice_adder_type.name rescue nil
+              invoice_lines << invoice_line
+            end
+            details['invoice_lines'] = invoice_lines
+          end
           data << details
         end
       end
@@ -158,6 +223,22 @@ class InvoiceHeader < ActiveRecord::Base
           details['unpaid'] = ih.unpaid_amount
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
+          if with_details
+            invoice_lines = []
+            InvoiceLine.where('invoice_header_id = ?', ih.id).order('id').each do |il|
+              invoice_line = {}
+              invoice_line['id'] = il.id
+              invoice_line['narrative'] = il.narrative
+              invoice_line['amount'] = il.line_amount
+              invoice_line['paid'] = il.line_amount - il.unpaid_amount
+              invoice_line['unpaid'] = il.unpaid_amount
+              invoice_line['project'] = il.project.name
+              invoice_line['invoicing_milestone'] = il.invoicing_milestone.name rescue nil
+              invoice_line['adder_type'] = il.invoice_adder_type.name rescue nil
+              invoice_lines << invoice_line
+            end
+            details['invoice_lines'] = invoice_lines
+          end
           data << details
         end
       end
@@ -174,6 +255,22 @@ class InvoiceHeader < ActiveRecord::Base
         details['unpaid'] = ih.unpaid_amount
         details['client'] = ih.client.name
         details['business_unit'] = ih.client.business_unit.name
+        if with_details
+          invoice_lines = []
+          InvoiceLine.where('invoice_header_id = ?', ih.id).order('id').each do |il|
+            invoice_line = {}
+            invoice_line['id'] = il.id
+            invoice_line['narrative'] = il.narrative
+            invoice_line['amount'] = il.line_amount
+            invoice_line['paid'] = il.line_amount - il.unpaid_amount
+            invoice_line['unpaid'] = il.unpaid_amount
+            invoice_line['project'] = il.project.name
+            invoice_line['invoicing_milestone'] = il.invoicing_milestone.name rescue nil
+            invoice_line['adder_type'] = il.invoice_adder_type.name rescue nil
+            invoice_lines << invoice_line
+          end
+          details['invoice_lines'] = invoice_lines
+        end
         data << details
       end
     elsif due_status.upcase == 'ALL' and completion_status.upcase == 'INCOMPLETE'
@@ -190,6 +287,22 @@ class InvoiceHeader < ActiveRecord::Base
           details['unpaid'] = ih.unpaid_amount
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
+          if with_details
+            invoice_lines = []
+            InvoiceLine.where('invoice_header_id = ?', ih.id).order('id').each do |il|
+              invoice_line = {}
+              invoice_line['id'] = il.id
+              invoice_line['narrative'] = il.narrative
+              invoice_line['amount'] = il.line_amount
+              invoice_line['paid'] = il.line_amount - il.unpaid_amount
+              invoice_line['unpaid'] = il.unpaid_amount
+              invoice_line['project'] = il.project.name
+              invoice_line['invoicing_milestone'] = il.invoicing_milestone.name rescue nil
+              invoice_line['adder_type'] = il.invoice_adder_type.name rescue nil
+              invoice_lines << invoice_line
+            end
+            details['invoice_lines'] = invoice_lines
+          end
           data << details
         end
       end
@@ -207,6 +320,22 @@ class InvoiceHeader < ActiveRecord::Base
           details['unpaid'] = ih.unpaid_amount
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
+          if with_details
+            invoice_lines = []
+            InvoiceLine.where('invoice_header_id = ?', ih.id).order('id').each do |il|
+              invoice_line = {}
+              invoice_line['id'] = il.id
+              invoice_line['narrative'] = il.narrative
+              invoice_line['amount'] = il.line_amount
+              invoice_line['paid'] = il.line_amount - il.unpaid_amount
+              invoice_line['unpaid'] = il.unpaid_amount
+              invoice_line['project'] = il.project.name
+              invoice_line['invoicing_milestone'] = il.invoicing_milestone.name rescue nil
+              invoice_line['adder_type'] = il.invoice_adder_type.name rescue nil
+              invoice_lines << invoice_line
+            end
+            details['invoice_lines'] = invoice_lines
+          end
           data << details
         end
       end
@@ -223,6 +352,22 @@ class InvoiceHeader < ActiveRecord::Base
         details['unpaid'] = ih.unpaid_amount
         details['client'] = ih.client.name
         details['business_unit'] = ih.client.business_unit.name
+        if with_details
+          invoice_lines = []
+          InvoiceLine.where('invoice_header_id = ?', ih.id).order('id').each do |il|
+            invoice_line = {}
+            invoice_line['id'] = il.id
+            invoice_line['narrative'] = il.narrative
+            invoice_line['amount'] = il.line_amount
+            invoice_line['paid'] = il.line_amount - il.unpaid_amount
+            invoice_line['unpaid'] = il.unpaid_amount
+            invoice_line['project'] = il.project.name
+            invoice_line['invoicing_milestone'] = il.invoicing_milestone.name rescue nil
+            invoice_line['adder_type'] = il.invoice_adder_type.name rescue nil
+            invoice_lines << invoice_line
+          end
+          details['invoice_lines'] = invoice_lines
+        end
         data << details
       end
     end
