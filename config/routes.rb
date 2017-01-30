@@ -141,4 +141,8 @@ Rails.application.routes.draw do
   match '/admin/api/active_users_netflow' => 'admin/admin_users_audits#active_users_netflow', via: [:get]
   match '/admin/api/inactive_users_netflow' => 'admin/admin_users_audits#inactive_users_netflow', via: [:get]
   match '/admin/api/all_users_netflow' => 'admin/admin_users_audits#all_users_netflow', via: [:get]
+  match '/admin/api/delivery_milestones' => 'admin/delivery_milestones#delivery_milestones', via: [:get]
+  match '/admin/api/invoicing_milestones' => 'admin/invoicing_milestones#invoicing_milestones', via: [:get]
+  match '/admin/api/collection_milestones' => 'admin/invoice_headers#collection_milestones', via: [:get]
+  match '/admin/api/reconciliation_milestones' => 'admin/payment_headers#reconciliation_milestones', via: [:get]
 end

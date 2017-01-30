@@ -160,6 +160,15 @@ ActiveAdmin.register InvoiceHeader do
       InvoiceHeader.restore(params[:id])
       redirect_to admin_invoice_headers_path
     end
+
+    def collection_milestones
+      as_on = params[:as_on]
+      due_status = params[:due_status]
+      completion_status = params[:completion_status]
+      with_details = params[:with_details]
+      result = InvoiceHeader.invoice_headers(as_on, due_status, completion_status, with_details)
+      render json: result
+    end
   end
 
   form do |f|

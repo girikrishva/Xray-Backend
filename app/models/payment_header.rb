@@ -47,4 +47,294 @@ class PaymentHeader < ActiveRecord::Base
   def business_unit_name
     self.client.business_unit.name
   end
+
+  def self.payment_headers(as_on, due_status, completion_status, with_details)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    with_details = (with_details.to_s == 'true') ? true : false
+    data = []
+    if due_status.upcase == 'DUE' and completion_status.upcase == 'INCOMPLETE'
+      PaymentHeader.where('payment_date <= ?', as_on).order('payment_date').each do |ph|
+        if ph.unreconciled_amount > 0
+          details = {}
+          details['id'] = ph.id
+          details['narrative'] = ph.narrative
+          details['payment_date'] = ph.payment_date.to_s
+          details['status'] = ph.payment_status.name
+          details['amount'] = ph.header_amount
+          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
+          details['unreconciled'] = ph.unreconciled_amount
+          details['client'] = ph.client.name
+          details['business_unit'] = ph.client.business_unit.name
+          if with_details
+            payment_lines = []
+            PaymentLine.where('payment_header_id = ?', ph.id).order('id').each do |pl|
+              payment_line = {}
+              payment_line['id'] = pl.id
+              payment_line['narrative'] = pl.narrative
+              payment_line['amount'] = pl.line_amount
+              payment_line['invoice_line_id'] = pl.invoice_line.id
+              payment_line['invoice_line_narrative'] = pl.invoice_line.narrative
+              payment_line['invoice_header_id'] = pl.invoice_line.invoice_header.id
+              payment_line['invoice_header_narrative'] = pl.invoice_line.invoice_header.narrative
+              payment_line['project'] = pl.invoice_line.project.name
+              payment_lines << payment_line
+            end
+            details['payment_lines'] = payment_lines
+          end
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'DUE' and completion_status.upcase == 'COMPLETE'
+      PaymentHeader.where('payment_date <= ?', as_on).order('payment_date').each do |ph|
+        if ph.unreconciled_amount <= 0
+          details = {}
+          details['id'] = ph.id
+          details['narrative'] = ph.narrative
+          details['payment_date'] = ph.payment_date.to_s
+          details['status'] = ph.payment_status.name
+          details['amount'] = ph.header_amount
+          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
+          details['unreconciled'] = ph.unreconciled_amount
+          details['client'] = ph.client.name
+          details['business_unit'] = ph.client.business_unit.name
+          if with_details
+            payment_lines = []
+            PaymentLine.where('payment_header_id = ?', ph.id).order('id').each do |pl|
+              payment_line = {}
+              payment_line['id'] = pl.id
+              payment_line['narrative'] = pl.narrative
+              payment_line['amount'] = pl.line_amount
+              payment_line['invoice_line_id'] = pl.invoice_line.id
+              payment_line['invoice_line_narrative'] = pl.invoice_line.narrative
+              payment_line['invoice_header_id'] = pl.invoice_line.invoice_header.id
+              payment_line['invoice_header_narrative'] = pl.invoice_line.invoice_header.narrative
+              payment_line['project'] = pl.invoice_line.project.name
+              payment_lines << payment_line
+            end
+            details['payment_lines'] = payment_lines
+          end
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'DUE' and completion_status.upcase == 'ALL'
+      PaymentHeader.where('payment_date <= ?', as_on).order('payment_date').each do |ph|
+        details = {}
+        details['id'] = ph.id
+        details['narrative'] = ph.narrative
+        details['payment_date'] = ph.payment_date.to_s
+        details['status'] = ph.payment_status.name
+        details['amount'] = ph.header_amount
+        details['reconciled'] = ph.header_amount - ph.unreconciled_amount
+        details['unreconciled'] = ph.unreconciled_amount
+        details['client'] = ph.client.name
+        details['business_unit'] = ph.client.business_unit.name
+        if with_details
+          payment_lines = []
+          PaymentLine.where('payment_header_id = ?', ph.id).order('id').each do |pl|
+            payment_line = {}
+            payment_line['id'] = pl.id
+            payment_line['narrative'] = pl.narrative
+            payment_line['amount'] = pl.line_amount
+            payment_line['invoice_line_id'] = pl.invoice_line.id
+            payment_line['invoice_line_narrative'] = pl.invoice_line.narrative
+            payment_line['invoice_header_id'] = pl.invoice_line.invoice_header.id
+            payment_line['invoice_header_narrative'] = pl.invoice_line.invoice_header.narrative
+            payment_line['project'] = pl.invoice_line.project.name
+            payment_lines << payment_line
+          end
+          details['payment_lines'] = payment_lines
+        end
+        data << details
+      end
+    elsif due_status.upcase == 'FUTURE' and completion_status.upcase == 'INCOMPLETE'
+      PaymentHeader.where('payment_date > ?', as_on).order('payment_date').each do |ph|
+        if ph.unreconciled_amount > 0
+          details = {}
+          details['id'] = ph.id
+          details['narrative'] = ph.narrative
+          details['payment_date'] = ph.payment_date.to_s
+          details['status'] = ph.payment_status.name
+          details['amount'] = ph.header_amount
+          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
+          details['unreconciled'] = ph.unreconciled_amount
+          details['client'] = ph.client.name
+          details['business_unit'] = ph.client.business_unit.name
+          if with_details
+            payment_lines = []
+            PaymentLine.where('payment_header_id = ?', ph.id).order('id').each do |pl|
+              payment_line = {}
+              payment_line['id'] = pl.id
+              payment_line['narrative'] = pl.narrative
+              payment_line['amount'] = pl.line_amount
+              payment_line['invoice_line_id'] = pl.invoice_line.id
+              payment_line['invoice_line_narrative'] = pl.invoice_line.narrative
+              payment_line['invoice_header_id'] = pl.invoice_line.invoice_header.id
+              payment_line['invoice_header_narrative'] = pl.invoice_line.invoice_header.narrative
+              payment_line['project'] = pl.invoice_line.project.name
+              payment_lines << payment_line
+            end
+            details['payment_lines'] = payment_lines
+          end
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'FUTURE' and completion_status.upcase == 'COMPLETE'
+      PaymentHeader.where('payment_date > ?', as_on).order('payment_date').each do |ph|
+        if ph.unreconciled_amount <= 0
+          details = {}
+          details['id'] = ph.id
+          details['narrative'] = ph.narrative
+          details['payment_date'] = ph.payment_date.to_s
+          details['status'] = ph.payment_status.name
+          details['amount'] = ph.header_amount
+          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
+          details['unreconciled'] = ph.unreconciled_amount
+          details['client'] = ph.client.name
+          details['business_unit'] = ph.client.business_unit.name
+          if with_details
+            payment_lines = []
+            PaymentLine.where('payment_header_id = ?', ph.id).order('id').each do |pl|
+              payment_line = {}
+              payment_line['id'] = pl.id
+              payment_line['narrative'] = pl.narrative
+              payment_line['amount'] = pl.line_amount
+              payment_line['invoice_line_id'] = pl.invoice_line.id
+              payment_line['invoice_line_narrative'] = pl.invoice_line.narrative
+              payment_line['invoice_header_id'] = pl.invoice_line.invoice_header.id
+              payment_line['invoice_header_narrative'] = pl.invoice_line.invoice_header.narrative
+              payment_line['project'] = pl.invoice_line.project.name
+              payment_lines << payment_line
+            end
+            details['payment_lines'] = payment_lines
+          end
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'FUTURE' and completion_status.upcase == 'ALL'
+      PaymentHeader.where('payment_date > ?', as_on).order('payment_date').each do |ph|
+        details = {}
+        details['id'] = ph.id
+        details['narrative'] = ph.narrative
+        details['payment_date'] = ph.payment_date.to_s
+        details['status'] = ph.payment_status.name
+        details['amount'] = ph.header_amount
+        details['reconciled'] = ph.header_amount - ph.unreconciled_amount
+        details['unreconciled'] = ph.unreconciled_amount
+        details['client'] = ph.client.name
+        details['business_unit'] = ph.client.business_unit.name
+        if with_details
+          payment_lines = []
+          PaymentLine.where('payment_header_id = ?', ph.id).order('id').each do |pl|
+            payment_line = {}
+            payment_line['id'] = pl.id
+            payment_line['narrative'] = pl.narrative
+            payment_line['amount'] = pl.line_amount
+            payment_line['invoice_line_id'] = pl.invoice_line.id
+            payment_line['invoice_line_narrative'] = pl.invoice_line.narrative
+            payment_line['invoice_header_id'] = pl.invoice_line.invoice_header.id
+            payment_line['invoice_header_narrative'] = pl.invoice_line.invoice_header.narrative
+            payment_line['project'] = pl.invoice_line.project.name
+            payment_lines << payment_line
+          end
+          details['payment_lines'] = payment_lines
+        end
+        data << details
+      end
+    elsif due_status.upcase == 'ALL' and completion_status.upcase == 'INCOMPLETE'
+      PaymentHeader.all.order('payment_date').each do |ph|
+        if ph.unreconciled_amount > 0
+          details = {}
+          details['id'] = ph.id
+          details['narrative'] = ph.narrative
+          details['payment_date'] = ph.payment_date.to_s
+          details['status'] = ph.payment_status.name
+          details['amount'] = ph.header_amount
+          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
+          details['unreconciled'] = ph.unreconciled_amount
+          details['client'] = ph.client.name
+          details['business_unit'] = ph.client.business_unit.name
+          if with_details
+            payment_lines = []
+            PaymentLine.where('payment_header_id = ?', ph.id).order('id').each do |pl|
+              payment_line = {}
+              payment_line['id'] = pl.id
+              payment_line['narrative'] = pl.narrative
+              payment_line['amount'] = pl.line_amount
+              payment_line['invoice_line_id'] = pl.invoice_line.id
+              payment_line['invoice_line_narrative'] = pl.invoice_line.narrative
+              payment_line['invoice_header_id'] = pl.invoice_line.invoice_header.id
+              payment_line['invoice_header_narrative'] = pl.invoice_line.invoice_header.narrative
+              payment_line['project'] = pl.invoice_line.project.name
+              payment_lines << payment_line
+            end
+            details['payment_lines'] = payment_lines
+          end
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'ALL' and completion_status.upcase == 'COMPLETE'
+      PaymentHeader.all.order('payment_date').each do |ph|
+        if ph.unreconciled_amount <= 0
+          details = {}
+          details['id'] = ph.id
+          details['narrative'] = ph.narrative
+          details['payment_date'] = ph.payment_date.to_s
+          details['status'] = ph.payment_status.name
+          details['amount'] = ph.header_amount
+          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
+          details['unreconciled'] = ph.unreconciled_amount
+          details['client'] = ph.client.name
+          details['business_unit'] = ph.client.business_unit.name
+          if with_details
+            payment_lines = []
+            PaymentLine.where('payment_header_id = ?', ph.id).order('id').each do |pl|
+              payment_line = {}
+              payment_line['id'] = pl.id
+              payment_line['narrative'] = pl.narrative
+              payment_line['amount'] = pl.line_amount
+              payment_line['invoice_line_id'] = pl.invoice_line.id
+              payment_line['invoice_line_narrative'] = pl.invoice_line.narrative
+              payment_line['invoice_header_id'] = pl.invoice_line.invoice_header.id
+              payment_line['invoice_header_narrative'] = pl.invoice_line.invoice_header.narrative
+              payment_line['project'] = pl.invoice_line.project.name
+              payment_lines << payment_line
+            end
+            details['payment_lines'] = payment_lines
+          end
+          data << details
+        end
+      end
+    elsif due_status.upcase == 'ALL' and completion_status.upcase == 'ALL'
+      PaymentHeader.all.order('payment_date').each do |ph|
+        details = {}
+        details['id'] = ph.id
+        details['narrative'] = ph.narrative
+        details['payment_date'] = ph.payment_date.to_s
+        details['status'] = ph.payment_status.name
+        details['amount'] = ph.header_amount
+        details['reconciled'] = ph.header_amount - ph.unreconciled_amount
+        details['unreconciled'] = ph.unreconciled_amount
+        details['client'] = ph.client.name
+        details['business_unit'] = ph.client.business_unit.name
+        if with_details
+          payment_lines = []
+          PaymentLine.where('payment_header_id = ?', ph.id).order('id').each do |pl|
+            payment_line = {}
+            payment_line['id'] = pl.id
+            payment_line['narrative'] = pl.narrative
+            payment_line['amount'] = pl.line_amount
+            payment_line['invoice_line_id'] = pl.invoice_line.id
+            payment_line['invoice_line_narrative'] = pl.invoice_line.narrative
+            payment_line['invoice_header_id'] = pl.invoice_line.invoice_header.id
+            payment_line['invoice_header_narrative'] = pl.invoice_line.invoice_header.narrative
+            payment_line['project'] = pl.invoice_line.project.name
+            payment_lines << payment_line
+          end
+          details['payment_lines'] = payment_lines
+        end
+        data << details
+      end
+    end
+    data
+  end
 end
