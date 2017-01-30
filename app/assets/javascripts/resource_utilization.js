@@ -1,8 +1,45 @@
-	$(".staffing_required,.deployable_resources,.staffing_fulfilled").on('click',function(){
-		var as_on = "2016-11-25"
-		responce  = ajax_call("api/staffing_forecast?as_on="+as_on+"&with_details=true")
+  $(".col-business_unit_id").hide()
+	$(".col-id").hide()
+  $.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
+$(document).ready(function() {
+    if ($.urlParam('q%5Bas_on_gteq_date%5D') != null)
+{
+       $('#q_as_on_gteq_date').val($.urlParam('q%5Bas_on_gteq_date%5D'));
+
+}
+    if ($.urlParam('q%5Bas_on_lteq_date%5D') != null)
+{
+       $('#q_as_on_lteq_date').val($.urlParam('q%5Bas_on_lteq_date%5D'));
+
+}
+  })
+  $(".assigned_percent,.clocked_percent,.utilization_percent").on('click',function(){
+    var id = $(this).attr('id').split("_")[1]
+    var from = $('#q_as_on_gteq_date').val()
+    var to = $('#q_as_on_lteq_date').val()
+		responce  = ajax_call("api/resource_efficiency?admin_user_id="+id+"&from_date="+from+"&to_date="+to+"&with_details=true")
 		var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
-		$.each( responce["data"], function( index, value ){
+    html_value += convert_ajax_to_htm(responce["data"])        
+		$(".ajax_content").html(html_value)
+		$(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details").hide()
+})
+
+    $(".deployable_resources").on('click',function(){
+    var id = $(this).attr('id')
+    var from = $('#q_as_on_gteq_date').val()
+    var to = $('#q_as_on_lteq_date').val()
+    responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+id+"&from_date="+from+"&to_date="+to+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    html_value += convert_ajax_to_htm(responce["data"])
+    $.each( responce["data"]["resource_efficiency_details"], function( index, value ){
                 if (index  ==  0){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
@@ -11,36 +48,10 @@
                 }
             });
             html_value += "</table>"
-              $.each( responce["data"], function( index, value ){
-                if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value["staffing_required_details"][0]).replace("</table>","")
-                }
-                else{
-                  html_value += return_only_t_data(value["staffing_required_details"][0])
-                }
-            });
-              html_value += "</table>"
-                $.each( responce["data"], function( index, value ){
-                if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value["staffing_fulfilled_details"][0]).replace("</table>","")
-                }
-                else{
-                  html_value += return_only_t_data(value["staffing_fulfilled_details"][0])
-                }
-                });
-                html_value += "</table>"
-                    $.each( responce["data"], function( index, value ){
-                if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value["deployable_resources_details"][0]).replace("</table>","")
-                }
-                else{
-                  html_value += return_only_t_data(value["deployable_resources_details"][0])
-                }
-                });
-                html_value += "</table>"
             
-		$(".ajax_content").html(html_value)
-		$(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details,.staffing_fulfilled_details,.deployable_resources_details,.id,.admin_user_id").hide()
+    $(".ajax_content").html(html_value)
+    $(".created_at,.updated_at,.deleted_at,.comments,.data,.resource_efficiency_details").hide()
+})
 
 	      function return_only_t_data(responce){
              var ajax_content_value = "</tr><tr>"
@@ -92,4 +103,3 @@
         e.preventDefault();
     });
 });
-})

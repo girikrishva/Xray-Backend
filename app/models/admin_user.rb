@@ -1,6 +1,7 @@
 class AdminUser < ActiveRecord::Base
   acts_as_paranoid
-
+  ransacker :as_on do
+  end
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,

@@ -58,6 +58,7 @@ en:
         Payment Headers Audits: ""
         Payment Lines Audits: ""
         Admin User Sessions: ""
+        Resource Forecasts: ""
   role:
     administrator: "Administrator"
     executive: "Executive"
