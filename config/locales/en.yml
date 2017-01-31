@@ -58,6 +58,7 @@ en:
         Payment Headers Audits: ""
         Payment Lines Audits: ""
         Admin User Sessions: ""
+        Resource Forecasts: ""
   role:
     administrator: "Administrator"
     executive: "Executive"
@@ -66,6 +67,7 @@ en:
     manager: "Manager"
   menu:
     define_users: "Define Users"
+    reports: "Reports"
     security: "Security"
     clients: "Clients"
     masters: "Masters"
