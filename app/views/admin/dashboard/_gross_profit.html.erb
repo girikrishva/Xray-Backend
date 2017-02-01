@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script type="text/javascript">
+		 $(document).ready(function() {
+			var chart = new CanvasJS.Chart("chartContainer",
+			{
+				title: {
+					text: "Gross Profit"
+				},
+				axisY: {
+					stripLines: [{
+						value: 143650,
+						label: "Average",
+						showOnTop: true
+					}
+					]
+				},
+
+				data: [
+				{
+					type: "bar",
+
+					dataPoints: [
+						{ x: new Date(2016, 00, 1), y: 4500},
+				        { x: new Date(2016, 01, 1), y: 4100},
+				        { x: new Date(2016, 02, 1), y: 5200},
+				        { x: new Date(2016, 03, 1), y: 600},
+				        { x: new Date(2016, 04, 1), y: 4500},
+				        { x: new Date(2016, 05, 1), y: 5000},
+				        { x: new Date(2016, 06, 1), y: 4800},
+				        { x: new Date(2016, 07, 1), y: 4800},
+				        { x: new Date(2016, 08, 1), y: 4100},
+				        { x: new Date(2016, 09, 1), y: 5000},
+				        { x: new Date(2016, 10, 1), y: 4800},
+				        { x: new Date(2016, 11, 1), y: 1000 }
+					]
+				}
+				]
+			});
+
+			chart.render();
+		})
+	</script>
+</head>
+<body>
+	<div id="chartContainer" style="height: 240px; width: 100%;">
+	</div>
+</body>
+</html>

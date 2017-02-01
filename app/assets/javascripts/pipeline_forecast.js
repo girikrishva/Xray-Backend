@@ -1,8 +1,8 @@
 $(document).ready(function() {
-	$(".col-expected_start,.col-pipeline_status_id").hide()
+	$(".col-expected_start,.col-pipeline_status_id,.hidden").hide()
 	$(".text_link").on('click',function(){
 		var status_id = $(this).closest('tr').find('td:eq(-1)').text()
-		var as_on = $(this).closest('tr').find('td:eq(-2)').text()
+		var as_on = $(this).find(".hidden").html() + "-01"
 		responce  = ajax_call("api/pipeline_for_status?status_id="+status_id+"&as_on="+as_on+"&with_details=true")
 		var html_value = "<span id='close' style='cursor:pointer' hidden></span>"+convert_ajax_to_htm(responce)
 		$.each( responce["data"], function( index, value ){

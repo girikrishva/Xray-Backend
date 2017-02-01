@@ -1,5 +1,26 @@
-	$(".staffing_required,.deployable_resources,.staffing_fulfilled").on('click',function(){
-		var as_on = "2016-11-25"
+	  $.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
+$(document).ready(function() {
+    if ($.urlParam('q%5Bas_on_gteq_datetime%5D') != null)
+{
+       $('#q_as_on_gteq_datetime').val($.urlParam('q%5Bas_on_gteq_datetime%5D'));
+
+}
+    if ($.urlParam('q%5Bas_on_lteq_datetime%5D') != null)
+{
+       $('#q_as_on_lteq_datetime').val($.urlParam('q%5Bas_on_lteq_datetime%5D'));
+
+}
+  
+  $(".staffing_required,.deployable_resources,.staffing_fulfilled").on('click',function(){
+		var as_on = $('#q_as_on_gteq_datetime').val()
 		responce  = ajax_call("api/staffing_forecast?as_on="+as_on+"&with_details=true")
 		var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
 		$.each( responce["data"], function( index, value ){
@@ -11,6 +32,8 @@
                 }
             });
             html_value += "</table>"
+            if( (jQuery.inArray("staffing_required",$(this).attr('class').split(" ")))== 0)
+            {
               $.each( responce["data"], function( index, value ){
                 if (index  ==  0){
                   html_value += convert_ajax_to_htm(value["staffing_required_details"][0]).replace("</table>","")
@@ -20,6 +43,9 @@
                 }
             });
               html_value += "</table>"
+            }
+             if( (jQuery.inArray("staffing_fulfilled",$(this).attr('class').split(" ")))== 0)
+            {
                 $.each( responce["data"], function( index, value ){
                 if (index  ==  0){
                   html_value += convert_ajax_to_htm(value["staffing_fulfilled_details"][0]).replace("</table>","")
@@ -29,6 +55,9 @@
                 }
                 });
                 html_value += "</table>"
+              }
+              if( (jQuery.inArray("deployable_resources",$(this).attr('class').split(" ")))== 0)
+            {
                     $.each( responce["data"], function( index, value ){
                 if (index  ==  0){
                   html_value += convert_ajax_to_htm(value["deployable_resources_details"][0]).replace("</table>","")
@@ -38,10 +67,11 @@
                 }
                 });
                 html_value += "</table>"
+              }
             
 		$(".ajax_content").html(html_value)
 		$(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details,.staffing_fulfilled_details,.deployable_resources_details,.id,.admin_user_id").hide()
-
+})
 	      function return_only_t_data(responce){
              var ajax_content_value = "</tr><tr>"
              $.each(responce, function(key, value) {

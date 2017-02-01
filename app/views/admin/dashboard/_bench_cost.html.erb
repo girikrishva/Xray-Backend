@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script type="text/javascript">
+$(document).ready(function() {
+	var chart = new CanvasJS.Chart("beanch_cost_chart",
+	{
+		theme: "theme2",
+		title:{
+			text: "Bench Cost"
+		},
+		data: [
+		{
+			type: "pie",
+			
+			dataPoints: [
+					{  y: 4500},
+				        {  y: 4100},
+				        {  y: 5200},
+				        {  y: 600},
+				        {  y: 4500},
+				        {  y: 5000},
+				        {  y: 4800},
+				        {  y: 4800},
+				        {  y: 4100},
+				        {  y: 5000},
+				        {  y: 4800},
+				        {  y: 1000 }
+			]
+		}
+		]
+	});
+	chart.render();
+	$(".canvasjs-chart-credit").hide()
+})
+	</script>
+</head>
+<body>
+	<div id="beanch_cost_chart" style="height: 240px; width: 100%;"></div>
+</body>
+</html>

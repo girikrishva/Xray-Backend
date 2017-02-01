@@ -10,32 +10,44 @@
     }
 }
 $(document).ready(function() {
-    if ($.urlParam('q%5Bas_on_gteq_date%5D') != null)
+    if ($.urlParam('q%5Bas_on_gteq_datetime%5D') != null)
 {
-       $('#q_as_on_gteq_date').val($.urlParam('q%5Bas_on_gteq_date%5D'));
+       $('#q_as_on_gteq_datetime').val($.urlParam('q%5Bas_on_gteq_datetime%5D'));
 
 }
-    if ($.urlParam('q%5Bas_on_lteq_date%5D') != null)
+    if ($.urlParam('q%5Bas_on_lteq_datetime%5D') != null)
 {
-       $('#q_as_on_lteq_date').val($.urlParam('q%5Bas_on_lteq_date%5D'));
+       $('#q_as_on_lteq_datetime').val($.urlParam('q%5Bas_on_lteq_datetime%5D'));
 
 }
   })
-  $(".assigned_percent,.clocked_percent,.utilization_percent").on('click',function(){
+  $(".assigned_percent,.clocked_percent,.utilization_percent,.billing_details").on('click',function(){
     var id = $(this).attr('id').split("_")[1]
-    var from = $('#q_as_on_gteq_date').val()
-    var to = $('#q_as_on_lteq_date').val()
+    var from = $('#q_as_on_gteq_datetime').val()
+    var to = $('#q_as_on_lteq_datetime').val()
 		responce  = ajax_call("api/resource_efficiency?admin_user_id="+id+"&from_date="+from+"&to_date="+to+"&with_details=true")
 		var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
     html_value += convert_ajax_to_htm(responce["data"])        
 		$(".ajax_content").html(html_value)
+    if( (jQuery.inArray("clocked_percent",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".working_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+    if( (jQuery.inArray("assigned_percent",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".clocked_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+     if( (jQuery.inArray("utilization_percent",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".assigned_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+    if( (jQuery.inArray("billing_details",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".clocked_hours,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
 		$(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details").hide()
 })
 
     $(".deployable_resources").on('click',function(){
     var id = $(this).attr('id')
-    var from = $('#q_as_on_gteq_date').val()
-    var to = $('#q_as_on_lteq_date').val()
+    var from = $('#q_as_on_gteq_datetime').val()
+    var to = $('#q_as_on_lteq_datetime').val()
     responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+id+"&from_date="+from+"&to_date="+to+"&with_details=true")
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
     html_value += convert_ajax_to_htm(responce["data"])
