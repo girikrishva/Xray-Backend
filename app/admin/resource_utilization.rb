@@ -6,7 +6,7 @@ config.batch_actions = false
     script :src => javascript_path('resource_utilization.js'), :type => "text/javascript"
 
     column "Utilization (%)" do |resource|
-      data = AdminUser.business_unit_efficiency(resource.business_unit_id, (Date.parse(params["q"]["as_on_gteq_date"]) rescue Date.today).strftime("%Y-%m-%d"),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today).strftime("%Y-%m-%d"),false)
+      data = AdminUser.business_unit_efficiency(resource.business_unit_id, (Date.parse(params["q"]["as_on_gteq_datetime"]) rescue Date.today).strftime("%Y-%m-%d"),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today).strftime("%Y-%m-%d"),false)
       val =  data["data"]["business_unit_utilization_percentage"]
       if val > 0
           div  class:"deployable_resources text_link ",id:"#{resource.business_unit_id}","data-popup-open":"popup-1" do
@@ -17,7 +17,7 @@ config.batch_actions = false
         end
     end
     column "Billing Delta" do |resource|
-      data = AdminUser.business_unit_efficiency(resource.business_unit_id, (Date.parse(params["q"]["as_on_gteq_date"]) rescue Date.today).strftime("%Y-%m-%d"),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today).strftime("%Y-%m-%d"),false)
+      data = AdminUser.business_unit_efficiency(resource.business_unit_id, (Date.parse(params["q"]["as_on_gteq_datetime"]) rescue Date.today).strftime("%Y-%m-%d"),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today).strftime("%Y-%m-%d"),false)
       div  class:"deployable_resources text_link ",id:"#{resource.business_unit_id}","data-popup-open":"popup-1" do
         data["data"]["business_unit_billing_opportunity_loss"]
       end
@@ -38,8 +38,8 @@ config.batch_actions = false
     end
     column :active
     column "Assigned Percentage" do |resource|
-      assigned_hours = AssignedResource.assigned_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_date"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today))
-      working_hours = AssignedResource.working_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_date"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today)) 
+      assigned_hours = AssignedResource.assigned_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_datetime"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today))
+      working_hours = AssignedResource.working_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_datetime"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today)) 
       val = (assigned_hours / working_hours) * 100 rescue 0 
        if val > 0
           div  class:"assigned_percent text_link ",id:"ap_#{resource.id}","data-popup-open":"popup-1" do
@@ -50,8 +50,8 @@ config.batch_actions = false
         end
     end
     column "clocked Percentage" do |resource|
-      assigned_hours = AssignedResource.assigned_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_date"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today))
-      clocked_hours = Timesheet.clocked_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_date"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today)) 
+      assigned_hours = AssignedResource.assigned_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_datetime"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today))
+      clocked_hours = Timesheet.clocked_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_datetime"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today)) 
       val = (clocked_hours / assigned_hours) * 100 rescue 0
       if val > 0
           div  class:"clocked_percent text_link ",id:"cp_#{resource.id}","data-popup-open":"popup-1" do
@@ -63,8 +63,8 @@ config.batch_actions = false
     end
 
     column "Utilization Percentage" do |resource|
-      working_hours = AssignedResource.working_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_date"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today)) 
-      clocked_hours = Timesheet.clocked_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_date"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today)) 
+      working_hours = AssignedResource.working_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_datetime"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today)) 
+      clocked_hours = Timesheet.clocked_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_datetime"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today)) 
         val = (clocked_hours / working_hours) * 100 rescue 0
         if val > 0
           div  class:"utilization_percent text_link ",id:"up_#{resource.id}","data-popup-open":"popup-1" do
@@ -76,8 +76,8 @@ config.batch_actions = false
     end
 
     column "Billing Delta" do |resource|
-      working_hours = AssignedResource.working_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_date"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today)) 
-      assigned_hours = AssignedResource.assigned_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_date"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today))
+      working_hours = AssignedResource.working_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_datetime"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today)) 
+      assigned_hours = AssignedResource.assigned_hours(resource.id, (Date.parse(params["q"]["as_on_gteq_datetime"]) rescue Date.today),( Date.parse(params["q"]["as_on_lteq_date"]) rescue Date.today))
       div  class:"billing_details text_link ",id:"bd_#{resource.id}","data-popup-open":"popup-1" do
       ((working_hours - assigned_hours) * resource.bill_rate).round(0)
       end

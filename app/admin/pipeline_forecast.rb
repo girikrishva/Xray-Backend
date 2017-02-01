@@ -21,18 +21,19 @@ ActiveAdmin.register Pipeline , as: "Pipeline Forecast" do
 
   index  do
     script :src => javascript_path('pipeline_forecast.js'), :type => "text/javascript"
-    column :client, sortable: 'clients.name' do |resource|
-      resource.client.name
-    end
-    column I18n.t('label.project'), :name
     column I18n.t('label.status'), :pipeline_status, sortable: 'pipeline_statuses.name' do |resource|
       resource.pipeline_status.name
     end
     ((Date.today-6.months)..(Date.today+6.months)).to_a.collect{|x| x.strftime("%Y-%m")}.uniq.each do |x|
       column "#{x}" do |resource|
-          if resource.expected_start.strftime("%Y-%m").include?(x)
+          if @@status["#{resource.pipeline_status_id}"].include?(x)
             div class:"text_link","data-popup-open":"popup-1" do
-              number_to_currency(resource.expected_value)
+              span class:"hidden" do
+                x
+              end
+              span do
+               number_to_currency(@@amount["#{resource.pipeline_status_id}_#{x}"].compact.inject(:+))
+              end
             end
           else
             number_to_currency(0)
@@ -63,7 +64,18 @@ ActiveAdmin.register Pipeline , as: "Pipeline Forecast" do
     before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
-      Pipeline.includes [:business_unit, :client, :pipeline_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager]
+      @pipe_line = Pipeline.includes([:business_unit, :client, :pipeline_status, :project_type_code, :sales_person, :estimator, :engagement_manager, :delivery_manager])
+      @@status= {}
+      @@ids = {}
+      @@amount = {}
+      @pipe_line.group_by(&:pipeline_status).each do |k,v|
+        @@status["#{k.id}"]= v.collect{|x| x.expected_start.strftime("%Y-%m")}
+        @@ids["#{k.id}"]= v.collect(&:id)
+        (v.collect{|x| x.expected_start.strftime("%Y-%m")}).uniq.each do |x|
+          @@amount["#{k.id}_#{x}"]= v.collect{|y| y.expected_value if y.expected_start.strftime("%Y-%m") == x}
+        end
+      end  
+      @pipe_line.where(id:@@ids.values.collect{|x| x[0]})
     end
   end
 end

@@ -16,31 +16,31 @@ config.batch_actions = false
     end
     column "Staffing Required" do |element|
       div  class:"staffing_required text_link","data-popup-open":"popup-1" do
-        StaffingRequirement.staffing_required(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_date"] rescue nil), false)["count"]
+        StaffingRequirement.staffing_required(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_datetime"] rescue nil), false)["count"]
       end
     end
    column "Staffing Fulfilled" do |element|
       div  class:"staffing_fulfilled text_link","data-popup-open":"popup-1" do
-        StaffingRequirement.staffing_fulfilled(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_date"] rescue nil), false)["count"]
+        StaffingRequirement.staffing_fulfilled(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_datetime"] rescue nil), false)["count"]
       end
     end
 
     column "Staffing Gap" do |element|
       div  do
-        StaffingRequirement.staffing_required(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_date"] rescue nil), false)["count"].to_i - StaffingRequirement.staffing_fulfilled(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_date"] rescue nil), false)["count"].to_i
+        StaffingRequirement.staffing_required(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_datetime"] rescue nil), false)["count"].to_i - StaffingRequirement.staffing_fulfilled(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_datetime"] rescue nil), false)["count"].to_i
       end
     end
 
      column "Deployable Resources" do |element|
       div  class:"deployable_resources text_link","data-popup-open":"popup-1" do
-        StaffingRequirement.deployable_resources(element.skill_id,element.designation_id,element.start_date,element.end_date,(params["q"]["as_on_gteq_date"] rescue nil), false)["count"]
+        StaffingRequirement.deployable_resources(element.skill_id,element.designation_id,element.start_date,element.end_date,(params["q"]["as_on_gteq_datetime"] rescue nil), false)["count"]
       end
     end
 
      column "Recruitment Need" do |element|
       div  do
-        (StaffingRequirement.staffing_required(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_date"] rescue nil), false)["count"].to_i - StaffingRequirement.staffing_fulfilled(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_date"] rescue nil), false)["count"].to_i
-        )-StaffingRequirement.deployable_resources(element.skill_id,element.designation_id,element.start_date,element.end_date,(params["q"]["as_on_gteq_date"] rescue nil), false)["count"]
+        (StaffingRequirement.staffing_required(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_datetime"] rescue nil), false)["count"].to_i - StaffingRequirement.staffing_fulfilled(element.skill_id,element.designation_id,(params["q"]["as_on_gteq_datetime"] rescue nil), false)["count"].to_i
+        )-StaffingRequirement.deployable_resources(element.skill_id,element.designation_id,element.start_date,element.end_date,(params["q"]["as_on_gteq_datetime"] rescue nil), false)["count"]
       end
     end
     # column :start_date
@@ -67,7 +67,7 @@ config.batch_actions = false
     before_filter :skip_sidebar!, if: proc { params.has_key?(:scope) }
 
     def scoped_collection
-      StaffingRequirement.joins(:skill, :designation).where('? between start_date and end_date', (params["q"]["as_on_gteq_date"] rescue nil)).uniq
+      StaffingRequirement.joins(:skill, :designation).where('? between start_date and end_date', (params["q"]["as_on_gteq_datetime"] rescue nil)).uniq
     end
 
     def create
