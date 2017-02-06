@@ -10,6 +10,50 @@
     }
 }
 $(document).ready(function() {
+    responce  = ajax_call("api/resource_distribution_combos?with_details=false")
+    var html_value = ""
+     $.each( responce["data"], function( index, value ){
+      value1 = Object.assign(value, value["resource_details"]);
+
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+
+
+      })
+      $("#initial_table").html(html_value) 
+        $.each($("td.total_resource_cost"), function( index1, value1 ){
+     $(this).text("$"+$(this).text())
+      })
+        $.each($("td.average_resource_cost"), function( index1, value1 ){
+     $(this).text("$"+$(this).text())
+      }) 
+         $.each($("td.count"), function( index1, value1 ){
+        $(this).addClass("text_link")
+        $(this).attr('data-popup-open', 'popup-1');
+      }) 
+        $(".count").on('click',function(){
+    responce  = ajax_call("api/resource_distribution_combos?with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+     $.each( responce["data"], function( index, value ){
+      $.each( value["resource_details"]["data"], function( index1, value1 ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+      })
+     })
+     $(".ajax_content").html(html_value)
+    $(".created_at,.updated_at,.deleted_at,.comments,.data,.resource_efficiency_details").hide()
+
+  })
+    $(".resource_details,.pagination_information").hide()
+   
     if ($.urlParam('q%5Bas_on_gteq_datetime%5D') != null)
 {
        $('#q_as_on_gteq_datetime').val($.urlParam('q%5Bas_on_gteq_datetime%5D'));
@@ -43,6 +87,8 @@ $(document).ready(function() {
     }
 		$(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details").hide()
 })
+
+
 
     $(".deployable_resources").on('click',function(){
     var id = $(this).attr('id')

@@ -1,0 +1,308 @@
+<span style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> TO <input type="text" id="datepickerto" class="onchange">
+Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pluck('name','id'))) %>
+<a href="#" id= "clikc_search" class="table_tools_button">Search </a>
+
+</span>
+<div id="initial_table"></div>
+<style type="text/css">
+	 table:not(.ui-datepicker-calendar) a:link {
+	color: #666;
+	font-weight: bold;
+	text-decoration:none;
+}
+ table:not(.ui-datepicker-calendar) a:visited {
+	color: #999999;
+	font-weight:bold;
+	text-decoration:none;
+}
+ table:not(.ui-datepicker-calendar) a:active,
+ table:not(.ui-datepicker-calendar) a:hover {
+	color: #bd5a35;
+	text-decoration:underline;
+}
+ table:not(.ui-datepicker-calendar) {
+	font-family:Arial, Helvetica, sans-serif;
+	color:#666;
+	font-size:12px;
+	text-shadow: 1px 1px 0px #fff;
+	background:#eaebec;
+	margin:20px;
+	border:#ccc 1px solid;
+
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+
+	-moz-box-shadow: 0 1px 2px #d1d1d1;
+	-webkit-box-shadow: 0 1px 2px #d1d1d1;
+	box-shadow: 0 1px 2px #d1d1d1;
+}
+ table:not(.ui-datepicker-calendar) th {
+	padding:21px 25px 22px 25px;
+	border-top:1px solid #fafafa;
+	border-bottom:1px solid #e0e0e0;
+
+	background: #ededed;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+	background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+}
+ table:not(.ui-datepicker-calendar) th:first-child {
+	text-align: left;
+	padding-left:20px;
+}
+ table:not(.ui-datepicker-calendar) tr:first-child th:first-child {
+	-moz-border-radius-topleft:3px;
+	-webkit-border-top-left-radius:3px;
+	border-top-left-radius:3px;
+}
+ table:not(.ui-datepicker-calendar) tr:first-child th:last-child {
+	-moz-border-radius-topright:3px;
+	-webkit-border-top-right-radius:3px;
+	border-top-right-radius:3px;
+}
+ table:not(.ui-datepicker-calendar) tr {
+	text-align: center;
+	padding-left:20px;
+}
+ table:not(.ui-datepicker-calendar) td:first-child {
+	text-align: left;
+	padding-left:20px;
+	border-left: 0;
+}
+ table:not(.ui-datepicker-calendar) td {
+	padding:18px;
+	border-top: 1px solid #ffffff;
+	border-bottom:1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+
+	background: #fafafa;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+	background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
+}
+ table:not(.ui-datepicker-calendar) tr.even td {
+	background: #f6f6f6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+	background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
+}
+ table:not(.ui-datepicker-calendar) tr:last-child td {
+	border-bottom:0;
+}
+ table:not(.ui-datepicker-calendar) tr:last-child td:first-child {
+	-moz-border-radius-bottomleft:3px;
+	-webkit-border-bottom-left-radius:3px;
+	border-bottom-left-radius:3px;
+}
+ table:not(.ui-datepicker-calendar) tr:last-child td:last-child {
+	-moz-border-radius-bottomright:3px;
+	-webkit-border-bottom-right-radius:3px;
+	border-bottom-right-radius:3px;
+}
+ table:not(.ui-datepicker-calendar) tr:hover td {
+	background: #f2f2f2;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+	background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
+}
+	
+</style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
+     $("#datepickerfrom").datepicker({
+        numberOfMonths: 1,
+        dateFormat: 'yy-mm-dd',
+        onSelect: function (selected) {
+            var dt = new Date(selected);
+            dt.setDate(dt.getDate() + 1);
+            $("#datepickerto").datepicker("option", "minDate", dt);
+        }
+    });
+    $("#datepickerto").datepicker({
+        numberOfMonths: 1,
+        dateFormat: 'yy-mm-dd',
+        onSelect: function (selected) {
+            var dt = new Date(selected);
+            dt.setDate(dt.getDate() - 1);
+            $("#datepickerfrom").datepicker("option", "maxDate", dt);
+        }
+    });
+		 var fullDate = new Date()
+  var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+  var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+    responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+$("#business_unit").val()+"&from_date="+currentDate+"&to_date="+currentDate+"&with_details=true")
+    var html_value = ""
+    value_1 = responce["data"]
+     $.each( responce["data"]["resource_efficiency_details"], function( index, value ){
+      value1 = Object.assign(value_1,value);
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+      })
+      $("#initial_table").html(html_value)
+        $.each($("td.billing_opportunity_loss,td.business_unit_billing_opportunity_loss"), function( index1, value1 ){
+     $(this).text("$"+$(this).text())
+      })
+        $.each($("td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
+     $(this).text($(this).text()+"%")
+      })
+      $.each($("td.active"),function(){
+        if ($(this).text() == "true"){
+        $(this).text("Active")
+        }
+        else{
+        $(this).text("Inactive")
+        }
+      }) 
+         $.each($("td.business_unit_billing_opportunity_loss,td.billing_opportunity_loss,td.deployable_resources,td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
+        $(this).addClass("text_link")
+        $(this).attr('data-popup-open', 'popup-1');
+      })
+         $("th.business_unit_utilization_percentage").text("Utilization %")
+         $("th.business_unit_billing_opportunity_loss").text("Billing Delta")
+         $("th.billing_opportunity_loss").text("Billing Delta")
+         $("th.admin_user_name").text("Resource")
+         $(".resource_efficiency_details,.business_unit_assigned_percentage,.business_unit_clocked_percentage,.assigned_hours,.clocked_hours,.utilization_hours,.working_hours,.bill_rate").hide()
+        pop_up_view(currentDate)
+
+          $('[data-popup-open]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+ 
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+      $("#clikc_search").on('click',function(){
+        from_date = $("#datepickerfrom").val()
+        to_date = $("#datepickerto").val()
+       responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+$("#business_unit").val()+"&from_date="+from_date+"&to_date="+to_date+"&with_details=true")
+    var html_value = ""
+    value_1 = responce["data"]
+     $.each( responce["data"]["resource_efficiency_details"], function( index, value ){
+      value1 = Object.assign(value_1,value);
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+      })
+      $("#initial_table").html(html_value)
+        $.each($("td.billing_opportunity_loss,td.business_unit_billing_opportunity_loss"), function( index1, value1 ){
+     $(this).text("$"+$(this).text())
+      })
+        $.each($("td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
+     $(this).text($(this).text()+"%")
+      })
+      $.each($("td.active"),function(){
+        if ($(this).text() == "true"){
+        $(this).text("Active")
+        }
+        else{
+        $(this).text("Inactive")
+        }
+      }) 
+         $.each($("td.business_unit_billing_opportunity_loss,td.billing_opportunity_loss,td.deployable_resources,td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
+        $(this).addClass("text_link")
+        $(this).attr('data-popup-open', 'popup-1');
+      })
+         $("th.business_unit_utilization_percentage").text("Utilization %")
+         $("th.business_unit_billing_opportunity_loss").text("Billing Delta")
+         $("th.billing_opportunity_loss").text("Billing Delta")
+         $("th.admin_user_name").text("Resource")
+         $(".resource_efficiency_details,.business_unit_assigned_percentage,.business_unit_clocked_percentage,.assigned_hours,.clocked_hours,.utilization_hours,.working_hours,.bill_rate").hide()
+        pop_up_view(currentDate)
+         pop_up_view(currentDate)
+         	 $('[data-popup-open]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+ 
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+    if ($("#initial_table").html() == ""){
+      	$("#initial_table").html("<br><br><span style ='margin-left: 450px;'><b>No Records Found In Date Range: "+currentDate+" to "+currentDate+" for Business Unit "+$("#business_unit option:selected").text()+"</b></span>")
+      }
+      })
+      $("#datepickerfrom").val(currentDate)
+      $("#datepickerto").val(currentDate)
+       if ($("#initial_table").html() == ""){
+      	$("#initial_table").html("<br><br><span style ='margin-left: 450px;'><b>No Records Found In Date Range: "+currentDate+" to "+currentDate+" for Business Unit "+$("#business_unit option:selected").text()+"</b></span>")
+      }
+         })
+
+      function pop_up_view(currentDate){
+  $(".assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_details").on('click',function(){
+    var id = 1
+    var from = "2016-11-18"
+    var to = "2016-11-19"
+    responce  = ajax_call("api/resource_efficiency?admin_user_id="+id+"&from_date="+from+"&to_date="+to+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    html_value += convert_ajax_to_htm(responce["data"]) 
+    $(".ajax_content").html(html_value)
+    if( (jQuery.inArray("clocked_percent",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".working_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+    if( (jQuery.inArray("assigned_percent",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".clocked_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+     if( (jQuery.inArray("utilization_percent",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".assigned_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+    if( (jQuery.inArray("billing_details",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".clocked_hours,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+    $(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details").hide()
+})
+     }
+         function return_only_t_data(responce){
+             var ajax_content_value = "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid black;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr>"
+           return ajax_content_value
+          }
+
+          function convert_ajax_to_htm(responce){
+   var ajax_content_value = "<table><tr>"
+           $.each(responce, function(key, value) {
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid black;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  });
+           ajax_content_value += "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid black;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr></table>"
+           return ajax_content_value
+          }
+
+	function ajax_call(url) {
+	    var responce = ""
+	 $.ajax({
+	        async: false,
+	        url: url,
+	          dataType: 'json',
+	        success: function (data) {
+	           responce =  data;
+	        }
+	    })
+	 return responce;
+	}
+
+
+  
+</script>

@@ -1,5 +1,8 @@
 $(document).ready(function() {
-	$(".col-expected_start,.col-pipeline_status_id,.hidden").hide()
+ 
+	// $(".col-expected_start,.col-pipeline_status_id,.hidden,.paginated_collection").hide()
+  responce  = ajax_call("api/pipeline_for_status?status_id=100&as_on="+"2017-01-01"+"&with_details=true")
+  $("#initial_table").html(convert_ajax_to_htm(responce))
 	$(".text_link").on('click',function(){
 		var status_id = $(this).closest('tr').find('td:eq(-1)').text()
 		var as_on = $(this).find(".hidden").html() + "-01"

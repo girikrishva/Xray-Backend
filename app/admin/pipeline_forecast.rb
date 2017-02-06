@@ -79,3 +79,40 @@ ActiveAdmin.register Pipeline , as: "Pipeline Forecast" do
     end
   end
 end
+
+
+# ActiveAdmin.register Pipeline , as: "Pipeline Forecast" do
+#   menu if: proc { is_menu_authorized? [I18n.t('role.manager')] }, label: "Pipeline Forecast", parent: I18n.t('menu.reports'), priority: 10
+
+# # See permitted parameters documentation:
+# # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
+# #
+# # permit_params :list, :of, :attributes, :on, :model
+# #
+# # or
+# #
+# # permit_params do
+# #   permitted = [:permitted, :attributes]
+# #   permitted << :other if params[:action] == 'create' && current_user.admin?
+# #   permitted
+# # end
+
+#   permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :updated_at, :updated_by, :ip_address
+#   config.filters = false
+
+#   config.clear_action_items!
+# config.batch_actions = false
+#   index  :download_links => false do
+#     script :src => javascript_path('pipeline_forecast.js'), :type => "text/javascript"
+#     render partial: "pipeline"
+#       div class:"popup","data-popup": "popup-1" do
+#       div class:"popup-inner",style:"overflow : auto;" do
+#         span class:"ajax_content" do 
+#         end
+#           a class:"popup-close","data-popup-close":"popup-1","href":"#" do
+#             "Close"
+#           end
+#       end
+#     end
+#   end
+# end

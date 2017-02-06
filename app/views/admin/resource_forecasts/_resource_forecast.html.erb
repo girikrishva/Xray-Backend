@@ -1,0 +1,292 @@
+<p>As On: <input type="text" id="datepicker"></p>
+<div id="initial_table"></div>
+<style type="text/css">
+	 table:not(.ui-datepicker-calendar) a:link {
+	color: #666;
+	font-weight: bold;
+	text-decoration:none;
+}
+ table:not(.ui-datepicker-calendar) a:visited {
+	color: #999999;
+	font-weight:bold;
+	text-decoration:none;
+}
+ table:not(.ui-datepicker-calendar) a:active,
+ table:not(.ui-datepicker-calendar) a:hover {
+	color: #bd5a35;
+	text-decoration:underline;
+}
+ table:not(.ui-datepicker-calendar) {
+	font-family:Arial, Helvetica, sans-serif;
+	color:#666;
+	font-size:12px;
+	text-shadow: 1px 1px 0px #fff;
+	background:#eaebec;
+	margin:20px;
+	border:#ccc 1px solid;
+
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+
+	-moz-box-shadow: 0 1px 2px #d1d1d1;
+	-webkit-box-shadow: 0 1px 2px #d1d1d1;
+	box-shadow: 0 1px 2px #d1d1d1;
+}
+ table:not(.ui-datepicker-calendar) th {
+	padding:21px 25px 22px 25px;
+	border-top:1px solid #fafafa;
+	border-bottom:1px solid #e0e0e0;
+
+	background: #ededed;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+	background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+}
+ table:not(.ui-datepicker-calendar) th:first-child {
+	text-align: left;
+	padding-left:20px;
+}
+ table:not(.ui-datepicker-calendar) tr:first-child th:first-child {
+	-moz-border-radius-topleft:3px;
+	-webkit-border-top-left-radius:3px;
+	border-top-left-radius:3px;
+}
+ table:not(.ui-datepicker-calendar) tr:first-child th:last-child {
+	-moz-border-radius-topright:3px;
+	-webkit-border-top-right-radius:3px;
+	border-top-right-radius:3px;
+}
+ table:not(.ui-datepicker-calendar) tr {
+	text-align: center;
+	padding-left:20px;
+}
+ table:not(.ui-datepicker-calendar) td:first-child {
+	text-align: left;
+	padding-left:20px;
+	border-left: 0;
+}
+ table:not(.ui-datepicker-calendar) td {
+	padding:18px;
+	border-top: 1px solid #ffffff;
+	border-bottom:1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+
+	background: #fafafa;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+	background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
+}
+ table:not(.ui-datepicker-calendar) tr.even td {
+	background: #f6f6f6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+	background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
+}
+ table:not(.ui-datepicker-calendar) tr:last-child td {
+	border-bottom:0;
+}
+ table:not(.ui-datepicker-calendar) tr:last-child td:first-child {
+	-moz-border-radius-bottomleft:3px;
+	-webkit-border-bottom-left-radius:3px;
+	border-bottom-left-radius:3px;
+}
+ table:not(.ui-datepicker-calendar) tr:last-child td:last-child {
+	-moz-border-radius-bottomright:3px;
+	-webkit-border-bottom-right-radius:3px;
+	border-bottom-right-radius:3px;
+}
+ table:not(.ui-datepicker-calendar) tr:hover td {
+	background: #f2f2f2;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+	background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
+}
+	
+</style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".pagination_information,.download_links,#index_table_resource_forecasts").hide()
+		$( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+		 var fullDate = new Date()
+  var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+  var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+    responce  = ajax_call("api/staffing_forecast?as_on="+currentDate+"&with_details=false")
+    var html_value = ""
+     $.each( responce["data"], function( index, value ){
+      value1 = Object.assign(value, value["resource_details"]);
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+      })
+      $("#initial_table").html(html_value) 
+        $.each($("td.total_resource_cost"), function( index1, value1 ){
+     $(this).text("$"+$(this).text())
+      })
+        $.each($("td.average_resource_cost"), function( index1, value1 ){
+     $(this).text("$"+$(this).text())
+      }) 
+         $.each($("td.staffing_required,td.staffing_fulfilled,td.deployable_resources"), function( index1, value1 ){
+        $(this).addClass("text_link")
+        $(this).attr('data-popup-open', 'popup-1');
+      })
+        pop_up_view(currentDate)
+
+
+      $("#datepicker").on('change',function(){
+      	currentDate = $(this).val()
+      	 responce  = ajax_call("api/staffing_forecast?as_on="+currentDate+"&with_details=false")
+    var html_value = ""
+     $.each( responce["data"], function( index, value ){
+      value1 = Object.assign(value, value["resource_details"]);
+
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+
+
+      })
+
+      $("#initial_table").html(html_value) 
+        $.each($("td.total_resource_cost"), function( index1, value1 ){
+     $(this).text("$"+$(this).text())
+      })
+        $.each($("td.average_resource_cost"), function( index1, value1 ){
+     $(this).text("$"+$(this).text())
+      }) 
+         $.each($("td.staffing_required,td.staffing_fulfilled,td.deployable_resources"), function( index1, value1 ){
+        $(this).addClass("text_link")
+        $(this).attr('data-popup-open', 'popup-1');
+
+      })
+         pop_up_view(currentDate)
+         	 $('[data-popup-open]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+ 
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+    if ($("#initial_table").html() == ""){
+      	$("#initial_table").html("<span style ='margin-left: 450px;'><b>No Records Found For Date: "+currentDate+"</b></span>")
+      }
+      })
+      $("#datepicker").val(currentDate)
+       if ($("#initial_table").html() == ""){
+      	$("#initial_table").html("<span style ='margin-left: 450px;'><b>No Records Found For Date: "+currentDate+"</b></span>")
+      }
+         })
+
+      function pop_up_view(currentDate){
+         $(".staffing_required,.deployable_resources,.staffing_fulfilled").on('click',function(){
+		responce  = ajax_call("api/staffing_forecast?as_on="+currentDate+"&with_details=true")
+		var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+		$.each( responce["data"], function( index, value ){
+                if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+            });
+            html_value += "</table>"
+            if( (jQuery.inArray("staffing_required",$(this).attr('class').split(" ")))== 0)
+            {
+              $.each( responce["data"], function( index, value ){
+                if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value["staffing_required_details"][0]).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value["staffing_required_details"][0])
+                }
+            });
+              html_value += "</table>"
+            }
+             if( (jQuery.inArray("staffing_fulfilled",$(this).attr('class').split(" ")))== 0)
+            {
+                $.each( responce["data"], function( index, value ){
+                if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value["staffing_fulfilled_details"][0]).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value["staffing_fulfilled_details"][0])
+                }
+                });
+                html_value += "</table>"
+              }
+              if( (jQuery.inArray("deployable_resources",$(this).attr('class').split(" ")))== 0)
+            {
+                    $.each( responce["data"], function( index, value ){
+                if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value["deployable_resources_details"][0]).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value["deployable_resources_details"][0])
+                }
+                });
+                html_value += "</table>"
+              }
+            
+		$(".ajax_content").html(html_value)
+		$(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details,.staffing_fulfilled_details,.deployable_resources_details,.id,.admin_user_id").hide()
+	
+})
+     }
+         function return_only_t_data(responce){
+             var ajax_content_value = "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid black;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr>"
+           return ajax_content_value
+          }
+
+          function convert_ajax_to_htm(responce){
+   var ajax_content_value = "<table><tr>"
+           $.each(responce, function(key, value) {
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid black;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  });
+           ajax_content_value += "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid black;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr></table>"
+           return ajax_content_value
+          }
+
+	function ajax_call(url) {
+	    var responce = ""
+	 $.ajax({
+	        async: false,
+	        url: url,
+	          dataType: 'json',
+	        success: function (data) {
+	           responce =  data;
+	        }
+	    })
+	 return responce;
+	}
+
+
+    $('[data-popup-open]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+ 
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+</script>
