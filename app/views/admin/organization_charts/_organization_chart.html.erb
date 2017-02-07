@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link id="themecss" rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
+    <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+</head>
+<body class="theme-light">
+<div class="container">
+    <div id="treeview"></div>
+</div>
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#treeview").shieldTreeView({
+            textTemplate: "{Name}",
+            hasChildrenTemplate: "{HasChildren}",
+            dataSource: new shield.RecursiveDataSource({
+                remote: {
+                    read: function (params, success, error, extra) {
+                        if (!extra) {
+                            $.ajax({
+                                url: "/admin/get_team"
+                            }).done(function (data) {
+                                success(data, false, extra);
+                            }).fail(function () {
+                                success([], false, extra);
+                            });
+                        }
+                        else {
+                            $.ajax({
+                                url: extra.parent.ChildrenUrl
+                            }).done(function (data) {
+                                success(data, false, extra);
+                            }).fail(function () {
+                                success([], false, extra);
+                            });
+                        }
+                    }
+                }
+            })
+        });
+    });
+</script>
+<style>
+    .container
+    {
+        max-width: 400px;
+        margin: auto;
+    }
+</style>
+</body>
+</html>
+

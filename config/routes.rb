@@ -7,7 +7,8 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
   get '/admin/project_pop_up' => 'admin/projects#pop_up_view'
-
+  get '/admin/get_team' => 'admin/organization_charts#get_users'
+  
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
