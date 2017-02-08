@@ -1,108 +1,45 @@
-<span style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> TO <input type="text" id="datepickerto" class="onchange">
+<div style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> TO <input type="text" id="datepickerto" class="onchange">
 Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pluck('name','id'))) %>
 <a href="#" id= "clikc_search" class="table_tools_button">Search </a>
 
-</span>
+</div>
 <div id="initial_table"></div>
 <style type="text/css">
-	 table:not(.ui-datepicker-calendar) a:link {
-	color: #666;
-	font-weight: bold;
-	text-decoration:none;
-}
- table:not(.ui-datepicker-calendar) a:visited {
-	color: #999999;
-	font-weight:bold;
-	text-decoration:none;
-}
- table:not(.ui-datepicker-calendar) a:active,
- table:not(.ui-datepicker-calendar) a:hover {
-	color: #bd5a35;
-	text-decoration:underline;
-}
- table:not(.ui-datepicker-calendar) {
-	font-family:Arial, Helvetica, sans-serif;
-	color:#666;
-	font-size:12px;
-	text-shadow: 1px 1px 0px #fff;
-	background:#eaebec;
-	margin:20px;
-	border:#ccc 1px solid;
+  .table {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+  }
+  table {
+      background-color: transparent;
+  }
+  table {
+      border-spacing: 0;
+      border-collapse: collapse;
+  }
 
-	-moz-border-radius:3px;
-	-webkit-border-radius:3px;
-	border-radius:3px;
-
-	-moz-box-shadow: 0 1px 2px #d1d1d1;
-	-webkit-box-shadow: 0 1px 2px #d1d1d1;
-	box-shadow: 0 1px 2px #d1d1d1;
-}
- table:not(.ui-datepicker-calendar) th {
-	padding:21px 25px 22px 25px;
-	border-top:1px solid #fafafa;
-	border-bottom:1px solid #e0e0e0;
-
-	background: #ededed;
-	background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
-	background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
-}
- table:not(.ui-datepicker-calendar) th:first-child {
-	text-align: left;
-	padding-left:20px;
-}
- table:not(.ui-datepicker-calendar) tr:first-child th:first-child {
-	-moz-border-radius-topleft:3px;
-	-webkit-border-top-left-radius:3px;
-	border-top-left-radius:3px;
-}
- table:not(.ui-datepicker-calendar) tr:first-child th:last-child {
-	-moz-border-radius-topright:3px;
-	-webkit-border-top-right-radius:3px;
-	border-top-right-radius:3px;
-}
- table:not(.ui-datepicker-calendar) tr {
-	text-align: center;
-	padding-left:20px;
-}
- table:not(.ui-datepicker-calendar) td:first-child {
-	text-align: left;
-	padding-left:20px;
-	border-left: 0;
-}
- table:not(.ui-datepicker-calendar) td {
-	padding:18px;
-	border-top: 1px solid #ffffff;
-	border-bottom:1px solid #e0e0e0;
-	border-left: 1px solid #e0e0e0;
-
-	background: #fafafa;
-	background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
-	background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
-}
- table:not(.ui-datepicker-calendar) tr.even td {
-	background: #f6f6f6;
-	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
-	background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
-}
- table:not(.ui-datepicker-calendar) tr:last-child td {
-	border-bottom:0;
-}
- table:not(.ui-datepicker-calendar) tr:last-child td:first-child {
-	-moz-border-radius-bottomleft:3px;
-	-webkit-border-bottom-left-radius:3px;
-	border-bottom-left-radius:3px;
-}
- table:not(.ui-datepicker-calendar) tr:last-child td:last-child {
-	-moz-border-radius-bottomright:3px;
-	-webkit-border-bottom-right-radius:3px;
-	border-bottom-right-radius:3px;
-}
- table:not(.ui-datepicker-calendar) tr:hover td {
-	background: #f2f2f2;
-	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
-	background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
-}
-	
+  .table-striped>tbody>tr:nth-of-type(odd) {
+      background-color: #E2E2E2;
+  }
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 10px;
+      line-height: 1.42857143;
+      vertical-align: top;
+      border-top: 1px solid #ddd;
+  }
+  .table .table-row-header {
+    background:#636363 !important;
+    color:#FFF;
+  }
+  td, th {
+      padding: 0;
+  }
+  .table th , .table td{
+      font-size: 14px;
+  }
+  .table th {
+    font-weight: 700;
+  }
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -271,20 +208,20 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
          function return_only_t_data(responce){
              var ajax_content_value = "</tr><tr>"
              $.each(responce, function(key, value) {
-                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid black;' >"+value+"</td>" 
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
                   });
            ajax_content_value +="</tr>"
            return ajax_content_value
           }
 
           function convert_ajax_to_htm(responce){
-   var ajax_content_value = "<table><tr>"
+   var ajax_content_value = "<table class = 'table table-striped'><tr class= 'table-row-header'>"
            $.each(responce, function(key, value) {
-                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid black;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {
-                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid black;' >"+value+"</td>" 
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
                   });
            ajax_content_value +="</tr></table>"
            return ajax_content_value

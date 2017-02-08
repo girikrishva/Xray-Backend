@@ -87,12 +87,16 @@ config.batch_actions = false
     # end
      render partial: "resource_utilization"
     div class:"popup","data-popup": "popup-1" do
-      div class:"popup-inner",style:"overflow : auto;" do
-        span class:"ajax_content" do 
-        end
-          a class:"popup-close","data-popup-close":"popup-1","href":"#" do
-            "Close"
+      div class:"popup-inner" do
+          div class:"modal-header" do 
+            a class:"popup-close","data-popup-close":"popup-1","href":"#" do
+              "X"
+            end
           end
+        div class:"ajax_content_container" do 
+          div class:"ajax_content" do 
+          end
+        end
       end
     end
   end
