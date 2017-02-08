@@ -212,6 +212,12 @@ ActiveAdmin.register Pipeline do
       result = Pipeline.pipeline_for_status(status_id, as_on, with_details)
       render json: result
     end
+
+    def pipeline_for_all_statuses
+      as_on = params[:as_on]
+      result = Pipeline.pipeline_for_all_statuses(as_on)
+      render json: result
+    end
   end
 
   form do |f|

@@ -131,4 +131,19 @@ class Pipeline < ActiveRecord::Base
     end
     result
   end
+
+  def self.pipeline_for_all_statuses(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    result = []
+    PipelineStatus.order('rank').each do |ps|
+      pipeline_status_detail = {}
+      pipeline_status_detail['pipeline_status'] = ps.name
+      (-6..5).each do |month_offset|
+        year_month = as_on + month_offset.month
+        pipeline_status_detail[year_month.to_s] = Pipeline.pipeline_for_status(ps.id, year_month, false)
+      end
+      result << pipeline_status_detail
+    end
+    result
+  end
 end
