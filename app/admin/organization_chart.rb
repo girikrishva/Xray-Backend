@@ -25,14 +25,8 @@ config.batch_actions = false
     end
 
     def get_users
-      @users = AdminUser.where(manager_id:params["id"])
-      a = []
-      @users.each do |user|
-        count =  AdminUser.where(:manager_id =>user.id).count()
-        user_name = count > 0 ? "#{user.name} (#{count})" : user.name 
-        a << {"Name": user_name,id:user.id,"ChildrenUrl":"/admin/get_team?id=#{user.id}","HasChildren": count > 0 ? true : false}
-      end
-      render json: a
+      a = AdminUser.get_records(params[:id])
+      render json: a[0]
     end
     def scoped_collection
       ids = Resource.latest(Date.today).collect(&:id)

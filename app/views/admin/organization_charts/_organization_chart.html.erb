@@ -1,53 +1,37 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <link id="themecss" rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
-    <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
-</head>
-<body class="theme-light">
-<div class="container">
-    <div id="treeview"></div>
-</div>
-<script type="text/javascript">
-    jQuery(function ($) {
-        $("#treeview").shieldTreeView({
-            textTemplate: "{Name}",
-            hasChildrenTemplate: "{HasChildren}",
-            dataSource: new shield.RecursiveDataSource({
-                remote: {
-                    read: function (params, success, error, extra) {
-                        if (!extra) {
-                            $.ajax({
-                                url: "/admin/get_team"
-                            }).done(function (data) {
-                                success(data, false, extra);
-                            }).fail(function () {
-                                success([], false, extra);
-                            });
-                        }
-                        else {
-                            $.ajax({
-                                url: extra.parent.ChildrenUrl
-                            }).done(function (data) {
-                                success(data, false, extra);
-                            }).fail(function () {
-                                success([], false, extra);
-                            });
-                        }
-                    }
-                }
-            })
-        });
-    });
-</script>
-<style>
-    .container
-    {
-        max-width: 400px;
-        margin: auto;
-    }
-</style>
-</body>
-</html>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="../img/logo.ico">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/FortAwesome/Font-Awesome/master/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://dabeng.github.io/OrgChart/css/jquery.orgchart.css">
+    <link rel="stylesheet" href="http://dabeng.github.io/OrgChart/css/style.css">
 
+</head>
+<body>
+  <div id="chart-container"></div>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script type="text/javascript" src="https://cdn.rawgit.com/jakerella/jquery-mockjax/master/dist/jquery.mockjax.min.js"></script>
+  <script type="text/javascript" src="http://dabeng.github.io/OrgChart/js/jquery.orgchart.js"></script>
+  <!-- <script type="text/javascript" src="http://dabeng.github.io/OrgChart/ondemand-loading-data/scripts.js"></script> -->
+  </body>
+</html>
+<script type="text/javascript">
+ $.ajax({
+            async: false,
+            url: "/admin/get_team?id="+'<%=current_admin_user.id%>',
+              dataType: 'json',
+            success: function (data) {
+               datasource =  data;
+            }
+        })
+$('#chart-container').orgchart({
+  'data' : datasource,
+  'depth': 2,
+  'nodeContent': 'title'
+});
+// $(".orgchart").first().hide()
+</script>
