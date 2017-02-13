@@ -212,7 +212,7 @@ class AdminUser < ActiveRecord::Base
     utilization_percentage = (clocked_hours / working_hours) * 100 rescue 0
     bill_rate = Resource.latest_for(admin_user_id, to_date).bill_rate rescue AdminUser.find(admin_user_id).bill_rate
     details['business_unit'] = admin_user.business_unit.name
-    details['admin_user_id'] = admin_user.id
+    details['admin_user_id'] = admin_user.admin_user_id
     details['admin_user_name'] = admin_user.name
     details['active'] = admin_user.active
     details['designation'] = admin_user.designation.name
