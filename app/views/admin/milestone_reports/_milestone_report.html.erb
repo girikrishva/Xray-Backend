@@ -1,5 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
     <head>
+   <p> <div style="margin-left: 23px;">As On: <input type="text" id="datepickerfrom" class="onchange">
+Due Status <%= select_tag("due_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %>
+Completion Status <%= select_tag("completion_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %>
+<a href="#" id= "clikc_search" class="table_tools_button">Search </a>
+<div id="initial_table"></div></div></p>
         <script type="text/javascript" src="https://tympanus.net/Tutorials/FancySlidingForm/sliding.form.js"></script>
     </head>
     <style>
@@ -40,19 +45,25 @@
                             <a href="#">Invoicing Milestones</a>
                         </li>
                         <li>
-                            <a href="#">Payment Milestones</a>
+                            <a href="#">Collection Milestones</a>
+                        </li>
+                        <li>
+                            <a href="#">Reconciliation Milestones</a>
                         </li>
                     </ul>
                 </div>
                 <div id="steps">
-                        <fieldset class="step">
-                        Information related to Delivery Milestones Yes
+                        <fieldset class="step step1">
+                        
                         </fieldset>
-                        <fieldset class="step">
-                        Information related to Invoicing Milestones Yes
+                        <fieldset class="step step2">
+                        
                         </fieldset>
-                        <fieldset class="step">
-                        Information related to Payment Milestones Yes
+                        <fieldset class="step step3">
+                        
+                        </fieldset>
+                         <fieldset class="step step4">
+                        
                         </fieldset>
                 </div>
              
@@ -72,9 +83,9 @@ body{
     font-family:"Century Gothic", Helvetica, sans-serif;
 }
 #content1{
-    margin:15px auto;
+    /*margin:15px auto;*/
     text-align:center;
-    width:600px;
+    width:1400px;
     position:relative;
     height:100%;
 }
@@ -87,17 +98,17 @@ body{
     border-radius:10px;
     border:2px solid #fff;
     background-color:#f9f9f9;
-    width:600px;
+    width:1400px;
     overflow:hidden;
 }
 #steps{
-    width:600px;
+    width:1400px;
     /*height:320px;*/
     overflow:hidden;
 }
 .step{
     float:left;
-    width:600px;
+    width:1400px;
     /*height:320px;*/
 }
 #navigation{
@@ -270,5 +281,322 @@ span.error{
     color:#666;
     text-shadow:1px 1px 1px #fff;
 }
+ .table {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+  }
+  table {
+      background-color: transparent;
+  }
+  table {
+      border-spacing: 0;
+      border-collapse: collapse;
+  }
 
+  .table-striped>tbody>tr:nth-of-type(odd) {
+      background-color: #E2E2E2;
+  }
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 10px;
+      line-height: 1.42857143;
+      vertical-align: top;
+      border-top: 1px solid #ddd;
+  }
+  .table .table-row-header {
+    background:#636363 !important;
+    color:#FFF;
+  }
+  td, th {
+      padding: 0;
+  }
+  .table th , .table td{
+      font-size: 14px;
+  }
+  .table th {
+    font-weight: 700;
+  }
 </style>
+<script type="text/javascript">
+        $(".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
+   $( "#datepickerfrom" ).datepicker({ dateFormat: 'yy-mm-dd' });
+         var fullDate = new Date()
+  var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+  var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+  currentDate = "2016-12-01"
+  $("#clikc_search").on('click',function(){
+  //start 
+  responce  = ajax_call("api/delivery_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+    var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+      $(".step1").html(html_value)
+       $.each($("td.name"), function( index1, value1 ){
+     $(this).addClass("text_link")
+     $(this).addClass("delivery_milestones_name")
+     $(this).attr('data-popup-open', 'popup-1');
+      })
+     pop_up_view(currentDate)
+         responce  = ajax_call("api/invoicing_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+    var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+    
+     $(".step2").html(html_value)
+      $.each($(".step2").find("td.name"), function( index1, value1 ){
+     $(this).addClass("text_link")
+     $(this).addClass("invoicing_milestones_name")
+     $(this).attr('data-popup-open', 'popup-1');
+      })
+     pop_up_view(currentDate)
+     responce  = ajax_call("api/collection_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+    var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+      $(".step3").html(html_value)
+      $.each($(".step3").find("td.narrative"), function( index1, value1 ){
+     $(this).addClass("text_link")
+     $(this).addClass("collection_milestones_name")
+     $(this).attr('data-popup-open', 'popup-1');
+      })
+      pop_up_view(currentDate)
+        responce  = ajax_call("api/reconciliation_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+    var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+      $(".step4").html(html_value)
+      $.each($(".step4").find("td.narrative"), function( index1, value1 ){
+     $(this).addClass("text_link")
+     $(this).addClass("reconciliation_milestones_name")
+     $(this).attr('data-popup-open', 'popup-1');
+      })
+      pop_up_view(currentDate)
+  })
+  $( "#datepickerfrom" ).val(currentDate)
+    responce  = ajax_call("api/delivery_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+    var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+      $(".step1").html(html_value)
+       $.each($("td.name"), function( index1, value1 ){
+     $(this).addClass("text_link")
+     $(this).addClass("delivery_milestones_name")
+     $(this).attr('data-popup-open', 'popup-1');
+      })
+     pop_up_view(currentDate)
+         responce  = ajax_call("api/invoicing_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+    var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+    
+     $(".step2").html(html_value)
+      $.each($(".step2").find("td.name"), function( index1, value1 ){
+     $(this).addClass("text_link")
+     $(this).addClass("invoicing_milestones_name")
+     $(this).attr('data-popup-open', 'popup-1');
+      })
+     pop_up_view(currentDate)
+     responce  = ajax_call("api/collection_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+    var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+      $(".step3").html(html_value)
+      $.each($(".step3").find("td.narrative"), function( index1, value1 ){
+     $(this).addClass("text_link")
+     $(this).addClass("collection_milestones_name")
+     $(this).attr('data-popup-open', 'popup-1');
+      })
+      pop_up_view(currentDate)
+        responce  = ajax_call("api/reconciliation_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+    var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+      $(".step4").html(html_value)
+      $.each($(".step4").find("td.narrative"), function( index1, value1 ){
+     $(this).addClass("text_link")
+     $(this).addClass("reconciliation_milestones_name")
+     $(this).attr('data-popup-open', 'popup-1');
+      })
+      pop_up_view(currentDate)
+       function pop_up_view(currentDate){
+             $('[data-popup-open]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+ 
+    
+    $(".delivery_milestones_name").on('click',function(){
+        responce  = ajax_call("api/delivery_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+     $.each( responce, function( index, value ){
+        $.each( value["invoicing_milestones"], function( index1, value1 ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+            })
+      })
+    $(".ajax_content").html(html_value)
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+    })
+    $(".invoicing_milestones_name").on('click',function(){
+        responce  = ajax_call("api/invoicing_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+     $.each( responce, function( index, value ){
+        $.each( value["delivery_milestones"], function( index1, value1 ){
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+            })
+      })
+    $(".ajax_content").html(html_value)
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+    })
+
+      $(".collection_milestones_name").on('click',function(){
+        responce  = ajax_call("api/collection_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+     $.each( responce, function( index, value ){
+        $.each( value["invoice_lines"], function( index1, value1 ){
+         if ((index  ==  0) || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+            })
+      })
+    $(".ajax_content").html(html_value)
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+    })
+
+      $(".reconciliation_milestones_name").on('click',function(){
+        responce  = ajax_call("api/reconciliation_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+     $.each( responce, function( index, value ){
+        $.each( value["payment_lines"], function( index1, value1 ){
+         if ((index  ==  0) || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+            })
+      })
+    $(".ajax_content").html(html_value)
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+    })
+}   
+function return_only_t_data(responce){
+             var ajax_content_value = "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr>"
+           return ajax_content_value
+          }
+
+
+
+          function convert_ajax_to_htm(responce){
+   var ajax_content_value = "<table class = 'table table-striped'><tr class= 'table-row-header'>"
+           $.each(responce, function(key, value) {
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  });
+           ajax_content_value += "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr></table>"
+           return ajax_content_value
+          }
+
+
+    function ajax_call(url) {
+        var responce = ""
+     $.ajax({
+            async: false,
+            url: url,
+              dataType: 'json',
+            success: function (data) {
+               responce =  data;
+            }
+        })
+     return responce;
+    }
+</script>

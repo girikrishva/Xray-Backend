@@ -1,6 +1,6 @@
-<div style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> TO <input type="text" id="datepickerto" class="onchange">
+<p><div style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> TO <input type="text" id="datepickerto" class="onchange">
 Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pluck('name','id'))) %>
-<a href="#" id= "clikc_search" class="table_tools_button">Search </a>
+<a href="#" id= "clikc_search" class="table_tools_button">Search </a></div></p>
 
 </div>
 <div id="initial_table"></div>
@@ -132,6 +132,7 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
                 }
       })
       $("#initial_table").html(html_value)
+      $(".admin_user_id").hide()
         $.each($("td.billing_opportunity_loss,td.business_unit_billing_opportunity_loss"), function( index1, value1 ){
      $(this).text("$"+$(this).text())
       })
@@ -183,27 +184,56 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
 
       function pop_up_view(currentDate){
   $(".assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_details").on('click',function(){
-    var id = 1
-    var from = "2016-11-18"
-    var to = "2016-11-19"
+    var id = $(this).parent().find(".admin_user_id").text()
+    var from = $("#datepickerfrom").val()
+    var to = $("#datepickerto").val()
     responce  = ajax_call("api/resource_efficiency?admin_user_id="+id+"&from_date="+from+"&to_date="+to+"&with_details=true")
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
     html_value += convert_ajax_to_htm(responce["data"]) 
     $(".ajax_content").html(html_value)
-    if( (jQuery.inArray("clocked_percent",$(this).attr('class').split(" ")))== 0){
+
+    if( (jQuery.inArray("clocked_percentage",$(this).attr('class').split(" ")))== 0){
     $(".popup").find(".working_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
     }
-    if( (jQuery.inArray("assigned_percent",$(this).attr('class').split(" ")))== 0){
+    if( (jQuery.inArray("assigned_percentage",$(this).attr('class').split(" ")))== 0){
     $(".popup").find(".clocked_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
     }
-     if( (jQuery.inArray("utilization_percent",$(this).attr('class').split(" ")))== 0){
+     if( (jQuery.inArray("utilization_percentage",$(this).attr('class').split(" ")))== 0){
     $(".popup").find(".assigned_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
     }
     if( (jQuery.inArray("billing_details",$(this).attr('class').split(" ")))== 0){
     $(".popup").find(".clocked_hours,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
     }
     $(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details").hide()
+    $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>Business Unit:"+$("#business_unit").find('option:selected').text()+" From: "+$("#datepickerfrom").val()+" TO: "+$("#datepickerto").val()+"</span>")
+    $(".hiddding_header").hide()
+    $(".hiddding_header").first().show()
 })
+  $(".business_unit_utilization_percentage,.business_unit_billing_opportunity_loss").on('click',function(){
+    var id = $("#business_unit").val()
+    var from = $("#datepickerfrom").val()
+    var to = $("#datepickerto").val()
+    responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+id+"&from_date="+from+"&to_date="+to+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+      $.each( responce["data"]["resource_efficiency_details"], function( index, value ){
+                if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+            });
+    $(".ajax_content").html(html_value)
+    if( (jQuery.inArray("business_unit_utilization_percentage",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".business_unit,.admin_user_id,.assigned_hours,.clocked_percentage,.billing_opportunity_loss,.bill_rate,.assigned_percentage,.billing_opportunity_loss,.clocked_hours,.working_hours").hide()
+    }
+     if( (jQuery.inArray("business_unit_billing_opportunity_loss",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".business_unit,.admin_user_id,.assigned_hours,.clocked_percentage,.billing_opportunity_loss,.bill_rate,.assigned_percentage,.utilization_percentage,.clocked_hours,.working_hours").hide()
+    }
+     $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>Business Unit:"+$("#business_unit").find('option:selected').text()+" From: "+$("#datepickerfrom").val()+" TO: "+$("#datepickerto").val()+"</span>")
+    $(".hiddding_header").hide()
+    $(".hiddding_header").first().show()
+  })
      }
          function return_only_t_data(responce){
              var ajax_content_value = "</tr><tr>"
