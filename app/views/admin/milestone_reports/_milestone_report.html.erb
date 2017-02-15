@@ -323,7 +323,7 @@ span.error{
          var fullDate = new Date()
   var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
   var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
-  currentDate = "2016-12-01"
+  // currentDate = "2016-12-01"
   $("#clikc_search").on('click',function(){
   //start 
   responce  = ajax_call("api/delivery_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
