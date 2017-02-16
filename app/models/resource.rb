@@ -93,7 +93,7 @@ class Resource < ActiveRecord::Base
     end
   end
 
-  def self.latest(as_on)
+  def self.latest(as_on = Date.today)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     resource_ids = []
     Resource.all.each do |resource|
@@ -114,24 +114,24 @@ class Resource < ActiveRecord::Base
     Resource.where('id in (?)', resource_ids)
   end
 
-  def self.resource_distribution_combos(as_on, with_details)
+  def self.resource_distribution_combos(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    with_details = (with_details.to_s == 'true') ? true : false
     data = []
     Resource.latest(as_on).each do |r|
       details = {}
+      details['business_unit_id'] = r.admin_user.business_unit.id
       details['business_unit'] = r.admin_user.business_unit.name
+      details['skill_id'] = r.skill.id
       details['skill'] = r.skill.name
+      details['designation_id'] = r.admin_user.designation.id
       details['designation'] = r.admin_user.designation.name
-      details['resource_details'] = Resource.resource_details(r.admin_user.business_unit.id, r.skill_id, r.admin_user.designation_id, as_on, with_details)
+      details['resource_details'] = Resource.resource_details(r.admin_user.business_unit.id, r.skill_id, r.admin_user.designation_id, as_on, false)
       data << details
     end
     result = {}
     result['data'] = data.sort_by{|x| [x['business_unit'], x['skill'], x['designation']]}
     result
   end
-
-  private
 
   def self.resource_details(business_unit_id, skill_id, designation_id, as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
