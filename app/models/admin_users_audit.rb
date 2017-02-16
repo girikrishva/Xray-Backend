@@ -94,13 +94,16 @@ class AdminUsersAudit < ActiveRecord::Base
   def self.inactive_users_outflow(from_date, to_date)
     from_date = Date.parse(from_date)
     to_date = Date.parse(to_date)
-    with_details = (with_details.to_s == 'true') ? true : false
     data = {}
     lower_date = from_date
     (from_date..to_date).each do |d|
-      if (d - lower_date) > 22
-        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
-        next
+      if d > from_date
+        if d == d.end_of_month or d == to_date
+          days_in_month = [d - lower_date + 1, Rails.configuration.max_work_days_per_month].min
+          lower_date = Date.parse((d + 1).year.to_s + '-' + (d + 1).month.to_s + '-' + '1'.to_s)
+        else
+          next
+        end
       end
       month_year_key = AdminUsersAudit.month_year(d)
       AdminUsersAudit.inactive_users(d).each do |aua|
@@ -114,7 +117,7 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          amount = aua.cost_rate * Rails.configuration.max_work_hours_per_day
+          amount = days_in_month * aua.cost_rate * Rails.configuration.max_work_hours_per_day
           if !data[user_key].has_key?('user_total')
             data[user_key]['user_total'] = amount
           else
@@ -137,9 +140,13 @@ class AdminUsersAudit < ActiveRecord::Base
     data = {}
     lower_date = from_date
     (from_date..to_date).each do |d|
-      if (d - lower_date) > 22
-        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
-        next
+      if d > from_date
+        if d == d.end_of_month or d == to_date
+          days_in_month = [d - lower_date + 1, Rails.configuration.max_work_days_per_month].min
+          lower_date = Date.parse((d + 1).year.to_s + '-' + (d + 1).month.to_s + '-' + '1'.to_s)
+        else
+          next
+        end
       end
       month_year_key = AdminUsersAudit.month_year(d)
       AdminUsersAudit.all_users(d).each do |aua|
@@ -153,7 +160,7 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          amount = aua.cost_rate * Rails.configuration.max_work_hours_per_day
+          amount = days_in_month * aua.cost_rate * Rails.configuration.max_work_hours_per_day
           if !data[user_key].has_key?('user_total')
             data[user_key]['user_total'] = amount
           else
@@ -176,9 +183,12 @@ class AdminUsersAudit < ActiveRecord::Base
     data = {}
     lower_date = from_date
     (from_date..to_date).each do |d|
-      if (d - lower_date) > 22
-        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
-        next
+      if d > from_date
+        if d == d.end_of_month or d == to_date
+          lower_date = [Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s), from_date].max
+        else
+          next
+        end
       end
       month_year_key = AdminUsersAudit.month_year(d)
       AdminUsersAudit.active_users(d).each do |aua|
@@ -192,7 +202,7 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, lower_date, d)
           if !data[user_key].has_key?('user_total')
             data[user_key]['user_total'] = amount
           else
@@ -215,9 +225,12 @@ class AdminUsersAudit < ActiveRecord::Base
     data = {}
     lower_date = from_date
     (from_date..to_date).each do |d|
-      if (d - lower_date) > 22
-        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
-        next
+      if d > from_date
+        if d == d.end_of_month or d == to_date
+          lower_date = [Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s), from_date].max
+        else
+          next
+        end
       end
       month_year_key = AdminUsersAudit.month_year(d)
       AdminUsersAudit.inactive_users(d).each do |aua|
@@ -231,7 +244,7 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, lower_date, d)
           if !data[user_key].has_key?('user_total')
             data[user_key]['user_total'] = amount
           else
@@ -254,9 +267,12 @@ class AdminUsersAudit < ActiveRecord::Base
     data = {}
     lower_date = from_date
     (from_date..to_date).each do |d|
-      if (d - lower_date) > 22
-        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
-        next
+      if d > from_date
+        if d == d.end_of_month or d == to_date
+          lower_date = [Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s), from_date].max
+        else
+          next
+        end
       end
       month_year_key = AdminUsersAudit.month_year(d)
       AdminUsersAudit.all_users(d).each do |aua|
@@ -270,7 +286,7 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
           data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
           data[user_key]['active'] = aua.active.to_s
-          amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)
+          amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, lower_date, d)
           if !data[user_key].has_key?('user_total')
             data[user_key]['user_total'] = amount
           else
