@@ -304,119 +304,47 @@ class AdminUsersAudit < ActiveRecord::Base
   end
 
   def self.active_users_netflow(from_date, to_date)
-    from_date = Date.parse(from_date)
-    to_date = Date.parse(to_date)
     data = {}
-    lower_date = from_date
-    (from_date..to_date).each do |d|
-      if (d - lower_date) > 22
-        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
-        next
-      end
-      month_year_key = AdminUsersAudit.month_year(d)
-      AdminUsersAudit.active_users(d).each do |aua|
-        user_key = aua.admin_user_id
-        if !data.has_key?(user_key)
-          data[user_key] = {}
-        else
-          data[user_key]['id'] = user_key
-          data[user_key]['name'] = aua.name
-          data[user_key]['business_unit'] = aua.business_unit.name
-          data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
-          data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
-          data[user_key]['active'] = aua.active.to_s
-          amount = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
-          if !data[user_key].has_key?('user_total')
-            data[user_key]['user_total'] = amount
-          else
-            data[user_key]['user_total'] += amount
-          end
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = amount
-          else
-            data[user_key][month_year_key] += amount
-          end
+    ouflow_data = AdminUsersAudit.active_users_outflow(from_date, to_date)
+    inflow_data = AdminUsersAudit.active_users_inflow(from_date, to_date)
+    inflow_data.keys.each do |x|
+      inflow_data[x].keys.each do |y|
+        if y == 'user_total' or y[y.length - 5, y.length] == 'AMOUNT'
+          inflow_data[x][y] -= ouflow_data[x][y]
         end
       end
     end
+    data = inflow_data
     data
   end
 
   def self.inactive_users_netflow(from_date, to_date)
-    from_date = Date.parse(from_date)
-    to_date = Date.parse(to_date)
     data = {}
-    lower_date = from_date
-    (from_date..to_date).each do |d|
-      if (d - lower_date) > 22
-        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
-        next
-      end
-      month_year_key = AdminUsersAudit.month_year(d)
-      AdminUsersAudit.inactive_users(d).each do |aua|
-        user_key = aua.admin_user_id
-        if !data.has_key?(user_key)
-          data[user_key] = {}
-        else
-          data[user_key]['id'] = user_key
-          data[user_key]['name'] = aua.name
-          data[user_key]['business_unit'] = aua.business_unit.name
-          data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
-          data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
-          data[user_key]['active'] = aua.active.to_s
-          amount = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
-          if !data[user_key].has_key?('user_total')
-            data[user_key]['user_total'] = amount
-          else
-            data[user_key]['user_total'] += amount
-          end
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = amount
-          else
-            data[user_key][month_year_key] += amount
-          end
+    ouflow_data = AdminUsersAudit.inactive_users_outflow(from_date, to_date)
+    inflow_data = AdminUsersAudit.inactive_users_inflow(from_date, to_date)
+    inflow_data.keys.each do |x|
+      inflow_data[x].keys.each do |y|
+        if y == 'user_total' or y[y.length - 5, y.length] == 'AMOUNT'
+          inflow_data[x][y] -= ouflow_data[x][y]
         end
       end
     end
+    data = inflow_data
     data
   end
 
   def self.all_users_netflow(from_date, to_date)
-    from_date = Date.parse(from_date)
-    to_date = Date.parse(to_date)
     data = {}
-    lower_date = from_date
-    (from_date..to_date).each do |d|
-      if (d - lower_date) > 22
-        lower_date = Date.parse(d.year.to_s + '-' + d.month.to_s + '-' + '1'.to_s)
-        next
-      end
-      month_year_key = AdminUsersAudit.month_year(d)
-      AdminUsersAudit.all_users(d).each do |aua|
-        user_key = aua.admin_user_id
-        if !data.has_key?(user_key)
-          data[user_key] = {}
-        else
-          data[user_key]['id'] = user_key
-          data[user_key]['name'] = aua.name
-          data[user_key]['business_unit'] = aua.business_unit.name
-          data[user_key]['date_of_joining'] = aua.date_of_joining.to_s
-          data[user_key]['date_of_leaving'] = aua.date_of_leaving.to_s
-          data[user_key]['active'] = aua.active.to_s
-          amount = (aua.bill_rate * AssignedResource.assigned_hours(user_key, d, d)) - (aua.cost_rate * Rails.configuration.max_work_hours_per_day)
-          if !data[user_key].has_key?('user_total')
-            data[user_key]['user_total'] = amount
-          else
-            data[user_key]['user_total'] += amount
-          end
-          if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = amount
-          else
-            data[user_key][month_year_key] += amount
-          end
+    ouflow_data = AdminUsersAudit.all_users_outflow(from_date, to_date)
+    inflow_data = AdminUsersAudit.all_users_inflow(from_date, to_date)
+    inflow_data.keys.each do |x|
+      inflow_data[x].keys.each do |y|
+        if y == 'user_total' or y[y.length - 5, y.length] == 'AMOUNT'
+          inflow_data[x][y] -= ouflow_data[x][y]
         end
       end
     end
+    data = inflow_data
     data
   end
 
@@ -424,6 +352,6 @@ class AdminUsersAudit < ActiveRecord::Base
 
   def self.month_year(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    as_on.strftime('%B').upcase.slice(0, 3) + '-' + as_on.year.to_s
+    as_on.strftime('%B').upcase.slice(0, 3) + '-' + as_on.year.to_s + '-' + 'AMOUNT'
   end
 end
