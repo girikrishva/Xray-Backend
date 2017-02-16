@@ -210,6 +210,12 @@ ActiveAdmin.register Project do
       render json: result
     end
 
+    def overall_delivery_health
+      as_on = params[:as_on]
+      result = Project.overall_delivery_health(as_on)
+      render json: result
+    end
+
     def missed_delivery
       project_id = params[:project_id]
       as_on = params[:as_on]

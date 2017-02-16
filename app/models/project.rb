@@ -89,9 +89,31 @@ class Project < ActiveRecord::Base
     self.invoiced_amount - self.paid_amount
   end
 
+
+  def self.overall_delivery_health(as_on)
+    result = {}
+    Project.all.each do |project|
+      result[project.id] = {}
+      result[project.id]['project_details'] = project.project_details
+      result[project.id]['missed_delivery'] = project.missed_delivery(as_on, false)
+      result[project.id]['missed_invoicing'] = project.missed_invoicing(as_on, false)
+      result[project.id]['missed_payments'] = project.missed_payments(as_on, false)
+      result[project.id]['contribution'] = project.contribution(as_on)
+      result[project.id]['gross_profit'] = project.gross_profit(as_on)
+      result[project.id]['delivery_health'] = project.delivery_health(as_on)
+    end
+    result
+  end
+
   def project_details
     result = {}
-    result['project_details'] = self
+    result['direct_details'] = self
+    result['lookup_details'] = self.lookup_details
+    result
+  end
+
+  def lookup_details
+    result = {}
     result['client'] = self.client.name
     result['project_type'] = self.project_type_code.name
     result['project_status'] = self.project_status.name
@@ -328,15 +350,15 @@ class Project < ActiveRecord::Base
     result = {}
     total_indirect_resource_cost_share = total_indirect_resource_cost_share(as_on, false)
     total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
-    result['total_indirect_cost_share'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']
+    result['total_indirect_cost_share'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share'] rescue 0
     result
   end
 
   def total_cost(as_on)
     result = {}
-    total_direct_cost = total_direct_cost(as_on)
-    total_indirect_cost_share = total_indirect_cost_share(as_on)
-    result['total_cost'] = total_direct_cost['total_direct_cost'] + total_indirect_cost_share['total_indirect_cost_share']
+    total_direct_cost = total_direct_cost(as_on)['total_direct_cost']
+    total_indirect_cost_share = total_indirect_cost_share(as_on)['total_indirect_cost_share']
+    result['total_cost'] = total_direct_cost + total_indirect_cost_share
     result
   end
 
@@ -370,7 +392,7 @@ class Project < ActiveRecord::Base
     result = {}
     total_revenue = total_revenue(as_on, false)['total_revenue']
     total_direct_cost = total_direct_cost(as_on)['total_direct_cost']
-    result['contribution'] = total_revenue - total_direct_cost
+    result = total_revenue - total_direct_cost
     result
   end
 
@@ -378,25 +400,25 @@ class Project < ActiveRecord::Base
     result = {}
     total_revenue = total_revenue(as_on, false)['total_revenue']
     total_cost = total_cost(as_on)['total_cost']
-    result['gross_profit'] = total_revenue - total_cost
+    result = total_revenue - total_cost
     result
   end
 
   def delivery_health(as_on)
-    contribution_amount = contribution(as_on)['contribution']
-    gross_profit_amount = gross_profit(as_on)['gross_profit']
+    contribution_amount = contribution(as_on)
+    gross_profit_amount = gross_profit(as_on)
     missed_delivery_count = missed_delivery(as_on, false)['count']
     missed_invoicing_count = missed_invoicing(as_on, false)['count']
     missed_payments_count = missed_payments(as_on, false)['count']
     result = {}
     if contribution_amount < 0
-      result['delivery_health'] = I18n.t('label.red')
+      result = I18n.t('label.red')
     elsif contribution_amount >= 0 and gross_profit_amount >= 0 and (missed_delivery_count > 0 or missed_invoicing_count > 0 or missed_payments_count > 0)
-      result['delivery_health'] = I18n.t('label.yellow')
+      result = I18n.t('label.yellow')
     elsif contribution_amount >= 0 and gross_profit_amount < 0 and (missed_delivery_count > 0 or missed_invoicing_count > 0 or missed_payments_count > 0)
-      result['delivery_health'] = I18n.t('label.orange')
+      result = I18n.t('label.orange')
     else
-      result['delivery_health'] = I18n.t('label.green')
+      result = I18n.t('label.green')
     end
     result
   end

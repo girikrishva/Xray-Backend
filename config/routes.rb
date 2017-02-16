@@ -110,7 +110,10 @@ Rails.application.routes.draw do
   match '/admin/api/cancel_timesheet', to: 'admin/timesheets#cancel_timesheet', via: [:post]
   match '/admin/api/make_timesheet_pending', to: 'admin/timesheets#make_timesheet_pending', via: [:post]
   match '/admin/api/clients_for_business_unit' => 'admin/pipelines#clients_for_business_unit', via: [:get]
+
+  # Reports APIs.
   match '/admin/api/admin_user_details' => 'admin/admin_users#admin_user_details', via: [:get]
+  match '/admin/api/overall_delivery_health' => 'admin/projects#overall_delivery_health', via: [:get]
   match '/admin/api/project_details' => 'admin/projects#project_details', via: [:get]
   match '/admin/api/missed_delivery' => 'admin/projects#missed_delivery', via: [:get]
   match '/admin/api/missed_invoicing' => 'admin/projects#missed_invoicing', via: [:get]
@@ -129,6 +132,7 @@ Rails.application.routes.draw do
   match '/admin/api/pipeline_for_status' => 'admin/pipelines#pipeline_for_status', via: [:get]
   match '/admin/api/pipeline_for_all_statuses' => 'admin/pipelines#pipeline_for_all_statuses', via: [:get]
   match '/admin/api/resource_distribution_combos' => 'admin/resources#resource_distribution_combos', via: [:get]
+  match '/admin/api/resource_details' => 'admin/resources#resource_details', via: [:get]
   match '/admin/api/staffing_forecast' => 'admin/staffing_requirements#staffing_forecast', via: [:get]
   match '/admin/api/resource_efficiency' => 'admin/admin_users#resource_efficiency', via: [:get]
   match '/admin/api/business_unit_efficiency' => 'admin/admin_users#business_unit_efficiency', via: [:get]
