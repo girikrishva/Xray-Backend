@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="../img/logo.ico">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/FortAwesome/Font-Awesome/master/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://dabeng.github.io/OrgChart/css/jquery.orgchart.css">
+    <link rel="stylesheet" href="http://dabeng.github.io/OrgChart/css/style.css">
+    <script type="text/javascript" src="https://cdn.rawgit.com/niklasvh/html2canvas/master/dist/html2canvas.min.js"></script>
+
+</head>
+<body>
+
+  <div id="chart-container"><span class="chart_expander expand" title="Expand All"><i class="fa fa-expand" aria-hidden="true" style="font-size: x-large;float: left;"></i></span>
+<span class="chart_expander collapse" hidden title="Collapse All"><i class="fa fa-compress" aria-hidden="true" style="font-size: x-large;float: left;"></i></span></div>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script type="text/javascript" src="https://cdn.rawgit.com/jakerella/jquery-mockjax/master/dist/jquery.mockjax.min.js"></script>
+  <script type="text/javascript" src="http://dabeng.github.io/OrgChart/js/jquery.orgchart.js"></script>
+  <!-- <script type="text/javascript" src="http://dabeng.github.io/OrgChart/ondemand-loading-data/scripts.js"></script> -->
+  </body>
+</html>
+<style type="text/css">
+.chart_expander{
+   /*position: fixed;*/
+    margin-left: 13px;
+    margin-top: 12px;
+}
+    .table {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+  }
+  table {
+      background-color: transparent;
+  }
+  table {
+      border-spacing: 0;
+      border-collapse: collapse;
+  }
+
+  .table-striped>tbody>tr:nth-of-type(odd) {
+      background-color: #E2E2E2;
+  }
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 10px;
+      line-height: 1.42857143;
+      vertical-align: top;
+      border-top: 1px solid #ddd;
+  }
+  .table .table-row-header {
+    background:#636363 !important;
+    color:#FFF;
+  }
+  td, th {
+      padding: 0;
+  }
+  .table th , .table td{
+      font-size: 14px;
+  }
+  .table th {
+    font-weight: 700;
+  }
+</style>
+<script type="text/javascript">
+ $.ajax({
+            async: false,
+            url: "/admin/get_team?id="+'<%=current_admin_user.id%>',
+              dataType: 'json',
+            success: function (data) {
+               datasource =  data;
+            }
+        })
+$('#chart-container').orgchart({
+  'data' : datasource,
+  'depth': 2,
+  'nodeContent': 'title'
+});
+$(".node").on('click',function(e){
+  $(".popup").show()
+  popup_view()
+  responce  = ajax_call("/admin/user_detail?id="+$(this).attr('id'))
+  var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+  value1 = Object.assign(responce, responce["admin_user_details"]);
+             html_value = html_value + convert_ajax_to_htm(value1)
+             $(".ajax_content").html(html_value)
+            $(".admin_user_details,.created_at,.updated_at,.deleted_at,.role_id,.business_unit_id,.department_id,.designation_id,.ip_address,.id,.manager_id,.bill_rate,.cost_rate,.comments,.updated_by,.associate_no").hide()
+             $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>"+$(this).find(".title").html()+"</span>")
+    $("ajax_content").find("td.business_unit")
+    $(".hiddding_header,.business_unit,.designation,.name").hide()
+    $(".hiddding_header").last().find(".fa").remove()
+    $(".hiddding_header").last().show()
+})
+function popup_view(){
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+  }
+        function return_only_t_data(responce){
+             var ajax_content_value = "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr>"
+           return ajax_content_value
+          }
+
+          function convert_ajax_to_htm(responce){
+   var ajax_content_value = "<table class = 'table table-striped'><tr class ='table-row-header'>"
+           $.each(responce, function(key, value) {
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  });
+           ajax_content_value += "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr></table>"
+           return ajax_content_value
+          }
+
+  function ajax_call(url) {
+      var responce = ""
+   $.ajax({
+          async: false,
+          url: url,
+            dataType: 'json',
+          success: function (data) {
+             responce =  data;
+          }
+      })
+   return responce;
+  }
+  $(document).ready(function() {
+$("#page_title").html("Organization Chart")
+$(".pagination_information").hide()})
+  $(".chart_expander").on('click',function(){
+    $(".chart_expander").toggle()
+    $(".orgchart").remove()
+    if( (jQuery.inArray("expand",$(this).attr('class').split(" ")))== 1){
+    $('#chart-container').orgchart({
+  'data' : datasource,
+  'nodeContent': 'title',
+  'exportButton': true,
+  'exportFilename': 'MyOrgChart',
+  'exportFileextension': 'pdf'
+});
+    }
+    else{
+      $(".oc-export-btn").remove()
+      $('#chart-container').orgchart({
+  'data' : datasource,
+  'depth': 2,
+  'nodeContent': 'title'
+});
+    }
+    $(".spinner").hide()
+    $(".node").on('click',function(e){
+  $(".popup").show()
+  popup_view()
+  responce  = ajax_call("/admin/user_detail?id="+$(this).attr('id'))
+  var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+  value1 = Object.assign(responce, responce["admin_user_details"]);
+             html_value = html_value + convert_ajax_to_htm(value1)
+             $(".ajax_content").html(html_value)
+             $(".admin_user_details,.created_at,.updated_at,.deleted_at,.role_id,.business_unit_id,.department_id,.designation_id,.ip_address,.id,.manager_id,.bill_rate,.cost_rate,.comments,.updated_by,.associate_no").hide()
+             $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>"+$(this).find(".title").html()+"</span>")
+    $("ajax_content").find("td.business_unit")
+    $(".hiddding_header,.business_unit,.designation,.name").hide()
+    $(".hiddding_header").last().find(".fa").remove()
+    $(".hiddding_header").last().show()
+})
+    $(".orgchart").css("display","flex")
+$(".orgchart").css('background-size','0')
+$("#chart-container").css("border",'.2px dotted #aaa')
+$("#chart-container").css("height",'100%')
+  })
+$(".orgchart").css("display","flex")
+$(".orgchart").css('background-size','0')
+$("#chart-container").css("border",'.2px dotted #aaa')
+$("#chart-container").css("height",'100%')
+// $(".orgchart").first().hide()
+</script>

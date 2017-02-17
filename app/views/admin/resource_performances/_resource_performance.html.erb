@@ -1,0 +1,229 @@
+<p> <div style="margin-left: 23px;">As On: <input type="text" id="datepickerfrom" class="onchange">
+Active <%= select_tag("active", options_for_select([["All","all"],["Yes","yes"],["No","no"]])) %>
+Display  <%= select_tag("display", options_for_select([["Inflow","inflow"],["Outflow","outflow"],["Netflow","netflow"]])) %>
+<a href="#" id= "clikc_search" class="table_tools_button">Search </a></div>
+</p>
+
+<div id="initial_table"></div>
+
+<style type="text/css">
+	.table {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+  }
+  table {
+      background-color: transparent;
+  }
+  table {
+      border-spacing: 0;
+      border-collapse: collapse;
+  }
+
+  .table-striped>tbody>tr:nth-of-type(odd) {
+      background-color: #E2E2E2;
+  }
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 10px;
+      line-height: 1.42857143;
+      vertical-align: top;
+      border-top: 1px solid #ddd;
+  }
+  .table .table-row-header {
+    background:#636363 !important;
+    color:#FFF;
+  }
+  td, th {
+      padding: 0;
+  }
+  .table th , .table td{
+      font-size: 14px;
+  }
+  .table th {
+    font-weight: 700;
+  }
+</style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".pagination_information,.download_links,#index_table_resource_forecasts,.pagination").hide()
+		$( "#datepickerfrom" ).datepicker({ dateFormat: 'yy-mm-dd' });
+		 var fullDate = new Date()
+  var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+  var currentDate = fullDate.getDate() + "-" + twoDigitMonth + "-" + fullDate.getFullYear();
+  $( "#datepickerfrom" ).val(currentDate)
+  
+ 
+ $("#clikc_search").on('click',function(){
+  currentDate = $("#datepickerfrom" ).val()
+  active = $("#active").val()
+  display = $("#display").val()
+ var numbers = currentDate.split("-"); 
+var date = new Date(numbers[2]+"-"+numbers[1]+"-"+numbers[0]);
+date.setMonth(date.getMonth() + 12)
+to_date = new Date(date.getFullYear(),date.getMonth(),0)
+    if (active == "yes" && display == "outflow"){
+  responce  = ajax_call("api/active_users_outflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
+  var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  1 || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+
+     html_value = html_value+"</table>"
+}
+if (active == "no" && display == "outflow"){
+  responce  = ajax_call("api/inactive_users_outflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
+  var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  1 || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+     
+     html_value = html_value+"</table>"
+}
+if (active == "all" && display == "outflow"){
+  responce  = ajax_call("api/all_users_outflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
+  var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  1 || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+     
+     html_value = html_value+"</table>"
+}
+if (active == "yes" && display == "inflow"){
+  responce  = ajax_call("api/active_users_inflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
+  var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  1 || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+
+     
+     html_value = html_value+"</table>"
+}
+if (active == "no" && display == "inflow"){
+  responce  = ajax_call("api/inactive_users_inflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
+  var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  1 || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+     
+     html_value = html_value+"</table>"
+}
+if (active == "all" && display == "inflow"){
+  responce  = ajax_call("api/all_users_inflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
+  var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  1 || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+     
+     html_value = html_value+"</table>"
+}
+if (active == "yes" && display == "netflow"){
+  responce  = ajax_call("api/active_users_netflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
+  var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  1 || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+     
+     html_value = html_value+"</table>"
+}
+if (active == "no" && display == "netflow"){
+  responce  = ajax_call("api/inactive_users_netflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
+  var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  1 || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+     
+     html_value = html_value+"</table>"
+}
+if (active == "all" && display == "netflow"){
+  responce  = ajax_call("api/all_users_netflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
+  var html_value = ""
+     $.each( responce, function( index, value ){
+         if (index  ==  1 || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+      })
+     
+     html_value = html_value+"</table>"
+}
+     $("#initial_table").html(html_value)
+ })
+ $("#clikc_search").click()
+ })
+         function return_only_t_data(responce){
+             var ajax_content_value = "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr>"
+           return ajax_content_value
+          }
+
+          function convert_ajax_to_htm(responce){
+   var ajax_content_value = "<table class = 'table table-striped'><tr class ='table-row-header'>"
+           $.each(responce, function(key, value) {
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  });
+           ajax_content_value += "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr></table>"
+           return ajax_content_value
+          }
+
+	function ajax_call(url) {
+	    var responce = ""
+	 $.ajax({
+	        async: false,
+	        url: url,
+	          dataType: 'json',
+	        success: function (data) {
+	           responce =  data;
+	        }
+	    })
+	 return responce;
+	}
+</script>

@@ -1,6 +1,7 @@
 class AdminUser < ActiveRecord::Base
   acts_as_paranoid
-
+  ransacker :as_on do
+  end
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -269,5 +270,25 @@ class AdminUser < ActiveRecord::Base
       details['business_unit_efficiency_details'] = business_unit_efficiency_details
     end
     details
+  end
+
+  def self.get_records(id)
+    users = []
+    self.where(id:id).each do |user|
+      users_hash = {}
+      user_count =  AdminUser.where(:manager_id =>user.id).collect(&:id)
+      user_name = user.name 
+      users_hash["id"] = user.id.to_s
+      users_hash["name"] = user_name
+      users_hash["title"] = user.designation.name
+      if user_count.count() > 0
+        users_hash["children"] =[]
+        user_count.each do |id|
+          users_hash["children"] << self.get_records(id)[0]
+        end
+      end
+      users << users_hash
+    end
+    return users
   end
 end

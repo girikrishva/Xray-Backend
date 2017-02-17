@@ -1,0 +1,275 @@
+<p><div style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> TO <input type="text" id="datepickerto" class="onchange">
+Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pluck('name','id'))) %>
+<a href="#" id= "clikc_search" class="table_tools_button">Search </a></div></p>
+
+</div>
+<div id="initial_table"></div>
+<style type="text/css">
+  .table {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+  }
+  table {
+      background-color: transparent;
+  }
+  table {
+      border-spacing: 0;
+      border-collapse: collapse;
+  }
+
+  .table-striped>tbody>tr:nth-of-type(odd) {
+      background-color: #E2E2E2;
+  }
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 10px;
+      line-height: 1.42857143;
+      vertical-align: top;
+      border-top: 1px solid #ddd;
+  }
+  .table .table-row-header {
+    background:#636363 !important;
+    color:#FFF;
+  }
+  td, th {
+      padding: 0;
+  }
+  .table th , .table td{
+      font-size: 14px;
+  }
+  .table th {
+    font-weight: 700;
+  }
+</style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
+     $("#datepickerfrom").datepicker({
+        numberOfMonths: 1,
+        dateFormat: 'yy-mm-dd',
+        onSelect: function (selected) {
+            var dt = new Date(selected);
+            dt.setDate(dt.getDate() + 1);
+            $("#datepickerto").datepicker("option", "minDate", dt);
+        }
+    });
+    $("#datepickerto").datepicker({
+        numberOfMonths: 1,
+        dateFormat: 'yy-mm-dd',
+        onSelect: function (selected) {
+            var dt = new Date(selected);
+            dt.setDate(dt.getDate() - 1);
+            $("#datepickerfrom").datepicker("option", "maxDate", dt);
+        }
+    });
+		 var fullDate = new Date()
+  var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+  var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+    responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+$("#business_unit").val()+"&from_date="+currentDate+"&to_date="+currentDate+"&with_details=true")
+    var html_value = ""
+    value_1 = responce["data"]
+     $.each( responce["data"]["resource_efficiency_details"], function( index, value ){
+      value1 = Object.assign(value_1,value);
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+      })
+      $("#initial_table").html(html_value)
+        $.each($("td.billing_opportunity_loss,td.business_unit_billing_opportunity_loss"), function( index1, value1 ){
+     $(this).text("$"+$(this).text())
+      })
+        $.each($("td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
+     $(this).text($(this).text()+"%")
+      })
+      $.each($("td.active"),function(){
+        if ($(this).text() == "true"){
+        $(this).text("Active")
+        }
+        else{
+        $(this).text("Inactive")
+        }
+      }) 
+         $.each($("td.business_unit_billing_opportunity_loss,td.billing_opportunity_loss,td.deployable_resources,td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
+        $(this).addClass("text_link")
+        $(this).attr('data-popup-open', 'popup-1');
+      })
+         $("th.business_unit_utilization_percentage").text("Utilization %")
+         $("th.business_unit_billing_opportunity_loss").text("Billing Delta")
+         $("th.billing_opportunity_loss").text("Billing Delta")
+         $("th.admin_user_name").text("Resource")
+         $(".resource_efficiency_details,.business_unit_assigned_percentage,.business_unit_clocked_percentage,.assigned_hours,.clocked_hours,.utilization_hours,.working_hours,.bill_rate").hide()
+        pop_up_view(currentDate)
+
+          $('[data-popup-open]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+ 
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+      $("#clikc_search").on('click',function(){
+        from_date = $("#datepickerfrom").val()
+        to_date = $("#datepickerto").val()
+       responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+$("#business_unit").val()+"&from_date="+from_date+"&to_date="+to_date+"&with_details=true")
+    var html_value = ""
+    value_1 = responce["data"]
+     $.each( responce["data"]["resource_efficiency_details"], function( index, value ){
+      value1 = Object.assign(value_1,value);
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+      })
+      $("#initial_table").html(html_value)
+      $(".admin_user_id").hide()
+        $.each($("td.billing_opportunity_loss,td.business_unit_billing_opportunity_loss"), function( index1, value1 ){
+     $(this).text("$"+$(this).text())
+      })
+        $.each($("td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
+     $(this).text($(this).text()+"%")
+      })
+      $.each($("td.active"),function(){
+        if ($(this).text() == "true"){
+        $(this).text("Active")
+        }
+        else{
+        $(this).text("Inactive")
+        }
+      }) 
+         $.each($("td.business_unit_billing_opportunity_loss,td.billing_opportunity_loss,td.deployable_resources,td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
+        $(this).addClass("text_link")
+        $(this).attr('data-popup-open', 'popup-1');
+      })
+         $("th.business_unit_utilization_percentage").text("Utilization %")
+         $("th.business_unit_billing_opportunity_loss").text("Billing Delta")
+         $("th.billing_opportunity_loss").text("Billing Delta")
+         $("th.admin_user_name").text("Resource")
+         $(".resource_efficiency_details,.business_unit_assigned_percentage,.business_unit_clocked_percentage,.assigned_hours,.clocked_hours,.utilization_hours,.working_hours,.bill_rate").hide()
+        pop_up_view(currentDate)
+         pop_up_view(currentDate)
+         	 $('[data-popup-open]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+ 
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+    if ($("#initial_table").html() == ""){
+      	$("#initial_table").html("<br><br><span style ='margin-left: 450px;'><b>No Records Found In Date Range: "+currentDate+" to "+currentDate+" for Business Unit "+$("#business_unit option:selected").text()+"</b></span>")
+      }
+      })
+      $("#datepickerfrom").val(currentDate)
+      $("#datepickerto").val(currentDate)
+       if ($("#initial_table").html() == ""){
+      	$("#initial_table").html("<br><br><span style ='margin-left: 450px;'><b>No Records Found In Date Range: "+currentDate+" to "+currentDate+" for Business Unit "+$("#business_unit option:selected").text()+"</b></span>")
+      }
+         })
+
+      function pop_up_view(currentDate){
+  $(".assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_details").on('click',function(){
+    var id = $(this).parent().find(".admin_user_id").text()
+    var from = $("#datepickerfrom").val()
+    var to = $("#datepickerto").val()
+    responce  = ajax_call("api/resource_efficiency?admin_user_id="+id+"&from_date="+from+"&to_date="+to+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    html_value += convert_ajax_to_htm(responce["data"]) 
+    $(".ajax_content").html(html_value)
+
+    if( (jQuery.inArray("clocked_percentage",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".working_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+    if( (jQuery.inArray("assigned_percentage",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".clocked_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+     if( (jQuery.inArray("utilization_percentage",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".assigned_hours,.bill_rate,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+    if( (jQuery.inArray("billing_details",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".clocked_hours,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
+    }
+    $(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details").hide()
+    $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>Business Unit:"+$("#business_unit").find('option:selected').text()+" From: "+$("#datepickerfrom").val()+" TO: "+$("#datepickerto").val()+"</span>")
+    $(".hiddding_header").hide()
+    $(".hiddding_header").first().show()
+})
+  $(".business_unit_utilization_percentage,.business_unit_billing_opportunity_loss").on('click',function(){
+    var id = $("#business_unit").val()
+    var from = $("#datepickerfrom").val()
+    var to = $("#datepickerto").val()
+    responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+id+"&from_date="+from+"&to_date="+to+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+      $.each( responce["data"]["resource_efficiency_details"], function( index, value ){
+                if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+            });
+    $(".ajax_content").html(html_value)
+    if( (jQuery.inArray("business_unit_utilization_percentage",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".business_unit,.admin_user_id,.assigned_hours,.clocked_percentage,.billing_opportunity_loss,.bill_rate,.assigned_percentage,.billing_opportunity_loss,.clocked_hours,.working_hours").hide()
+    }
+     if( (jQuery.inArray("business_unit_billing_opportunity_loss",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".business_unit,.admin_user_id,.assigned_hours,.clocked_percentage,.billing_opportunity_loss,.bill_rate,.assigned_percentage,.utilization_percentage,.clocked_hours,.working_hours").hide()
+    }
+     $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>Business Unit:"+$("#business_unit").find('option:selected').text()+" From: "+$("#datepickerfrom").val()+" TO: "+$("#datepickerto").val()+"</span>")
+    $(".hiddding_header").hide()
+    $(".hiddding_header").first().show()
+  })
+     }
+         function return_only_t_data(responce){
+             var ajax_content_value = "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr>"
+           return ajax_content_value
+          }
+
+          function convert_ajax_to_htm(responce){
+   var ajax_content_value = "<table class = 'table table-striped'><tr class= 'table-row-header'>"
+           $.each(responce, function(key, value) {
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  });
+           ajax_content_value += "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr></table>"
+           return ajax_content_value
+          }
+
+	function ajax_call(url) {
+	    var responce = ""
+	 $.ajax({
+	        async: false,
+	        url: url,
+	          dataType: 'json',
+	        success: function (data) {
+	           responce =  data;
+	        }
+	    })
+	 return responce;
+	}
+
+
+  
+</script>
