@@ -175,8 +175,31 @@ ActiveAdmin.register StaffingRequirement do
 
     def staffing_forecast
       as_on = params[:as_on]
-      with_details = params[:with_details]
-      result = StaffingRequirement.staffing_forecast(as_on, with_details)
+      result = StaffingRequirement.staffing_forecast(as_on, false)
+      render json: result
+    end
+
+    def staffing_required
+      as_on = params[:as_on]
+      skill_id = params[:skill_id]
+      designation_id = params[:designation_id]
+      result = StaffingRequirement.staffing_required(skill_id, designation_id, as_on, true)
+      render json: result
+    end
+
+    def staffing_fulfilled
+      as_on = params[:as_on]
+      skill_id = params[:skill_id]
+      designation_id = params[:designation_id]
+      result = StaffingRequirement.staffing_fulfilled(skill_id, designation_id, as_on, true)
+      render json: result
+    end
+
+    def deployable_resources
+      as_on = params[:as_on]
+      skill_id = params[:skill_id]
+      designation_id = params[:designation_id]
+      result = StaffingRequirement.deployable_resources(skill_id, designation_id, as_on, true)
       render json: result
     end
   end
