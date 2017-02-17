@@ -56,7 +56,9 @@ class StaffingRequirement < ActiveRecord::Base
       start_date = sr[4]
       end_date = sr[5]
       details = {}
+      details['skill_id'] = skill_id
       details['skill_name'] = skill_name
+      details['designation_id'] = designation_id
       details['designation_name'] = designation_name
       staffing_required = StaffingRequirement.staffing_required(skill_id, designation_id, as_on, with_details)
       details['staffing_required'] = staffing_required['count']
@@ -70,12 +72,12 @@ class StaffingRequirement < ActiveRecord::Base
       end
       staffing_gap = staffing_required['count'] - staffing_fulfilled['count']
       details['staffing_gap'] = staffing_gap
-      deployable_resources = StaffingRequirement.deployable_resources(skill_id, designation_id, start_date, end_date, as_on, with_details)
+      deployable_resources = StaffingRequirement.deployable_resources(skill_id, designation_id, as_on, with_details)
       details['deployable_resources'] = deployable_resources['count']
       if with_details
         details['deployable_resources_details'] = deployable_resources['details']
       end
-      details['recruitment_need'] = [(staffing_gap - deployable_resources['count']), 0].max
+      details['recruitment_need'] = (staffing_gap - deployable_resources['count'])
       data << details
     end
     result = {}
@@ -113,6 +115,7 @@ class StaffingRequirement < ActiveRecord::Base
     end
     result
   end
+
   def self.staffing_fulfilled(skill_id, designation_id, as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
@@ -142,30 +145,36 @@ class StaffingRequirement < ActiveRecord::Base
     result
   end
 
-  def self.deployable_resources(skill_id, designation_id, start_date, end_date, as_on, with_details)
+  def self.deployable_resources(skill_id, designation_id, as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
     deployable_resources = []
     count = 0
-    Resource.latest(as_on).each do |r|
-      deployable = true
-      if r.skill_id == skill_id and r.admin_user.designation_id = designation_id
-        (start_date..end_date).each do |d|
-          unused_capacity_hours = Rails.configuration.max_work_hours_per_day - AssignedResource.assigned_hours(r.admin_user_id, d, d)
-          if unused_capacity_hours <= 0
-            deployable = false
-            break
+    StaffingRequirement.joins(:skill, :designation).where('? between start_date and end_date', as_on).order('skills.name').pluck('skills.id, skills.name, designations.id, designations.name, start_date, end_date').uniq.each do |sr|
+      skill_id = sr[0]
+      designation_id = sr[2]
+      start_date = sr[4]
+      end_date = sr[5]
+      Resource.latest(as_on).each do |r|
+        deployable = true
+        if r.skill_id == skill_id and r.admin_user.designation_id = designation_id
+          (start_date..end_date).each do |d|
+            unused_capacity_hours = Rails.configuration.max_work_hours_per_day - AssignedResource.assigned_hours(r.admin_user_id, d, d)
+            if unused_capacity_hours <= 0
+              deployable = false
+              break
+            end
           end
-        end
-        if deployable
-          count += 1
-          if with_details
-            deployable_resource_details = {}
-            deployable_resource_details['admin_user_id'] = r.admin_user_id
-            deployable_resource_details['admin_user_name'] = r.admin_user.name
-            deployable_resource_details['bill_rate'] = r.bill_rate
-            deployable_resource_details['cost_rate'] = r.cost_rate
-            deployable_resources << deployable_resource_details
+          if deployable
+            count += 1
+            if with_details
+              deployable_resource_details = {}
+              deployable_resource_details['admin_user_id'] = r.admin_user_id
+              deployable_resource_details['admin_user_name'] = r.admin_user.name
+              deployable_resource_details['bill_rate'] = r.bill_rate
+              deployable_resource_details['cost_rate'] = r.cost_rate
+              deployable_resources << deployable_resource_details
+            end
           end
         end
       end
