@@ -8,6 +8,7 @@ Rails.application.config.assets.precompile += %w( delivery_health.js )
 Rails.application.config.assets.precompile += %w( pipeline_forecast.js )
 Rails.application.config.assets.precompile += %w( resource_forecast.js )
 Rails.application.config.assets.precompile += %w( resource_utilization.js )
+Rails.application.config.assets.precompile += %w( html_to_canvas.js )
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path
 

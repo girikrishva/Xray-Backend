@@ -8,16 +8,21 @@ config.batch_actions = false
 
  before_filter :skip_sidebar!
   index  :download_links => false do
+    script :src => javascript_path('html_to_canvas.js'), :type => "text/javascript"
     render partial: "organization_chart"
      div class:"popup","data-popup": "popup-1" do
-      div class:"popup-inner",style:"overflow : auto;" do
-        span class:"ajax_content" do 
-        end
-          a class:"popup-close","data-popup-close":"popup-1","href":"#" do
-            "Close"
+      div class:"popup-inner" do
+          div class:"modal-header" do 
+            a class:"popup-close","data-popup-close":"popup-1","href":"#" do
+              "X"
+            end
           end
+        div class:"ajax_content_container" do 
+          div class:"ajax_content" do 
+          end
+        end
       end
-  end
+    end
   end
     controller do
     before_filter do |c|
@@ -27,6 +32,11 @@ config.batch_actions = false
     def get_users
       a = AdminUser.get_records(params[:id])
       render json: a[0]
+    end
+
+    def user_detail
+      a = AdminUser.find(params[:id])
+      render json: a.admin_user_details
     end
     def scoped_collection
       ids = Resource.latest(Date.today).collect(&:id)

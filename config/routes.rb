@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   # root 'welcome#index'
   get '/admin/project_pop_up' => 'admin/projects#pop_up_view'
   get '/admin/get_team' => 'admin/organization_charts#get_users'
+  get '/admin/user_detail' => 'admin/organization_charts#user_detail'
   
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

@@ -4,7 +4,7 @@
 Due Status <%= select_tag("due_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %>
 Completion Status <%= select_tag("completion_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %>
 <a href="#" id= "clikc_search" class="table_tools_button">Search </a>
-<div id="initial_table"></div></div></p>
+</div></p>
         <script type="text/javascript" src="https://tympanus.net/Tutorials/FancySlidingForm/sliding.form.js"></script>
     </head>
     <style>
@@ -318,6 +318,9 @@ span.error{
   }
 </style>
 <script type="text/javascript">
+$(document).ready(function() {
+  (".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
+})
         $(".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
    $( "#datepickerfrom" ).datepicker({ dateFormat: 'yy-mm-dd' });
          var fullDate = new Date()
