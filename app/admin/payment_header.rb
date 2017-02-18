@@ -159,8 +159,13 @@ ActiveAdmin.register PaymentHeader do
       as_on = params[:as_on]
       due_status = params[:due_status]
       completion_status = params[:completion_status]
-      with_details = params[:with_details]
-      result = PaymentHeader.payment_headers(as_on, due_status, completion_status, with_details)
+      result = PaymentHeader.payment_headers(as_on, due_status, completion_status)
+      render json: result
+    end
+
+    def reconciliation_milestone_details
+      payment_header_id = params[:payment_header_id]
+      result = PaymentHeader.payment_header_details(payment_header_id)
       render json: result
     end
   end

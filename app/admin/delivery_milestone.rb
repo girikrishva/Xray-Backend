@@ -160,8 +160,14 @@ ActiveAdmin.register DeliveryMilestone do
       as_on = params[:as_on]
       due_status = params[:due_status]
       completion_status = params[:completion_status]
-      with_details = params[:with_details]
-      result = DeliveryMilestone.delivery_milestones(as_on, due_status, completion_status, with_details)
+      result = DeliveryMilestone.delivery_milestones(as_on, due_status, completion_status)
+      render json: result
+    end
+
+    def delivery_milestone_details
+      as_on = params[:as_on]
+      delivery_milestone_id = params[:delivery_milestone_id]
+      result = DeliveryMilestone.delivery_milestone_details(as_on, delivery_milestone_id)
       render json: result
     end
   end
