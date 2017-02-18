@@ -412,6 +412,16 @@ class Project < ActiveRecord::Base
     result
   end
 
+  def gross_profit_details(as_on)
+    result = {}
+    result['total_revenue'] = total_revenue(as_on, true)
+    result['direct_resource_cost'] = direct_resource_cost(as_on, true)
+    result['direct_overhead_cost'] = direct_overhead_cost(as_on, true)
+    result['indirect_resource_cost_share'] = total_indirect_resource_cost_share(as_on, true)
+    result['indirect_overhead_cost_share'] = total_indirect_overhead_cost_share(as_on, true)
+    result
+  end
+
   def delivery_health(as_on)
     contribution_amount = contribution(as_on)
     gross_profit_amount = gross_profit(as_on)

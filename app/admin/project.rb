@@ -322,6 +322,13 @@ ActiveAdmin.register Project do
       render json: result
     end
 
+    def gross_profit_details
+      project_id = params[:project_id]
+      as_on = params[:as_on]
+      result = Project.find(project_id).gross_profit_details(as_on)
+      render json: result
+    end
+
     def delivery_health
       project_id = params[:project_id]
       as_on = params[:as_on]
