@@ -250,7 +250,8 @@ ActiveAdmin.register Project do
 
     def overall_delivery_health
       as_on = params[:as_on]
-      result = Project.overall_delivery_health(as_on)
+      contribution = params[:contribution]
+      result = Project.overall_delivery_health(as_on, contribution)
       render json: result
     end
 
@@ -346,10 +347,24 @@ ActiveAdmin.register Project do
       render json: result
     end
 
+    def contribution_details
+      project_id = params[:project_id]
+      as_on = params[:as_on]
+      result = Project.find(project_id).contribution_details(as_on)
+      render json: result
+    end
+
     def gross_profit
       project_id = params[:project_id]
       as_on = params[:as_on]
       result = Project.find(project_id).gross_profit(as_on)
+      render json: result
+    end
+
+    def gross_profit_details
+      project_id = params[:project_id]
+      as_on = params[:as_on]
+      result = Project.find(project_id).gross_profit_details(as_on)
       render json: result
     end
 
