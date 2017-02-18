@@ -10,7 +10,11 @@
     }
 }
 $(document).ready(function() {
-    responce  = ajax_call("api/resource_distribution_combos?with_details=false")
+  $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+  var fullDate = new Date()
+  var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+  var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+    responce  = ajax_call("api/resource_distribution_combos?as_on="+currentDate)
     var html_value = ""
      $.each( responce["data"], function( index, value ){
       value1 = Object.assign(value, value["resource_details"]);
@@ -25,45 +29,35 @@ $(document).ready(function() {
 
       })
       $("#initial_table").html(html_value) 
-        $.each($("td.total_resource_cost"), function( index1, value1 ){
-     $(this).text("$"+$(this).text())
-      })
-        $.each($("td.average_resource_cost"), function( index1, value1 ){
-     $(this).text("$"+$(this).text())
-      }) 
+  $(".skill_id,.designation_id,.business_unit_id").hide()
+      $("#datepicker").val(currentDate)
          $.each($("td.count"), function( index1, value1 ){
         $(this).addClass("text_link")
         $(this).attr('data-popup-open', 'popup-1');
       }) 
         $(".count").on('click',function(){
-    responce  = ajax_call("api/resource_distribution_combos?with_details=true")
+          skill = $(this).parent().find(".skill_id").html()
+              business_unit_id = $(this).parent().find(".business_unit_id").html()
+              designation = $(this).parent().find(".designation_id").html()
+    responce  = ajax_call("api/resource_details?as_on="+currentDate+"&designation_id="+designation+"&skill_id="+skill+"&business_unit_id="+business_unit_id+"&with_details=true")
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
      $.each( responce["data"], function( index, value ){
-      $.each( value["resource_details"]["data"], function( index1, value1 ){
          if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
                 else{
-                  html_value += return_only_t_data(value1)
+                  html_value += return_only_t_data(value)
                 }
-      })
      })
      $(".ajax_content").html(html_value)
+     $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 290px;margin-left: 260px;'> Business Unit "+$(this).parent().find(".business_unit").html()+" Skilled with "+$(this).parent().find(".skill").html()+" and Designated as "
+      +$(this).parent().find(".designation").html()+"</span>")
+                $(".hiddding_header").hide()
+                $(".hiddding_header").last().show()
     $(".created_at,.updated_at,.deleted_at,.comments,.data,.resource_efficiency_details").hide()
 
   })
     $(".resource_details,.pagination_information").hide()
-   
-    if ($.urlParam('q%5Bas_on_gteq_datetime%5D') != null)
-{
-       $('#q_as_on_gteq_datetime').val($.urlParam('q%5Bas_on_gteq_datetime%5D'));
-
-}
-    if ($.urlParam('q%5Bas_on_lteq_datetime%5D') != null)
-{
-       $('#q_as_on_lteq_datetime').val($.urlParam('q%5Bas_on_lteq_datetime%5D'));
-
-}
   })
   $(".assigned_percent,.clocked_percent,.utilization_percent,.billing_details").on('click',function(){
     var id = $(this).attr('id').split("_")[1]
@@ -114,20 +108,20 @@ $(document).ready(function() {
 	      function return_only_t_data(responce){
              var ajax_content_value = "</tr><tr>"
              $.each(responce, function(key, value) {
-                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid black;' >"+value+"</td>" 
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
                   });
            ajax_content_value +="</tr>"
            return ajax_content_value
           }
 
           function convert_ajax_to_htm(responce){
-   var ajax_content_value = "<table><tr>"
+   var ajax_content_value = "<table class = 'table table-striped'><tr class = 'table-row-header'>"
            $.each(responce, function(key, value) {
-                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid black;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {
-                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid black;' >"+value+"</td>" 
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
                   });
            ajax_content_value +="</tr></table>"
            return ajax_content_value
@@ -160,4 +154,48 @@ $(document).ready(function() {
         $(".dropdown_menu").toggle()
         e.preventDefault();
     });
+
+     $("#datepicker").on('change',function(){
+      
+        currentDate = $(this).val()
+          responce  = ajax_call("api/resource_distribution_combos?as_on="+currentDate)
+    var html_value = ""
+     $.each( responce["data"], function( index, value ){
+      value1 = Object.assign(value, value["resource_details"]);
+
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+
+
+      })
+
+      $("#initial_table").html(html_value)
+      $(".resource_details,.pagination_information").hide() 
+      $(".skill_id,.designation_id,.business_unit_id").hide()
+         $.each($("td.count"), function( index1, value1 ){
+        $(this).addClass("text_link")
+        $(this).attr('data-popup-open', 'popup-1');
+
+      })
+           $('[data-popup-open]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+ 
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+    if ($("#initial_table").html() == ""){
+        $("#initial_table").html("<span style ='margin-left: 450px;'><b>No Records Found For Date: "+currentDate+"</b></span>")
+      }
+      })
 });

@@ -1,101 +1,171 @@
+<p>As On: <input type="text" id="datepicker">
+<input type="checkbox"  id="show_project_details">Project Details
+<input type="checkbox"  id="show_financial_details">Financial Details
+<!-- # Delivery Health<%= select_tag("delivery_health", options_for_select([["Select",""],["Red","red"],["Oragnge","oragnge"],["Yellow","yellow"],["Green","green"]])) %> -->
+</p>
 <div id="initial_table"></div>
 <style type="text/css">
-	table a:link {
-	color: #666;
-	font-weight: bold;
-	text-decoration:none;
-}
-table a:visited {
-	color: #999999;
-	font-weight:bold;
-	text-decoration:none;
-}
-table a:active,
-table a:hover {
-	color: #bd5a35;
-	text-decoration:underline;
-}
-table {
-	font-family:Arial, Helvetica, sans-serif;
-	color:#666;
-	font-size:12px;
-	text-shadow: 1px 1px 0px #fff;
-	background:#eaebec;
-	margin:20px;
-	border:#ccc 1px solid;
+	.table {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+  }
+  table {
+      background-color: transparent;
+  }
+  table {
+      border-spacing: 0;
+      border-collapse: collapse;
+  }
 
-	-moz-border-radius:3px;
-	-webkit-border-radius:3px;
-	border-radius:3px;
+  .table-striped>tbody>tr:nth-of-type(odd) {
+      background-color: #E2E2E2;
+  }
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 10px;
+      line-height: 1.42857143;
+      vertical-align: top;
+      border-top: 1px solid #ddd;
+  }
+  .table .table-row-header {
+    background:#636363 !important;
+    color:#FFF;
+  }
+  td, th {
+      padding: 0;
+  }
+  .table th , .table td{
+      font-size: 14px;
+  }
+  .table th {
+    font-weight: 700;
+  }
+</style>	
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".pagination_information,.download_links,#index_table_resource_forecasts").hide()
+		$( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+		 var fullDate = new Date()
+  var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+  var currentDate = fullDate.getDate() + "-" + twoDigitMonth + "-" + fullDate.getFullYear();
+  		intial_content(currentDate)
+  		$( "#datepicker" ).val(currentDate)
+  		$( "#datepicker" ).on('change',function(){
+  			intial_content($(this).val())
+  		})
+  		   $('[data-popup-open]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+ 
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+    $("#show_project_details").on('click',function(){
+    	if ($('input#show_project_details').is(':checked')) {
+      $("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").show()
+  }
+  else{
+  	$("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").hide()
+  }
+    })
+    $("#show_financial_details").on('click',function(){
+    	 if ($('input#show_financial_details').is(':checked')) {
+      $("#initial_table").find(".booking_value,.contribution,.gross_profit").show()
+  }
+  else{
+  	$("#initial_table").find(".booking_value,.contribution,.gross_profit").hide()
+  }
+    })
+	})
+	function intial_content(currentDate){
+		responce  = ajax_call("api/overall_delivery_health?as_on="+currentDate+"&with_details=false")
+    var html_value = ""
+     $.each( responce, function( index, value ){
+     	value1 = Object.assign(value["project_details"]["direct_details"], value["project_details"]["lookup_details"]);
+     	value1 = Object.assign(value1, value["missed_delivery"]);
+     	value_temp = {"missed_invoicing_count":value["missed_invoicing"]["count"]}
+     	value1 = Object.assign(value1, value_temp);
+     	value_temp = {"missed_payments_count":value["missed_payments"]["count"]}
+     	value1 = Object.assign(value1, value_temp);
+     	value_temp = {"contribution_status": value["contribution"] > 0 ? "+ve" : "-ve"}
+     	value1 = Object.assign(value1, value_temp);
+     	value_temp = {"profit_status": value["profit"] > 0 ? "+ve" : "-ve"}
+     	value1 = Object.assign(value1, value_temp);
+     	value1 = Object.assign(value1, value);
+         if ((index  ==  0) || (html_value.indexOf("<table") < 0)){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+      })
+      $("#initial_table").html(html_value) 
+      $("#initial_table").find("th.missed_invoicing_count").html("MISSED INVOICING")
+      $("#initial_table").find("th.missed_payments_count").html("MISSED PAYMENTS ")
+      $("#initial_table").find("th.count").html("MISSED DELIVERY")
+      $("#initial_table").find(".project_details,.direct_details,.lookup_details,.missed_payments,.missed_invoicing,.missed_delivery,.created_at,.updated_at,.deleted_at,.client_id,.project_type_code_id,.project_status_id,.business_unit_id,.estimator_id,.delivery_manager_id,.pipeline_id,.sales_person_id,.engagement_manager_id,.sales_person,.estimator,.engagement_manager,.comments,.pipeline_details,.ip_address,.updated_by,.description").hide()
+      if ($('input#show_project_details').is(':checked')) {
+      $("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").show()
+  }
+  else{
+  	$("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").hide()
+  }
+   if ($('input#show_financial_details').is(':checked')) {
+      $("#initial_table").find(".booking_value,.contribution,.gross_profit").show()
+  }
+  else{
+  	$("#initial_table").find(".booking_value,.contribution,.gross_profit").hide()
+  }
+      $.each($("td.missed_invoicing_count,td.count,td.missed_payments_count"), function( index1, value1 ){
+        $(this).addClass("text_link")
+        $(this).attr('data-popup-open', 'popup-1');
+      })
+      // $(".missed_invoicing_count,.count,.missed_payments_count").
+	}
+	function pop_up_view(currentDate){
+     }
 
-	-moz-box-shadow: 0 1px 2px #d1d1d1;
-	-webkit-box-shadow: 0 1px 2px #d1d1d1;
-	box-shadow: 0 1px 2px #d1d1d1;
-}
-table th {
-	padding:21px 25px 22px 25px;
-	border-top:1px solid #fafafa;
-	border-bottom:1px solid #e0e0e0;
+	 function return_only_t_data(responce){
+             var ajax_content_value = "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr>"
+           return ajax_content_value
+          }
 
-	background: #ededed;
-	background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
-	background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
-}
-table th:first-child {
-	text-align: left;
-	padding-left:20px;
-}
-table tr:first-child th:first-child {
-	-moz-border-radius-topleft:3px;
-	-webkit-border-top-left-radius:3px;
-	border-top-left-radius:3px;
-}
-table tr:first-child th:last-child {
-	-moz-border-radius-topright:3px;
-	-webkit-border-top-right-radius:3px;
-	border-top-right-radius:3px;
-}
-table tr {
-	text-align: center;
-	padding-left:20px;
-}
-table td:first-child {
-	text-align: left;
-	padding-left:20px;
-	border-left: 0;
-}
-table td {
-	padding:18px;
-	border-top: 1px solid #ffffff;
-	border-bottom:1px solid #e0e0e0;
-	border-left: 1px solid #e0e0e0;
+          function convert_ajax_to_htm(responce){
+   var ajax_content_value = "<table class = 'table table-striped'><tr class ='table-row-header'>"
+           $.each(responce, function(key, value) {
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  });
+           ajax_content_value += "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr></table>"
+           return ajax_content_value
+          }
 
-	background: #fafafa;
-	background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
-	background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
-}
-table tr.even td {
-	background: #f6f6f6;
-	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
-	background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
-}
-table tr:last-child td {
-	border-bottom:0;
-}
-table tr:last-child td:first-child {
-	-moz-border-radius-bottomleft:3px;
-	-webkit-border-bottom-left-radius:3px;
-	border-bottom-left-radius:3px;
-}
-table tr:last-child td:last-child {
-	-moz-border-radius-bottomright:3px;
-	-webkit-border-bottom-right-radius:3px;
-	border-bottom-right-radius:3px;
-}
-table tr:hover td {
-	background: #f2f2f2;
-	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
-	background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
-}
-	
-</style>
+	function ajax_call(url) {
+	    var responce = ""
+	 $.ajax({
+	        async: false,
+	        url: url,
+	          dataType: 'json',
+	        success: function (data) {
+	           responce =  data;
+	        }
+	    })
+	 return responce;
+	}
+
+
+ 
+</script>
