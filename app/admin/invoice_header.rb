@@ -165,8 +165,13 @@ ActiveAdmin.register InvoiceHeader do
       as_on = params[:as_on]
       due_status = params[:due_status]
       completion_status = params[:completion_status]
-      with_details = params[:with_details]
-      result = InvoiceHeader.invoice_headers(as_on, due_status, completion_status, with_details)
+      result = InvoiceHeader.invoice_headers(as_on, due_status, completion_status)
+      render json: result
+    end
+
+    def collection_milestone_details
+      invoice_header_id = params[:invoice_header_id]
+      result = InvoiceHeader.invoice_header_details(invoice_header_id)
       render json: result
     end
   end
