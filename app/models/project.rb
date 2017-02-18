@@ -90,7 +90,7 @@ class Project < ActiveRecord::Base
   end
 
 
-  def self.overall_delivery_health(as_on)
+  def self.overall_delivery_health(as_on, contribution='all')
     result = {}
     Project.all.each do |project|
       result[project.id] = {}
@@ -101,6 +101,19 @@ class Project < ActiveRecord::Base
       result[project.id]['contribution'] = project.contribution(as_on)
       result[project.id]['gross_profit'] = project.gross_profit(as_on)
       result[project.id]['delivery_health'] = project.delivery_health(as_on)
+    end
+    if contribution == 'positive'
+      result.keys.each do |r|
+        if result[r]['contribution'] < 0
+          result.delete(r)
+        end
+      end
+    elsif contribution == 'negative'
+      result.keys.each do |r|
+        if result[r]['contribution'] >= 0
+          result.delete(r)
+        end
+      end
     end
     result
   end
