@@ -115,7 +115,7 @@ class Project < ActiveRecord::Base
         end
       end
     end
-    if delivery_manager_id > 0
+    if delivery_manager_id.to_i > 0
       result.keys.each do |r|
         if result[r]['delivery_manager_id'] != delivery_manager_id.to_i
           result.delete(r)
