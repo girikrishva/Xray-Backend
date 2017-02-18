@@ -126,6 +126,7 @@ Rails.application.routes.draw do
   match '/admin/api/total_indirect_cost_share' => 'admin/projects#total_indirect_cost_share', via: [:get]
   match '/admin/api/total_cost' => 'admin/projects#total_cost', via: [:get]
   match '/admin/api/total_revenue' => 'admin/projects#total_revenue', via: [:get]
+  match '/admin/api/contribution_details' => 'admin/projects#contribution_details', via: [:get]
   match '/admin/api/contribution' => 'admin/projects#contribution', via: [:get]
   match '/admin/api/gross_profit' => 'admin/projects#gross_profit', via: [:get]
   match '/admin/api/delivery_health' => 'admin/projects#delivery_health', via: [:get]

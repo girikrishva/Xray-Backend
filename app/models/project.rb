@@ -396,6 +396,14 @@ class Project < ActiveRecord::Base
     result
   end
 
+  def contribution_details(as_on)
+    result = {}
+    result['total_revenue'] = total_revenue(as_on, true)
+    result['direct_resource_cost'] = direct_resource_cost(as_on, true)
+    result['direct_overhead_cost'] = direct_overhead_cost(as_on, true)
+    result
+  end
+
   def gross_profit(as_on)
     result = {}
     total_revenue = total_revenue(as_on, false)['total_revenue']
