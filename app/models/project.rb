@@ -97,7 +97,7 @@ class Project < ActiveRecord::Base
   end
 
 
-  def self.overall_delivery_health(as_on, contribution='all')
+  def self.overall_delivery_health(as_on, contribution='all', delivery_manager_id=-1)
     result = {}
     Project.all.each do |project|
       result[project.id] = {}
@@ -118,6 +118,13 @@ class Project < ActiveRecord::Base
     elsif contribution == 'negative'
       result.keys.each do |r|
         if result[r]['contribution'] >= 0
+          result.delete(r)
+        end
+      end
+    end
+    if delivery_manager_id > 0
+      result.keys.each do |r|
+        if result[r]['delivery_manager_id'] != delivery_manager_id
           result.delete(r)
         end
       end

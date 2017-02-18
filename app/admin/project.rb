@@ -251,7 +251,8 @@ ActiveAdmin.register Project do
     def overall_delivery_health
       as_on = params[:as_on]
       contribution = params[:contribution]
-      result = Project.overall_delivery_health(as_on, contribution)
+      delivery_manager_id = params[:delivery_manager_id]
+      result = Project.overall_delivery_health(as_on, contribution, delivery_manager_id)
       render json: result
     end
 
