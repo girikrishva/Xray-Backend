@@ -214,7 +214,11 @@ ActiveAdmin.register Project do
       as_on = params[:as_on]
       contribution = params[:contribution]
       delivery_manager_id = params[:delivery_manager_id]
-      result = Project.overall_delivery_health(as_on, contribution, delivery_manager_id)
+      gross_profit = params[:gross_profit]
+      project_status_id = params[:project_status_id]
+      delivery_health = params[:delivery_health]
+      project_type_code_id = params[:project_type_code_id]
+      result = Project.overall_delivery_health(as_on, contribution, delivery_manager_id, gross_profit, project_status_id, delivery_health, project_type_code_id)
       render json: result
     end
 
