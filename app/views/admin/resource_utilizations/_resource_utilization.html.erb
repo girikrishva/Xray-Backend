@@ -1,4 +1,5 @@
-<p><div style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> TO <input type="text" id="datepickerto" class="onchange">
+<p><div style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> TO <input type="text" id="datepickerto" class="onchange"><a href="#" id= "clikc_search" class="table_tools_button">Search </a></div></p>
+<!-- 
 Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pluck('name','id'))) %>
 <a href="#" id= "clikc_search" class="table_tools_button">Search </a></div></p>
 
@@ -40,10 +41,346 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
   .table th {
     font-weight: 700;
   }
+</style> -->
+        <script type="text/javascript" src="https://tympanus.net/Tutorials/FancySlidingForm/sliding.form.js"></script>
+    </head>
+    <style>
+        span.reference{
+            position:fixed;
+            left:5px;
+            top:5px;
+            font-size:10px;
+            text-shadow:1px 1px 1px #fff;
+        }
+        span.reference a{
+            color:#555;
+            text-decoration:none;
+      text-transform:uppercase;
+        }
+        span.reference a:hover{
+            color:#000;
+            
+        }
+        h1{
+            color:#ccc;
+            font-size:36px;
+            text-shadow:1px 1px 1px #fff;
+            padding:20px;
+        }
+    </style>
+    <body>
+        <div>
+           
+        <div id="content1">
+            <div id="wrapper1">
+               <div id="navigation" style="display:none;">
+                    <ul>
+                        <li class="selected">
+                            <a href="#">Resource Utilization View For Resource </a>
+                        </li>
+                        <li>
+                            <a href="#">Resource Utilization View For Business Unit</a>
+                        </li>
+                        <li>
+                            <a href="#">Resource Utilization  Overall View</a>
+                        </li>
+                     
+                    </ul>
+                </div>
+                <div id="steps">
+                        <fieldset class="step step1">
+                        <p>Manager<%= select_tag("manager_id", options_for_select(AdminUser.pluck("name",'id').reverse,current_admin_user.id),class:"filters") %></p>
+                        </fieldset>
+                        <fieldset class="step step2">
+                        <p>Business Unit<%= select_tag("business_unit_id", options_for_select(BusinessUnit.pluck("name",'id').reverse,current_admin_user.business_unit_id),class:"filters") %></p>
+                        </fieldset>
+                        <fieldset class="step step3">
+                        <p style="margin: 3px 0 6.5em;"></p>
+                        </fieldset>
+                        
+                </div>
+             
+            </div>
+        </div>
+    </body>
+</html>
+<style type="text/css">
+select {
+   -webkit-appearance: button;
+   -webkit-border-radius: 2px;
+   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+   -webkit-padding-end: 20px;
+   -webkit-padding-start: 2px;
+   -webkit-user-select: none;
+   background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+   background-position: 100% center;
+   background-repeat: no-repeat;
+   border: 1px solid #AAA;
+   color: #555;
+   font-size: inherit;
+   margin: 20px;
+   overflow: hidden;
+   padding: 5px 10px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   width: 130px;
+}
+.hasDatepicker 
+{
+    height: 20px;
+    border: 3px solid #c2c2c2;
+    border-radius: 5px;
+}
+    *{
+    margin:0px;
+    padding:0px;
+}
+body{
+    color:#444444;
+    font-size:13px;
+    background: #f2f2f2;
+    font-family:"Century Gothic", Helvetica, sans-serif;
+}
+#content1{
+    /*margin:15px auto;*/
+    text-align:center;
+    width:1400px;
+    position:relative;
+    height:100%;
+}
+#wrapper1{
+    -moz-box-shadow:0px 0px 3px #aaa;
+    -webkit-box-shadow:0px 0px 3px #aaa;
+    box-shadow:0px 0px 3px #aaa;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+    border:2px solid #fff;
+    background-color:#f9f9f9;
+    width:1400px;
+    overflow:hidden;
+}
+#steps{
+    width:1400px;
+    /*height:320px;*/
+    overflow:hidden;
+}
+.step{
+    float:left;
+    width:1400px;
+    /*height:320px;*/
+}
+#navigation{
+    height:45px;
+    background-color:#e9e9e9;
+    border-top:1px solid #fff;
+    -moz-border-radius:0px 0px 10px 10px;
+    -webkit-border-bottom-left-radius:10px;
+    -webkit-border-bottom-right-radius:10px;
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
+}
+#navigation ul{
+    list-style:none;
+    float:left;
+    margin-left:22px;
+}
+#navigation ul li{
+    float:left;
+    border-right:1px solid #ccc;
+    border-left:1px solid #ccc;
+    position:relative;
+    margin:0px 2px;
+}
+#navigation ul li a{
+    display:block;
+    height:45px;
+    background-color:#444;
+    color:#777;
+    outline:none;
+    font-weight:bold;
+    text-decoration:none;
+    line-height:45px;
+    padding:0px 20px;
+    border-right:1px solid #fff;
+    border-left:1px solid #fff;
+    background:#f0f0f0;
+    background:
+        -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.09, rgb(240,240,240)),
+        color-stop(0.55, rgb(227,227,227)),
+        color-stop(0.78, rgb(240,240,240))
+        );
+    background:
+        -moz-linear-gradient(
+        center bottom,
+        rgb(240,240,240) 9%,
+        rgb(227,227,227) 55%,
+        rgb(240,240,240) 78%
+        )
+}
+#navigation ul li a:hover,
+#navigation ul li.selected a{
+    background:#d8d8d8;
+    color:#666;
+    text-shadow:1px 1px 1px #fff;
+}
+span.checked{
+    background:transparent url(../images/checked.png) no-repeat top left;
+    position:absolute;
+    top:0px;
+    left:1px;
+    width:20px;
+    height:20px;
+}
+span.error{
+    background:transparent url(../images/error.png) no-repeat top left;
+    position:absolute;
+    top:0px;
+    left:1px;
+    width:20px;
+    height:20px;
+}
+#steps form fieldset{
+    border:none;
+    padding-bottom:20px;
+}
+#steps form legend{
+    text-align:left;
+    background-color:#f0f0f0;
+    color:#666;
+    font-size:24px;
+    text-shadow:1px 1px 1px #fff;
+    font-weight:bold;
+    float:left;
+    width:590px;
+    padding:5px 0px 5px 10px;
+    margin:10px 0px;
+    border-bottom:1px solid #fff;
+    border-top:1px solid #d9d9d9;
+}
+#steps form p{
+    float:left;
+    clear:both;
+    margin:5px 0px;
+    background-color:#f4f4f4;
+    border:1px solid #fff;
+    width:400px;
+    padding:10px;
+    margin-left:100px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow:0px 0px 3px #aaa;
+    -webkit-box-shadow:0px 0px 3px #aaa;
+    box-shadow:0px 0px 3px #aaa;
+}
+#steps form p label{
+    width:160px;
+    float:left;
+    text-align:right;
+    margin-right:15px;
+    line-height:26px;
+    color:#666;
+    text-shadow:1px 1px 1px #fff;
+    font-weight:bold;
+}
+#steps form input:not([type=radio]),
+#steps form textarea,
+#steps form select{
+    background: #ffffff;
+    border: 1px solid #ddd;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    outline: none;
+    padding: 5px;
+    width: 200px;
+    float:left;
+}
+#steps form input:focus{
+    -moz-box-shadow:0px 0px 3px #aaa;
+    -webkit-box-shadow:0px 0px 3px #aaa;
+    box-shadow:0px 0px 3px #aaa;
+    background-color:#FFFEEF;
+}
+#steps form p.submit{
+    background:none;
+    border:none;
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+    box-shadow:none;
+}
+#steps form button {
+    border:none;
+    outline:none;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    color: #ffffff;
+    display: block;
+    cursor:pointer;
+    margin: 0px auto;
+    clear:both;
+    padding: 7px 25px;
+    text-shadow: 0 1px 1px #777;
+    font-weight:bold;
+    font-family:"Century Gothic", Helvetica, sans-serif;
+    font-size:22px;
+    -moz-box-shadow:0px 0px 3px #aaa;
+    -webkit-box-shadow:0px 0px 3px #aaa;
+    box-shadow:0px 0px 3px #aaa;
+    background:#4797ED;
+}
+#steps form button:hover {
+    background:#d8d8d8;
+    color:#666;
+    text-shadow:1px 1px 1px #fff;
+}
+ .table {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+  }
+  table {
+      background-color: transparent;
+  }
+  table {
+      border-spacing: 0;
+      border-collapse: collapse;
+  }
+
+  .table-striped>tbody>tr:nth-of-type(odd) {
+      background-color: #E2E2E2;
+  }
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 10px;
+      line-height: 1.42857143;
+      vertical-align: top;
+      border-top: 1px solid #ddd;
+  }
+  .table .table-row-header {
+    background:#636363 !important;
+    color:#FFF;
+  }
+  td, th {
+      padding: 0;
+  }
+  .table th , .table td{
+      font-size: 14px;
+  }
+  .table th {
+    font-weight: 700;
+  }
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
+    $("#manager_id").width("150px")
+    $("#page_title").html("Resource Utilization")
      $("#datepickerfrom").datepicker({
         numberOfMonths: 1,
         dateFormat: 'yy-mm-dd',
@@ -64,27 +401,43 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
     });
 		 var fullDate = new Date()
   var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
-  var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
-    responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+$("#business_unit").val()+"&from_date="+currentDate+"&to_date="+currentDate+"&with_details=true")
+  var currentDate = fullDate.getDate() + "-" + twoDigitMonth + "-" + fullDate.getFullYear();
+  $("#datepickerto,#datepickerfrom").val(currentDate)
+    
+    initial_view()
+      
+         })
+  $("#clikc_search").on('click',function(){
+    initial_view()
+  })
+  $("#manager_id").on('change',function(){
+    var from = $("#datepickerfrom").val()
+    var to = $("#datepickerto").val()
+    resource_view(from,to)
+    common_call()
+  })
+
+    $("#business_unit_id").on('change',function(){
+    var from = $("#datepickerfrom").val()
+    var to = $("#datepickerto").val()
+    business_view(from,to)
+    common_call()
+  })
+  function initial_view(){
+    var from = $("#datepickerfrom").val()
+    var to = $("#datepickerto").val()
+    resource_view(from,to)
+    business_view(from,to)
+      
+       responce  = ajax_call("api/overall_efficiency?from_date="+from+"&to_date="+to+"&with_details=false")
     var html_value = ""
-    value_1 = responce["data"]
-     $.each( responce["data"]["resource_efficiency_details"], function( index, value ){
-      value1 = Object.assign(value_1,value);
-         if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
-                }
-                else{
-                  html_value += return_only_t_data(value1)
-                }
-      })
-      $("#initial_table").html(html_value)
-        $.each($("td.billing_opportunity_loss,td.business_unit_billing_opportunity_loss"), function( index1, value1 ){
-     $(this).text("$"+$(this).text())
-      })
-        $.each($("td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
-     $(this).text($(this).text()+"%")
-      })
-      $.each($("td.active"),function(){
+    html_value += convert_ajax_to_htm(responce["data"])
+      $(".step3").find('table').remove()
+      $(".step3").append(html_value)
+      common_call()
+  }
+  function common_call(){
+    $.each($("td.active"),function(){
         if ($(this).text() == "true"){
         $(this).text("Active")
         }
@@ -92,16 +445,18 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
         $(this).text("Inactive")
         }
       }) 
-         $.each($("td.business_unit_billing_opportunity_loss,td.billing_opportunity_loss,td.deployable_resources,td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
+         $.each($("td.business_unit_billing_opportunity_loss,td.billing_opportunity_loss,td.deployable_resources,td.business_unit_utilization_percentage,td.business_unit_assigned_percentage,td.business_unit_clocked_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
         $(this).addClass("text_link")
         $(this).attr('data-popup-open', 'popup-1');
       })
          $("th.business_unit_utilization_percentage").text("Utilization %")
+         $("th.business_unit_clocked_percentage").text("Clocked %")
+         $("th.business_unit_assigned_percentage").text("Assigned %")
          $("th.business_unit_billing_opportunity_loss").text("Billing Delta")
          $("th.billing_opportunity_loss").text("Billing Delta")
          $("th.admin_user_name").text("Resource")
-         $(".resource_efficiency_details,.business_unit_assigned_percentage,.business_unit_clocked_percentage,.assigned_hours,.clocked_hours,.utilization_hours,.working_hours,.bill_rate").hide()
-        pop_up_view(currentDate)
+         $(".resource_efficiency_details,.assigned_hours,.clocked_hours,.utilization_hours,.working_hours,.bill_rate").hide()
+        pop_up_view()
 
           $('[data-popup-open]').on('click', function(e)  {
         var targeted_popup_class = jQuery(this).attr('data-popup-open');
@@ -116,73 +471,27 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
         $(".dropdown_menu").toggle()
         e.preventDefault();
     });
-      $("#clikc_search").on('click',function(){
-        from_date = $("#datepickerfrom").val()
-        to_date = $("#datepickerto").val()
-       responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+$("#business_unit").val()+"&from_date="+from_date+"&to_date="+to_date+"&with_details=true")
+  }
+  function resource_view(from,to){
+    responce  = ajax_call("api/resource_efficiency?admin_user_id="+$("#manager_id").val()+"&from_date="+from+"&to_date="+to+"&with_details=false")
     var html_value = ""
-    value_1 = responce["data"]
-     $.each( responce["data"]["resource_efficiency_details"], function( index, value ){
-      value1 = Object.assign(value_1,value);
-         if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
-                }
-                else{
-                  html_value += return_only_t_data(value1)
-                }
-      })
-      $("#initial_table").html(html_value)
-      $(".admin_user_id").hide()
-        $.each($("td.billing_opportunity_loss,td.business_unit_billing_opportunity_loss"), function( index1, value1 ){
-     $(this).text("$"+$(this).text())
-      })
-        $.each($("td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
-     $(this).text($(this).text()+"%")
-      })
-      $.each($("td.active"),function(){
-        if ($(this).text() == "true"){
-        $(this).text("Active")
-        }
-        else{
-        $(this).text("Inactive")
-        }
-      }) 
-         $.each($("td.business_unit_billing_opportunity_loss,td.billing_opportunity_loss,td.deployable_resources,td.business_unit_utilization_percentage,td.assigned_percentage,td.clocked_percentage,td.utilization_percentage"), function( index1, value1 ){
-        $(this).addClass("text_link")
-        $(this).attr('data-popup-open', 'popup-1');
-      })
-         $("th.business_unit_utilization_percentage").text("Utilization %")
-         $("th.business_unit_billing_opportunity_loss").text("Billing Delta")
-         $("th.billing_opportunity_loss").text("Billing Delta")
-         $("th.admin_user_name").text("Resource")
-         $(".resource_efficiency_details,.business_unit_assigned_percentage,.business_unit_clocked_percentage,.assigned_hours,.clocked_hours,.utilization_hours,.working_hours,.bill_rate").hide()
-        pop_up_view(currentDate)
-         pop_up_view(currentDate)
-         	 $('[data-popup-open]').on('click', function(e)  {
-        var targeted_popup_class = jQuery(this).attr('data-popup-open');
-        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
-        $(".dropdown_menu").toggle()
-        e.preventDefault();
-    });
- 
-    $('[data-popup-close]').on('click', function(e)  {
-        var targeted_popup_class = jQuery(this).attr('data-popup-close');
-        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
-        $(".dropdown_menu").toggle()
-        e.preventDefault();
-    });
-    if ($("#initial_table").html() == ""){
-      	$("#initial_table").html("<br><br><span style ='margin-left: 450px;'><b>No Records Found In Date Range: "+currentDate+" to "+currentDate+" for Business Unit "+$("#business_unit option:selected").text()+"</b></span>")
-      }
-      })
-      $("#datepickerfrom").val(currentDate)
-      $("#datepickerto").val(currentDate)
-       if ($("#initial_table").html() == ""){
-      	$("#initial_table").html("<br><br><span style ='margin-left: 450px;'><b>No Records Found In Date Range: "+currentDate+" to "+currentDate+" for Business Unit "+$("#business_unit option:selected").text()+"</b></span>")
-      }
-         })
+    html_value += convert_ajax_to_htm(responce["data"])
+      $(".step1").find('table').remove()
+      $(".step1").append(html_value)
+      $(".step1").find(".admin_user_id").hide()
+      
+  }
 
-      function pop_up_view(currentDate){
+  function business_view(from,to){
+    responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+$("#business_unit_id").val()+"&from_date="+from+"&to_date="+to+"&with_details=false")
+    var html_value = ""
+    html_value += convert_ajax_to_htm(responce["data"])
+    $(".step2").find('table').remove()
+    $(".step2").append(html_value)
+
+  }
+
+      function pop_up_view(){
   $(".assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_details").on('click',function(){
     var id = $(this).parent().find(".admin_user_id").text()
     var from = $("#datepickerfrom").val()
@@ -205,12 +514,12 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
     $(".popup").find(".clocked_hours,.assigned_percentage,.clocked_percentage,.utilization_percentage,.billing_opportunity_loss").hide()
     }
     $(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details").hide()
-    $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>Business Unit:"+$("#business_unit").find('option:selected').text()+" From: "+$("#datepickerfrom").val()+" TO: "+$("#datepickerto").val()+"</span>")
+    $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'> From: "+$("#datepickerfrom").val()+" TO: "+$("#datepickerto").val()+"</span>")
     $(".hiddding_header").hide()
     $(".hiddding_header").first().show()
 })
-  $(".business_unit_utilization_percentage,.business_unit_billing_opportunity_loss").on('click',function(){
-    var id = $("#business_unit").val()
+  $(".business_unit_utilization_percentage,.business_unit_billing_opportunity_loss,.business_unit_assigned_percentage,.business_unit_clocked_percentage").on('click',function(){
+    var id = $("#business_unit_id").val()
     var from = $("#datepickerfrom").val()
     var to = $("#datepickerto").val()
     responce  = ajax_call("api/business_unit_efficiency?business_unit_id="+id+"&from_date="+from+"&to_date="+to+"&with_details=true")
@@ -228,9 +537,15 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
     $(".popup").find(".business_unit,.admin_user_id,.assigned_hours,.clocked_percentage,.billing_opportunity_loss,.bill_rate,.assigned_percentage,.billing_opportunity_loss,.clocked_hours,.working_hours").hide()
     }
      if( (jQuery.inArray("business_unit_billing_opportunity_loss",$(this).attr('class').split(" ")))== 0){
-    $(".popup").find(".business_unit,.admin_user_id,.assigned_hours,.clocked_percentage,.billing_opportunity_loss,.bill_rate,.assigned_percentage,.utilization_percentage,.clocked_hours,.working_hours").hide()
+    $(".popup").find(".business_unit,.admin_user_id,.assigned_hours,.clocked_percentage,.bill_rate,.assigned_percentage,.utilization_percentage,.clocked_hours,.working_hours").hide()
     }
-     $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>Business Unit:"+$("#business_unit").find('option:selected').text()+" From: "+$("#datepickerfrom").val()+" TO: "+$("#datepickerto").val()+"</span>")
+     if( (jQuery.inArray("business_unit_clocked_percentage",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".business_unit,.admin_user_id,.assigned_hours,.billing_opportunity_loss,.bill_rate,.assigned_percentage,.utilization_percentage,.clocked_hours,.working_hours").hide()
+    }
+    if( (jQuery.inArray("business_unit_assigned_percentage",$(this).attr('class').split(" ")))== 0){
+    $(".popup").find(".business_unit,.admin_user_id,.assigned_hours,.billing_opportunity_loss,.bill_rate,.clocked_percentage,.utilization_percentage,.clocked_hours,.working_hours").hide()
+    }
+     $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'> From: "+$("#datepickerfrom").val()+" TO: "+$("#datepickerto").val()+"</span>")
     $(".hiddding_header").hide()
     $(".hiddding_header").first().show()
   })

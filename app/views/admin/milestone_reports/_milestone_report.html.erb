@@ -30,6 +30,32 @@ Completion Status <%= select_tag("completion_status", options_for_select([["All"
             text-shadow:1px 1px 1px #fff;
             padding:20px;
         }
+        select {
+   -webkit-appearance: button;
+   -webkit-border-radius: 2px;
+   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+   -webkit-padding-end: 20px;
+   -webkit-padding-start: 2px;
+   -webkit-user-select: none;
+   background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+   background-position: 100% center;
+   background-repeat: no-repeat;
+   border: 1px solid #AAA;
+   color: #555;
+   font-size: inherit;
+   margin: 20px;
+   overflow: hidden;
+   padding: 5px 10px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   width: 130px;
+}
+.hasDatepicker 
+{
+    height: 20px;
+    border: 3px solid #c2c2c2;
+    border-radius: 5px;
+}
     </style>
     <body>
         <div>
@@ -319,7 +345,8 @@ span.error{
 </style>
 <script type="text/javascript">
 $(document).ready(function() {
-  (".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
+  $(".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
+  $("#page_title").html("Milestone Report")
 })
         $(".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
    $( "#datepickerfrom" ).datepicker({ dateFormat: 'yy-mm-dd' });
@@ -479,17 +506,17 @@ $(document).ready(function() {
  
     
     $(".delivery_milestones_name").on('click',function(){
-        responce  = ajax_call("api/delivery_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=true")
+        responce  = ajax_call("api/delivery_milestone_details?as_on="+currentDate+"&delivery_milestone_id="+$(this).parent().find('td.id').html())
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
      $.each( responce, function( index, value ){
-        $.each( value["invoicing_milestones"], function( index1, value1 ){
+        // $.each( value["invoicing_milestones"], function( index1, value1 ){
          if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
                 else{
-                  html_value += return_only_t_data(value1)
+                  html_value += return_only_t_data(value)
                 }
-            })
+            // })
       })
     $(".ajax_content").html(html_value)
     $('[data-popup-close]').on('click', function(e)  {
@@ -500,17 +527,15 @@ $(document).ready(function() {
     });
     })
     $(".invoicing_milestones_name").on('click',function(){
-        responce  = ajax_call("api/invoicing_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=true")
+        responce  = ajax_call("api/invoicing_milestone_details?as_on="+currentDate+"&invoicing_milestone_id="+$(this).parent().find('td.id').html())
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
      $.each( responce, function( index, value ){
-        $.each( value["delivery_milestones"], function( index1, value1 ){
          if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
                 else{
-                  html_value += return_only_t_data(value1)
+                  html_value += return_only_t_data(value)
                 }
-            })
       })
     $(".ajax_content").html(html_value)
     $('[data-popup-close]').on('click', function(e)  {
@@ -522,17 +547,15 @@ $(document).ready(function() {
     })
 
       $(".collection_milestones_name").on('click',function(){
-        responce  = ajax_call("api/collection_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=true")
+         responce  = ajax_call("api/collection_milestone_details?as_on="+currentDate+"&invoice_header_id="+$(this).parent().find('td.id').html())
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
      $.each( responce, function( index, value ){
-        $.each( value["invoice_lines"], function( index1, value1 ){
-         if ((index  ==  0) || (html_value.indexOf("<table") < 0)){
-                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
                 else{
-                  html_value += return_only_t_data(value1)
+                  html_value += return_only_t_data(value)
                 }
-            })
       })
     $(".ajax_content").html(html_value)
     $('[data-popup-close]').on('click', function(e)  {
@@ -544,17 +567,15 @@ $(document).ready(function() {
     })
 
       $(".reconciliation_milestones_name").on('click',function(){
-        responce  = ajax_call("api/reconciliation_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=true")
+         responce  = ajax_call("api/reconciliation_milestone_details?as_on="+currentDate+"&payment_header_id="+$(this).parent().find('td.id').html())
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
      $.each( responce, function( index, value ){
-        $.each( value["payment_lines"], function( index1, value1 ){
-         if ((index  ==  0) || (html_value.indexOf("<table") < 0)){
-                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+         if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
                 else{
-                  html_value += return_only_t_data(value1)
+                  html_value += return_only_t_data(value)
                 }
-            })
       })
     $(".ajax_content").html(html_value)
     $('[data-popup-close]').on('click', function(e)  {

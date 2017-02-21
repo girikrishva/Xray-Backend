@@ -1,10 +1,102 @@
 <p>As On: <input type="text" id="datepicker">
-<input type="checkbox"  id="show_project_details">Project Details
-<input type="checkbox"  id="show_financial_details">Financial Details
-<!-- # Delivery Health<%= select_tag("delivery_health", options_for_select([["Select",""],["Red","red"],["Oragnge","oragnge"],["Yellow","yellow"],["Green","green"]])) %> -->
+
+<span class="checkboxFour">
+      <input type="checkbox" value="1" class="filter_opt" id="show_project_details" name="" />
+      <label for="show_project_details"></label>
+    </span>
+    <span style="margin-top: 48px;position: absolute;margin-left: -42px;width: 20px;">Project Details</span>
+    <span class="checkboxFour">
+      <input type="checkbox" value="1" class="filter_opt" id="show_financial_details" name="" />
+      <label for="show_financial_details"></label>
+    </span>
+    <span style="margin-top: 48px;position: absolute;margin-left: -42px;width: 20px;">Financial Details</span>
+<!-- <input type="checkbox"  id="show_project_details">Project Details
+<input type="checkbox"  id="show_financial_details">Financial Details -->
+<%= select_tag("delivery_health", options_for_select([["All Delivery Health","all"],["Red","red"],["Oragnge","oragnge"],["Yellow","yellow"],["Green","green"]]),class:"filters") %>
+<%= select_tag("contribution", options_for_select([["All Contribution","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %>
+<%= select_tag("gross_profit", options_for_select([["All Gross Profit","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %>
+<%= select_tag("project_status", options_for_select(ProjectStatus.pluck('name','id').push(['All Project Status',-1]).reverse),class:"filters") %>
+<%= select_tag("project_type_option", options_for_select(ProjectTypeCode.pluck('name','id').push(['All Project Type',-1]).reverse),class:"filters") %>
+<%= select_tag("manager_id", options_for_select(AdminUser.pluck("name",'id').push(["All Manager",-1]).reverse),class:"filters") %>
 </p>
 <div id="initial_table"></div>
+
 <style type="text/css">
+select {
+   -webkit-appearance: button;
+   -webkit-border-radius: 2px;
+   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+   -webkit-padding-end: 20px;
+   -webkit-padding-start: 2px;
+   -webkit-user-select: none;
+   background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+   background-position: 100% center;
+   background-repeat: no-repeat;
+   border: 1px solid #AAA;
+   color: #555;
+   font-size: inherit;
+   margin: 20px;
+   overflow: hidden;
+   padding: 5px 10px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   width: 130px;
+}
+.hasDatepicker 
+{
+    height: 20px;
+    border: 3px solid #c2c2c2;
+    border-radius: 5px;
+}
+.checkboxFour {
+  width: 40px;
+  height: 40px;
+  background: #ddd;
+  margin: 20px 30px;
+
+  border-radius: 100%;
+  position: relative;
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.5);
+}
+.checkboxFour label {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
+
+  transition: all .5s ease;
+  cursor: pointer;
+  position: absolute;
+  top: -9px;
+  left: -8px;
+  z-index: 1;
+
+  background: '';
+  box-shadow:inset 0px 1px 3px rgba(0,0,0,0.5);
+}
+.checkboxFour input[type=checkbox]:checked + label {
+  background: #26ca28;
+}
+select {
+   -webkit-appearance: button;
+   -webkit-border-radius: 2px;
+   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+   -webkit-padding-end: 20px;
+   -webkit-padding-start: 2px;
+   -webkit-user-select: none;
+   background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+   background-position: 100% center;
+   background-repeat: no-repeat;
+   border: 1px solid #AAA;
+   color: #555;
+   font-size: inherit;
+   margin: 20px;
+   overflow: hidden;
+   padding: 5px 10px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   width: 130px;
+}
 	.table {
       width: 100%;
       max-width: 100%;
@@ -40,9 +132,12 @@
   .table th {
     font-weight: 700;
   }
+
 </style>	
 <script type="text/javascript">
 	$(document).ready(function() {
+    $(".filter_opt").hide()
+    $("#page_title").html("Delivery Health")
 		$(".pagination_information,.download_links,#index_table_resource_forecasts").hide()
 		$( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
 		 var fullDate = new Date()
@@ -53,38 +148,19 @@
   		$( "#datepicker" ).on('change',function(){
   			intial_content($(this).val())
   		})
-  		   $('[data-popup-open]').on('click', function(e)  {
-        var targeted_popup_class = jQuery(this).attr('data-popup-open');
-        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
-        $(".dropdown_menu").toggle()
-        e.preventDefault();
-    });
- 
-    $('[data-popup-close]').on('click', function(e)  {
-        var targeted_popup_class = jQuery(this).attr('data-popup-close');
-        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
-        $(".dropdown_menu").toggle()
-        e.preventDefault();
-    });
-    $("#show_project_details").on('click',function(){
-    	if ($('input#show_project_details').is(':checked')) {
-      $("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").show()
-  }
-  else{
-  	$("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").hide()
-  }
-    })
-    $("#show_financial_details").on('click',function(){
-    	 if ($('input#show_financial_details').is(':checked')) {
-      $("#initial_table").find(".booking_value,.contribution,.gross_profit").show()
-  }
-  else{
-  	$("#initial_table").find(".booking_value,.contribution,.gross_profit").hide()
-  }
-    })
+      $( ".filters" ).on('change',function(){
+        intial_content($("#datepicker").val())
+      })
+  	
 	})
 	function intial_content(currentDate){
-		responce  = ajax_call("api/overall_delivery_health?as_on="+currentDate+"&with_details=false")
+    delivery_health= $("#delivery_health").val()
+    contribution = $("#contribution").val()
+    gross_profit = $("#gross_profit").val()
+    project_status = $("#project_status").val()
+    manager_id = $("#manager_id").val()
+    project_type_option = $("#project_type_option").val()
+		responce  = ajax_call("api/overall_delivery_health?as_on="+currentDate+"&with_details=false&contribution="+contribution+"&delivery_manager_id="+manager_id+"&gross_profit="+gross_profit+"&project_status_id="+project_status+"&project_type_code_id="+project_type_option+"&delivery_health="+delivery_health)
     var html_value = ""
      $.each( responce, function( index, value ){
      	value1 = Object.assign(value["project_details"]["direct_details"], value["project_details"]["lookup_details"]);
@@ -126,6 +202,38 @@
         $(this).addClass("text_link")
         $(this).attr('data-popup-open', 'popup-1');
       })
+
+      $("#initial_table").find("th.project_type").html("Type")
+      $("#initial_table").find("th.project_status").html("Status")
+           $('[data-popup-open]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+ 
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+    $("#show_project_details").on('click',function(){
+      if ($('input#show_project_details').is(':checked')) {
+      $("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").show()
+  }
+  else{
+    $("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").hide()
+  }
+    })
+    $("#show_financial_details").on('click',function(){
+       if ($('input#show_financial_details').is(':checked')) {
+      $("#initial_table").find(".booking_value,.contribution,.gross_profit").show()
+  }
+  else{
+    $("#initial_table").find(".booking_value,.contribution,.gross_profit").hide()
+  }
+    })
       // $(".missed_invoicing_count,.count,.missed_payments_count").
 	}
 	function pop_up_view(currentDate){
