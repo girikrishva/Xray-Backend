@@ -97,7 +97,7 @@ class Project < ActiveRecord::Base
   end
 
 
-  def self.overall_delivery_health(as_on, contribution='all', delivery_manager_id=-1)
+  def self.overall_delivery_health(as_on, contribution='all', delivery_manager_id=-1, gross_profit='all', project_status_id=-1, delivery_health='all', project_type_code_id=-1)
     result = {}
     Project.all.each do |project|
       result[project.id] = {}
@@ -125,6 +125,40 @@ class Project < ActiveRecord::Base
     if delivery_manager_id.to_i > 0
       result.keys.each do |r|
         if result[r]['project_details']['direct_details']['delivery_manager_id'] != delivery_manager_id.to_i
+          result.delete(r)
+        end
+      end
+    end
+    if gross_profit == 'positive'
+      result.keys.each do |r|
+        if result[r]['gross_profit'] < 0
+          result.delete(r)
+        end
+      end
+    elsif gross_profit == 'negative'
+      result.keys.each do |r|
+        if result[r]['gross_profit'] >= 0
+          result.delete(r)
+        end
+      end
+    end
+    if project_status_id.to_i > 0
+      result.keys.each do |r|
+        if result[r]['project_details']['direct_details']['project_status_id'] != project_status_id.to_i
+          result.delete(r)
+        end
+      end
+    end
+    if delivery_health.upcase != 'ALL'
+      result.keys.each do |r|
+        if result[r]['delivery_health'].upcase != delivery_health.upcase
+          result.delete(r)
+        end
+      end
+    end
+    if project_type_code_id.to_i > 0
+      result.keys.each do |r|
+        if result[r]['project_details']['direct_details']['project_type_code_id'] != project_type_code_id.to_i
           result.delete(r)
         end
       end
