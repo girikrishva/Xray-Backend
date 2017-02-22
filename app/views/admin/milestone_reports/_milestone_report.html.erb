@@ -506,6 +506,7 @@ $(document).ready(function() {
  
     
     $(".delivery_milestones_name").on('click',function(){
+      currentDate = $("#datepickerfrom").val()
         responce  = ajax_call("api/delivery_milestone_details?as_on="+currentDate+"&delivery_milestone_id="+$(this).parent().find('td.id').html())
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
      $.each( responce, function( index, value ){
@@ -527,6 +528,7 @@ $(document).ready(function() {
     });
     })
     $(".invoicing_milestones_name").on('click',function(){
+      currentDate = $("#datepickerfrom").val()
         responce  = ajax_call("api/invoicing_milestone_details?as_on="+currentDate+"&invoicing_milestone_id="+$(this).parent().find('td.id').html())
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
      $.each( responce, function( index, value ){
@@ -547,6 +549,7 @@ $(document).ready(function() {
     })
 
       $(".collection_milestones_name").on('click',function(){
+        currentDate = $("#datepickerfrom").val()
          responce  = ajax_call("api/collection_milestone_details?as_on="+currentDate+"&invoice_header_id="+$(this).parent().find('td.id').html())
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
      $.each( responce, function( index, value ){

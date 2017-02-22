@@ -2,12 +2,12 @@
 
 <span class="checkboxFour">
       <input type="checkbox" value="1" class="filter_opt" id="show_project_details" name="" />
-      <label for="show_project_details"></label>
+      <label for="show_project_details" class="boxes"></label>
     </span>
     <span style="margin-top: 48px;position: absolute;margin-left: -42px;width: 20px;">Project Details</span>
     <span class="checkboxFour">
       <input type="checkbox" value="1" class="filter_opt" id="show_financial_details" name="" />
-      <label for="show_financial_details"></label>
+      <label for="show_financial_details" class="boxes"></label>
     </span>
     <span style="margin-top: 48px;position: absolute;margin-left: -42px;width: 20px;">Financial Details</span>
 <!-- <input type="checkbox"  id="show_project_details">Project Details
@@ -132,8 +132,37 @@ select {
   .table th {
     font-weight: 700;
   }
+.stars-container {
+  position: relative;
+  display: inline-block;
+  color: transparent;
+  font-size: large;
+}
 
+.stars-container:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '★★★★★';
+  color: lightgray;
+}
+
+.stars-container:after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '★★★★★';
+  /*color: black;*/
+  overflow: hidden;
+}
+
+.stars-0:after { width: 0%; }
+.stars-40:after { width: 40%; }
+.stars-60:after { width: 60%; }
+.stars-80:after { width: 80%; }
+.stars-100:after { width: 100; }
 </style>	
+
 <script type="text/javascript">
 	$(document).ready(function() {
     $(".filter_opt").hide()
@@ -169,9 +198,9 @@ select {
      	value1 = Object.assign(value1, value_temp);
      	value_temp = {"missed_payments_count":value["missed_payments"]["count"]}
      	value1 = Object.assign(value1, value_temp);
-     	value_temp = {"contribution_status": value["contribution"] > 0 ? "+ve" : "-ve"}
+     	value_temp = {"contribution_status": value["contribution"] > -1 ? "+ve" : "-ve"}
      	value1 = Object.assign(value1, value_temp);
-     	value_temp = {"profit_status": value["profit"] > 0 ? "+ve" : "-ve"}
+     	value_temp = {"profit_status": value["gross_profit"] > -1 ? "+ve" : "-ve"}
      	value1 = Object.assign(value1, value_temp);
      	value1 = Object.assign(value1, value);
          if ((index  ==  0) || (html_value.indexOf("<table") < 0)){
@@ -185,7 +214,30 @@ select {
       $("#initial_table").find("th.missed_invoicing_count").html("MISSED INVOICING")
       $("#initial_table").find("th.missed_payments_count").html("MISSED PAYMENTS ")
       $("#initial_table").find("th.count").html("MISSED DELIVERY")
-      $("#initial_table").find(".project_details,.direct_details,.lookup_details,.missed_payments,.missed_invoicing,.missed_delivery,.created_at,.updated_at,.deleted_at,.client_id,.project_type_code_id,.project_status_id,.business_unit_id,.estimator_id,.delivery_manager_id,.pipeline_id,.sales_person_id,.engagement_manager_id,.sales_person,.estimator,.engagement_manager,.comments,.pipeline_details,.ip_address,.updated_by,.description").hide()
+      $.each($("#initial_table").find("td.delivery_health"),function(){
+        var color = $(this).html().toLowerCase()
+        switch ($(this).html().toLowerCase()) {
+                    case "red":
+                        $(this).html("<div><span class='stars-container stars-40'>★★★★★</span></div>");
+                        break;
+                    case "oragnge":
+                        $(this).html("<div><span class='stars-container stars-60'>★★★★★</span></div>");
+                        break;
+                    case "yellow":
+                         $(this).html("<div><span class='stars-container stars-80'>★★★★★</span></div>");
+                        break;
+                    case "green":
+                        $(this).html("<div><span class='stars-container stars-100'>★★★★★</span></div>");
+                        break;
+                    default:
+                        $(this).html("<div><span class='stars-container stars-0'>★★★★★</span></div>");
+                        break;
+
+                }
+        $(".stars-container").last().css('color',color)
+
+      })
+      $("#initial_table").find(".project_details,.direct_details,.lookup_details,.missed_payments,.missed_invoicing,.missed_delivery,.created_at,.updated_at,.deleted_at,.client_id,.project_type_code_id,.project_status_id,.business_unit_id,.estimator_id,.delivery_manager_id,.pipeline_id,.sales_person_id,.engagement_manager_id,.sales_person,.estimator,.engagement_manager,.comments,.pipeline_details,.ip_address,.updated_by,.description,.id").hide()
       if ($('input#show_project_details').is(':checked')) {
       $("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").show()
   }
@@ -198,7 +250,7 @@ select {
   else{
   	$("#initial_table").find(".booking_value,.contribution,.gross_profit").hide()
   }
-      $.each($("td.missed_invoicing_count,td.count,td.missed_payments_count"), function( index1, value1 ){
+      $.each($("td.missed_invoicing_count,td.count,td.missed_payments_count,td.contribution,td.gross_profit"), function( index1, value1 ){
         $(this).addClass("text_link")
         $(this).attr('data-popup-open', 'popup-1');
       })
@@ -209,15 +261,98 @@ select {
         var targeted_popup_class = jQuery(this).attr('data-popup-open');
         $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
         $(".dropdown_menu").toggle()
+            $(".boxes").hide()
         e.preventDefault();
     });
  
     $('[data-popup-close]').on('click', function(e)  {
+            $(".boxes").show()
         var targeted_popup_class = jQuery(this).attr('data-popup-close');
         $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
         $(".dropdown_menu").toggle()
         e.preventDefault();
     });
+
+    $(".text_link").on('click',function(){
+      project_id = $(this).parent().find('.id').html()
+      as_on = $("#datepicker").val()
+    if( (jQuery.inArray("count",$(this).attr('class').split(" ")))== 0){
+      responce  = ajax_call("api/missed_delivery?project_id="+project_id+"&as_on="+as_on+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    $.each( responce["data"], function( index, value ){
+       if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value["delivery_milestone"]).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value["delivery_milestone"])
+                }
+    })
+       }
+    if( (jQuery.inArray("missed_invoicing_count",$(this).attr('class').split(" ")))== 0){
+      responce  = ajax_call("api/missed_invoicing?project_id="+project_id+"&as_on="+as_on+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    $.each( responce["data"], function( index, value ){
+       if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value["invoicing_milestone"]).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value["invoicing_milestone"])
+                }
+    })
+       }
+    if( (jQuery.inArray("missed_payments_count",$(this).attr('class').split(" ")))== 0){
+      responce  = ajax_call("api/missed_payments?project_id="+project_id+"&as_on="+as_on+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    $.each( responce["data"], function( index, value ){
+       if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value["invoice_line"]).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value["invoice_line"])
+                }
+    })
+       }
+    if( (jQuery.inArray("contribution",$(this).attr('class').split(" ")))== 0){
+      responce  = ajax_call("api/contribution_details?project_id="+project_id+"&as_on="+as_on+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    $.each( responce["total_revenue"]["data"], function( index, value ){
+       if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value["invoice_line"]).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value["invoice_line"])
+                }
+    })
+     $.each( responce["total_revenue"]["data"], function( index, value ){
+       if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value["invoice_header"]).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value["invoice_header"])
+                }
+    })
+       }
+     if( (jQuery.inArray("gross_profit",$(this).attr('class').split(" ")))== 0){
+      responce  = ajax_call("api/gross_profit_details?project_id="+project_id+"&as_on="+as_on+"&with_details=true")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    $.each( responce["total_revenue"]["data"], function( index, value ){
+       if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value["invoice_line"]).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value["invoice_line"])
+                }
+    })
+       }
+       $(".hiddding_header").remove()
+       $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 270px;'>"+(($(this).parent().parent().find("."+$(this).attr('class').split(" ")[0]).html()).toLowerCase()).replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})+" By "+$(this).parent().find(".delivery_manager").html()+" In "+$(this).parent().find(".name").html()+" Project On "+$("#datepicker").val()+"</span>")
+    $(".hiddding_header").last().show()
+    $(".ajax_content").html(html_value)
+    $(".ajax_content").find(".id,.created_at,.deleted_at,.updated_at,.project_id,.ip_address").hide()
+     if ($(".ajax_content").html().indexOf("<table") < 0){
+      $(".ajax_content").html("<span style ='margin-left: 450px;'><b>No Records Found For Date: "+$("#datepicker").val()+"</b></span>")
+    }
+     })
     $("#show_project_details").on('click',function(){
       if ($('input#show_project_details').is(':checked')) {
       $("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").show()
@@ -237,6 +372,7 @@ select {
       // $(".missed_invoicing_count,.count,.missed_payments_count").
 	}
 	function pop_up_view(currentDate){
+
      }
 
 	 function return_only_t_data(responce){
