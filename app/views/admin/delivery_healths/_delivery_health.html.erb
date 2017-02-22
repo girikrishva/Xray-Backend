@@ -315,40 +315,63 @@ select {
     if( (jQuery.inArray("contribution",$(this).attr('class').split(" ")))== 0){
       responce  = ajax_call("api/contribution_details?project_id="+project_id+"&as_on="+as_on+"&with_details=true")
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    html_value += convert_ajax_to_htm(responce["total_revenue"])
     $.each( responce["total_revenue"]["data"], function( index, value ){
+      value1 = Object.assign(value["invoice_header"], value["invoice_line"],value);
        if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value["invoice_line"]).replace("</table>","")
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
                 }
                 else{
-                  html_value += return_only_t_data(value["invoice_line"])
+                  html_value += return_only_t_data(value1)
                 }
     })
-     $.each( responce["total_revenue"]["data"], function( index, value ){
+    html_value += convert_ajax_to_htm(responce["direct_resource_cost"])
+   
+     html_value += convert_ajax_to_htm(responce["direct_overhead_cost"])
+     $.each( responce["direct_overhead_cost"]["data"], function( index, value ){
+      value1 = Object.assign(value["project_overhead"],value);
        if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value["invoice_header"]).replace("</table>","")
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
                 }
                 else{
-                  html_value += return_only_t_data(value["invoice_header"])
+                  html_value += return_only_t_data(value1)
                 }
     })
        }
      if( (jQuery.inArray("gross_profit",$(this).attr('class').split(" ")))== 0){
       responce  = ajax_call("api/gross_profit_details?project_id="+project_id+"&as_on="+as_on+"&with_details=true")
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    html_value += convert_ajax_to_htm(responce["total_revenue"])
     $.each( responce["total_revenue"]["data"], function( index, value ){
+      value1 = Object.assign(value["invoice_header"], value["invoice_line"]);
        if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value["invoice_line"]).replace("</table>","")
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
                 }
                 else{
-                  html_value += return_only_t_data(value["invoice_line"])
+                  html_value += return_only_t_data(value1)
                 }
     })
+    html_value += convert_ajax_to_htm(responce["direct_resource_cost"])
+    
+      html_value += convert_ajax_to_htm(responce["direct_overhead_cost"])
+     $.each( responce["direct_overhead_cost"]["data"], function( index, value ){
+      value1 = Object.assign(value["project_overhead"],value);
+       if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value1).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value1)
+                }
+    })
+      html_value += convert_ajax_to_htm(responce["indirect_resource_cost_share"])
+      html_value += convert_ajax_to_htm(responce["indirect_overhead_cost_share"])
+
        }
        $(".hiddding_header").remove()
        $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 270px;'>"+(($(this).parent().parent().find("."+$(this).attr('class').split(" ")[0]).html()).toLowerCase()).replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})+" By "+$(this).parent().find(".delivery_manager").html()+" In "+$(this).parent().find(".name").html()+" Project On "+$("#datepicker").val()+"</span>")
     $(".hiddding_header").last().show()
     $(".ajax_content").html(html_value)
-    $(".ajax_content").find(".id,.created_at,.deleted_at,.updated_at,.project_id,.ip_address").hide()
+    $(".ajax_content").find(".id,.data,.invoice_header,.invoice_line,.invoice_status_id,.client_id,.invoice_term_id,.invoice_header_id,.invoicing_milestone_id,.invoice_adder_type_id,.project_overhead,.created_at,.deleted_at,.updated_at,.project_id,.ip_address").hide()
      if ($(".ajax_content").html().indexOf("<table") < 0){
       $(".ajax_content").html("<span style ='margin-left: 450px;'><b>No Records Found For Date: "+$("#datepicker").val()+"</b></span>")
     }
