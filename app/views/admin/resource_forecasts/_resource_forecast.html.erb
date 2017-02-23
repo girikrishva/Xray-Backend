@@ -39,7 +39,8 @@
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(".pagination_information,.download_links,#index_table_resource_forecasts").hide()
+    $("#page_title").html("Resource Forecast")
+		$(".pagination_information,.pagination,.download_links,#index_table_resource_forecasts").hide()
 		$( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
 		 var fullDate = new Date()
   var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);

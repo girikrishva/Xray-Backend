@@ -57,7 +57,7 @@ $(document).ready(function() {
     $(".created_at,.updated_at,.deleted_at,.comments,.data,.resource_efficiency_details").hide()
 
   })
-    $(".resource_details,.pagination_information").hide()
+    $(".resource_details,.pagination_information,.pagination").hide()
   })
   $(".assigned_percent,.clocked_percent,.utilization_percent,.billing_details").on('click',function(){
     var id = $(this).attr('id').split("_")[1]

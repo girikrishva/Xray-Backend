@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  $("#page_title").html("Pipeline Forecast")
  $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
 	$("#index_table_pipeline_forecasts,.pagination_information,.pagination").hide()
    var fullDate = new Date()
