@@ -31,16 +31,20 @@
       padding: 0;
   }
   .table th , .table td{
-      font-size: 14px;
+      font-size: 12px;
   }
   .table th {
     font-weight: 700;
+  }
+   #title_bar{
+    padding: 0px;
+    padding-left: 10px;
   }
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
     $("#page_title").html("Resource Forecast")
-		$(".pagination_information,.pagination,.download_links,#index_table_resource_forecasts").hide()
+		$(".pagination_information,.pagination,.breadcrumb,.download_links,#index_table_resource_forecasts").hide()
 		$( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
 		 var fullDate = new Date()
   var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);

@@ -1,4 +1,4 @@
-<p><div style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> TO <input type="text" id="datepickerto" class="onchange"><a href="#" id= "clikc_search" class="table_tools_button">Search </a></div></p>
+<p><div style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> To: <input type="text" id="datepickerto" class="onchange"><a href="#" id= "clikc_search" class="table_tools_button">Search </a></div></p>
 <!-- 
 Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pluck('name','id'))) %>
 <a href="#" id= "clikc_search" class="table_tools_button">Search </a></div></p>
@@ -36,7 +36,7 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
       padding: 0;
   }
   .table th , .table td{
-      font-size: 14px;
+      font-size: 12px;
   }
   .table th {
     font-weight: 700;
@@ -67,6 +67,11 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
             text-shadow:1px 1px 1px #fff;
             padding:20px;
         }
+          #active_admin_content{
+    padding: 0px !important;
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+  }
     </style>
     <body>
         <div>
@@ -370,15 +375,19 @@ span.error{
       padding: 0;
   }
   .table th , .table td{
-      font-size: 14px;
+      font-size: 12px;
   }
   .table th {
     font-weight: 700;
   }
+  #title_bar{
+    padding: 0px;
+    padding-left: 10px;
+  }
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
+		$(".pagination_information,.pagination,.breadcrumb,.download_links,#index_table_resource_utilizations").hide()
     $("#manager_id").width("150px")
     $("#page_title").html("Resource Utilization")
      $("#datepickerfrom").datepicker({

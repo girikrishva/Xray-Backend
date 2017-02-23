@@ -337,15 +337,29 @@ span.error{
       padding: 0;
   }
   .table th , .table td{
-      font-size: 14px;
+      font-size: 12px;
   }
   .table th {
     font-weight: 700;
   }
+   #title_bar{
+    padding: 0px;
+    padding-left: 10px;
+  }
+  select{
+    margin:0px !important;
+    margin-left: 2px !important;
+    margin-right: 20px !important;
+  }
+  #active_admin_content{
+    padding: 0px !important;
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+  }
 </style>
 <script type="text/javascript">
 $(document).ready(function() {
-  $(".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
+  $(".pagination_information,.breadcrumb,.pagination,.download_links,#index_table_resource_utilizations").hide()
   $("#page_title").html("Milestone Report")
 })
         $(".pagination_information,.pagination,.download_links,#index_table_resource_utilizations").hide()
@@ -520,6 +534,9 @@ $(document).ready(function() {
             // })
       })
     $(".ajax_content").html(html_value)
+    $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>"+$(this).html()+"</span>")
+    $(".hiddding_header").hide()
+    $(".hiddding_header").last().show()
     $('[data-popup-close]').on('click', function(e)  {
         var targeted_popup_class = jQuery(this).attr('data-popup-close');
         $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
@@ -540,6 +557,9 @@ $(document).ready(function() {
                 }
       })
     $(".ajax_content").html(html_value)
+    $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>"+$(this).html()+"</span>")
+    $(".hiddding_header").hide()
+    $(".hiddding_header").last().show()
     $('[data-popup-close]').on('click', function(e)  {
         var targeted_popup_class = jQuery(this).attr('data-popup-close');
         $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
@@ -561,6 +581,9 @@ $(document).ready(function() {
                 }
       })
     $(".ajax_content").html(html_value)
+    $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>"+$(this).html()+"</span>")
+    $(".hiddding_header").hide()
+    $(".hiddding_header").last().show()
     $('[data-popup-close]').on('click', function(e)  {
         var targeted_popup_class = jQuery(this).attr('data-popup-close');
         $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
@@ -581,6 +604,9 @@ $(document).ready(function() {
                 }
       })
     $(".ajax_content").html(html_value)
+    $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 460px;'>"+$(this).html()+"</span>")
+    $(".hiddding_header").hide()
+    $(".hiddding_header").last().show()
     $('[data-popup-close]').on('click', function(e)  {
         var targeted_popup_class = jQuery(this).attr('data-popup-close');
         $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);

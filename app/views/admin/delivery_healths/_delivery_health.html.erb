@@ -127,7 +127,7 @@ select {
       padding: 0;
   }
   .table th , .table td{
-      font-size: 14px;
+      font-size: 12px;
   }
   .table th {
     font-weight: 700;
@@ -161,13 +161,17 @@ select {
 .stars-60:after { width: 60%; }
 .stars-80:after { width: 80%; }
 .stars-100:after { width: 100; }
+ #title_bar{
+    padding: 0px;
+    padding-left: 10px;
+  }
 </style>	
 
 <script type="text/javascript">
 	$(document).ready(function() {
     $(".filter_opt").hide()
     $("#page_title").html("Delivery Health")
-		$(".pagination_information,.download_links,#index_table_resource_forecasts").hide()
+		$(".pagination_information,.download_links,#index_table_resource_forecasts,.breadcrumb").hide()
 		$( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
 		 var fullDate = new Date()
   var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
@@ -192,7 +196,8 @@ select {
 		responce  = ajax_call("api/overall_delivery_health?as_on="+currentDate+"&with_details=false&contribution="+contribution+"&delivery_manager_id="+manager_id+"&gross_profit="+gross_profit+"&project_status_id="+project_status+"&project_type_code_id="+project_type_option+"&delivery_health="+delivery_health)
     var html_value = ""
      $.each( responce, function( index, value ){
-     	value1 = Object.assign(value["project_details"]["direct_details"], value["project_details"]["lookup_details"]);
+      value_temp = {"name":value["project_details"]["direct_details"]["name"],"delivery_health":value["delivery_health"],"client":value["project_details"]["lookup_details"]["client"]}
+     	value1 = Object.assign(value_temp,value["project_details"]["direct_details"],{"project_type":value["project_details"]["lookup_details"]["project_type"]},{"project_status":value["project_details"]["lookup_details"]["project_status"]},{"business_unit":value["project_details"]["lookup_details"]["business_unit"]});
      	value1 = Object.assign(value1, value["missed_delivery"]);
      	value_temp = {"missed_invoicing_count":value["missed_invoicing"]["count"]}
      	value1 = Object.assign(value1, value_temp);
@@ -202,7 +207,7 @@ select {
      	value1 = Object.assign(value1, value_temp);
      	value_temp = {"profit_status": value["gross_profit"] > -1 ? "+ve" : "-ve"}
      	value1 = Object.assign(value1, value_temp);
-     	value1 = Object.assign(value1, value);
+     	value1 = Object.assign(value1, value,value["project_details"]["lookup_details"]);
          if ((index  ==  0) || (html_value.indexOf("<table") < 0)){
                   html_value += convert_ajax_to_htm(value1).replace("</table>","")
                 }

@@ -1,5 +1,5 @@
-<p style="margin-left: 4px;font-size: 19px;">As On: <input type="text" id="datepicker" style="margin-right: 90px;"> 
-<span style="font-size: 19px;color: #094891;">Period:</span><span class="period" style="margin-left: 4px;font-size: 19px;"></span></p>
+<p >As On: <input type="text" id="datepicker" style="margin-right: 90px;"> 
+<span style="color: #094891;">Period:</span><span class="period" ></span></p>
 <%@pipeline_status=PipelineStatus.pluck('name','id')%>
 <%@pipeline_status.each do |status|%>
 <span class=<%=status[0]%> id=<%=status[1]%> >  </span>
@@ -36,9 +36,13 @@
 	    padding: 0;
 	}
 	.table th , .table td{
-	    font-size: 14px;
+	    font-size: 12px;
 	}
 	.table th {
 		font-weight: 700;
 	}
+	 #title_bar{
+    padding: 0px;
+    padding-left: 10px;
+  }
 </style>

@@ -58,10 +58,14 @@
       padding: 0;
   }
   .table th , .table td{
-      font-size: 14px;
+      font-size: 12px;
   }
   .table th {
     font-weight: 700;
+  }
+   #title_bar{
+    padding: 0px;
+    padding-left: 10px;
   }
 </style>
 <script type="text/javascript">
@@ -137,7 +141,7 @@ function popup_view(){
   }
   $(document).ready(function() {
 $("#page_title").html("Organization Chart")
-$(".pagination_information").hide()})
+$(".pagination_information,.pagination,.breadcrumb").hide()})
   $(".chart_expander").on('click',function(){
     $(".chart_expander").toggle()
     $(".orgchart").remove()

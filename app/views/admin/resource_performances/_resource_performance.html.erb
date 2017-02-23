@@ -37,15 +37,25 @@ Display  <%= select_tag("display", options_for_select([["Inflow","inflow"],["Out
       padding: 0;
   }
   .table th , .table td{
-      font-size: 14px;
+      font-size: 12px;
   }
   .table th {
     font-weight: 700;
   }
+   #title_bar{
+    padding: 0px;
+    padding-left: 10px;
+  }
+    #active_admin_content{
+    padding: 0px !important;
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+  }
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(".pagination_information,.download_links,#index_table_resource_forecasts,.pagination").hide()
+    $("#page_title").html("Resource Performance")
+		$(".pagination_information,.download_links,#index_table_resource_forecasts,.pagination,.breadcrumb").hide()
 		$( "#datepickerfrom" ).datepicker({ dateFormat: 'yy-mm-dd' });
 		 var fullDate = new Date()
   var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);

@@ -29,7 +29,7 @@ $(document).ready(function() {
 
       })
       $("#initial_table").html(html_value) 
-  $(".skill_id,.designation_id,.business_unit_id").hide()
+  $(".skill_id,.designation_id,.business_unit_id,.breadcrumb").hide()
       $("#datepicker").val(currentDate)
          $.each($("td.count"), function( index1, value1 ){
         $(this).addClass("text_link")
