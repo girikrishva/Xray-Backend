@@ -12,7 +12,7 @@
     <span style="margin-top: 48px;position: absolute;margin-left: -42px;width: 20px;">Financial Details</span>
 <!-- <input type="checkbox"  id="show_project_details">Project Details
 <input type="checkbox"  id="show_financial_details">Financial Details -->
-<%= select_tag("delivery_health", options_for_select([["All Delivery Health","all"],["Red","red"],["Oragnge","oragnge"],["Yellow","yellow"],["Green","green"]]),class:"filters") %>
+<%= select_tag("delivery_health", options_for_select([["All Delivery Health","all"],["Red","red"],["Orange","orange"],["Yellow","yellow"],["Green","green"]]),class:"filters") %>
 <%= select_tag("contribution", options_for_select([["All Contribution","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %>
 <%= select_tag("gross_profit", options_for_select([["All Gross Profit","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %>
 <%= select_tag("project_status", options_for_select(ProjectStatus.pluck('name','id').push(['All Project Status',-1]).reverse),class:"filters") %>
@@ -225,7 +225,7 @@ select {
                     case "red":
                         $(this).html("<div><span class='stars-container stars-40'>★★★★★</span></div>");
                         break;
-                    case "oragnge":
+                    case "orange":
                         $(this).html("<div><span class='stars-container stars-60'>★★★★★</span></div>");
                         break;
                     case "yellow":
