@@ -216,9 +216,9 @@ select {
                 }
       })
       $("#initial_table").html(html_value) 
-      $("#initial_table").find("th.missed_invoicing_count").html("MISSED INVOICING")
-      $("#initial_table").find("th.missed_payments_count").html("MISSED PAYMENTS ")
-      $("#initial_table").find("th.count").html("MISSED DELIVERY")
+      $("#initial_table").find("th.missed_invoicing_count").html("MISSED INVOICING MILESTONE")
+      $("#initial_table").find("th.missed_payments_count").html("MISSED PAYMENTS MILESTONE")
+      $("#initial_table").find("th.count").html("MISSED DELIVERY MILESTONE")
       $.each($("#initial_table").find("td.delivery_health"),function(){
         var color = $(this).html().toLowerCase()
         switch ($(this).html().toLowerCase()) {
