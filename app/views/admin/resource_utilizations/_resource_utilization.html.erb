@@ -94,7 +94,7 @@ Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pl
                 </div>
                 <div id="steps">
                         <fieldset class="step step1">
-                        <p>Manager<%= select_tag("manager_id", options_for_select(AdminUser.pluck("name",'id').reverse,current_admin_user.id),class:"filters") %></p>
+                        <p>Resource<%= select_tag("manager_id", options_for_select(AdminUser.get_records_user_id(current_admin_user.id).reverse,current_admin_user.id),class:"filters") %></p>
                         </fieldset>
                         <fieldset class="step step2">
                         <p>Business Unit<%= select_tag("business_unit_id", options_for_select(BusinessUnit.pluck("name",'id').reverse,current_admin_user.business_unit_id),class:"filters") %></p>
