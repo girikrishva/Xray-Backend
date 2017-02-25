@@ -291,4 +291,23 @@ class AdminUser < ActiveRecord::Base
     end
     return users
   end
+
+  def self.get_records_user_id(id)
+    users = []
+    self.where(id:id).each do |user|
+      users_hash = {}
+      user_count =  AdminUser.where(:manager_id =>user.id).collect(&:id)
+      user_name = user.name 
+      users_id = user.id.to_s
+      if user_count.count() > 0
+        user_count.each do |id|
+          self.get_records_user_id(id).each do |x|
+          users << x
+        end
+        end
+      end
+      users << [user_name,users_id]
+    end
+    return users
+  end
 end
