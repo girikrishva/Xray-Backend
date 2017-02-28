@@ -9,6 +9,7 @@ $(document).ready(function() {
         responce  = ajax_call("api/pipeline_for_all_statuses?as_on="+currentDate)
     var html_value = ""
  $("#initial_table").html(table_view(responce,html_value))
+ sorting_table($("#initial_table").find('table'))
   $(".period").text($(".table tbody tr th:nth-child(2)").html()+" to "+$(".table tbody tr th:last").html())
            $('[data-popup-open]').on('click', function(e)  {
         var targeted_popup_class = jQuery(this).attr('data-popup-open');
@@ -34,6 +35,7 @@ $(document).ready(function() {
   html_value = ""
   $("#datepicker").val(currentDate)
   $("#initial_table").html(table_view(responce,html_value))
+  sorting_table($("#initial_table").find('table'))
   $(".period").text($(".table tbody tr th:nth-child(2)").html()+" to "+$(".table tbody tr th:last").html())
   $(".text_link").on('click',function(){
   status_id = $("."+$(this).parent().find(".pipeline_status").html()).attr('id')
@@ -45,19 +47,22 @@ $(document).ready(function() {
     $(".hiddding_header").hide()
     $(".hiddding_header").first().show()
     $.each( responce["data"], function( index, value ){
+      value = Object.assign(value, value["pipeline"]);
                 if (index  ==  0){
-                  html_value += convert_ajax_to_htm(value["pipeline"]).replace("</table>","")
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
                 else{
-                  html_value += return_only_t_data(value["pipeline"])
+                  html_value += return_only_t_data(value)
                 }
             });
             html_value += "</table>"
 		$(".ajax_content").html(html_value)
+ sorting_table($(".ajax_content").find('table'))
+
      $.each($("td.expected_value,td.total_pipeline"), function( index1, value1 ){
      $(this).text("$"+$(this).text())
       })
-		$(".created_at,.updated_at,.deleted_at,.comments,.data,.update_by,.pipeline_status_id").hide()
+		$(".created_at,.pipeline,.project_type_code_id,.pipeline_status_id,.sales_person_id,.estimator_id,.engagement_manager_id,.delivery_manager_id,.ip_address,.client_id,.id,.business_unit_id,.updated_at,.deleted_at,.comments,.data,.update_by,.pipeline_status_id").hide()
 	})
 
 	      function return_only_t_data(responce){
@@ -72,7 +77,7 @@ $(document).ready(function() {
           function convert_ajax_to_htm(responce){
    var ajax_content_value = "<table class = 'table table-striped'><tr class = 'table-row-header'>"
            $.each(responce, function(key, value) {
-                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border-top: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border-top: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {
@@ -113,6 +118,8 @@ $(document).ready(function() {
     });
 });
 })
+var fullDate = new Date()
+mon = fullDate.getMonth()+1
 var monthNames = [ "Jan",   "Feb", "Mar",    "Apr",
                    "May",       "Jun",     "Jul",     "Aug",
                    "Sept", "Oct",  "Nov", "Dec" ]
@@ -129,13 +136,14 @@ function table_view(responce,html_value){
                      else{
                       key1 =key.replace(/_/g," ").toUpperCase()
                      }
-                  html_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border-top: 1px solid #ddd;'>"+key1+"</th>" 
+                  html_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border-top: 1px solid #ddd;'>"+key1.toUpperCase()+"</th>" 
                   });
            html_value += "</tr><tr>"
              $.each(value, function(key, value) {
                   other_class = ""
                   attr = ""
                   if (value["total_pipeline"] > 0){other_class=" text_link"}
+                  if(parseInt(key.replace(" ", "_").split("-")[1]) == mon){other_class+=" current_month"}
                   if (typeof value == 'object'){ 
                     value = value["total_pipeline"]
                   attr = "data-popup-open='popup-1'"
@@ -149,6 +157,7 @@ function table_view(responce,html_value){
              $.each(value, function(key, value) {
                   other_class = ""
                   if (value["total_pipeline"] > 0){other_class=" text_link"}
+                  if(parseInt(key.replace(" ", "_").split("-")[1]) == mon){other_class+=" current_month"}
                   if (typeof value == 'object'){ value = value["total_pipeline"] }
                   html_value +="<td class='"+key.replace(" ", "_")+other_class+"'style = 'border-top: 1px solid #ddd;'"+attr+" >"+value+"</td>" 
                   });

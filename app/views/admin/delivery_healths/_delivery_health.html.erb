@@ -1,5 +1,16 @@
-<p>As On: <input type="text" id="datepicker">
+<p>As On: <input type="text" id="datepicker" style="text-align:center;width: 90px;">
 
+
+  <%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
+
+<!-- <input type="checkbox"  id="show_project_details">Project Details
+<input type="checkbox"  id="show_financial_details">Financial Details -->
+<%= select_tag("delivery_health", options_for_select([["All Delivery Health","all"],["Red","red"],["Orange","orange"],["Yellow","yellow"],["Green","green"]]),class:"filters") %>
+<%= select_tag("contribution", options_for_select([["All Contribution","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %>
+<%= select_tag("gross_profit", options_for_select([["All Gross Profit","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %>
+<%= select_tag("project_status", options_for_select(ProjectStatus.pluck('name','id').push(['All Project Status',-1]).reverse),class:"filters") %>
+<%= select_tag("project_type_option", options_for_select(ProjectTypeCode.pluck('name','id').push(['All Project Type',-1]).reverse),class:"filters") %>
+<%= select_tag("manager_id", options_for_select(AdminUser.order('name desc').pluck("name",'id').push(["All Manager",-1]).reverse),class:"filters") %>
 <span class="checkboxFour">
       <input type="checkbox" value="1" class="filter_opt" id="show_project_details" name="" />
       <label for="show_project_details" class="boxes"></label>
@@ -10,14 +21,6 @@
       <label for="show_financial_details" class="boxes"></label>
     </span>
     <span style="margin-top: 48px;position: absolute;margin-left: -42px;width: 20px;">Financial Details</span>
-<!-- <input type="checkbox"  id="show_project_details">Project Details
-<input type="checkbox"  id="show_financial_details">Financial Details -->
-<%= select_tag("delivery_health", options_for_select([["All Delivery Health","all"],["Red","red"],["Orange","orange"],["Yellow","yellow"],["Green","green"]]),class:"filters") %>
-<%= select_tag("contribution", options_for_select([["All Contribution","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %>
-<%= select_tag("gross_profit", options_for_select([["All Gross Profit","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %>
-<%= select_tag("project_status", options_for_select(ProjectStatus.pluck('name','id').push(['All Project Status',-1]).reverse),class:"filters") %>
-<%= select_tag("project_type_option", options_for_select(ProjectTypeCode.pluck('name','id').push(['All Project Type',-1]).reverse),class:"filters") %>
-<%= select_tag("manager_id", options_for_select(AdminUser.pluck("name",'id').push(["All Manager",-1]).reverse),class:"filters") %>
 </p>
 <div id="initial_table"></div>
 
@@ -60,8 +63,8 @@ select {
 }
 .checkboxFour label {
   display: block;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border-radius: 100px;
 
   transition: all .5s ease;
@@ -136,14 +139,14 @@ select {
   position: relative;
   display: inline-block;
   color: transparent;
-  font-size: large;
+  font-size: xx-large;
 }
 
 .stars-container:before {
   position: absolute;
   top: 0;
   left: 0;
-  content: '★★★★★';
+  content: '★';
   color: lightgray;
 }
 
@@ -151,7 +154,7 @@ select {
   position: absolute;
   top: 0;
   left: 0;
-  content: '★★★★★';
+  content: '★';
   /*color: black;*/
   overflow: hidden;
 }
@@ -169,6 +172,7 @@ select {
 
 <script type="text/javascript">
 	$(document).ready(function() {
+    
     $(".filter_opt").hide()
     $("#page_title").html("Delivery Health")
 		$(".pagination_information,.download_links,#index_table_resource_forecasts,.breadcrumb").hide()
@@ -220,31 +224,36 @@ select {
       $("#initial_table").find("th.missed_payments_count").html("MISSED PAYMENTS MILESTONE")
       $("#initial_table").find("th.count").html("MISSED DELIVERY MILESTONE")
       $.each($("#initial_table").find("td.delivery_health"),function(){
+        $(this).css('text-align','center')
         var color = $(this).html().toLowerCase()
         switch ($(this).html().toLowerCase()) {
                     case "red":
-                        $(this).html("<div><span class='stars-container stars-40'>★★★★★</span></div>");
+                        $(this).html("<div><span class='stars-container stars-100'>★</span></div>");
                         break;
                     case "orange":
-                        $(this).html("<div><span class='stars-container stars-60'>★★★★★</span></div>");
+                        $(this).html("<div><span class='stars-container stars-100'>★</span></div>");
                         break;
                     case "yellow":
-                         $(this).html("<div><span class='stars-container stars-80'>★★★★★</span></div>");
+                         $(this).html("<div><span class='stars-container stars-100'>★</span></div>");
                         break;
                     case "green":
-                        $(this).html("<div><span class='stars-container stars-100'>★★★★★</span></div>");
+                        $(this).html("<div><span class='stars-container stars-100'>★</span></div>");
                         break;
                     default:
-                        $(this).html("<div><span class='stars-container stars-0'>★★★★★</span></div>");
+                        $(this).html("<div><span class='stars-container stars-100'>★</span></div>");
                         break;
 
                 }
         $(".stars-container").last().css('color',color)
 
       })
+      sorting_table($("#initial_table").find('table'))
+      
+
       $("#initial_table").find(".project_details,.direct_details,.lookup_details,.missed_payments,.missed_invoicing,.missed_delivery,.created_at,.updated_at,.deleted_at,.client_id,.project_type_code_id,.project_status_id,.business_unit_id,.estimator_id,.delivery_manager_id,.pipeline_id,.sales_person_id,.engagement_manager_id,.sales_person,.estimator,.engagement_manager,.comments,.pipeline_details,.ip_address,.updated_by,.description,.id").hide()
       if ($('input#show_project_details').is(':checked')) {
       $("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").show()
+
   }
   else{
   	$("#initial_table").find(".start_date,.end_date,.project_status,.business_unit,.project_type").hide()
@@ -255,11 +264,11 @@ select {
   else{
   	$("#initial_table").find(".booking_value,.contribution,.gross_profit").hide()
   }
+
       $.each($("td.missed_invoicing_count,td.count,td.missed_payments_count,td.contribution,td.gross_profit"), function( index1, value1 ){
         $(this).addClass("text_link")
         $(this).attr('data-popup-open', 'popup-1');
       })
-
       $("#initial_table").find("th.project_type").html("Type")
       $("#initial_table").find("th.project_status").html("Status")
            $('[data-popup-open]').on('click', function(e)  {
@@ -377,6 +386,7 @@ select {
     $(".hiddding_header").last().show()
     $(".ajax_content").html(html_value)
     $(".ajax_content").find(".id,.data,.invoice_header,.invoice_line,.invoice_status_id,.client_id,.invoice_term_id,.invoice_header_id,.invoicing_milestone_id,.invoice_adder_type_id,.project_overhead,.created_at,.deleted_at,.updated_at,.project_id,.ip_address").hide()
+    sorting_table($(".ajax_content").find('table'))
      if ($(".ajax_content").html().indexOf("<table") < 0){
       $(".ajax_content").html("<span style ='margin-left: 450px;'><b>No Records Found For Date: "+$("#datepicker").val()+"</b></span>")
     }
@@ -398,6 +408,7 @@ select {
   }
     })
       // $(".missed_invoicing_count,.count,.missed_payments_count").
+
 	}
 	function pop_up_view(currentDate){
 
@@ -415,7 +426,7 @@ select {
           function convert_ajax_to_htm(responce){
    var ajax_content_value = "<table class = 'table table-striped'><tr class ='table-row-header'>"
            $.each(responce, function(key, value) {
-                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {

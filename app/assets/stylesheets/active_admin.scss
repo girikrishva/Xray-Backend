@@ -60,7 +60,7 @@
     background: transparent;
     font-family: Arial, Sans-Serif;
     border: 1px solid #AAA;
-    font-size: 20px;
+    font-size: 11px;
     background: #FAFAFA;
     text-align: center;
     line-height: 30px;
@@ -100,4 +100,13 @@
 
 .ajax_content {
     overflow:auto;
+}
+
+th.sort_up {
+  background-image: url('up-arrow.png');
+  background-repeat: no-repeat;
+}
+th.sort_down {
+  background-image: url('down-arrow.png');
+  background-repeat: no-repeat;
 }
