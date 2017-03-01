@@ -1,10 +1,11 @@
-<p> <div style="margin-left: 23px;">As On: <input type="text" id="datepickerfrom" class="onchange">
+<p> <div style="margin-left: 23px;">As On: <input type="text" id="datepickerfrom" class="onchange" style="text-align:center;width: 90px;margin-right: 20px;">
 Active <%= select_tag("active", options_for_select([["All","all"],["Yes","yes"],["No","no"]])) %>
 Display  <%= select_tag("display", options_for_select([["Inflow","inflow"],["Outflow","outflow"],["Netflow","netflow"]])) %>
-<a href="#" id= "clikc_search" class="table_tools_button">Search </a></div>
+Business Unit<%= select_tag("bu_dropdown", options_for_select(BusinessUnit.pluck('name','name').push(['All',"All"]).reverse),class:"filters") %>
 </p>
 
 <div id="initial_table"></div>
+<%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
 
 <style type="text/css">
 	.table {
@@ -51,6 +52,26 @@ Display  <%= select_tag("display", options_for_select([["Inflow","inflow"],["Out
     padding-left: 30px !important;
     padding-right: 30px !important;
   }
+  select {
+   -webkit-appearance: button;
+   -webkit-border-radius: 2px;
+   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+   -webkit-padding-end: 20px;
+   -webkit-padding-start: 2px;
+   -webkit-user-select: none;
+   background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+   background-position: 100% center;
+   background-repeat: no-repeat;
+   border: 1px solid #AAA;
+   color: #555;
+   font-size: inherit;
+   margin: 20px;
+   overflow: hidden;
+   padding: 5px 10px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   width: 130px;
+}
 </style>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -61,12 +82,17 @@ Display  <%= select_tag("display", options_for_select([["Inflow","inflow"],["Out
   var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
   var currentDate = fullDate.getDate() + "-" + twoDigitMonth + "-" + fullDate.getFullYear();
   $( "#datepickerfrom" ).val(currentDate)
-  
+  call_init_view()
+  $("#datepickerfrom,#active,#display").on('change',function(){
+    call_init_view()
+  })
+ })
+
  
- $("#clikc_search").on('click',function(){
+ function call_init_view(){
   currentDate = $("#datepickerfrom" ).val()
-  active = $("#active").val()
-  display = $("#display").val()
+  active = $("#active").find(":selected").val()
+  display = $("#display").find(":selected").val()
  var numbers = currentDate.split("-"); 
 var date = new Date(numbers[2]+"-"+numbers[1]+"-"+numbers[0]);
 date.setMonth(date.getMonth() + 12)
@@ -75,6 +101,7 @@ to_date = new Date(date.getFullYear(),date.getMonth(),0)
   responce  = ajax_call("api/active_users_outflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
   var html_value = ""
      $.each( responce, function( index, value ){
+       value = Object.assign(value, {"Total":value["user_total"]});
          if (index  ==  1 || (html_value.indexOf("<table") < 0)){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
@@ -89,6 +116,7 @@ if (active == "no" && display == "outflow"){
   responce  = ajax_call("api/inactive_users_outflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
   var html_value = ""
      $.each( responce, function( index, value ){
+       value = Object.assign(value, {"Total":value["user_total"]});
          if (index  ==  1 || (html_value.indexOf("<table") < 0)){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
@@ -103,6 +131,7 @@ if (active == "all" && display == "outflow"){
   responce  = ajax_call("api/all_users_outflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
   var html_value = ""
      $.each( responce, function( index, value ){
+       value = Object.assign(value, {"Total":value["user_total"]});
          if (index  ==  1 || (html_value.indexOf("<table") < 0)){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
@@ -117,6 +146,7 @@ if (active == "yes" && display == "inflow"){
   responce  = ajax_call("api/active_users_inflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
   var html_value = ""
      $.each( responce, function( index, value ){
+       value = Object.assign(value, {"Total":value["user_total"]});
          if (index  ==  1 || (html_value.indexOf("<table") < 0)){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
@@ -132,6 +162,7 @@ if (active == "no" && display == "inflow"){
   responce  = ajax_call("api/inactive_users_inflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
   var html_value = ""
      $.each( responce, function( index, value ){
+       value = Object.assign(value, {"Total":value["user_total"]});
          if (index  ==  1 || (html_value.indexOf("<table") < 0)){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
@@ -146,6 +177,7 @@ if (active == "all" && display == "inflow"){
   responce  = ajax_call("api/all_users_inflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
   var html_value = ""
      $.each( responce, function( index, value ){
+       value = Object.assign(value, {"Total":value["user_total"]});
          if (index  ==  1 || (html_value.indexOf("<table") < 0)){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
@@ -160,6 +192,7 @@ if (active == "yes" && display == "netflow"){
   responce  = ajax_call("api/active_users_netflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
   var html_value = ""
      $.each( responce, function( index, value ){
+       value = Object.assign(value, {"Total":value["user_total"]});
          if (index  ==  1 || (html_value.indexOf("<table") < 0)){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
@@ -174,6 +207,7 @@ if (active == "no" && display == "netflow"){
   responce  = ajax_call("api/inactive_users_netflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
   var html_value = ""
      $.each( responce, function( index, value ){
+       value = Object.assign(value, {"Total":value["user_total"]});
          if (index  ==  1 || (html_value.indexOf("<table") < 0)){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
@@ -188,6 +222,7 @@ if (active == "all" && display == "netflow"){
   responce  = ajax_call("api/all_users_netflow?from_date="+currentDate+"&to_date="+to_date.getDate()+"-"+(to_date.getMonth()+1)+"-"+to_date.getFullYear())
   var html_value = ""
      $.each( responce, function( index, value ){
+       value = Object.assign(value, {"Total":value["user_total"]});
          if (index  ==  1 || (html_value.indexOf("<table") < 0)){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
                 }
@@ -199,10 +234,72 @@ if (active == "all" && display == "netflow"){
      html_value = html_value+"</table>"
 }
      $("#initial_table").html(html_value)
+     var m = {}
+
+$.each($("#initial_table").find("td"), function(){
+      if (($.inArray($(this).attr('class'), [ "id", "name", "business_unit","date_of_joining","date_of_leaving","active"] ) == -1)){
+        if (isNaN(parseInt(m[$(this).attr('class')]))){
+          m[$(this).attr('class')] = 0
+        console.log(m[$(this).attr('class')])
+        }
+        else{
+        console.log(m[$(this).attr('class')])
+        m[$(this).attr('class')] =parseInt(m[$(this).attr('class')]) + parseInt($(this).html())
+        }
+      }
+      else{
+        m[$(this).attr('class')] = ""
+        
+      }
+    })
+
+     $.each($("#initial_table").find("td.active"), function(){
+
+      if ($(this).html() == "true"){
+        $(this).html("Yes")
+      }
+      else{
+        $(this).html("No")
+      }
+
+     })
+     if ($("#bu_dropdown").find(":selected").val() != "All"){
+      var current_val = $("#bu_dropdown").find(":selected").val()
+      $.each($("#initial_table").find("td.business_unit"), function(){
+        if ($(this).html() != current_val){
+          $(this).parent().hide()
+        }
+        else{
+          $(this).parent().show()
+        }
+      })
+     }
+     $("#initial_table").find('.user_total').hide()
+    $("#initial_table").html(html_value+"<table class = 'table table-striped'>"+return_only_t_data(m)+"</table>")
+$.each($("#initial_table").find('table.initial_table_disp').find("td"), function(){
+  $("."+$(this).attr('class')).width($(this).width())
+})
+ sorting_table($("#initial_table").find('table.initial_table_disp'))
+
+ }
+
+ $("#bu_dropdown").on('change',function(){
+  if ($("#bu_dropdown").find(":selected").val() != "All"){
+      var current_val = $("#bu_dropdown").find(":selected").val()
+      $.each($("#initial_table").find("td.business_unit"), function(){
+        if ($(this).html() == current_val){
+          $(this).parent().show()
+        }
+        else{
+          $(this).parent().hide()
+        }
+      })
+     }
+     else{
+      $.each($("#initial_table").find("td.business_unit"), function(){$(this).parent().show()})
+     }
  })
- $("#clikc_search").click()
- })
-         function return_only_t_data(responce){
+          function return_only_t_data(responce){
              var ajax_content_value = "</tr><tr>"
              $.each(responce, function(key, value) {
                   ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
@@ -212,9 +309,9 @@ if (active == "all" && display == "netflow"){
           }
 
           function convert_ajax_to_htm(responce){
-   var ajax_content_value = "<table class = 'table table-striped'><tr class ='table-row-header'>"
+   var ajax_content_value = "<table class = 'table table-striped initial_table_disp'><tr class ='table-row-header'>"
            $.each(responce, function(key, value) {
-                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {

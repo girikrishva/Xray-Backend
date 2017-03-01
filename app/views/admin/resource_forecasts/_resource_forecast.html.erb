@@ -1,4 +1,6 @@
-<p>As On: <input type="text" id="datepicker"></p>
+<p>As On: <input type="text" id="datepicker" style="text-align:center;width: 90px;margin-right: 20px;"></p>
+  <%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
+
 <div id="initial_table"></div>
 <style type="text/css">
 	.table {
@@ -93,6 +95,8 @@
       })
 
       $("#initial_table").html(html_value) 
+      sorting_table($("#initial_table").find('table'))
+
       $(".skill_id,.designation_id").hide()
         $.each($("td.total_resource_cost"), function( index1, value1 ){
      $(this).text("$"+$(this).text())
@@ -196,6 +200,7 @@
               }
             
 		$(".ajax_content").html(html_value)
+    sorting_table($(".ajax_content").find('table'))
 		$(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details,.staffing_fulfilled_details,.deployable_resources_details,.id,.admin_user_id").hide()
 	
 })
@@ -212,7 +217,7 @@
           function convert_ajax_to_htm(responce){
    var ajax_content_value = "<table class = 'table table-striped'><tr class ='table-row-header'>"
            $.each(responce, function(key, value) {
-                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {

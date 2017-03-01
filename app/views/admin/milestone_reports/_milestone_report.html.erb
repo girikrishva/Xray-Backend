@@ -1,10 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
     <head>
-   <p> <div style="margin-left: 23px;">As On: <input type="text" id="datepickerfrom" class="onchange">
+   <p> <div style="margin-left: 23px;">As On: <input type="text" id="datepickerfrom" class="onchange" style="text-align:center;width: 90px;margin-right: 90px;">
 Due Status <%= select_tag("due_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %>
 Completion Status <%= select_tag("completion_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %>
-<a href="#" id= "clikc_search" class="table_tools_button">Search </a>
+<!-- <a href="#" id= "clikc_search" class="table_tools_button">Search </a> -->
 </div></p>
+<%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
         <script type="text/javascript" src="https://tympanus.net/Tutorials/FancySlidingForm/sliding.form.js"></script>
     </head>
     <style>
@@ -64,7 +65,7 @@ Completion Status <%= select_tag("completion_status", options_for_select([["All"
             <div id="wrapper1">
                <div id="navigation" style="display:none;">
                     <ul>
-                        <li class="selected">
+                        <li class="selected" style="margin-left: 18px;">
                             <a href="#">Delivery Milestones</a>
                         </li>
                         <li>
@@ -149,10 +150,11 @@ body{
 }
 #navigation ul{
     list-style:none;
-    float:left;
-    margin-left:22px;
+    /*float:left;
+    margin-left:22px;*/
 }
 #navigation ul li{
+    width: 24%;
     float:left;
     border-right:1px solid #ccc;
     border-left:1px solid #ccc;
@@ -308,6 +310,7 @@ span.error{
     text-shadow:1px 1px 1px #fff;
 }
  .table {
+      margin-top: 30px;
       width: 100%;
       max-width: 100%;
       margin-bottom: 20px;
@@ -368,9 +371,10 @@ $(document).ready(function() {
   var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
   var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
   // currentDate = "2016-12-01"
-  $("#clikc_search").on('click',function(){
+  $("#datepickerfrom,#due_status,#completion_status").on('change',function(){
   //start 
-  responce  = ajax_call("api/delivery_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+  currentDate = $("#datepickerfrom").val()
+  responce  = ajax_call("api/delivery_milestones?as_on="+currentDate+"&due_status="+$("#due_status").find(":selected").val()+"&completion_status="+$("#completion_status").find(":selected").val()+"&with_details=false")
     var html_value = ""
      $.each( responce, function( index, value ){
          if (index  ==  0){
@@ -387,7 +391,7 @@ $(document).ready(function() {
      $(this).attr('data-popup-open', 'popup-1');
       })
      pop_up_view(currentDate)
-         responce  = ajax_call("api/invoicing_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+         responce  = ajax_call("api/invoicing_milestones?as_on="+currentDate+"&due_status="+$("#due_status").find(":selected").val()+"&completion_status="+$("#completion_status").find(":selected").val()+"&with_details=false")
     var html_value = ""
      $.each( responce, function( index, value ){
          if (index  ==  0){
@@ -405,7 +409,7 @@ $(document).ready(function() {
      $(this).attr('data-popup-open', 'popup-1');
       })
      pop_up_view(currentDate)
-     responce  = ajax_call("api/collection_milestones?as_on="+currentDate+"&due_status="+$("#due_status").val()+"&completion_status="+$("#completion_status").val()+"&with_details=false")
+     responce  = ajax_call("api/collection_milestones?as_on="+currentDate+"&due_status="+$("#due_status").find(":selected").val()+"&completion_status="+$("#completion_status").find(":selected").val()+"&with_details=false")
     var html_value = ""
      $.each( responce, function( index, value ){
          if (index  ==  0){
@@ -452,6 +456,8 @@ $(document).ready(function() {
                 }
       })
       $(".step1").html(html_value)
+ sorting_table($(".step1").find('table'))
+
        $.each($("td.name"), function( index1, value1 ){
      $(this).addClass("text_link")
      $(this).addClass("delivery_milestones_name")
@@ -470,6 +476,8 @@ $(document).ready(function() {
       })
     
      $(".step2").html(html_value)
+ sorting_table($(".step2").find('table'))
+
       $.each($(".step2").find("td.name"), function( index1, value1 ){
      $(this).addClass("text_link")
      $(this).addClass("invoicing_milestones_name")
@@ -487,6 +495,8 @@ $(document).ready(function() {
                 }
       })
       $(".step3").html(html_value)
+ sorting_table($(".step3").find('table'))
+
       $.each($(".step3").find("td.narrative"), function( index1, value1 ){
      $(this).addClass("text_link")
      $(this).addClass("collection_milestones_name")
@@ -510,6 +520,8 @@ $(document).ready(function() {
      $(this).attr('data-popup-open', 'popup-1');
       })
       pop_up_view(currentDate)
+ sorting_table($(".step4").find('table'))
+
        function pop_up_view(currentDate){
              $('[data-popup-open]').on('click', function(e)  {
         var targeted_popup_class = jQuery(this).attr('data-popup-open');
@@ -629,7 +641,7 @@ function return_only_t_data(responce){
           function convert_ajax_to_htm(responce){
    var ajax_content_value = "<table class = 'table table-striped'><tr class= 'table-row-header'>"
            $.each(responce, function(key, value) {
-                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {

@@ -29,6 +29,8 @@ $(document).ready(function() {
 
       })
       $("#initial_table").html(html_value) 
+            sorting_table($("#initial_table").find('table'))
+
   $(".skill_id,.designation_id,.business_unit_id,.breadcrumb").hide()
       $("#datepicker").val(currentDate)
          $.each($("td.count"), function( index1, value1 ){
@@ -50,6 +52,8 @@ $(document).ready(function() {
                 }
      })
      $(".ajax_content").html(html_value)
+    sorting_table($(".ajax_content").find('table'))
+
      $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 290px;margin-left: 260px;'> Business Unit "+$(this).parent().find(".business_unit").html()+" Skilled with "+$(this).parent().find(".skill").html()+" and Designated as "
       +$(this).parent().find(".designation").html()+"</span>")
                 $(".hiddding_header").hide()
@@ -117,7 +121,7 @@ $(document).ready(function() {
           function convert_ajax_to_htm(responce){
    var ajax_content_value = "<table class = 'table table-striped'><tr class = 'table-row-header'>"
            $.each(responce, function(key, value) {
-                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {

@@ -1,4 +1,4 @@
-<p><div style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange"> To: <input type="text" id="datepickerto" class="onchange"><a href="#" id= "clikc_search" class="table_tools_button">Search </a></div></p>
+<p><div style="margin-left: 23px;">From: <input type="text" id="datepickerfrom" class="onchange" style="text-align:center;width: 90px;margin-right: 20px;"> To: <input type="text" id="datepickerto" class="onchange" style="text-align:center;width: 90px;margin-right: 20px;"><!-- <a href="#" id= "clikc_search" class="table_tools_button">Search </a> --></div></p>
 <!-- 
 Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pluck('name','id'))) %>
 <a href="#" id= "clikc_search" class="table_tools_button">Search </a></div></p>
@@ -187,10 +187,11 @@ body{
 }
 #navigation ul{
     list-style:none;
-    float:left;
-    margin-left:22px;
+    /*float:left;
+    margin-left:22px;*/
 }
 #navigation ul li{
+    width: 32%;
     float:left;
     border-right:1px solid #ccc;
     border-left:1px solid #ccc;
@@ -393,6 +394,7 @@ span.error{
      $("#datepickerfrom").datepicker({
         numberOfMonths: 1,
         dateFormat: 'yy-mm-dd',
+        maxDate:'0',
         onSelect: function (selected) {
             var dt = new Date(selected);
             dt.setDate(dt.getDate() + 1);
@@ -402,6 +404,7 @@ span.error{
     $("#datepickerto").datepicker({
         numberOfMonths: 1,
         dateFormat: 'yy-mm-dd',
+        minDate:'0',
         onSelect: function (selected) {
             var dt = new Date(selected);
             dt.setDate(dt.getDate() - 1);
@@ -416,7 +419,7 @@ span.error{
     initial_view()
       
          })
-  $("#clikc_search").on('click',function(){
+  $("#datepickerfrom,#datepickerto").on('change',function(){
     initial_view()
   })
   $("#manager_id").on('change',function(){
