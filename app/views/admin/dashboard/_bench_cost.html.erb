@@ -1,41 +1,61 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<script type="text/javascript">
-$(document).ready(function() {
-	var chart = new CanvasJS.Chart("beanch_cost_chart",
-	{
-		theme: "theme2",
-		title:{
-			text: "Bench Cost"
-		},
-		data: [
-		{
-			type: "pie",
-			
-			dataPoints: [
-					{  y: 4500},
-				        {  y: 4100},
-				        {  y: 5200},
-				        {  y: 600},
-				        {  y: 4500},
-				        {  y: 5000},
-				        {  y: 4800},
-				        {  y: 4800},
-				        {  y: 4100},
-				        {  y: 5000},
-				        {  y: 4800},
-				        {  y: 1000 }
-			]
-		}
-		]
-	});
-	chart.render();
-	$(".canvasjs-chart-credit").hide()
-})
-	</script>
-</head>
-<body>
-	<div id="beanch_cost_chart" style="height: 240px; width: 100%;"></div>
-</body>
-</html>
+
+    <%= javascript_include_tag 'charts', 'data-turbolinks-track' => true %>
+   <canvas id="resource_distribution_chart" width="400" height="100"></canvas>
+
+<script type="text/javascript">
+
+var config1 = {
+    type: 'line',
+    data: ajax_call("http://beta.json-generator.com/api/json/get/N1OUP_QcG"),
+    options: {
+    scales: {
+  		xAxes: [{stacked: true}],
+    	yAxes: [{
+      	stacked: true,
+      	ticks: {
+        	beginAtZero: true 
+         }
+      }]
+    }
+  }
+};
+
+
+$(function () {
+    var myRadar = new Chart(document.getElementById("resource_distribution_chart"), config1);
+    document.getElementById("resource_distribution_chart").onclick = function(evt){
+        var activePoints = myRadar.getElementsAtEvent(evt);
+        var firstPoint = activePoints[0];
+        if (firstPoint !== undefined)
+        	$(".popup").show();
+     mark_and_display("http://beta.json-generator.com/api/json/get/4y29kFP5f","bar")
+     $(".ajax_content_container").find('span').remove()
+     $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Skill</span><span>|</span><span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Designation</span>')
+    // $(".ajax_content_container").css("max-height","700px")
+    $(".popup_details").on('click',function(){
+      if($(this).html().replace(" ","") == "Beanch Distribution By Skill" ){
+        $(".popup_details").css('font-size','small')
+        $(this).css('font-size','large')
+        mark_and_display("http://beta.json-generator.com/api/json/get/4y29kFP5f","bar")
+      }else{
+        $(".popup_details").css('font-size','small')
+        $(this).css('font-size','large')
+        mark_and_display("http://beta.json-generator.com/api/json/get/4k-x4FP9z","bar")
+      }
+    })
+     };
+}); 
+    
+ function ajax_call(url) {
+        var responce = ""
+     $.ajax({
+            async: false,
+            url: url,
+              dataType: 'json',
+            success: function (data) {
+               responce =  data;
+            }
+        })
+     return responce;
+    }
+</script>

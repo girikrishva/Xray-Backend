@@ -1,40 +1,24 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<script type="text/javascript">
- $(document).ready(function() {
-    var chart = new CanvasJS.Chart("pipe_line_chart",
-    {
-      title: {
-        text: "Pipeline"
-      },
-        data: [
-      {
-        type: "area",
-        dataPoints: [//array
-{ x: new Date(2016, 00, 1), y: 4500},
-				        { x: new Date(2016, 01, 1), y: 4100},
-				        { x: new Date(2016, 02, 1), y: 5200},
-				        { x: new Date(2016, 03, 1), y: 600},
-				        { x: new Date(2016, 04, 1), y: 4500},
-				        { x: new Date(2016, 05, 1), y: 5000},
-				        { x: new Date(2016, 06, 1), y: 4800},
-				        { x: new Date(2016, 07, 1), y: 4800},
-				        { x: new Date(2016, 08, 1), y: 4100},
-				        { x: new Date(2016, 09, 1), y: 5000},
-				        { x: new Date(2016, 10, 1), y: 4800},
-				        { x: new Date(2016, 11, 1), y: 1000 }
-        ]
-      }
-      ]
-    });
 
-    chart.render();
-  })
-	</script>
-</head>
-<body>
-	<div id="pipe_line_chart" style="height: 240px; width: 100%;">
-	</div>
-</body>
-</html>
+    
+   <canvas id="pipeline_chart" width="400" height="100"></canvas>
+
+<script type="text/javascript">
+var pipeline_config = {
+    type: 'bar',
+    data: ajax_call("http://beta.json-generator.com/api/json/get/4JGATEfcM"),
+};
+
+
+$(function () {
+    var myRadar = new Chart(document.getElementById("pipeline_chart"), pipeline_config);
+    document.getElementById("pipeline_chart").onclick = function(evt){
+        var activePoints = myRadar.getElementsAtEvent(evt);
+        var firstPoint = activePoints[0];
+       if (firstPoint !== undefined)
+            $(".popup").show();
+        mark_and_display("http://beta.json-generator.com/api/json/get/VkKyZcDqf","bar")
+        $(".ajax_content_container").find('span').remove()
+     };
+});
+
+</script>

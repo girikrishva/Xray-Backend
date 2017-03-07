@@ -1,50 +1,36 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<script type="text/javascript">
-		 $(document).ready(function() {
-			var chart = new CanvasJS.Chart("chartContainer",
-			{
-				title: {
-					text: "Gross Profit"
-				},
-				axisY: {
-					stripLines: [{
-						value: 143650,
-						label: "Average",
-						showOnTop: true
-					}
-					]
-				},
 
-				data: [
-				{
-					type: "bar",
+    
+   <canvas id="gp_chart" width="400" height="100"></canvas>
 
-					dataPoints: [
-						{ x: new Date(2016, 00, 1), y: 4500},
-				        { x: new Date(2016, 01, 1), y: 4100},
-				        { x: new Date(2016, 02, 1), y: 5200},
-				        { x: new Date(2016, 03, 1), y: 600},
-				        { x: new Date(2016, 04, 1), y: 4500},
-				        { x: new Date(2016, 05, 1), y: 5000},
-				        { x: new Date(2016, 06, 1), y: 4800},
-				        { x: new Date(2016, 07, 1), y: 4800},
-				        { x: new Date(2016, 08, 1), y: 4100},
-				        { x: new Date(2016, 09, 1), y: 5000},
-				        { x: new Date(2016, 10, 1), y: 4800},
-				        { x: new Date(2016, 11, 1), y: 1000 }
-					]
-				}
-				]
-			});
+<script type="text/javascript">
+var gp_config = {
+    type: 'bar',
+    data: ajax_call("http://beta.json-generator.com/api/json/get/41cjaNz9z"),
+};
 
-			chart.render();
-		})
-	</script>
-</head>
-<body>
-	<div id="chartContainer" style="height: 240px; width: 100%;">
-	</div>
-</body>
-</html>
+
+$(function () {
+    var myRadar = new Chart(document.getElementById("gp_chart"), gp_config);
+    document.getElementById("gp_chart").onclick = function(evt){
+        var activePoints = myRadar.getElementsAtEvent(evt);
+        var firstPoint = activePoints[0];
+      if (firstPoint !== undefined)
+            $(".popup").show();
+        mark_and_display("http://beta.json-generator.com/api/json/get/41cjaNz9z","bar")
+        $(".ajax_content_container").find('span').remove()
+        $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="gp_popup_details"> Gross Profit By Business Unit</span><span>|</span><span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="gp_popup_details"> Profit Vs Indirect Cost</span>')
+        $(".gp_popup_details").on('click',function(){
+      if($(this).html().replace(" ","") == "Gross Profit By Business Unit" ){
+        $(".gp_popup_details").css('font-size','small')
+        $(this).css('font-size','large')
+        mark_and_display("http://beta.json-generator.com/api/json/get/41cjaNz9z","bar")
+      }else{
+        $(".gp_popup_details").css('font-size','small')
+        $(this).css('font-size','large')
+        mark_and_display_pai("http://beta.json-generator.com/api/json/get/4kbYycwqz","doughnut")
+      }
+    })
+     };
+});
+
+</script>

@@ -1,44 +1,104 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<script type="text/javascript">
-  $(document).ready(function() {
 
-    var chart = new CanvasJS.Chart("distributionchartContainer",
-    {
+    
+   <canvas id="resource_cost_chart" width="400" height="100"></canvas>
+<script type="text/javascript">
+var config = {
+    type: 'bar',
+    data: ajax_call("http://beta.json-generator.com/api/json/get/Vk7mTVMqG"),
+    options: {
+    scales: {
+      xAxes: [{stacked: true}],
+      yAxes: [{
+        stacked: true,
+        ticks: {
+          beginAtZero: true 
+         }
+      }]
+    }
+  }
+};
 
-      title:{
-      text: "Bench Distribution"
-      },
-       data: [
-      {
-        type: "line",
 
-        dataPoints: [
-          { x: new Date(2016, 00, 1), y: 4500},
-                { x: new Date(2016, 01, 1), y: 4100},
-                { x: new Date(2016, 02, 1), y: 5200},
-                { x: new Date(2016, 03, 1), y: 600},
-                { x: new Date(2016, 04, 1), y: 4500},
-                { x: new Date(2016, 05, 1), y: 5000},
-                { x: new Date(2016, 06, 1), y: 4800},
-                { x: new Date(2016, 07, 1), y: 4800},
-                { x: new Date(2016, 08, 1), y: 4100},
-                { x: new Date(2016, 09, 1), y: 5000},
-                { x: new Date(2016, 10, 1), y: 4800},
-                { x: new Date(2016, 11, 1), y: 1000 }
-        ]
+$(function () {
+    var myRadar = new Chart(document.getElementById("resource_cost_chart"), config);
+    document.getElementById("resource_cost_chart").onclick = function(evt){
+        var activePoints = myRadar.getElementsAtEvent(evt);
+        var firstPoint = activePoints[0];
+        if (firstPoint !== undefined)
+
+          $(".popup").show();
+         mark_and_display("http://beta.json-generator.com/api/json/get/4y29kFP5f","bar")
+     $(".ajax_content_container").find('span').remove()
+     $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Skill</span>|<span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Designation</span>')
+    $(".ajax_content_container").css("max-height","700px")
+    $(".popup_details").on('click',function(){
+      if($(this).html().replace(" ","") == "Beanch Distribution By Skill" ){
+        $(".popup_details").css('font-size','small')
+        $(this).css('font-size','large')
+        mark_and_display("http://beta.json-generator.com/api/json/get/4y29kFP5f","bar")
+      }else{
+        $(".popup_details").css('font-size','small')
+        $(this).css('font-size','large')
+        mark_and_display("http://beta.json-generator.com/api/json/get/4k-x4FP9z","bar")
       }
-      ]
+    })
+     };
+});
+function mark_and_display(url,type){
+var popup_one_config = {
+    type: type,
+    data: ajax_call(url),
+    options: {
+    scales: {
+      xAxes: [{stacked: true}],
+      yAxes: [{
+        stacked: true,
+        ticks: {
+          beginAtZero: true 
+         }
+      }]
+    }
+  }
+};
+
+     $(".ajax_content_container").find(".canvas_conatiner").html("")
+     $(".ajax_content_container").find(".canvas_conatiner").html('<canvas id="popup_one" style="width: 920px; height: 460px;" width="827" height="413"></canvas>')
+new Chart(document.getElementById("popup_one"), popup_one_config);
+     // new Chart(document.getElementById("popup_two"), config1);
+    $(".ajax_content_container").css("max-height","700px")
+    $(".popup-inner").css("max-height","700px")
+    $(".ajax_content").html($("#resource_distribution_chart").first().html())
+    $(".popup-inner").find("canvas").height("70%")
+    $(".popup-inner").find("canvas").width("90%")
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
     });
 
-    chart.render();
-  })
-	</script>
-	<script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
-</head>
-<body>
-	<div id="distributionchartContainer" style="height: 240px; width: 100%;">
-	</div>
-</body>
-</html>
+}
+function mark_and_display_pai(url,type){
+var popup_one_config = {
+    type: type,
+    data: ajax_call(url)
+};
+
+     $(".ajax_content_container").find(".canvas_conatiner").html("")
+     $(".ajax_content_container").find(".canvas_conatiner").html('<canvas id="popup_one" style="width: 920px; height: 460px;" width="827" height="413"></canvas>')
+new Chart(document.getElementById("popup_one"), popup_one_config);
+     // new Chart(document.getElementById("popup_two"), config1);
+    $(".ajax_content_container").css("max-height","700px")
+    $(".popup-inner").css("max-height","700px")
+    $(".ajax_content").html($("#resource_distribution_chart").first().html())
+    $(".popup-inner").find("canvas").height("70%")
+    $(".popup-inner").find("canvas").width("90%")
+    $('[data-popup-close]').on('click', function(e)  {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
+        $(".dropdown_menu").toggle()
+        e.preventDefault();
+    });
+
+}
+</script>
