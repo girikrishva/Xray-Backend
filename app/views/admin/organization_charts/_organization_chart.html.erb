@@ -69,7 +69,9 @@
     padding-left: 10px;
   }
   .oc-export-btn{
-    top: 422px !important;
+    /*top: 422px !important;*/
+    float: right;
+    margin-left: 10px;
   }
 </style>
 <script type="text/javascript">
@@ -157,6 +159,8 @@ $(".pagination_information,.pagination,.breadcrumb").hide()})
   'exportFilename': 'MyOrgChart',
   'exportFileextension': 'pdf'
 });
+    $(".oc-export-btn").css('top', 'auto')
+    
     }
     else{
       $(".oc-export-btn").remove()

@@ -5,13 +5,13 @@
 <script type="text/javascript">
 
 var config1 = {
-    type: 'line',
+    type: 'bar',
     data: ajax_call("http://beta.json-generator.com/api/json/get/N1OUP_QcG"),
     options: {
     scales: {
-  		xAxes: [{stacked: true}],
+  		xAxes: [{stacked: false}],
     	yAxes: [{
-      	stacked: true,
+      	stacked: false,
       	ticks: {
         	beginAtZero: true 
          }

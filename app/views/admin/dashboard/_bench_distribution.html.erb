@@ -3,13 +3,13 @@
    <canvas id="resource_cost_chart" width="400" height="100"></canvas>
 <script type="text/javascript">
 var config = {
-    type: 'bar',
+    type: "bar",
     data: ajax_call("http://beta.json-generator.com/api/json/get/Vk7mTVMqG"),
     options: {
     scales: {
-      xAxes: [{stacked: true}],
+      xAxes: [{stacked: false}],
       yAxes: [{
-        stacked: true,
+        stacked: false,
         ticks: {
           beginAtZero: true 
          }
@@ -25,7 +25,9 @@ $(function () {
         var activePoints = myRadar.getElementsAtEvent(evt);
         var firstPoint = activePoints[0];
         if (firstPoint !== undefined)
-
+          console.log(activePoints[0])
+          // alert(firstPoint._model["label"])
+          // alert(firstPoint._model["datasetLabel"])
           $(".popup").show();
          mark_and_display("http://beta.json-generator.com/api/json/get/4y29kFP5f","bar")
      $(".ajax_content_container").find('span').remove()

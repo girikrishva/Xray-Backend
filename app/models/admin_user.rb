@@ -308,6 +308,15 @@ class AdminUser < ActiveRecord::Base
       end
       users << [user_name,users_id]
     end
-    return users
+    sorted_user = []
+    users.each do |x|
+      sorted_user << "#{x[0]}_#{x[1]}"
+    end
+    sorted_user_list = []
+    sorted_user.sort.each do |x|
+      sorted_user_list << x.split("_")
+    end
+
+    return sorted_user_list.reverse
   end
 end

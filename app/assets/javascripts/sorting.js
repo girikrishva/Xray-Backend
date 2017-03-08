@@ -26,12 +26,17 @@ function sorting_table(table)
                     return $(this).index() === thIndex;
                     
                 }).sortElements(function(a, b){
-                    
+                    if($.isNumeric($.text([a]))){
+                        return parseInt($.text([a])) > parseInt($.text([b])) ?
+                        inverse ? -1 : 1
+                        : inverse ? 1 : -1;
+                    }
+                    else{
                     return $.text([a]) > $.text([b]) ?
                         inverse ? -1 : 1
                         : inverse ? 1 : -1;
                     
-                }, function(){
+                }}, function(){
                     return this.parentNode; 
                     
                 });
