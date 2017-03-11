@@ -155,7 +155,7 @@ class Resource < ActiveRecord::Base
         if with_details
           details = {}
           details['user'] = r.admin_user.name
-          details['resource_cost'] = resource_cost
+          details['resource_cost'] = format_currency(resource_cost)
           data << details
         end
         count += 1
