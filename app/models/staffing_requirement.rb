@@ -74,7 +74,7 @@ class StaffingRequirement < ActiveRecord::Base
       end
       staffing_gap = staffing_required['count'] - staffing_fulfilled['count']
       details['staffing_gap'] = staffing_gap
-      deployable_resources = StaffingRequirement.deployable_resources(skill_id, designation_id, as_on, with_details)
+      deployable_resources = StaffingRequirement.deployable_resources(skill_id, designation_id, as_on, true)
       details['deployable_resources'] = deployable_resources['count']
       if with_details
         details['deployable_resources_details'] = deployable_resources['details']
@@ -83,6 +83,14 @@ class StaffingRequirement < ActiveRecord::Base
       data << details
     end
     result = {}
+    temp_data = data.sort_by{|x| [x['skill'], x['designation']]}
+    data = []
+    data << temp_data[0]
+    temp_data.each do |r|
+      if data[data.count - 1]['skill_id'] != r['skill_id'] or data[data.count - 1]['designation_id'] != r['designation_id']
+        data << r
+      end
+    end
     result['data'] = data
     result
   end
@@ -152,7 +160,7 @@ class StaffingRequirement < ActiveRecord::Base
     with_details = (with_details.to_s == 'true') ? true : false
     deployable_resources = []
     count = 0
-    StaffingRequirement.joins(:skill, :designation).where('? between start_date and end_date', as_on).order('skills.name').pluck('skills.id, skills.name, designations.id, designations.name, start_date, end_date').uniq.each do |sr|
+    StaffingRequirement.joins(:skill, :designation).where('skill_id = ? and designation_id = ? and ? between start_date and end_date', skill_id, designation_id, as_on).order('skills.name').pluck('skills.id, skills.name, designations.id, designations.name, start_date, end_date').uniq.each do |sr|
       skill_id = sr[0]
       designation_id = sr[2]
       start_date = sr[4]
@@ -160,21 +168,26 @@ class StaffingRequirement < ActiveRecord::Base
       Resource.latest(as_on).each do |r|
         deployable = true
         if r.skill_id == skill_id and r.admin_user.designation_id = designation_id
-          (start_date..end_date).each do |d|
-            unused_capacity_hours = Rails.configuration.max_work_hours_per_day - AssignedResource.assigned_hours(r.admin_user_id, d, d)
-            if unused_capacity_hours <= 0
-              deployable = false
-              break
-            end
+          total_assigned_hours = AssignedResource.assigned_hours(r.admin_user_id, start_date, end_date)
+          total_working_hours = (end_date - start_date + 1) * Rails.configuration.max_work_hours_per_day
+          if total_assigned_hours >= total_working_hours
+            deployable = false
           end
+          # (start_date..end_date).each do |d|
+          #   unused_capacity_hours = Rails.configuration.max_work_hours_per_day - AssignedResource.assigned_hours(r.admin_user_id, d, d)
+          #   if unused_capacity_hours <= 0
+          #     deployable = false
+          #     break
+          #   end
+          # end
           if deployable
-            count += 1
+            # count += 1
             if with_details
               deployable_resource_details = {}
               deployable_resource_details['admin_user_id'] = r.admin_user_id
               deployable_resource_details['admin_user_name'] = r.admin_user.name
-              deployable_resource_details['bill_rate'] = r.bill_rate
-              deployable_resource_details['cost_rate'] = r.cost_rate
+              deployable_resource_details['bill_rate'] = format_currency(r.bill_rate)
+              deployable_resource_details['cost_rate'] = format_currency(r.cost_rate)
               deployable_resources << deployable_resource_details
             end
           end
@@ -182,7 +195,15 @@ class StaffingRequirement < ActiveRecord::Base
       end
     end
     result = {}
-    result['count'] = count
+    temp_data = deployable_resources.sort_by{|x| [x['admin_user_name']]}
+    deployable_resources = []
+    deployable_resources << temp_data[0]
+    temp_data.each do |r|
+      if deployable_resources[deployable_resources.count - 1]['admin_user_name'] != r['admin_user_name']
+        deployable_resources << r
+      end
+    end
+    result['count'] = deployable_resources.count
     if with_details
       result['details'] = deployable_resources
     end
