@@ -76,14 +76,14 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['active'] = aua.active.to_s
           amount = days_in_month * aua.cost_rate * Rails.configuration.max_work_hours_per_day
           if !data[user_key].has_key?('user_total')
-            data[user_key]['user_total'] = amount
+            data[user_key]['user_total'] = format_currency(amount)
           else
-            data[user_key]['user_total'] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
           if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = amount
+            data[user_key][month_year_key] = format_currency(amount)
           else
-            data[user_key][month_year_key] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
         end
       end
@@ -119,14 +119,14 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['active'] = aua.active.to_s
           amount = days_in_month * aua.cost_rate * Rails.configuration.max_work_hours_per_day
           if !data[user_key].has_key?('user_total')
-            data[user_key]['user_total'] = amount
+            data[user_key]['user_total'] = format_currency(amount)
           else
-            data[user_key]['user_total'] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
           if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = amount
+            data[user_key][month_year_key] = format_currency(amount)
           else
-            data[user_key][month_year_key] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
         end
       end
@@ -162,14 +162,14 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['active'] = aua.active.to_s
           amount = days_in_month * aua.cost_rate * Rails.configuration.max_work_hours_per_day
           if !data[user_key].has_key?('user_total')
-            data[user_key]['user_total'] = amount
+            data[user_key]['user_total'] = format_currency(amount)
           else
-            data[user_key]['user_total'] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
           if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = amount
+            data[user_key][month_year_key] = format_currency(amount)
           else
-            data[user_key][month_year_key] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
         end
       end
@@ -204,14 +204,14 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['active'] = aua.active.to_s
           amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, lower_date, d)
           if !data[user_key].has_key?('user_total')
-            data[user_key]['user_total'] = amount
+            data[user_key]['user_total'] = format_currency(amount)
           else
-            data[user_key]['user_total'] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
           if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = amount
+            data[user_key][month_year_key] = format_currency(amount)
           else
-            data[user_key][month_year_key] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
         end
       end
@@ -246,14 +246,14 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['active'] = aua.active.to_s
           amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, lower_date, d)
           if !data[user_key].has_key?('user_total')
-            data[user_key]['user_total'] = amount
+            data[user_key]['user_total'] = format_currency(amount)
           else
-            data[user_key]['user_total'] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
           if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = amount
+            data[user_key][month_year_key] = format_currency(amount)
           else
-            data[user_key][month_year_key] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
         end
       end
@@ -288,14 +288,14 @@ class AdminUsersAudit < ActiveRecord::Base
           data[user_key]['active'] = aua.active.to_s
           amount = aua.bill_rate * AssignedResource.assigned_hours(user_key, lower_date, d)
           if !data[user_key].has_key?('user_total')
-            data[user_key]['user_total'] = amount
+            data[user_key]['user_total'] = format_currency(amount)
           else
-            data[user_key]['user_total'] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
           if !data[user_key].has_key?(month_year_key)
-            data[user_key][month_year_key] = amount
+            data[user_key][month_year_key] = format_currency(amount)
           else
-            data[user_key][month_year_key] += amount
+            data[user_key]['user_total'] = format_currency(currency_as_amount(data[user_key]['user_total']) + amount)
           end
         end
       end
@@ -305,12 +305,12 @@ class AdminUsersAudit < ActiveRecord::Base
 
   def self.active_users_netflow(from_date, to_date)
     data = {}
-    ouflow_data = AdminUsersAudit.active_users_outflow(from_date, to_date)
+    outflow_data = AdminUsersAudit.active_users_outflow(from_date, to_date)
     inflow_data = AdminUsersAudit.active_users_inflow(from_date, to_date)
     inflow_data.keys.each do |x|
       inflow_data[x].keys.each do |y|
         if y == 'user_total' or y[y.length - 5, y.length] == 'AMOUNT'
-          inflow_data[x][y] -= ouflow_data[x][y]
+          inflow_data[x][y] = format_currency(currency_as_amount(inflow_data[x][y]) - currency_as_amount(outflow_data[x][y]))
         end
       end
     end
@@ -320,12 +320,12 @@ class AdminUsersAudit < ActiveRecord::Base
 
   def self.inactive_users_netflow(from_date, to_date)
     data = {}
-    ouflow_data = AdminUsersAudit.inactive_users_outflow(from_date, to_date)
+    outflow_data = AdminUsersAudit.inactive_users_outflow(from_date, to_date)
     inflow_data = AdminUsersAudit.inactive_users_inflow(from_date, to_date)
     inflow_data.keys.each do |x|
       inflow_data[x].keys.each do |y|
         if y == 'user_total' or y[y.length - 5, y.length] == 'AMOUNT'
-          inflow_data[x][y] -= ouflow_data[x][y]
+          inflow_data[x][y] = format_currency(currency_as_amount(inflow_data[x][y]) - currency_as_amount(outflow_data[x][y]))
         end
       end
     end
@@ -335,12 +335,12 @@ class AdminUsersAudit < ActiveRecord::Base
 
   def self.all_users_netflow(from_date, to_date)
     data = {}
-    ouflow_data = AdminUsersAudit.all_users_outflow(from_date, to_date)
+    outflow_data = AdminUsersAudit.all_users_outflow(from_date, to_date)
     inflow_data = AdminUsersAudit.all_users_inflow(from_date, to_date)
     inflow_data.keys.each do |x|
       inflow_data[x].keys.each do |y|
         if y == 'user_total' or y[y.length - 5, y.length] == 'AMOUNT'
-          inflow_data[x][y] -= ouflow_data[x][y]
+          inflow_data[x][y] = format_currency(currency_as_amount(inflow_data[x][y]) - currency_as_amount(outflow_data[x][y]))
         end
       end
     end
