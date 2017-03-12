@@ -78,6 +78,6 @@ module ActiveAdminHelper
   end
 
   def format_currency(amount)
-    Money.new(amount * 100, 'INR').format
+    Money.new(amount * 100, 'INR').format(south_asian_number_formatting: true)
   end  
 end
