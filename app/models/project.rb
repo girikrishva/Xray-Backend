@@ -384,10 +384,10 @@ class Project < ActiveRecord::Base
   def total_indirect_overhead_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
-    total_direct_resource_cost_for_project = self.direct_resource_cost(as_on, false)['total_direct_resource_cost']
+    total_direct_resource_cost_for_project = currency_as_amount(self.direct_resource_cost(as_on, false)['total_direct_resource_cost'])
     total_direct_resource_cost_for_all_projects = 0
     Project.where('project_status_id = ?', ProjectStatus.id_for_status(I18n.t('label.delivery'))).each do |p|
-      total_direct_resource_cost_for_all_projects += p.direct_resource_cost(as_on, false)['total_direct_resource_cost']
+      total_direct_resource_cost_for_all_projects += currency_as_amount(p.direct_resource_cost(as_on, false)['total_direct_resource_cost'])
     end
     if total_direct_resource_cost_for_all_projects > 0
       total_indirect_overhead_cost_share = 0
@@ -399,11 +399,13 @@ class Project < ActiveRecord::Base
         overhead_cost_share = (total_direct_resource_cost_for_project / total_direct_resource_cost_for_all_projects) * o.amount
         if with_details
           details = {}
-          details['overhead'] = o
+          overhead = o.as_json
+          overhead['amount'] = format_currency(overhead['amount'])
+          details['overhead'] = overhead
           details['business_unit'] = o.business_unit.name
           details['department'] = o.department.name
           details['cost_adder_type'] = o.cost_adder_type.name
-          details['overhead_cost_share'] = overhead_cost_share
+          details['overhead_cost_share'] = format_currency(overhead_cost_share)
           data << details
         end
         count += 1
@@ -412,9 +414,9 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
-    result['total_direct_resource_cost_for_project'] = total_direct_resource_cost_for_project
-    result['total_direct_resource_cost_for_all_projects'] = total_direct_resource_cost_for_all_projects
-    result['total_indirect_overhead_cost_share'] = total_indirect_overhead_cost_share
+    result['total_direct_resource_cost_for_project'] = format_currency(total_direct_resource_cost_for_project)
+    result['total_direct_resource_cost_for_all_projects'] = format_currency(total_direct_resource_cost_for_all_projects)
+    result['total_indirect_overhead_cost_share'] = format_currency(total_indirect_overhead_cost_share)
     if with_details
       result['data'] = data
     end
