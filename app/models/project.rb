@@ -333,7 +333,7 @@ class Project < ActiveRecord::Base
     result = {}
     direct_resource_cost = direct_resource_cost(as_on, false)
     direct_overhead_cost = direct_overhead_cost(as_on, false)
-    result['total_direct_cost'] = direct_resource_cost['total_direct_resource_cost'] + direct_overhead_cost['total_direct_overhead_cost']
+    result['total_direct_cost'] = currency_as_amount(direct_resource_cost['total_direct_resource_cost']) + currency_as_amount(direct_overhead_cost['total_direct_overhead_cost'])
     result
   end
 
@@ -427,7 +427,7 @@ class Project < ActiveRecord::Base
     result = {}
     total_indirect_resource_cost_share = total_indirect_resource_cost_share(as_on, false)
     total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
-    result['total_indirect_cost_share'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] rescue 0 + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share'] rescue 0
+    result['total_indirect_cost_share'] = currency_as_amount(total_indirect_resource_cost_share['total_indirect_resource_cost_share']) rescue 0 + currency_as_amount(total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']) rescue 0
     result
   end
 
@@ -435,7 +435,7 @@ class Project < ActiveRecord::Base
     result = {}
     total_direct_cost = total_direct_cost(as_on)
     total_indirect_cost_share = total_indirect_cost_share(as_on)
-    result['total_cost'] = total_direct_cost['total_direct_cost'] rescue 0 + total_indirect_cost_share['total_indirect_cost_share'] rescue 0
+    result['total_cost'] = currency_as_amount(total_direct_cost['total_direct_cost']) rescue 0 + currency_as_amount(total_indirect_cost_share['total_indirect_cost_share']) rescue 0
     result
   end
 
