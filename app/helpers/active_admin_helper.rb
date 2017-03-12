@@ -82,6 +82,6 @@ module ActiveAdminHelper
   end
 
   def currency_as_amount(currency)
-    currency[1..currency.length].to_f
+    currency[1..currency.length].gsub(',', '').to_f
   end
 end

@@ -340,10 +340,10 @@ class Project < ActiveRecord::Base
   def total_indirect_resource_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
-    total_direct_resource_cost_for_project = self.direct_resource_cost(as_on, false)['total_direct_resource_cost']
+    total_direct_resource_cost_for_project = currency_as_amount(self.direct_resource_cost(as_on, false)['total_direct_resource_cost'])
     total_direct_resource_cost_for_all_projects = 0
     Project.where('project_status_id = ?', ProjectStatus.id_for_status(I18n.t('label.delivery'))).each do |p|
-      total_direct_resource_cost_for_all_projects += p.direct_resource_cost(as_on, false)['total_direct_resource_cost']
+      total_direct_resource_cost_for_all_projects += currency_as_amount(p.direct_resource_cost(as_on, false)['total_direct_resource_cost'])
     end
     if total_direct_resource_cost_for_all_projects > 0
       total_indirect_resource_cost_share = 0
@@ -356,11 +356,14 @@ class Project < ActiveRecord::Base
         resource_cost_share = (total_direct_resource_cost_for_project / total_direct_resource_cost_for_all_projects) * (working_hours * r.cost_rate)
         if with_details
           details = {}
-          details['resource'] = r
+          resource = r.as_json
+          resource['bill_rate'] = format_currency(resource['bill_rate'])
+          resource['cost_rate'] = format_currency(resource['cost_rate'])
+          details['resource'] = resource
           details['user'] = r.admin_user.name
           details['skill'] = r.skill.name
           details['working_hours'] = working_hours
-          details['resource_cost_share'] = resource_cost_share
+          details['resource_cost_share'] = format_currency(resource_cost_share)
           data << details
         end
         count += 1
@@ -369,9 +372,9 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
-    result['total_direct_resource_cost_for_project'] = total_direct_resource_cost_for_project
-    result['total_direct_resource_cost_for_all_projects'] = total_direct_resource_cost_for_all_projects
-    result['total_indirect_resource_cost_share'] = total_indirect_resource_cost_share
+    result['total_direct_resource_cost_for_project'] = format_currency(total_direct_resource_cost_for_project)
+    result['total_direct_resource_cost_for_all_projects'] = format_currency(total_direct_resource_cost_for_all_projects)
+    result['total_indirect_resource_cost_share'] = format_currency(total_indirect_resource_cost_share)
     if with_details
       result['data'] = data
     end
