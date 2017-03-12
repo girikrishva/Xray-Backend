@@ -113,25 +113,8 @@ class Pipeline < ActiveRecord::Base
       total_pipeline += p.expected_value
       if with_details
         details = {}
-        pipeline = {}
-        pipeline['id'] = p['id']
-        pipeline['name'] = p['name']
-        pipeline['expected_start'] = p['expected_end']
+        pipeline = p.as_jon
         pipeline['expected_value'] = format_currency(p['expected_value'])
-        pipeline['comments'] = p['comments']
-        pipeline['business_unit_id'] = p['business_unit_id']
-        pipeline['client_id'] = p['client_id']
-        pipeline['project_type_code_id'] = p['project_type_code_id']
-        pipeline['pipeline_status_id'] = p['pipeline_status_id']
-        pipeline['created_at'] = p['created_at']
-        pipeline['updated_at'] = p['updated_at']
-        pipeline['sales_person_id'] = p['sales_person_id']
-        pipeline['estimator_id'] = p['estimator_id']
-        pipeline['engagement_manager_id'] = p['engagement_manager_id']
-        pipeline['delivery_manager_id'] = p['delivery_manager_id']
-        pipeline['updated_by'] = p['updated_by']
-        pipeline['ip_address'] = p['ip_address']
-        pipeline['deleted_at'] = p['deleted_at']
         details['pipeline'] = pipeline
         details['business_unit'] = p.business_unit.name
         details['client'] = p.client.name

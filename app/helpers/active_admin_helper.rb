@@ -79,5 +79,9 @@ module ActiveAdminHelper
 
   def format_currency(amount)
     Money.new(amount * 100, 'INR').format(south_asian_number_formatting: true)[0..-4]
-  end  
+  end
+
+  def currency_as_amount(currency)
+    currency[1..currency.length].to_f
+  end
 end

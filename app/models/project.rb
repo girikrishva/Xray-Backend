@@ -105,8 +105,8 @@ class Project < ActiveRecord::Base
       result[project.id]['missed_delivery'] = project.missed_delivery(as_on, false)
       result[project.id]['missed_invoicing'] = project.missed_invoicing(as_on, false)
       result[project.id]['missed_payments'] = project.missed_payments(as_on, false)
-      result[project.id]['contribution'] = project.contribution(as_on)
-      result[project.id]['gross_profit'] = project.gross_profit(as_on)
+      result[project.id]['contribution'] = format_currency(project.contribution(as_on))
+      result[project.id]['gross_profit'] = format_currency(project.gross_profit(as_on))
       result[project.id]['delivery_health'] = project.delivery_health(as_on)
     end
     if contribution == 'positive'
@@ -168,7 +168,9 @@ class Project < ActiveRecord::Base
 
   def project_details
     result = {}
-    result['direct_details'] = self
+    direct_details = self.as_json
+    direct_details['booking_value'] = format_currency(direct_details['booking_value'])
+    result['direct_details'] = direct_details
     result['lookup_details'] = self.lookup_details
     result
   end
@@ -217,8 +219,10 @@ class Project < ActiveRecord::Base
     InvoicingMilestone.where('project_id = ? and due_date < ? and completion_date is null', self.id, as_on).order(:due_date).each do |im|
       if with_details
         details = {}
-        details['invoicing_milestone'] = im
-        details['uninvoiced'] = im.uninvoiced
+        invoicing_milestone = im.as_json
+        invoicing_milestone['amount'] = format_currency(invoicing_milestone['amount'])
+        details['invoicing_milestone'] = invoicing_milestone
+        details['uninvoiced'] = format_currency(im.uninvoiced)
         data << details
 
       end
@@ -227,7 +231,7 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
-    result['total_uninvoiced'] = total_uninvoiced
+    result['total_uninvoiced'] = format_currency(total_uninvoiced)
     if with_details
       result['data'] = data
     end
@@ -244,10 +248,12 @@ class Project < ActiveRecord::Base
       if il.unpaid_amount > 0
         if with_details
           details = {}
-          details['invoice_line'] = il
+          invoice_line = il.as_json
+          invoice_line['line_amount'] = format_currency(invoice_line['line_amount'])
+          details['invoice_line'] = invoice_line
           details['invoice_header'] = il.invoice_header
           details['client'] = il.invoice_header.client
-          details['unpaid_amount'] = il.unpaid_amount
+          details['unpaid_amount'] = format_currency(il.unpaid_amount)
           data << details
         end
         count += 1
@@ -256,7 +262,7 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
-    result['total_unpaid'] = total_unpaid
+    result['total_unpaid'] = format_currency(total_unpaid)
     if with_details
       result['data'] = data
     end
@@ -272,12 +278,15 @@ class Project < ActiveRecord::Base
     AssignedResource.where('project_id = ? and ? between start_date and end_date', self.id, as_on).order('start_date, end_date').each do |ar|
       if with_details
         details = {}
-        details['assigned_resource'] = ar
+        assigned_resource = ar.as_json
+        assigned_resource['bill_rate'] = format_currency(assigned_resource['bill_rate'])
+        assigned_resource['cost_rate'] = format_currency(assigned_resource['cost_rate'])
+        details['assigned_resource'] = assigned_resource
         details['skill'] = ar.resource.skill.name
         details['user'] = ar.resource.admin_user.name
         details['designation'] = ar.resource.admin_user.designation.name
         details['assignment_hours'] = ar.assignment_hours(as_on)
-        details['direct_resource_cost'] = ar.assignment_cost(as_on)
+        details['direct_resource_cost'] = format_currency(ar.assignment_cost(as_on))
         data << details
       end
       count += 1
@@ -285,7 +294,7 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
-    result['total_direct_resource_cost'] = total_direct_resource_cost
+    result['total_direct_resource_cost'] = format_currency(total_direct_resource_cost)
     if with_details
       result['data'] = data
     end
@@ -301,9 +310,11 @@ class Project < ActiveRecord::Base
     ProjectOverhead.where('project_id = ? and amount_date <= ?', self.id, as_on).joins(:cost_adder_type).order('amount_date').each do |po|
       if with_details
         details = {}
-        details['project_overhead'] = po
+        project_overhead = po.as_json
+        project_overhead['amount'] = format_currency(project_overhead['amount'])
+        details['project_overhead'] = project_overhead
         details['cost_adder_type'] = po.cost_adder_type.name
-        details['direct_overhead_cost'] = po.amount
+        details['direct_overhead_cost'] = format_currency(po.amount)
         data << details
       end
       count += 1
@@ -311,7 +322,7 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
-    result['total_direct_overhead_cost'] = total_direct_overhead_cost
+    result['total_direct_overhead_cost'] = format_currency(total_direct_overhead_cost)
     if with_details
       result['data'] = data
     end
@@ -432,8 +443,12 @@ class Project < ActiveRecord::Base
       if il.invoice_header.invoice_date <= as_on
         if with_details
           details = {}
-          details['invoice_line'] = il
-          details['invoice_header'] = il.invoice_header
+          invoice_line = il.as_json
+          invoice_line['line_amount'] = format_currency(invoice_line['line_amount'])
+          details['invoice_line'] = invoice_line
+          invoice_header = il.invoice_header.as_json
+          invoice_header['header_amount'] = format_currency(invoice_header['header_amount'])
+          details['invoice_header'] = invoice_header
           details['client'] = il.invoice_header.client.name
           details['business_unit'] = il.invoice_header.client.business_unit.name
           data << details
@@ -442,7 +457,7 @@ class Project < ActiveRecord::Base
       end
     end
     result = {}
-    result['total_revenue'] = total_revenue
+    result['total_revenue'] = format_currency(total_revenue)
     if with_details
       result['data'] = data
     end
@@ -451,7 +466,7 @@ class Project < ActiveRecord::Base
 
   def contribution(as_on)
     result = {}
-    total_revenue = total_revenue(as_on, false)['total_revenue']
+    total_revenue = currency_as_amount(total_revenue(as_on, false)['total_revenue'])
     total_direct_cost = total_direct_cost(as_on)['total_direct_cost']
     result = total_revenue - total_direct_cost
     result
@@ -467,7 +482,7 @@ class Project < ActiveRecord::Base
 
   def gross_profit(as_on)
     result = {}
-    total_revenue = total_revenue(as_on, false)['total_revenue']
+    total_revenue = currency_as_amount(total_revenue(as_on, false)['total_revenue'])
     total_cost = total_cost(as_on)['total_cost']
     result = total_revenue - total_cost
     result
