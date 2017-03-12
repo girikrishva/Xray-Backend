@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.1'
+gem 'rails', '4.2.7'
 # Use postgresql as the database for Active Record
 gem 'pg'
 # Use SCSS for stylesheets
@@ -48,6 +48,8 @@ gem 'ancestry'
 gem "paranoia", "~> 2.2"
 
 gem 'weekdays'
+
+gem 'money'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

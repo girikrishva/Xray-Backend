@@ -5,12 +5,12 @@ module ActiveAdmin
         params[:order] ||= active_admin_config.sort_order
 
         orders = []
-        params[:order].split('_and_').each do |fragment|
-          order_clause = OrderClause.new fragment
-          if order_clause.valid?
-            orders << order_clause.to_sql(active_admin_config)
-          end
-        end
+        # params[:order].split('_and_').each do |fragment|
+        #   order_clause = OrderClause.new fragment
+        #   if order_clause.valid?
+        #     orders << order_clause.to_sql(active_admin_config)
+        #   end
+        # end
 
         if orders.empty?
           chain

@@ -11,3 +11,8 @@
 /log/*
 !/log/.keep
 /tmp
+
+# Custom.
+/Gemfile.lock
+.byebug_history
+.idea

@@ -68,6 +68,7 @@ ActiveAdmin.register AdminUser do
   config.sort_order = 'email_asc'
 
   index as: :grouped_table, group_by_attribute: :business_unit_name do
+    # byebug
     selectable_column
     column :id
     column :email

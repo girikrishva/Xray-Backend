@@ -76,4 +76,8 @@ module ActiveAdminHelper
     result = datetime.to_s.split('+')[0]
     result[0..result.length - 2]
   end
+
+  def format_currency(amount)
+    Money.new(amount * 100, 'INR').format(south_asian_number_formatting: true)[0..-4]
+  end  
 end

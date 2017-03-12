@@ -95,6 +95,7 @@ class Resource < ActiveRecord::Base
 
   def self.latest(as_on = Date.today)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    # byebug
     resource_ids = []
     Resource.all.each do |resource|
       if resource.is_latest(as_on)
@@ -118,6 +119,7 @@ class Resource < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     data = []
     Resource.latest(as_on).each do |r|
+      # byebug
       details = {}
       details['business_unit_id'] = r.admin_user.business_unit.id
       details['business_unit'] = r.admin_user.business_unit.name
@@ -129,7 +131,15 @@ class Resource < ActiveRecord::Base
       data << details
     end
     result = {}
-    result['data'] = data.sort_by{|x| [x['business_unit'], x['skill'], x['designation']]}
+    temp_data = data.sort_by{|x| [x['business_unit'], x['skill'], x['designation']]}
+    data = []
+    data << temp_data[0] 
+    temp_data.each do |r|
+      if data[data.count - 1]['business_unit_id'] != r['business_unit_id'] or data[data.count - 1]['skill_id'] != r['skill_id'] or data[data.count - 1]['designation_id'] != r['designation_id']
+        data << r 
+      end
+    end
+    result['data'] = data
     result
   end
 
@@ -145,7 +155,7 @@ class Resource < ActiveRecord::Base
         if with_details
           details = {}
           details['user'] = r.admin_user.name
-          details['resource_cost'] = resource_cost
+          details['resource_cost'] = format_currency(resource_cost)
           data << details
         end
         count += 1
@@ -154,8 +164,8 @@ class Resource < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
-    result['total_resource_cost'] = total_resource_cost
-    result['average_resource_cost'] = (count > 0) ? (total_resource_cost / count) : 0
+    result['total_resource_cost'] = format_currency(total_resource_cost)
+    result['average_resource_cost'] = format_currency((count > 0) ? (total_resource_cost / count) : 0)
     if with_details
       result['data'] = data
     end
