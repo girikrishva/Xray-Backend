@@ -142,7 +142,7 @@ function table_view(responce,html_value){
              $.each(value, function(key, value) {
                   other_class = ""
                   attr = ""
-                  if (value["total_pipeline"] > 0){other_class=" text_link"}
+                  if (value["total_pipeline"] != "₹0"){other_class=" text_link"}
                   if(parseInt(key.replace(" ", "_").split("-")[1]) == mon){other_class+=" current_month"}
                   if (typeof value == 'object'){ 
                     value = value["total_pipeline"]
