@@ -223,12 +223,12 @@ class AdminUser < ActiveRecord::Base
       details['assigned_hours'] = assigned_hours.round(1)
       details['clocked_hours'] = clocked_hours.round(1)
       details['working_hours'] = working_hours.round(1)
-      details['bill_rate'] = bill_rate.round(0)
+      details['bill_rate'] = format_currency(bill_rate.round(0))
     end
     details['assigned_percentage'] = assigned_percentage.round(2)
     details['clocked_percentage'] = clocked_percentage.round(2)
     details['utilization_percentage'] = utilization_percentage.round(2)
-    details['billing_opportunity_loss'] = ((working_hours - assigned_hours) * bill_rate).round(0)
+    details['billing_opportunity_loss'] = format_currency(((working_hours - assigned_hours) * bill_rate).round(0))
     details
   end
 
@@ -247,7 +247,7 @@ class AdminUser < ActiveRecord::Base
     business_unit_clocked_percentage = (resource_efficiency_details.map{|y| y['clocked_percentage']}.sum / resource_efficiency_details.size).round(2) rescue 0
     details['business_unit_clocked_percentage'] = business_unit_clocked_percentage
     details['business_unit_utilization_percentage'] = ((business_unit_assigned_percentage * business_unit_clocked_percentage) / 100).round(2)
-    details['business_unit_billing_opportunity_loss'] = resource_efficiency_details.map{|y| y['billing_opportunity_loss']}.sum.round(0)
+    details['business_unit_billing_opportunity_loss'] = format_currency(resource_efficiency_details.map{|y| currency_as_amount(y['billing_opportunity_loss'])}.sum.round(0))
     if with_details
       details['resource_efficiency_details'] = resource_efficiency_details
     end
@@ -265,7 +265,7 @@ class AdminUser < ActiveRecord::Base
     overall_clocked_percentage = (business_unit_efficiency_details.map{|y| y['business_unit_clocked_percentage']}.sum / business_unit_efficiency_details.size).round(2) rescue 0
     details['overall_clocked_percentage'] = overall_clocked_percentage
     details['overall_utilization_percentage'] = ((overall_assigned_percentage * overall_clocked_percentage) / 100).round(2)
-    details['overall_billing_opportunity_loss'] = business_unit_efficiency_details.map{|y| y['business_unit_billing_opportunity_loss']}.sum.round(0)
+    details['overall_billing_opportunity_loss'] = format_currency(business_unit_efficiency_details.map{|y| currency_as_amount(y['business_unit_billing_opportunity_loss'])}.sum.round(0))
     if with_details
       details['business_unit_efficiency_details'] = business_unit_efficiency_details
     end
