@@ -156,7 +156,7 @@ function table_view(responce,html_value){
                html_value += "</tr><tr>"
              $.each(value, function(key, value) {
                   other_class = ""
-                  if (value["total_pipeline"] > 0){other_class=" text_link"}
+                  if (value["total_pipeline"] != "₹0"){other_class=" text_link"}
                   if(parseInt(key.replace(" ", "_").split("-")[1]) == mon){other_class+=" current_month"}
                   if (typeof value == 'object'){ value = value["total_pipeline"] }
                   html_value +="<td class='"+key.replace(" ", "_")+other_class+"'style = 'border-top: 1px solid #ddd;'"+attr+" >"+value+"</td>" 
