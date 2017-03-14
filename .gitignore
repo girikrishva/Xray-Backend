@@ -15,4 +15,5 @@
 # Custom.
 /Gemfile.lock
 .byebug_history
-.idea
+/.idea
+
