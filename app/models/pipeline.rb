@@ -113,7 +113,7 @@ class Pipeline < ActiveRecord::Base
       total_pipeline += p.expected_value
       if with_details
         details = {}
-        pipeline = p.as_jon
+        pipeline = p.as_json
         pipeline['expected_value'] = format_currency(p['expected_value'])
         details['pipeline'] = pipeline
         details['business_unit'] = p.business_unit.name
