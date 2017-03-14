@@ -87,9 +87,9 @@ class InvoiceHeader < ActiveRecord::Base
           details['invoice_date'] = ih.invoice_date.to_s
           details['due_date'] = ih.due_date.to_s
           details['status'] = ih.invoice_status.name
-          details['amount'] = ih.header_amount
-          details['paid'] = ih.header_amount - ih.unpaid_amount
-          details['unpaid'] = ih.unpaid_amount
+          details['amount'] = format_currency(ih.header_amount)
+          details['paid'] = format_currency(ih.header_amount - ih.unpaid_amount)
+          details['unpaid'] = format_currency(ih.unpaid_amount)
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
           data << details
@@ -104,9 +104,9 @@ class InvoiceHeader < ActiveRecord::Base
           details['invoice_date'] = ih.invoice_date.to_s
           details['due_date'] = ih.due_date.to_s
           details['status'] = ih.invoice_status.name
-          details['amount'] = ih.header_amount
-          details['paid'] = ih.header_amount - ih.unpaid_amount
-          details['unpaid'] = ih.unpaid_amount
+          details['amount'] = format_currency(ih.header_amount)
+          details['paid'] = format_currency(ih.header_amount - ih.unpaid_amount)
+          details['unpaid'] = format_currency(ih.unpaid_amount)
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
           data << details
@@ -120,9 +120,9 @@ class InvoiceHeader < ActiveRecord::Base
         details['invoice_date'] = ih.invoice_date.to_s
         details['due_date'] = ih.due_date.to_s
         details['status'] = ih.invoice_status.name
-        details['amount'] = ih.header_amount
-        details['paid'] = ih.header_amount - ih.unpaid_amount
-        details['unpaid'] = ih.unpaid_amount
+        details['amount'] = format_currency(ih.header_amount)
+        details['paid'] = format_currency(ih.header_amount - ih.unpaid_amount)
+        details['unpaid'] = format_currency(ih.unpaid_amount)
         details['client'] = ih.client.name
         details['business_unit'] = ih.client.business_unit.name
         data << details
@@ -136,9 +136,9 @@ class InvoiceHeader < ActiveRecord::Base
           details['invoice_date'] = ih.invoice_date.to_s
           details['due_date'] = ih.due_date.to_s
           details['status'] = ih.invoice_status.name
-          details['amount'] = ih.header_amount
-          details['paid'] = ih.header_amount - ih.unpaid_amount
-          details['unpaid'] = ih.unpaid_amount
+          details['amount'] = format_currency(ih.header_amount)
+          details['paid'] = format_currency(ih.header_amount - ih.unpaid_amount)
+          details['unpaid'] = format_currency(ih.unpaid_amount)
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
           data << details
@@ -153,9 +153,9 @@ class InvoiceHeader < ActiveRecord::Base
           details['invoice_date'] = ih.invoice_date.to_s
           details['due_date'] = ih.due_date.to_s
           details['status'] = ih.invoice_status.name
-          details['amount'] = ih.header_amount
-          details['paid'] = ih.header_amount - ih.unpaid_amount
-          details['unpaid'] = ih.unpaid_amount
+          details['amount'] = format_currency(ih.header_amount)
+          details['paid'] = format_currency(ih.header_amount - ih.unpaid_amount)
+          details['unpaid'] = format_currency(ih.unpaid_amount)
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
           data << details
@@ -169,9 +169,9 @@ class InvoiceHeader < ActiveRecord::Base
         details['invoice_date'] = ih.invoice_date.to_s
         details['due_date'] = ih.due_date.to_s
         details['status'] = ih.invoice_status.name
-        details['amount'] = ih.header_amount
-        details['paid'] = ih.header_amount - ih.unpaid_amount
-        details['unpaid'] = ih.unpaid_amount
+        details['amount'] = format_currency(ih.header_amount)
+        details['paid'] = format_currency(ih.header_amount - ih.unpaid_amount)
+        details['unpaid'] = format_currency(ih.unpaid_amount)
         details['client'] = ih.client.name
         details['business_unit'] = ih.client.business_unit.name
         data << details
@@ -185,9 +185,9 @@ class InvoiceHeader < ActiveRecord::Base
           details['invoice_date'] = ih.invoice_date.to_s
           details['due_date'] = ih.due_date.to_s
           details['status'] = ih.invoice_status.name
-          details['amount'] = ih.header_amount
-          details['paid'] = ih.header_amount - ih.unpaid_amount
-          details['unpaid'] = ih.unpaid_amount
+          details['amount'] = format_currency(ih.header_amount)
+          details['paid'] = format_currency(ih.header_amount - ih.unpaid_amount)
+          details['unpaid'] = format_currency(ih.unpaid_amount)
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
           data << details
@@ -202,9 +202,9 @@ class InvoiceHeader < ActiveRecord::Base
           details['invoice_date'] = ih.invoice_date.to_s
           details['due_date'] = ih.due_date.to_s
           details['status'] = ih.invoice_status.name
-          details['amount'] = ih.header_amount
-          details['paid'] = ih.header_amount - ih.unpaid_amount
-          details['unpaid'] = ih.unpaid_amount
+          details['amount'] = format_currency(ih.header_amount)
+          details['paid'] = format_currency(ih.header_amount - ih.unpaid_amount)
+          details['unpaid'] = format_currency(ih.unpaid_amount)
           details['client'] = ih.client.name
           details['business_unit'] = ih.client.business_unit.name
           data << details
@@ -218,9 +218,9 @@ class InvoiceHeader < ActiveRecord::Base
         details['invoice_date'] = ih.invoice_date.to_s
         details['due_date'] = ih.due_date.to_s
         details['status'] = ih.invoice_status.name
-        details['amount'] = ih.header_amount
-        details['paid'] = ih.header_amount - ih.unpaid_amount
-        details['unpaid'] = ih.unpaid_amount
+        details['amount'] = format_currency(ih.header_amount)
+        details['paid'] = format_currency(ih.header_amount - ih.unpaid_amount)
+        details['unpaid'] = format_currency(ih.unpaid_amount)
         details['client'] = ih.client.name
         details['business_unit'] = ih.client.business_unit.name
         data << details
@@ -235,9 +235,9 @@ class InvoiceHeader < ActiveRecord::Base
       invoice_line = {}
       invoice_line['id'] = il.id
       invoice_line['narrative'] = il.narrative
-      invoice_line['amount'] = il.line_amount
-      invoice_line['paid'] = il.line_amount - il.unpaid_amount
-      invoice_line['unpaid'] = il.unpaid_amount
+      invoice_line['amount'] = format_currency(il.line_amount)
+      invoice_line['paid'] = format_currency(il.line_amount - il.unpaid_amount)
+      invoice_line['unpaid'] = format_currency(il.unpaid_amount)
       invoice_line['project'] = il.project.name
       invoice_line['invoicing_milestone'] = il.invoicing_milestone.name rescue nil
       invoice_line['adder_type'] = il.invoice_adder_type.name rescue nil
