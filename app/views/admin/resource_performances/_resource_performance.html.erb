@@ -264,16 +264,7 @@ $.each($("#initial_table").find("td"), function(){
                  m[key] = "₹"+ReplaceNumberWithCommas(value)
                 }
                   });
-     $.each($("#initial_table").find("td.active"), function(){
-
-      if ($(this).html() == "true"){
-        $(this).html("Yes")
-      }
-      else{
-        $(this).html("No")
-      }
-
-     })
+    
      if ($("#bu_dropdown").find(":selected").val() != "All"){
       var current_val = $("#bu_dropdown").find(":selected").val()
       $.each($("#initial_table").find("td.business_unit"), function(){
@@ -285,15 +276,25 @@ $.each($("#initial_table").find("td"), function(){
         }
       })
      }
-     $("#initial_table").find('.user_total').hide()
     $("#initial_table").html(html_value+"<table class = 'table table-striped'>"+return_only_t_data(m)+"</table>")
 $.each($("#initial_table").find('table.initial_table_disp').find("td"), function(){
   $("."+$(this).attr('class')).width($(this).width())
 })
+ $.each($("#initial_table").find("td.active"), function(){
+
+      if ($(this).html() == "true"){
+        $(this).html("Yes")
+      }
+      else{
+        $(this).html("No")
+      }
+
+     })
+     $(".user_total").hide()
  sorting_table($("#initial_table").find('table.initial_table_disp'))
 
  }
-
+$("#initial_table").find('.user_total').hide()
  $("#bu_dropdown").on('change',function(){
   if ($("#bu_dropdown").find(":selected").val() != "All"){
       var current_val = $("#bu_dropdown").find(":selected").val()
