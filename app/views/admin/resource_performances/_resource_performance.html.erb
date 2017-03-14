@@ -235,7 +235,14 @@ if (active == "all" && display == "netflow"){
 }
      $("#initial_table").html(html_value)
      var m = {}
-
+function ReplaceNumberWithCommas(yourNumber) {
+    //Seperates the components of the number
+    var n= yourNumber.toString().split(".");
+    //Comma-fies the first part
+    n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    //Combines the two sections
+    return n.join(".");
+}
 $.each($("#initial_table").find("td"), function(){
       if (($.inArray($(this).attr('class'), [ "id", "name", "business_unit","date_of_joining","date_of_leaving","active"] ) == -1)){
         if (isNaN(parseInt(m[$(this).attr('class')]))){
@@ -244,7 +251,7 @@ $.each($("#initial_table").find("td"), function(){
         }
         else{
         console.log(m[$(this).attr('class')])
-        m[$(this).attr('class')] =parseInt(m[$(this).attr('class')]) + parseInt($(this).html())
+        m[$(this).attr('class')] =parseInt(m[$(this).attr('class')]) + parseInt($(this).html().replace(/[^\d.]/g, ''))
         }
       }
       else{
@@ -252,7 +259,11 @@ $.each($("#initial_table").find("td"), function(){
         
       }
     })
-
+  $.each(m, function(key, value) {
+                if (value != ""){
+                 m[key] = "₹"+ReplaceNumberWithCommas(value)
+                }
+                  });
      $.each($("#initial_table").find("td.active"), function(){
 
       if ($(this).html() == "true"){

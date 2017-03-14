@@ -399,6 +399,7 @@ span.error{
             var dt = new Date(selected);
             dt.setDate(dt.getDate() + 1);
             $("#datepickerto").datepicker("option", "minDate", dt);
+             initial_view()
         }
     });
     $("#datepickerto").datepicker({
@@ -409,6 +410,7 @@ span.error{
             var dt = new Date(selected);
             dt.setDate(dt.getDate() - 1);
             $("#datepickerfrom").datepicker("option", "maxDate", dt);
+             initial_view()
         }
     });
 		 var fullDate = new Date()
@@ -440,7 +442,6 @@ span.error{
     var to = $("#datepickerto").val()
     resource_view(from,to)
     business_view(from,to)
-      
        responce  = ajax_call("api/overall_efficiency?from_date="+from+"&to_date="+to+"&with_details=false")
     var html_value = ""
     html_value += convert_ajax_to_htm(responce["data"])
