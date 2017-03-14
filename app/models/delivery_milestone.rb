@@ -158,9 +158,9 @@ class DeliveryMilestone < ActiveRecord::Base
       invoicing_milestone = {}
       invoicing_milestone['id'] = im.id
       invoicing_milestone['name'] = im.name
-      invoicing_milestone['amount'] = im.amount
-      invoicing_milestone['invoiced'] = im.amount - im.uninvoiced
-      invoicing_milestone['remaining'] = im.uninvoiced
+      details['amount'] = format_currency(im.amount)
+      details['invoiced'] = format_currency(im.amount - im.uninvoiced)
+      details['remaining'] = format_currency(im.uninvoiced)
       invoicing_milestone['due_date'] = im.due_date.to_s
       invoicing_milestone['last_reminder_date'] = im.last_reminder_date
       invoicing_milestone['completion_date'] = im.completion_date.to_s

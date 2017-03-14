@@ -59,9 +59,9 @@ class PaymentHeader < ActiveRecord::Base
           details['narrative'] = ph.narrative
           details['payment_date'] = ph.payment_date.to_s
           details['status'] = ph.payment_status.name
-          details['amount'] = ph.header_amount
-          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
-          details['unreconciled'] = ph.unreconciled_amount
+          details['amount'] = format_currency(ph.header_amount)
+          details['reconciled'] = format_currency(ph.header_amount - ph.unreconciled_amount)
+          details['unreconciled'] = format_currency(ph.unreconciled_amount)
           details['client'] = ph.client.name
           details['business_unit'] = ph.client.business_unit.name
           data << details
@@ -75,9 +75,9 @@ class PaymentHeader < ActiveRecord::Base
           details['narrative'] = ph.narrative
           details['payment_date'] = ph.payment_date.to_s
           details['status'] = ph.payment_status.name
-          details['amount'] = ph.header_amount
-          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
-          details['unreconciled'] = ph.unreconciled_amount
+          details['amount'] = format_currency(ph.header_amount)
+          details['reconciled'] = format_currency(ph.header_amount - ph.unreconciled_amount)
+          details['unreconciled'] = format_currency(ph.unreconciled_amount)
           details['client'] = ph.client.name
           details['business_unit'] = ph.client.business_unit.name
           data << details
@@ -90,9 +90,9 @@ class PaymentHeader < ActiveRecord::Base
         details['narrative'] = ph.narrative
         details['payment_date'] = ph.payment_date.to_s
         details['status'] = ph.payment_status.name
-        details['amount'] = ph.header_amount
-        details['reconciled'] = ph.header_amount - ph.unreconciled_amount
-        details['unreconciled'] = ph.unreconciled_amount
+        details['amount'] = format_currency(ph.header_amount)
+        details['reconciled'] = format_currency(ph.header_amount - ph.unreconciled_amount)
+        details['unreconciled'] = format_currency(ph.unreconciled_amount)
         details['client'] = ph.client.name
         details['business_unit'] = ph.client.business_unit.name
         data << details
@@ -105,9 +105,9 @@ class PaymentHeader < ActiveRecord::Base
           details['narrative'] = ph.narrative
           details['payment_date'] = ph.payment_date.to_s
           details['status'] = ph.payment_status.name
-          details['amount'] = ph.header_amount
-          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
-          details['unreconciled'] = ph.unreconciled_amount
+          details['amount'] = format_currency(ph.header_amount)
+          details['reconciled'] = format_currency(ph.header_amount - ph.unreconciled_amount)
+          details['unreconciled'] = format_currency(ph.unreconciled_amount)
           details['client'] = ph.client.name
           details['business_unit'] = ph.client.business_unit.name
           data << details
@@ -121,9 +121,9 @@ class PaymentHeader < ActiveRecord::Base
           details['narrative'] = ph.narrative
           details['payment_date'] = ph.payment_date.to_s
           details['status'] = ph.payment_status.name
-          details['amount'] = ph.header_amount
-          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
-          details['unreconciled'] = ph.unreconciled_amount
+          details['amount'] = format_currency(ph.header_amount)
+          details['reconciled'] = format_currency(ph.header_amount - ph.unreconciled_amount)
+          details['unreconciled'] = format_currency(ph.unreconciled_amount)
           details['client'] = ph.client.name
           details['business_unit'] = ph.client.business_unit.name
           data << details
@@ -136,9 +136,9 @@ class PaymentHeader < ActiveRecord::Base
         details['narrative'] = ph.narrative
         details['payment_date'] = ph.payment_date.to_s
         details['status'] = ph.payment_status.name
-        details['amount'] = ph.header_amount
-        details['reconciled'] = ph.header_amount - ph.unreconciled_amount
-        details['unreconciled'] = ph.unreconciled_amount
+        details['amount'] = format_currency(ph.header_amount)
+        details['reconciled'] = format_currency(ph.header_amount - ph.unreconciled_amount)
+        details['unreconciled'] = format_currency(ph.unreconciled_amount)
         details['client'] = ph.client.name
         details['business_unit'] = ph.client.business_unit.name
         data << details
@@ -151,9 +151,9 @@ class PaymentHeader < ActiveRecord::Base
           details['narrative'] = ph.narrative
           details['payment_date'] = ph.payment_date.to_s
           details['status'] = ph.payment_status.name
-          details['amount'] = ph.header_amount
-          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
-          details['unreconciled'] = ph.unreconciled_amount
+          details['amount'] = format_currency(ph.header_amount)
+          details['reconciled'] = format_currency(ph.header_amount - ph.unreconciled_amount)
+          details['unreconciled'] = format_currency(ph.unreconciled_amount)
           details['client'] = ph.client.name
           details['business_unit'] = ph.client.business_unit.name
           data << details
@@ -167,9 +167,9 @@ class PaymentHeader < ActiveRecord::Base
           details['narrative'] = ph.narrative
           details['payment_date'] = ph.payment_date.to_s
           details['status'] = ph.payment_status.name
-          details['amount'] = ph.header_amount
-          details['reconciled'] = ph.header_amount - ph.unreconciled_amount
-          details['unreconciled'] = ph.unreconciled_amount
+          details['amount'] = format_currency(ph.header_amount)
+          details['reconciled'] = format_currency(ph.header_amount - ph.unreconciled_amount)
+          details['unreconciled'] = format_currency(ph.unreconciled_amount)
           details['client'] = ph.client.name
           details['business_unit'] = ph.client.business_unit.name
           data << details
@@ -182,9 +182,9 @@ class PaymentHeader < ActiveRecord::Base
         details['narrative'] = ph.narrative
         details['payment_date'] = ph.payment_date.to_s
         details['status'] = ph.payment_status.name
-        details['amount'] = ph.header_amount
-        details['reconciled'] = ph.header_amount - ph.unreconciled_amount
-        details['unreconciled'] = ph.unreconciled_amount
+        details['amount'] = format_currency(ph.header_amount)
+        details['reconciled'] = format_currency(ph.header_amount - ph.unreconciled_amount)
+        details['unreconciled'] = format_currency(ph.unreconciled_amount)
         details['client'] = ph.client.name
         details['business_unit'] = ph.client.business_unit.name
         data << details
@@ -199,7 +199,7 @@ class PaymentHeader < ActiveRecord::Base
       payment_line = {}
       payment_line['id'] = pl.id
       payment_line['narrative'] = pl.narrative
-      payment_line['amount'] = pl.line_amount
+      payment_line['amount'] = format_currency(pl.line_amount)
       payment_line['invoice_line_id'] = pl.invoice_line.id
       payment_line['invoice_line_narrative'] = pl.invoice_line.narrative
       payment_line['invoice_header_id'] = pl.invoice_line.invoice_header.id
