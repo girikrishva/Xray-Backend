@@ -1,0 +1,160 @@
+    <!-- <h2>XRAY Login</h2>
+    <div id="active_admin_content"> -->
+      <div id="login">
+        <form id="session_new" novalidate="novalidate" class="formtastic admin_user" action="/admin/login" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="Pb+JBSk+hC3P5zD+67eYofdpc4y2FloyAdPeQKixlUo+IfYyY88FwLhYy0T59mZ4lh8kCPU6W5lAsGtqVZMifg==">
+            <fieldset class="inputs">
+                <ol>
+                    <li class="email input required autofocus stringish" id="admin_user_email_input">
+                        <label for="admin_user_email" class="label">Email<abbr title="required">*</abbr></label>
+                        <input id="admin_user_email" autofocus="autofocus" type="email" value="" name="admin_user[email]">
+                    </li>
+                    <li class="password input required stringish" id="admin_user_password_input">
+                        <label for="admin_user_password" class="label">Password<abbr title="required">*</abbr></label>
+                        <input maxlength="128" id="admin_user_password" type="password" name="admin_user[password]">
+                    </li>
+                    <li class="boolean input optional" id="admin_user_remember_me_input">
+                        <input type="hidden" name="admin_user[remember_me]" value="0">
+                        <label for="admin_user_remember_me" class="">
+                            <input type="checkbox" name="admin_user[remember_me]" id="admin_user_remember_me" value="1">Remember me
+                        </label>
+                    </li>
+                </ol>
+            </fieldset>
+            <fieldset class="actions">
+                <ol>
+                    <li class="action input_action " id="admin_user_submit_action">
+                        <input type="submit" name="commit" value="Login">
+                    </li>
+                </ol>
+            </fieldset>
+        </form>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#content_wrapper").prepend('<h2>XRAY Login</h2>')
+		$("#content_wrapper").append('<a class="actions" href="/admin/sign_up" style="float: left;color: #FFF;font-size: 14px;margin-top: 10px;">Sign up</a><a class="actions forgot-password" style="float: right;color: #FFF;font-size: 14px;margin-top: 10px;" href="/admin/password/new">Forgot your password?</a>')
+		$("#active_admin_content").css('height','290px')
+		// $("#content_wrapper").html('<div id="content_wrapper"><h2>XRAY Login</h2><div id="active_admin_content"><div id="login"><form id="session_new" novalidate="novalidate" class="formtastic admin_user" action="/admin/login" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="Pb+JBSk+hC3P5zD+67eYofdpc4y2FloyAdPeQKixlUo+IfYyY88FwLhYy0T59mZ4lh8kCPU6W5lAsGtqVZMifg=="><fieldset class="inputs"><ol> <li class="email input required autofocus stringish" id="admin_user_email_input"> <label for="admin_user_email" class="label">Email<abbr title="required">*</abbr></label> <input id="admin_user_email" autofocus="autofocus" type="email" value="" name="admin_user[email]"></li><li class="password input required stringish" id="admin_user_password_input"><label for="admin_user_password" class="label">Password<abbr title="required">*</abbr></label><input maxlength="128" id="admin_user_password" type="password" name="admin_user[password]"></li><li class="boolean input optional" id="admin_user_remember_me_input"><input type="hidden" name="admin_user[remember_me]" value="0"><label for="admin_user_remember_me" class=""><input type="checkbox" name="admin_user[remember_me]" id="admin_user_remember_me" value="1">Remember me </label></li></ol></fieldset><fieldset class="actions"><ol><li class="action input_action " id="admin_user_submit_action"><input type="submit" name="commit" value="Login"></li></ol></fieldset> </form></div></div><a class="actions" href="/admin/sign_up">Sign up</a><a class="actions forgot-password" href="/admin/password/new">Forgot your password?</a></div>')
+	})
+</script>
+<style type="text/css">
+body.logged_out {
+	background : #083683;
+}
+
+body.logged_out #content_wrapper {
+    width: 450px;
+    margin: 70px auto;
+}
+
+body.logged_out .flash {
+	display:none;
+}
+
+body.logged_out h2 {
+	background: transparent;
+    box-shadow: none;
+    font-size: 22px;
+    text-align: center;
+    font-weight: 300;
+    text-shadow: none;
+    border: 0;
+}
+
+body.logged_out #login form fieldset input[type=text], body.logged_out #login form fieldset input[type=email], body.logged_out #login form fieldset input[type=password] {
+    width: 93%;
+    float: left;
+    height: 35px;
+    padding: 5px 10px;
+    margin: 0;
+    font-size: 14px;
+    background: #fbfbfb;
+}
+
+body.logged_out #login form {
+	float: left;
+    width: 100%;
+}
+
+body.logged_out #login form fieldset {
+    box-shadow: none;
+    background: none;
+    padding: 0;
+    margin-bottom: 0;
+    float: left;
+    width: 100%;
+    display: block;
+}
+
+body.logged_out #login form fieldset.actions ol {
+	width:100%;
+}
+
+body.logged_out #login form fieldset.actions ol li {
+	padding-top: 0;
+}
+
+body.logged_out #login form fieldset.actions ol li#admin_user_submit_action {
+	padding-bottom: 20px;
+}
+
+body.logged_out #login form fieldset.actions ol li input[type=submit] {
+	height: 50px;
+    border-radius: 4px;
+    text-shadow: none;
+    box-shadow: none;
+    font-size: 18px;
+    font-weight: 400;
+    color: #FFF;
+    border: 0;
+    width: 140px;
+    margin: auto;
+    display: block;
+}
+    
+body.logged_out #login form ol, body.logged_out #login form ul {
+    list-style: none;
+    float: left;
+}
+
+body.logged_out #login form fieldset li {
+    padding: 10px 0;
+    float: left;
+    width: 100%;
+}
+
+body.logged_out #login form fieldset ol > li label {
+    display: block;
+    width: 100%;
+    float: left;
+    font-size: 14px;
+    font-weight: 700;
+    -webkit-font-smoothing: antialiased;
+    color: #5E6469;
+}
+
+body.logged_out #login form fieldset > ol > li.boolean {
+	padding-top: 0;
+}
+
+body.logged_out #login form fieldset > ol > li.boolean label {
+    width: 80%;
+    /* padding-left: 20%; */
+    /* padding-right: 10px; */
+    text-transform: none !important;
+    font-weight: normal;
+}
+
+body.logged_out #content_wrapper  #active_admin_content a.actions {
+	float: left;
+    color: #FFF;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+body.logged_out #content_wrapper #active_admin_content a.forgot-password {
+	float:right;
+}
+
+</style>
