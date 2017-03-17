@@ -1,16 +1,21 @@
-<p>As On: <input type="text" id="datepicker" style="text-align:center;width: 90px;">
-
+<div class="datepicker-input-container">
+<label>As On:</label>
+ <input type="text" id="datepicker" style="text-align:center;width: 90px;">
+<i class="fa fa-calendar" class="datepicker-icon"></i>
+</div>
 
   <%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
 
 <!-- <input type="checkbox"  id="show_project_details">Project Details
 <input type="checkbox"  id="show_financial_details">Financial Details -->
-<%= select_tag("delivery_health", options_for_select([["All Delivery Health","all"],["Red","red"],["Orange","orange"],["Yellow","yellow"],["Green","green"]]),class:"filters") %>
-<%= select_tag("contribution", options_for_select([["All Contribution","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %>
-<%= select_tag("gross_profit", options_for_select([["All Gross Profit","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %>
-<%= select_tag("project_status", options_for_select(ProjectStatus.pluck('name','id').push(['All Project Status',-1]).reverse),class:"filters") %>
-<%= select_tag("project_type_option", options_for_select(ProjectTypeCode.pluck('name','id').push(['All Project Type',-1]).reverse),class:"filters") %>
-<%= select_tag("manager_id", options_for_select(AdminUser.order('name desc').pluck("name",'id').push(["All Manager",-1]).reverse),class:"filters") %>
+<div class="select-container"><label>Delivery Health</label><%= select_tag("delivery_health", options_for_select([["All","all"],["Red","red"],["Orange","orange"],["Yellow","yellow"],["Green","green"]]),class:"filters") %></div>
+<div class="select-container"><label>Contribution</label><%= select_tag("contribution",options_for_select([["All","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %></div>
+<div class="select-container"><label>Gross Profit</label><%= select_tag("gross_profit", options_for_select([["All","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %></div>
+<div class="select-container"><label>Project Status</label><%= select_tag("project_status", options_for_select(ProjectStatus.pluck('name','id').push(['All',-1]).reverse),class:"filters") %>
+</div>
+
+<div class="select-container"><label>Project Type Option</label><%= select_tag("project_type_option", options_for_select(ProjectTypeCode.pluck('name','id').push(['All Project Type',-1]).reverse),class:"filters") %></div>
+<div class="select-container"><label>Manager</label><%= select_tag("manager_id", options_for_select(AdminUser.order('name desc').pluck("name",'id').push(["All",-1]).reverse),class:"filters") %></div>
 <span class="checkboxFour">
       <input type="checkbox" value="1" class="filter_opt" id="show_project_details" name="" />
       <label for="show_project_details" class="boxes"></label>
@@ -116,6 +121,7 @@ select {
   .table-striped>tbody>tr:nth-of-type(odd) {
       background-color: #E2E2E2;
   }
+
   .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
       padding: 10px;
       line-height: 1.42857143;
