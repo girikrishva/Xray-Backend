@@ -102,27 +102,47 @@ class Pipeline < ActiveRecord::Base
     end
   end
 
-  def self.pipeline_for_status(status_id, as_on, with_details)
+  def self.pipeline_for_status(status_id, as_on, with_details, business_unit_id = -1)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
     data = []
     count = 0
     total_pipeline = 0
-    Pipeline.where('pipeline_status_id = ? and expected_start between ? and ?', status_id, as_on.beginning_of_month, as_on.end_of_month).each do |p|
-      count += 1
-      total_pipeline += p.expected_value
-      if with_details
-        details = {}
-        pipeline = p.as_json
-        pipeline['expected_value'] = format_currency(p['expected_value'])
-        details['pipeline'] = pipeline
-        details['business_unit'] = p.business_unit.name
-        details['client'] = p.client.name
-        details['project_type'] = p.project_type_code.name
-        details['pipeline_status'] = p.pipeline_status.name
-        details['sales_person'] = p.sales_person.name
-        details['estimator'] = p.estimator.name
-        data << details
+    if business_unit_id == -1
+      Pipeline.where('pipeline_status_id = ? and expected_start between ? and ?', status_id, as_on.beginning_of_month, as_on.end_of_month).each do |p|
+        count += 1
+        total_pipeline += p.expected_value
+        if with_details
+          details = {}
+          pipeline = p.as_json
+          pipeline['expected_value'] = format_currency(p['expected_value'])
+          details['pipeline'] = pipeline
+          details['business_unit'] = p.business_unit.name
+          details['client'] = p.client.name
+          details['project_type'] = p.project_type_code.name
+          details['pipeline_status'] = p.pipeline_status.name
+          details['sales_person'] = p.sales_person.name
+          details['estimator'] = p.estimator.name
+          data << details
+        end
+      end
+    else
+      Pipeline.where('pipeline_status_id = ? and expected_start between ? and ? and business_unit_id = ?', status_id, as_on.beginning_of_month, as_on.end_of_month, business_unit_id).each do |p|
+        count += 1
+        total_pipeline += p.expected_value
+        if with_details
+          details = {}
+          pipeline = p.as_json
+          pipeline['expected_value'] = format_currency(p['expected_value'])
+          details['pipeline'] = pipeline
+          details['business_unit'] = p.business_unit.name
+          details['client'] = p.client.name
+          details['project_type'] = p.project_type_code.name
+          details['pipeline_status'] = p.pipeline_status.name
+          details['sales_person'] = p.sales_person.name
+          details['estimator'] = p.estimator.name
+          data << details
+        end
       end
     end
     result = {}
@@ -134,7 +154,7 @@ class Pipeline < ActiveRecord::Base
     result
   end
 
-  def self.pipeline_for_all_statuses(as_on, months_prior = -6, months_after = 5)
+  def self.pipeline_for_all_statuses(as_on, months_prior = -6, months_after = 5, business_unit_id = -1)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     result = []
     PipelineStatus.order('rank').each do |ps|
@@ -142,7 +162,7 @@ class Pipeline < ActiveRecord::Base
       pipeline_status_detail['pipeline_status'] = ps.name
       (months_prior..months_after).each do |month_offset|
         year_month = as_on + month_offset.month
-        pipeline_status_detail[year_month.to_s] = Pipeline.pipeline_for_status(ps.id, year_month, false)
+        pipeline_status_detail[year_month.to_s] = Pipeline.pipeline_for_status(ps.id, year_month, false, business_unit_id)
       end
       result << pipeline_status_detail
     end
