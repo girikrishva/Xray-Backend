@@ -319,4 +319,65 @@ class AdminUser < ActiveRecord::Base
 
     return sorted_user_list.reverse
   end
+
+  def self.bench_cost(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    bench_cost = 0
+    total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
+    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
+    users_universe.each do |uu|
+      assigned_hours = AssignedResource.assigned_hours(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month) rescue 0
+      bench_cost += (total_working_hours - assigned_hours) * uu.cost_rate
+    end
+    format_currency(bench_cost)
+  end
+
+  def self.assigned_cost(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    assigned_cost = 0
+    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
+    users_universe.each do |uu|
+      assigned_hours = AssignedResource.assigned_hours(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month) rescue 0
+      assigned_cost += assigned_hours * uu.cost_rate
+    end
+    format_currency(assigned_cost)
+  end
+
+  def self.total_resource_cost(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    total_resource_cost = 0
+    total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
+    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
+    users_universe.each do |uu|
+      total_resource_cost += total_working_hours * uu.cost_rate
+    end
+    format_currency(total_resource_cost)
+  end
+
+  def self.bench_cost_for_skill(as_on, skill_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    bench_cost_for_skill = 0
+    total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
+    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
+    users_universe.each do |uu|
+      primary_skill_id = Resource.where('admin_user_id = ? and skill_id = ? and primary_skill is true', uu.id, skill_id) rescue nil
+      if !primary_skill_id.nil?
+        assigned_hours = AssignedResource.assigned_hours_by_skill(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month, skill_id) rescue 0
+        bench_cost_for_skill += ((total_working_hours - assigned_hours) * uu.cost_rate)
+      end
+    end
+    format_currency(bench_cost_for_skill)
+  end
+
+  def self.bench_cost_for_designation(as_on, designation_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    bench_cost_for_designation = 0
+    total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
+    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
+    users_universe.each do |uu|
+      assigned_hours = AssignedResource.assigned_hours_by_designation(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month, designation_id) rescue 0
+      bench_cost_for_designation += ((total_working_hours - assigned_hours) * uu.cost_rate)
+    end
+    format_currency(bench_cost_for_designation)
+  end
 end
