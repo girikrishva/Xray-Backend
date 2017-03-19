@@ -384,8 +384,11 @@ class AdminUser < ActiveRecord::Base
     total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
     users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
     users_universe.each do |uu|
-      assigned_hours = AssignedResource.assigned_hours_by_designation(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month, designation_id) rescue 0
-      bench_cost_for_designation += ((total_working_hours - assigned_hours) * uu.cost_rate)
+      resource = Resource.latest_for(uu.id, as_on)
+      if !resource.nil? and resource.admin_user.designation_id == designation_id
+        assigned_hours = AssignedResource.assigned_hours_by_designation(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month, designation_id) rescue 0
+        bench_cost_for_designation += ((total_working_hours - assigned_hours) * uu.cost_rate)
+      end
     end
     format_currency(bench_cost_for_designation)
   end

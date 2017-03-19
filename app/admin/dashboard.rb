@@ -211,5 +211,24 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       result['labels'] = labels
       render json: result
     end
+
+    def bench_costs_by_designation_panel_data
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.bench_cost')
+      detail['borderColor'] = '#F29220'
+      data = []
+      Designation.all.order('name').each do |d|
+        labels << d.name
+        data << AdminUser.bench_cost_for_designation(Date.today.to_s, d.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
   end
 end
