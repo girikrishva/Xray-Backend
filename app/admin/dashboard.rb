@@ -153,7 +153,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: result
     end
 
-    def pipeline_by_stage
+    def pipeline_by_stage_data
       result = {}
       labels = []
       datasets = []
@@ -172,5 +172,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       result['labels'] = labels
       render json: result
     end
+  end
+
+  def financial_position_panel_data
+    result = {}
+    render json: result
   end
 end
