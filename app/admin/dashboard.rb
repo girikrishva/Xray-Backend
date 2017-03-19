@@ -332,5 +332,36 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       result['labels'] = labels
       render json: result
     end
+
+    def pipeline_by_business_unit_panel_data
+      result = {}
+      datasets = []
+      labels = []
+      color_master = ["#FF6384", "#36A2EB", "#FFCE56","#FE6384", "#37B2EB", "#FCCE33"]
+      detail = {}
+      hoverBackgroundColor = []
+      backgroundColor = []
+      data = []
+      i = 0
+      BusinessUnit.all.order('name').each do |bu|
+        labels << bu.name
+        hoverBackgroundColor << color_master[i]
+        backgroundColor << color_master[color_master.size - 1 - i]
+        bu_pipeline = Pipeline.pipeline_for_all_statuses(Date.today.to_s, 0, 0, bu.id)
+        bu_pipeline_value = 0
+        bu_pipeline.each do |bup|
+          bu_pipeline_value += currency_as_amount(bup[Date.today.to_s]['total_pipeline'])
+        end
+        data << format_currency(bu_pipeline_value)
+        i += 1
+      end
+      detail['hoverBackgroundColor'] = hoverBackgroundColor
+      detail['backgroundColor'] = backgroundColor
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
   end
 end
