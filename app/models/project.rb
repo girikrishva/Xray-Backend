@@ -499,11 +499,20 @@ class Project < ActiveRecord::Base
     result
   end
 
-  def self.gross_profit(business_unit_id, as_on)
+  def self.gross_profit_for_business_unit(business_unit_id, as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     gross_profit = 0
     Project.where('business_unit_id = ?', business_unit_id).each do |p|
       gross_profit += p.gross_profit(as_on.at_end_of_month)
+    end
+    format_currency(gross_profit)
+  end
+
+  def self.gross_profit(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    gross_profit = 0
+    BusinessUnit.all.each do |bu|
+      gross_profit += currency_as_amount(Project.gross_profit_for_business_unit(bu.id, as_on))
     end
     format_currency(gross_profit)
   end
