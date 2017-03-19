@@ -58,5 +58,49 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     before_filter do |c|
       c.send(:is_resource_authorized?, [I18n.t('role.user')])
     end
+
+    def resource_costs_panel_data
+      result = {}
+
+      labels = []
+      labels << Date::MONTHNAMES[(Date.today - 2.months).month]
+      labels << Date::MONTHNAMES[(Date.today - 1.months).month]
+      labels << Date::MONTHNAMES[(Date.today - 0.months).month]
+      result['labels'] = labels
+
+      datasets = []
+
+      detail = {}
+      bench_costs = []
+      bench_costs[0] = AdminUser.total_bench_cost((Date.today - 2.months).at_end_of_month)
+      bench_costs[1] = AdminUser.total_bench_cost((Date.today - 1.months).at_end_of_month)
+      bench_costs[2] = AdminUser.total_bench_cost((Date.today - 0.months).at_end_of_month)
+      data = []
+      data << bench_costs[0]
+      data << bench_costs[1]
+      data << bench_costs[2]
+      detail['data'] = data
+      detail['label'] = 'Bench Cost'
+      detail['borderColor'] = '#33A2FF'
+      datasets << detail
+
+      detail = {}
+      assigned_costs = []
+      assigned_costs[0] = format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - 2.months).at_end_of_month)) - currency_as_amount(bench_costs[0]))
+      assigned_costs[1] = format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - 1.months).at_end_of_month)) - currency_as_amount(bench_costs[1]))
+      assigned_costs[2] = format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - 0.months).at_end_of_month)) - currency_as_amount(bench_costs[2]))
+      data = []
+      data << assigned_costs[0]
+      data << assigned_costs[1]
+      data << assigned_costs[2]
+      detail['data'] = data
+      detail['label'] = 'Assigned Cost'
+      detail['borderColor'] = '#F29220'
+      datasets << detail
+
+      result['datasets'] = datasets
+
+      render json: result
+    end
   end
 end

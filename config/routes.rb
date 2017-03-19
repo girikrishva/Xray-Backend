@@ -162,4 +162,5 @@ Rails.application.routes.draw do
   match '/admin/api/collection_milestone_details' => 'admin/invoice_headers#collection_milestone_details', via: [:get]
   match '/admin/api/reconciliation_milestones' => 'admin/payment_headers#reconciliation_milestones', via: [:get]
   match '/admin/api/reconciliation_milestone_details' => 'admin/payment_headers#reconciliation_milestone_details', via: [:get]
+  match '/admin/api/resource_costs_panel_data' => 'admin/dashboard#resource_costs_panel_data', via: [:get]
 end

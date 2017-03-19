@@ -242,12 +242,12 @@ class AdminUser < ActiveRecord::Base
       end
     end
     details['business_unit'] = BusinessUnit.find(business_unit_id).name
-    business_unit_assigned_percentage = (resource_efficiency_details.map{|y| y['assigned_percentage']}.sum / resource_efficiency_details.size).round(2) rescue 0
+    business_unit_assigned_percentage = (resource_efficiency_details.map { |y| y['assigned_percentage'] }.sum / resource_efficiency_details.size).round(2) rescue 0
     details['business_unit_assigned_percentage'] = business_unit_assigned_percentage
-    business_unit_clocked_percentage = (resource_efficiency_details.map{|y| y['clocked_percentage']}.sum / resource_efficiency_details.size).round(2) rescue 0
+    business_unit_clocked_percentage = (resource_efficiency_details.map { |y| y['clocked_percentage'] }.sum / resource_efficiency_details.size).round(2) rescue 0
     details['business_unit_clocked_percentage'] = business_unit_clocked_percentage
     details['business_unit_utilization_percentage'] = ((business_unit_assigned_percentage * business_unit_clocked_percentage) / 100).round(2)
-    details['business_unit_billing_opportunity_loss'] = format_currency(resource_efficiency_details.map{|y| currency_as_amount(y['billing_opportunity_loss'])}.sum.round(0))
+    details['business_unit_billing_opportunity_loss'] = format_currency(resource_efficiency_details.map { |y| currency_as_amount(y['billing_opportunity_loss']) }.sum.round(0))
     if with_details
       details['resource_efficiency_details'] = resource_efficiency_details
     end
@@ -260,12 +260,12 @@ class AdminUser < ActiveRecord::Base
     BusinessUnit.order('name').each do |bu|
       business_unit_efficiency_details << AdminUser.business_unit_efficiency_details(bu.id, from_date, to_date, with_details)
     end
-    overall_assigned_percentage = (business_unit_efficiency_details.map{|y| y['business_unit_assigned_percentage']}.sum / business_unit_efficiency_details.size).round(2) rescue 0
+    overall_assigned_percentage = (business_unit_efficiency_details.map { |y| y['business_unit_assigned_percentage'] }.sum / business_unit_efficiency_details.size).round(2) rescue 0
     details['overall_assigned_percentage'] = overall_assigned_percentage
-    overall_clocked_percentage = (business_unit_efficiency_details.map{|y| y['business_unit_clocked_percentage']}.sum / business_unit_efficiency_details.size).round(2) rescue 0
+    overall_clocked_percentage = (business_unit_efficiency_details.map { |y| y['business_unit_clocked_percentage'] }.sum / business_unit_efficiency_details.size).round(2) rescue 0
     details['overall_clocked_percentage'] = overall_clocked_percentage
     details['overall_utilization_percentage'] = ((overall_assigned_percentage * overall_clocked_percentage) / 100).round(2)
-    details['overall_billing_opportunity_loss'] = format_currency(business_unit_efficiency_details.map{|y| currency_as_amount(y['business_unit_billing_opportunity_loss'])}.sum.round(0))
+    details['overall_billing_opportunity_loss'] = format_currency(business_unit_efficiency_details.map { |y| currency_as_amount(y['business_unit_billing_opportunity_loss']) }.sum.round(0))
     if with_details
       details['business_unit_efficiency_details'] = business_unit_efficiency_details
     end
@@ -274,10 +274,10 @@ class AdminUser < ActiveRecord::Base
 
   def self.get_records(id)
     users = []
-    self.where(id:id).each do |user|
+    self.where(id: id).each do |user|
       users_hash = {}
-      user_count =  AdminUser.where(:manager_id =>user.id).collect(&:id)
-      user_name = user.name 
+      user_count = AdminUser.where(:manager_id => user.id).collect(&:id)
+      user_name = user.name
       users_hash["id"] = user.id.to_s
       users_hash["name"] = user_name
       users_hash["title"] = user.designation.name
@@ -294,19 +294,19 @@ class AdminUser < ActiveRecord::Base
 
   def self.get_records_user_id(id)
     users = []
-    self.where(id:id).each do |user|
+    self.where(id: id).each do |user|
       users_hash = {}
-      user_count =  AdminUser.where(:manager_id =>user.id).collect(&:id)
-      user_name = user.name 
+      user_count = AdminUser.where(:manager_id => user.id).collect(&:id)
+      user_name = user.name
       users_id = user.id.to_s
       if user_count.count() > 0
         user_count.each do |id|
           self.get_records_user_id(id).each do |x|
-          users << x
-        end
+            users << x
+          end
         end
       end
-      users << [user_name,users_id]
+      users << [user_name, users_id]
     end
     sorted_user = []
     users.each do |x|
@@ -354,14 +354,23 @@ class AdminUser < ActiveRecord::Base
     format_currency(total_resource_cost)
   end
 
+  def self.total_bench_cost(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    total_bench_cost = 0
+    Skill.all.each do |s|
+      total_bench_cost += currency_as_amount(AdminUser.bench_cost_for_skill(as_on, s.id))
+    end
+    format_currency(total_bench_cost)
+  end
+
   def self.bench_cost_for_skill(as_on, skill_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     bench_cost_for_skill = 0
     total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
     users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
     users_universe.each do |uu|
-      primary_skill_id = Resource.where('admin_user_id = ? and skill_id = ? and primary_skill is true', uu.id, skill_id) rescue nil
-      if !primary_skill_id.nil?
+      resource = Resource.latest_for(uu.id, as_on)
+      if !resource.nil? and resource.skill_id == skill_id
         assigned_hours = AssignedResource.assigned_hours_by_skill(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month, skill_id) rescue 0
         bench_cost_for_skill += ((total_working_hours - assigned_hours) * uu.cost_rate)
       end
