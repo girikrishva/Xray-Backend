@@ -172,10 +172,25 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       result['labels'] = labels
       render json: result
     end
-  end
 
-  def financial_position_panel_data
-    result = {}
-    render json: result
+    def financial_performance_panel_data
+      result = {}
+      labels = []
+      labels << Date::MONTHNAMES[(Date.today - 2.months).month]
+      labels << Date::MONTHNAMES[(Date.today - 1.months).month]
+      labels << Date::MONTHNAMES[(Date.today - 0.months).month]
+      result['labels'] = labels
+      payments_received = []
+      payments_received << PaymentHeader.payments_received(Date.today - 2.months)
+      payments_received << PaymentHeader.payments_received(Date.today - 1.months)
+      payments_received << PaymentHeader.payments_received(Date.today - 0.months)
+      result['payments_received'] = payments_received
+      invoices_raised = []
+      invoices_raised << InvoiceHeader.invoices_raised(Date.today - 2.months)
+      invoices_raised << InvoiceHeader.invoices_raised(Date.today - 1.months)
+      invoices_raised << InvoiceHeader.invoices_raised(Date.today - 0.months)
+      result['invoices_raised'] = invoices_raised
+      render json: result
+    end
   end
 end

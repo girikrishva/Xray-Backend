@@ -166,4 +166,5 @@ Rails.application.routes.draw do
   match '/admin/api/gross_profit_panel_data' => 'admin/dashboard#gross_profit_panel_data', via: [:get]
   match '/admin/api/resource_distribution_panel_data' => 'admin/dashboard#resource_distribution_panel_data', via: [:get]
   match '/admin/api/pipeline_by_stage_data' => 'admin/dashboard#pipeline_by_stage_data', via: [:get]
+  match '/admin/api/financial_performance_panel_data' => 'admin/dashboard#financial_performance_panel_data', via: [:get]
 end
