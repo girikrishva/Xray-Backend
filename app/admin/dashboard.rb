@@ -70,7 +70,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data << bench_costs[1]
       data << bench_costs[2]
       detail['data'] = data
-      detail['label'] = 'Bench Cost'
+      detail['label'] = I18n.t('label.bench_cost')
       detail['borderColor'] = '#33A2FF'
       datasets << detail
       detail = {}
@@ -83,7 +83,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data << assigned_costs[1]
       data << assigned_costs[2]
       detail['data'] = data
-      detail['label'] = 'Assigned Cost'
+      detail['label'] = I18n.t('label.assigned_cost')
       detail['borderColor'] = '#F29220'
       datasets << detail
       result['datasets'] = datasets
@@ -108,7 +108,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data << gross_profits[1]
       data << gross_profits[2]
       detail['data'] = data
-      detail['label'] = 'Gross Profit'
+      detail['label'] = I18n.t('label.gross_profit')
       detail['borderColor'] = '#33A2FF'
       datasets << detail
       result['datasets'] = datasets
@@ -133,7 +133,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data << bench_counts[1]
       data << bench_counts[2]
       detail['data'] = data
-      detail['label'] = 'Bench Count'
+      detail['label'] = I18n.t('label.bench_count')
       detail['borderColor'] = '#33A2FF'
       datasets << detail
       detail = {}
@@ -146,7 +146,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data << assigned_counts[1]
       data << assigned_counts[2]
       detail['data'] = data
-      detail['label'] = 'Assigned Count'
+      detail['label'] = I18n.t('label.assigned_count')
       detail['borderColor'] = '#F29220'
       datasets << detail
       result['datasets'] = datasets
@@ -158,7 +158,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       labels = []
       datasets = []
       detail = {}
-      detail['label'] = 'Pipeline Amount'
+      detail['label'] = I18n.t('label.pipeline_amount')
       detail['borderColor'] = '#F29220'
       pipeline_for_all_statuses = Pipeline.pipeline_for_all_statuses(Date.today.at_end_of_month, 0, 0)
       data = []
