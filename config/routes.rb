@@ -169,4 +169,5 @@ Rails.application.routes.draw do
   match '/admin/api/financial_performance_panel_data' => 'admin/dashboard#financial_performance_panel_data', via: [:get]
   match '/admin/api/bench_costs_by_skill_panel_data' => 'admin/dashboard#bench_costs_by_skill_panel_data', via: [:get]
   match '/admin/api/bench_costs_by_designation_panel_data' => 'admin/dashboard#bench_costs_by_designation_panel_data', via: [:get]
+  match '/admin/api/gross_profit_by_business_unit_panel_data' => 'admin/dashboard#gross_profit_by_business_unit_panel_data', via: [:get]
 end

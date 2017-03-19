@@ -230,5 +230,24 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       result['labels'] = labels
       render json: result
     end
+
+    def gross_profit_by_business_unit_panel_data
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.gross_profit')
+      detail['borderColor'] = '#F29220'
+      data = []
+      BusinessUnit.all.order(:name).each do |bu|
+        labels << bu.name
+        data << Project.gross_profit_for_business_unit(bu.id, Date.today.to_s)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
   end
 end
