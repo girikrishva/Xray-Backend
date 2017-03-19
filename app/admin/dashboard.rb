@@ -293,5 +293,44 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       result['project_ids'] = project_ids
       render json: result
     end
+
+
+    def bench_counts_by_skill_panel_data
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.bench_count')
+      detail['borderColor'] = '#F29220'
+      data = []
+      Skill.all.order('name').each do |s|
+        labels << s.name
+        data << AdminUser.bench_count_for_skill(Date.today.to_s, s.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
+
+    def bench_counts_by_designation_panel_data
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.bench_count')
+      detail['borderColor'] = '#F29220'
+      data = []
+      Designation.all.order('name').each do |d|
+        labels << d.name
+        data << AdminUser.bench_count_for_designation(Date.today.to_s, d.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
   end
 end
