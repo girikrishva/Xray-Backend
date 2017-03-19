@@ -249,5 +249,32 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       result['labels'] = labels
       render json: result
     end
+
+    def gross_profit_versus_indirect_cost_panel_data
+      result = {}
+      labels = []
+      labels << I18n.t('label.gross_profit')
+      labels << I18n.t('label.indirect_cost')
+      result['labels'] = labels
+      datasets = []
+      detail = {}
+      hoverBackgroundColor = []
+      hoverBackgroundColor << "#FF6384"
+      hoverBackgroundColor << "#36A2EB"
+      hoverBackgroundColor << "#FFCE56"
+      detail['hoverBackgroundColor'] = hoverBackgroundColor
+      backgroundColor = []
+      backgroundColor << "#FF6384"
+      backgroundColor << "#36A2EB"
+      backgroundColor << "#FFCE56"
+      detail['backgroundColor'] = backgroundColor
+      data = []
+      data << Project.gross_profit(Date.today.to_s)
+      data << Project.total_indirect_cost_share_for_all_projects(Date.today.to_s)
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      render json: result
+    end
   end
 end

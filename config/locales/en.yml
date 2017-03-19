@@ -162,6 +162,7 @@ en:
     bench_count: "Bench Count"
     assigned_count: "Assigned Count"
     pipeline_amount: "Pipeline Amount"
+    indirect_cost: "Indirect Cost"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"

@@ -437,6 +437,15 @@ class Project < ActiveRecord::Base
     format_currency(total_indirect_cost_share)
   end
 
+  def self.total_indirect_cost_share_for_all_projects(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    total_indirect_cost_share = 0
+    Project.all.each do |p|
+      total_indirect_cost_share += currency_as_amount(Project.total_indirect_cost_share(p.id, Date.today.to_s))
+    end
+    format_currency(total_indirect_cost_share)
+  end
+
   def total_cost(as_on)
     result = {}
     total_direct_cost = total_direct_cost(as_on)
