@@ -152,5 +152,25 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       result['datasets'] = datasets
       render json: result
     end
+
+    def pipeline_by_stage
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = 'Pipeline Amount'
+      detail['borderColor'] = '#F29220'
+      pipeline_for_all_statuses = Pipeline.pipeline_for_all_statuses(Date.today.at_end_of_month, 0, 0)
+      data = []
+      pipeline_for_all_statuses.each do |p|
+        labels << p['pipeline_status']
+        data << p[Date.today.at_end_of_month.to_s]['total_pipeline']
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
   end
 end
