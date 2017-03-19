@@ -562,6 +562,7 @@ class Project < ActiveRecord::Base
       color_code = p.delivery_health(as_on)
       if !delivery_health.has_key?(color_code)
         ids = []
+        ids << p.id
         delivery_health[color_code] = ids
       else
         ids = delivery_health[color_code]

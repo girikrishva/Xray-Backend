@@ -276,5 +276,22 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       result['datasets'] = datasets
       render json: result
     end
+
+    def delivery_health_panel_data
+      result = {}
+      delivery_health = Project.delivery_health(Date.today.to_s)
+      color_code = []
+      project_count = []
+      project_ids = []
+      delivery_health.keys.each do |key|
+        color_code << key
+        project_count << delivery_health[key].size
+        project_ids << delivery_health[key]
+      end
+      result['color_code'] = color_code
+      result['project_count'] = project_count
+      result['project_ids'] = project_ids
+      render json: result
+    end
   end
 end
