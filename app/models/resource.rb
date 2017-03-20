@@ -38,7 +38,8 @@ class Resource < ActiveRecord::Base
 
   def is_latest(as_on = Date.today)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    if self.deleted_at.blank? and self.id == Resource.where('admin_user_id = ? and as_on <= ?', self.admin_user_id, as_on).order(:as_on).last.id
+    latest_resource = Resource.where('admin_user_id = ? and as_on <= ?', self.admin_user_id, as_on).order(:as_on).last rescue nil
+    if !latest_resource.nil? and self.deleted_at.blank? and self.id == latest_resource.id
       return true
     else
       return false
@@ -86,16 +87,17 @@ class Resource < ActiveRecord::Base
 
   def self.latest_for(admin_user_id, as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    resource_ids = []
     Resource.where('admin_user_id = ?', admin_user_id).each do |resource|
       if resource.is_latest(as_on)
-        return resource
+        resource_ids << resource.id
       end
     end
+    Resource.where('id in (?)', ids).order('as_on').last
   end
 
   def self.latest(as_on = Date.today)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    # byebug
     resource_ids = []
     Resource.all.each do |resource|
       if resource.is_latest(as_on)
@@ -119,7 +121,6 @@ class Resource < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     data = []
     Resource.latest(as_on).each do |r|
-      # byebug
       details = {}
       details['business_unit_id'] = r.admin_user.business_unit.id
       details['business_unit'] = r.admin_user.business_unit.name

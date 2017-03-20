@@ -303,7 +303,10 @@ ActiveAdmin.register Project do
     def total_direct_cost
       project_id = params[:project_id]
       as_on = params[:as_on]
-      result = Project.find(project_id).total_direct_cost(as_on)
+      result = Project.find(project_id).total_di
+
+
+      rect_cost(as_on)
       render json: result
     end
 
