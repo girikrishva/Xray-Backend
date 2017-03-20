@@ -153,7 +153,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: result
     end
 
-    def pipeline_by_stage_data
+    def pipeline_by_stage_panel_data
       result = {}
       labels = []
       datasets = []
