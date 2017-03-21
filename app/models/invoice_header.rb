@@ -245,4 +245,13 @@ class InvoiceHeader < ActiveRecord::Base
     end
     data
   end
+
+  def self.invoices_raised(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    invoices_raised = 0
+    InvoiceHeader.where('invoice_date between ? and ?', as_on.at_beginning_of_month, as_on.at_end_of_month).each do |ih|
+      invoices_raised += ih.header_amount
+    end
+    format_currency(invoices_raised)
+  end
 end

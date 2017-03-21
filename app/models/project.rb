@@ -5,7 +5,7 @@ class Project < ActiveRecord::Base
   ransacker :gross_profit_status do
   end
 
-   ransacker :contribution_status do
+  ransacker :contribution_status do
   end
 
   belongs_to :client, class_name: 'Client', foreign_key: :client_id
@@ -427,8 +427,23 @@ class Project < ActiveRecord::Base
     result = {}
     total_indirect_resource_cost_share = total_indirect_resource_cost_share(as_on, false)
     total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
-    result['total_indirect_cost_share'] = currency_as_amount(total_indirect_resource_cost_share['total_indirect_resource_cost_share']) rescue 0 + currency_as_amount(total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']) rescue 0
+    result['total_indirect_cost_share'] = currency_as_amount(total_indirect_resource_cost_share['total_indirect_resource_cost_share']) + currency_as_amount(total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']) rescue 0
     result
+  end
+
+  def self.total_indirect_cost_share(project_id, as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    total_indirect_cost_share = Project.find(project_id).total_indirect_cost_share(as_on)['total_indirect_cost_share']
+    format_currency(total_indirect_cost_share)
+  end
+
+  def self.total_indirect_cost_share_for_all_projects(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    total_indirect_cost_share = 0
+    Project.all.each do |p|
+      total_indirect_cost_share += currency_as_amount(Project.total_indirect_cost_share(p.id, Date.today.to_s))
+    end
+    format_currency(total_indirect_cost_share)
   end
 
   def total_cost(as_on)
@@ -493,6 +508,24 @@ class Project < ActiveRecord::Base
     result
   end
 
+  def self.gross_profit_for_business_unit(business_unit_id, as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    gross_profit = 0
+    Project.where('business_unit_id = ?', business_unit_id).each do |p|
+      gross_profit += p.gross_profit(as_on.at_end_of_month)
+    end
+    format_currency(gross_profit)
+  end
+
+  def self.gross_profit(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    gross_profit = 0
+    BusinessUnit.all.each do |bu|
+      gross_profit += currency_as_amount(Project.gross_profit_for_business_unit(bu.id, as_on))
+    end
+    format_currency(gross_profit)
+  end
+
   def gross_profit_details(as_on)
     result = {}
     result['total_revenue'] = total_revenue(as_on, true)
@@ -520,5 +553,23 @@ class Project < ActiveRecord::Base
       result = I18n.t('label.green')
     end
     result
+  end
+
+  def self.delivery_health(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    delivery_health = {}
+    Project.all.order(:name).each do |p|
+      color_code = p.delivery_health(as_on)
+      if !delivery_health.has_key?(color_code)
+        ids = []
+        ids << p.id
+        delivery_health[color_code] = ids
+      else
+        ids = delivery_health[color_code]
+        ids << p.id
+        delivery_health[color_code] = ids
+      end
+    end
+    delivery_health
   end
 end

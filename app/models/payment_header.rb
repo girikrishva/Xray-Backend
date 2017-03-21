@@ -209,4 +209,13 @@ class PaymentHeader < ActiveRecord::Base
     end
     data
   end
+
+  def self.payments_received(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    payments_received = 0
+    PaymentHeader.where('payment_date between ? and ?', as_on.at_beginning_of_month, as_on.at_end_of_month).each do |ph|
+      payments_received += ph.header_amount
+    end
+    format_currency(payments_received)
+  end
 end

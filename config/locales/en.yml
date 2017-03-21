@@ -156,6 +156,13 @@ en:
     orange: "ORANGE"
     yellow: "YELLOW"
     green: "GREEN"
+    bench_cost: "Bench Cost"
+    assigned_cost: "Assigned Cost"
+    gross_profit: "Gross Profit"
+    bench_count: "Bench Count"
+    assigned_count: "Assigned Count"
+    pipeline_amount: "Pipeline Amount"
+    indirect_cost: "Indirect Cost"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"

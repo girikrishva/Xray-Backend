@@ -27,5 +27,6 @@ module XrayBackend
     # Xray configuration.
     config.max_work_hours_per_day = 8
     config.max_work_days_per_month = 22
+    config.bench_threshold = 25
   end
 end

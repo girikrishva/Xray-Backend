@@ -75,6 +75,24 @@ class AssignedResource < ActiveRecord::Base
     assigned_hours
   end
 
+  def self.assigned_hours_by_skill(admin_user_id, from_date, to_date, skill_id)
+    resource_ids = Resource.where(admin_user_id: admin_user_id).pluck(:id).to_a
+    assigned_hours = 0
+    AssignedResource.where('resource_id in (?) and skill_id = ?', resource_ids, skill_id).each do |ar|
+      assigned_hours += (ar.assignment_hours(to_date) - ar.assignment_hours(from_date) + 1)
+    end
+    assigned_hours
+  end
+
+  def self.assigned_hours_by_designation(admin_user_id, from_date, to_date, designation_id)
+    resource_ids = Resource.where(admin_user_id: admin_user_id).pluck(:id).to_a
+    assigned_hours = 0
+    AssignedResource.where('resource_id in (?) and designation_id = ?', resource_ids, designation_id).each do |ar|
+      assigned_hours += (ar.assignment_hours(to_date) - ar.assignment_hours(from_date) + 1)
+    end
+    assigned_hours
+  end
+
   def self.working_hours(admin_user_id, from_date, to_date)
     working_days = from_date.weekdays_until(to_date)
     working_days -= AssignedResource.holidays_between(AdminUser.find(admin_user_id).business_unit_id, from_date, to_date)
