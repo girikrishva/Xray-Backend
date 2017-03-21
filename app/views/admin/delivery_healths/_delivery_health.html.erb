@@ -8,47 +8,32 @@
 
 <!-- <input type="checkbox"  id="show_project_details">Project Details
 <input type="checkbox"  id="show_financial_details">Financial Details -->
-<div class="select-container"><label>Delivery Health</label><%= select_tag("delivery_health", options_for_select([["All","all"],["Red","red"],["Orange","orange"],["Yellow","yellow"],["Green","green"]]),class:"filters") %></div>
-<div class="select-container"><label>Contribution</label><%= select_tag("contribution",options_for_select([["All","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %></div>
-<div class="select-container"><label>Gross Profit</label><%= select_tag("gross_profit", options_for_select([["All","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %></div>
-<div class="select-container"><label>Project Status</label><%= select_tag("project_status", options_for_select(ProjectStatus.pluck('name','id').push(['All',-1]).reverse),class:"filters") %>
+<div class="select-container"><label>Delivery Health</label><br><%= select_tag("delivery_health", options_for_select([["All","all"],["Red","red"],["Orange","orange"],["Yellow","yellow"],["Green","green"]]),class:"filters") %></div>
+<div class="select-container"><label>Contribution</label><br><%= select_tag("contribution",options_for_select([["All","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %></div>
+<div class="select-container"><label>Gross Profit</label><br><%= select_tag("gross_profit", options_for_select([["All","all"],["Positive","positive"],["Negative","negative"]]),class:"filters") %></div>
+<div class="select-container"><label>Project Status</label><br><%= select_tag("project_status", options_for_select(ProjectStatus.pluck('name','id').push(['All',-1]).reverse),class:"filters") %>
 </div>
 
-<div class="select-container"><label>Project Type Option</label><%= select_tag("project_type_option", options_for_select(ProjectTypeCode.pluck('name','id').push(['All Project Type',-1]).reverse),class:"filters") %></div>
-<div class="select-container"><label>Manager</label><%= select_tag("manager_id", options_for_select(AdminUser.order('name desc').pluck("name",'id').push(["All",-1]).reverse),class:"filters") %></div>
-<span class="checkboxFour">
-      <input type="checkbox" value="1" class="filter_opt" id="show_project_details" name="" />
-      <label for="show_project_details" class="boxes"></label>
-    </span>
-    <span style="margin-top: 48px;position: absolute;margin-left: -42px;width: 20px;">Project Details</span>
-    <span class="checkboxFour">
-      <input type="checkbox" value="1" class="filter_opt" id="show_financial_details" name="" />
-      <label for="show_financial_details" class="boxes"></label>
-    </span>
-    <span style="margin-top: 48px;position: absolute;margin-left: -42px;width: 20px;">Financial Details</span>
+<div class="select-container"><label>Project Type Option</label><br><%= select_tag("project_type_option", options_for_select(ProjectTypeCode.pluck('name','id').push(['All',-1]).reverse),class:"filters") %></div>
+<div class="select-container"><label>Manager</label><br><%= select_tag("manager_id", options_for_select(AdminUser.order('name desc').pluck("name",'id').push(["All",-1]).reverse),class:"filters") %></div>
+  <span class="pull-left mr20 checkbox-group">
+    <input type="checkbox" value="1" class="filter_opt" id="show_project_details" name="" />
+    <label for="show_project_details">Project Details</label>
+  </span>
+  <span class="pull-left checkbox-group">
+    <input type="checkbox" value="1" class="filter_opt" id="show_financial_details" name="" />
+    <label for="show_financial_details">Financial Details</label>
+  </span>
+    
 </p>
 <div id="initial_table"></div>
 
 <style type="text/css">
-select {
-   -webkit-appearance: button;
-   -webkit-border-radius: 2px;
-   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-   -webkit-padding-end: 20px;
-   -webkit-padding-start: 2px;
-   -webkit-user-select: none;
-   background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
-   background-position: 100% center;
-   background-repeat: no-repeat;
-   border: 1px solid #AAA;
-   color: #555;
-   font-size: inherit;
-   margin: 20px;
-   overflow: hidden;
-   padding: 5px 10px;
-   text-overflow: ellipsis;
-   white-space: nowrap;
-   width: 130px;
+.pull-left {
+  float:left;
+}
+.mr20 {
+  margin-right: 20px;
 }
 .hasDatepicker 
 {
@@ -85,26 +70,7 @@ select {
 .checkboxFour input[type=checkbox]:checked + label {
   background: #26ca28;
 }
-select {
-   -webkit-appearance: button;
-   -webkit-border-radius: 2px;
-   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-   -webkit-padding-end: 20px;
-   -webkit-padding-start: 2px;
-   -webkit-user-select: none;
-   background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
-   background-position: 100% center;
-   background-repeat: no-repeat;
-   border: 1px solid #AAA;
-   color: #555;
-   font-size: inherit;
-   margin: 20px;
-   overflow: hidden;
-   padding: 5px 10px;
-   text-overflow: ellipsis;
-   white-space: nowrap;
-   width: 130px;
-}
+
 	.table {
       width: 100%;
       max-width: 100%;
@@ -129,16 +95,17 @@ select {
       border-top: 1px solid #ddd;
   }
   .table .table-row-header {
-    background:#636363 !important;
-    color:#FFF;
+    background:#636363;
   }
   td, th {
       padding: 0;
   }
-  .table th , .table td{
-      font-size: 12px;
+  
+  .table td{
+      font-size: 14px;
   }
   .table th {
+    font-size: 13px;
     font-weight: 700;
   }
 .stars-container {
@@ -174,12 +141,27 @@ select {
     padding: 0px;
     padding-left: 10px;
   }
+  .checkbox-group {
+
+  }
+
+  .checkbox-group label{
+    float:left;
+    color:#FFF;
+    font-size: 14px;
+  }
+  .checkbox-group input[type=checkbox] {
+    margin: 0;
+    margin-top: 4px;
+    margin-right: 5px;
+    float: left;
+  }
+
 </style>	
 
 <script type="text/javascript">
 	$(document).ready(function() {
     
-    $(".filter_opt").hide()
     $("#page_title").html("Delivery Health")
 		$(".pagination_information,.pagination,.download_links,#index_table_resource_forecasts,.breadcrumb").hide()
 		$( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
@@ -226,6 +208,8 @@ select {
                 }
       })
       $("#initial_table").html(html_value) 
+      $("#initial_table").find('table').first().addClass("semi-transparent-table")
+      $(".semi-transparent-table").find(".table-row-header").first().attr('style', 'background-color: #23457d !important; color: #FFF !important');
       $("#initial_table").find("th.missed_invoicing_count").html("MISSED INVOICING MILESTONE")
       $("#initial_table").find("th.missed_payments_count").html("MISSED PAYMENTS MILESTONE")
       $("#initial_table").find("th.count").html("MISSED DELIVERY MILESTONE")
@@ -388,7 +372,7 @@ select {
 
        }
        $(".hiddding_header").remove()
-       $(".modal-header").append("<span class= 'hiddding_header'style='font-family: fantasy;font-size: 20px;align-self: center;margin-top: 900px;margin-left: 270px;'>"+(($(this).parent().parent().find("."+$(this).attr('class').split(" ")[0]).html()).toLowerCase()).replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})+" By "+$(this).parent().find(".delivery_manager").html()+" In "+$(this).parent().find(".name").html()+" Project On "+$("#datepicker").val()+"</span>")
+       $(".modal-header").append("<span class= 'hiddding_header'>"+(($(this).parent().parent().find("."+$(this).attr('class').split(" ")[0]).html()).toLowerCase()).replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();})+" By "+$(this).parent().find(".delivery_manager").html()+" In "+$(this).parent().find(".name").html()+" Project On "+$("#datepicker").val()+"</span>")
     $(".hiddding_header").last().show()
     $(".ajax_content").html(html_value)
     $(".ajax_content").find(".id,.data,.invoice_header,.invoice_line,.invoice_status_id,.client_id,.invoice_term_id,.invoice_header_id,.invoicing_milestone_id,.invoice_adder_type_id,.project_overhead,.created_at,.deleted_at,.updated_at,.project_id,.ip_address").hide()

@@ -1,8 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
     <head>
-   <p> <div style="margin-left: 23px;">As On: <input type="text" id="datepickerfrom" class="onchange" style="text-align:center;width: 90px;margin-right: 90px;">
-Due Status <%= select_tag("due_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %>
-Completion Status <%= select_tag("completion_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %>
+   <p> <div class="datepicker-input-container">
+<label>As On:</label> <input type="text" id="datepickerfrom" class="onchange" style="text-align:center;width: 90px;margin-right: 90px;">
+<i class="fa fa-calendar" class="datepicker-icon"></i>
+</div>
+<div class="select-container"><label>Due Status </label></br><%= select_tag("due_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %></div>
+<div class="select-container"><label>Completion Status</label></br> <%= select_tag("completion_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %></div>
 <!-- <a href="#" id= "clikc_search" class="table_tools_button">Search </a> -->
 </div></p>
 <%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
@@ -31,26 +34,7 @@ Completion Status <%= select_tag("completion_status", options_for_select([["All"
             text-shadow:1px 1px 1px #fff;
             padding:20px;
         }
-        select {
-   -webkit-appearance: button;
-   -webkit-border-radius: 2px;
-   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-   -webkit-padding-end: 20px;
-   -webkit-padding-start: 2px;
-   -webkit-user-select: none;
-   background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
-   background-position: 100% center;
-   background-repeat: no-repeat;
-   border: 1px solid #AAA;
-   color: #555;
-   font-size: inherit;
-   margin: 20px;
-   overflow: hidden;
-   padding: 5px 10px;
-   text-overflow: ellipsis;
-   white-space: nowrap;
-   width: 130px;
-}
+        
 .hasDatepicker 
 {
     height: 20px;
@@ -106,7 +90,7 @@ Completion Status <%= select_tag("completion_status", options_for_select([["All"
 body{
     color:#444444;
     font-size:13px;
-    background: #f2f2f2;
+    background: #083683;
     font-family:"Century Gothic", Helvetica, sans-serif;
 }
 #content1{
@@ -117,16 +101,12 @@ body{
     height:100%;
 }
 #wrapper1{
-    -moz-box-shadow:0px 0px 3px #aaa;
-    -webkit-box-shadow:0px 0px 3px #aaa;
-    box-shadow:0px 0px 3px #aaa;
-    -moz-border-radius:10px;
-    -webkit-border-radius:10px;
-    border-radius:10px;
-    border:2px solid #fff;
-    background-color:#f9f9f9;
-    width:1400px;
-    overflow:hidden;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    border: 0;
+    width: 1400px;
+    overflow: hidden;
 }
 #steps{
     width:1400px;
@@ -140,62 +120,47 @@ body{
 }
 #navigation{
     height:45px;
-    background-color:#e9e9e9;
-    border-top:1px solid #fff;
-    -moz-border-radius:0px 0px 10px 10px;
-    -webkit-border-bottom-left-radius:10px;
-    -webkit-border-bottom-right-radius:10px;
-    border-bottom-left-radius:10px;
-    border-bottom-right-radius:10px;
+    background: transparent;
+    border-radius: 0;
+    border: 0;
 }
 #navigation ul{
-    list-style:none;
-    /*float:left;
-    margin-left:22px;*/
+    list-style: none;
+    float: left;
+    padding: 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 #navigation ul li{
-    width: 24%;
-    float:left;
-    border-right:1px solid #ccc;
-    border-left:1px solid #ccc;
-    position:relative;
-    margin:0px 2px;
+    width: auto;
+    float: left;
+    position: relative;
+    margin: 0px 2px;
+    border: 0;
 }
 #navigation ul li a{
-    display:block;
-    height:45px;
-    background-color:#444;
-    color:#777;
-    outline:none;
-    font-weight:bold;
-    text-decoration:none;
-    line-height:45px;
-    padding:0px 20px;
-    border-right:1px solid #fff;
-    border-left:1px solid #fff;
-    background:#f0f0f0;
-    background:
-        -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(0.09, rgb(240,240,240)),
-        color-stop(0.55, rgb(227,227,227)),
-        color-stop(0.78, rgb(240,240,240))
-        );
-    background:
-        -moz-linear-gradient(
-        center bottom,
-        rgb(240,240,240) 9%,
-        rgb(227,227,227) 55%,
-        rgb(240,240,240) 78%
-        )
+    display: block;
+    height: 45px;
+    background-color: #444;
+    color: rgba(255,255,255,0.8);
+    outline: none;
+    font-weight: 400;
+    font-size: 14px;
+    text-decoration: none;
+    line-height: 45px;
+    padding: 0px 20px;
+    background: transparent;
+    border: 0;
 }
 #navigation ul li a:hover,
 #navigation ul li.selected a{
-    background:#d8d8d8;
-    color:#666;
-    text-shadow:1px 1px 1px #fff;
+    background: transparent;
+    color: #FFF;
+    text-shadow: none;
+}
+#navigation ul li.selected a{
+    border-bottom: 2px solid #FFF;
+    font-weight: 700;
 }
 span.checked{
     background:transparent url(../images/checked.png) no-repeat top left;
@@ -385,6 +350,8 @@ $(document).ready(function() {
                 }
       })
       $(".step1").html(html_value)
+      $(".step1").find('table').first().addClass("semi-transparent-table")
+
        $.each($("td.name"), function( index1, value1 ){
      $(this).addClass("text_link")
      $(this).addClass("delivery_milestones_name")
@@ -403,6 +370,8 @@ $(document).ready(function() {
       })
     
      $(".step2").html(html_value)
+      $(".step2").find('table').first().addClass("semi-transparent-table")
+
       $.each($(".step2").find("td.name"), function( index1, value1 ){
      $(this).addClass("text_link")
      $(this).addClass("invoicing_milestones_name")
@@ -420,6 +389,7 @@ $(document).ready(function() {
                 }
       })
       $(".step3").html(html_value)
+      $(".step3").find('table').first().addClass("semi-transparent-table")
       $.each($(".step3").find("td.narrative"), function( index1, value1 ){
      $(this).addClass("text_link")
      $(this).addClass("collection_milestones_name")
@@ -456,6 +426,8 @@ $(document).ready(function() {
                 }
       })
       $(".step1").html(html_value)
+      $(".step1").find('table').first().addClass("semi-transparent-table")
+
  sorting_table($(".step1").find('table'))
 
        $.each($("td.name"), function( index1, value1 ){
@@ -476,6 +448,8 @@ $(document).ready(function() {
       })
     
      $(".step2").html(html_value)
+      $(".step2").find('table').first().addClass("semi-transparent-table")
+
  sorting_table($(".step2").find('table'))
 
       $.each($(".step2").find("td.name"), function( index1, value1 ){
@@ -495,6 +469,8 @@ $(document).ready(function() {
                 }
       })
       $(".step3").html(html_value)
+      $(".step3").find('table').first().addClass("semi-transparent-table")
+
  sorting_table($(".step3").find('table'))
 
       $.each($(".step3").find("td.narrative"), function( index1, value1 ){
@@ -514,6 +490,8 @@ $(document).ready(function() {
                 }
       })
       $(".step4").html(html_value)
+      $(".step4").find('table').first().addClass("semi-transparent-table")
+
       $.each($(".step4").find("td.narrative"), function( index1, value1 ){
      $(this).addClass("text_link")
      $(this).addClass("reconciliation_milestones_name")
@@ -529,7 +507,7 @@ $(document).ready(function() {
         $(".dropdown_menu").toggle()
         e.preventDefault();
     });
- 
+ $(".semi-transparent-table").find(".table-row-header").attr('style', 'background-color: #23457d !important; color: #FFF !important');
     
     $(".delivery_milestones_name").on('click',function(){
       currentDate = $("#datepickerfrom").val()
