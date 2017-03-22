@@ -3,10 +3,10 @@
    <canvas id="resource_distribution_chart" width="400" height="100"></canvas>
 
 <script type="text/javascript">
-
+// alert("<%=format_currency(70000)%>")
 var config1 = {
     type: 'bar',
-    data: ajax_call("http://beta.json-generator.com/api/json/get/N1OUP_QcG"),
+    data: ajax_call("/admin/api/resource_costs_panel_data"),
     options: {
     scales: {
   		xAxes: [{stacked: false}],

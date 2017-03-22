@@ -5,12 +5,14 @@
 <script type="text/javascript">
 var gp_config = {
     type: 'line',
-    data: ajax_call("http://beta.json-generator.com/api/json/get/41cjaNz9z"),
-};
+    data: ajax_call("/admin/api/gross_profit_panel_data"),
+    
+   };
 
 
 $(function () {
     var myRadar = new Chart(document.getElementById("gp_chart"), gp_config);
+
     document.getElementById("gp_chart").onclick = function(evt){
         var activePoints = myRadar.getElementsAtEvent(evt);
         var firstPoint = activePoints[0];
