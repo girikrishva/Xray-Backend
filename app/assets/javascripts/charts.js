@@ -8,11 +8,21 @@
  * https://github.com/nnnick/Chart.js/blob/master/LICENSE.md
  */
 
-
+var currencyFormat = "";
+	var enType = "";
+	
 (function() {
-
+	
 	"use strict";
-
+ $.ajax({
+            async: false,
+            url: '/admin/api/get_formated_value',
+              dataType: 'json',
+            success: function (data) {
+               currencyFormat = data["format"];
+               enType = data["en-type"]
+            }
+        })
 	//Declare root variable - window in the browser, global on the server
 	var root = this,
 		previous = root.Chart;
@@ -3726,7 +3736,7 @@
 
 (function() {
 	"use strict";
-
+	
 	var root = this,
 		Chart = root.Chart,
 		helpers = Chart.helpers;
@@ -3754,7 +3764,7 @@
 		// label settings
 		labels: {
 			show: true,
-			template: "<%=value.toLocaleString()%>",
+			template: "<%=value.toLocaleString('"+enType+"')%>",
 			fontSize: 12,
 			fontStyle: "normal",
 			fontColor: "#666",
@@ -3876,7 +3886,7 @@
 					});
 				}
 
-				this.labels.push(label ? label : ""); // empty string will not render so we're good
+				this.labels.push(label ? currencyFormat+label : ""); // empty string will not render so we're good
 			}, this);
 		},
 		// Get the correct value. If the value type is object get the x or y based on whether we are horizontal or not
@@ -4332,7 +4342,7 @@
 		// label settings
 		labels: {
 			show: true,
-			template: "<%=value.toLocaleString()%>",
+			template: "<%=value.toLocaleString('"+enType+"')%>",
 			fontSize: 12,
 			fontStyle: "normal",
 			fontColor: "#666",
