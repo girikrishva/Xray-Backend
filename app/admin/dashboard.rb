@@ -53,6 +53,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     end
 
     def resource_costs_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       result = {}
       labels = []
       labels << Date::MONTHNAMES[(Date.today - 2.months).month]
@@ -65,6 +66,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       bench_costs[0] = AdminUser.total_bench_cost((Date.today - 2.months).at_end_of_month)
       bench_costs[1] = AdminUser.total_bench_cost((Date.today - 1.months).at_end_of_month)
       bench_costs[2] = AdminUser.total_bench_cost((Date.today - 0.months).at_end_of_month)
+      if formatted.upcase == 'NO'
+        bench_costs[0] = currency_as_amount(bench_costs[0])
+        bench_costs[1] = currency_as_amount(bench_costs[1])
+        bench_costs[2] = currency_as_amount(bench_costs[2])
+      end
       data = []
       data << bench_costs[0]
       data << bench_costs[1]
@@ -78,6 +84,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       assigned_costs[0] = format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - 2.months).at_end_of_month)) - currency_as_amount(bench_costs[0]))
       assigned_costs[1] = format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - 1.months).at_end_of_month)) - currency_as_amount(bench_costs[1]))
       assigned_costs[2] = format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - 0.months).at_end_of_month)) - currency_as_amount(bench_costs[2]))
+      if formatted.upcase == 'NO'
+        assigned_costs[0] = currency_as_amount(assigned_costs[0])
+        assigned_costs[1] = currency_as_amount(assigned_costs[1])
+        assigned_costs[2] = currency_as_amount(assigned_costs[2])
+      end
       data = []
       data << assigned_costs[0]
       data << assigned_costs[1]
@@ -91,6 +102,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     end
 
     def gross_profit_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       result = {}
       labels = []
       labels << Date::MONTHNAMES[(Date.today - 2.months).month]
@@ -103,6 +115,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       gross_profits[0] = Project.gross_profit((Date.today - 2.months).at_end_of_month)
       gross_profits[1] = Project.gross_profit((Date.today - 1.months).at_end_of_month)
       gross_profits[2] = Project.gross_profit((Date.today - 0.months).at_end_of_month)
+      if formatted.upcase == 'NO'
+        gross_profits[0] = currency_as_amount(gross_profits[0])
+        gross_profits[1] = currency_as_amount(gross_profits[1])
+        gross_profits[2] = currency_as_amount(gross_profits[2])
+      end
       data = []
       data << gross_profits[0]
       data << gross_profits[1]
@@ -154,6 +171,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     end
 
     def pipeline_by_stage_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       result = {}
       labels = []
       datasets = []
@@ -164,7 +182,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data = []
       pipeline_for_all_statuses.each do |p|
         labels << p['pipeline_status']
-        data << p[Date.today.at_end_of_month.to_s]['total_pipeline']
+        if formatted.upcase == 'NO'
+          data << currency_as_amount(p[Date.today.at_end_of_month.to_s]['total_pipeline'])
+        else
+          data << p[Date.today.at_end_of_month.to_s]['total_pipeline']
+        end
       end
       detail['data'] = data
       datasets << detail
@@ -174,6 +196,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     end
 
     def financial_performance_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       result = {}
       labels = []
       labels << Date::MONTHNAMES[(Date.today - 2.months).month]
@@ -181,19 +204,32 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       labels << Date::MONTHNAMES[(Date.today - 0.months).month]
       result['labels'] = labels
       payments_received = []
-      payments_received << PaymentHeader.payments_received(Date.today - 2.months)
-      payments_received << PaymentHeader.payments_received(Date.today - 1.months)
-      payments_received << PaymentHeader.payments_received(Date.today - 0.months)
-      result['payments_received'] = payments_received
-      invoices_raised = []
-      invoices_raised << InvoiceHeader.invoices_raised(Date.today - 2.months)
-      invoices_raised << InvoiceHeader.invoices_raised(Date.today - 1.months)
-      invoices_raised << InvoiceHeader.invoices_raised(Date.today - 0.months)
-      result['invoices_raised'] = invoices_raised
+      if formatted.upcase == 'NO'
+        payments_received << currency_as_amount(PaymentHeader.payments_received(Date.today - 2.months))
+        payments_received << currency_as_amount(PaymentHeader.payments_received(Date.today - 1.months))
+        payments_received << currency_as_amount(PaymentHeader.payments_received(Date.today - 0.months))
+        result['payments_received'] = payments_received
+        invoices_raised = []
+        invoices_raised << currency_as_amount(InvoiceHeader.invoices_raised(Date.today - 2.months))
+        invoices_raised << currency_as_amount(InvoiceHeader.invoices_raised(Date.today - 1.months))
+        invoices_raised << currency_as_amount(InvoiceHeader.invoices_raised(Date.today - 0.months))
+        result['invoices_raised'] = invoices_raised
+      else
+        payments_received << PaymentHeader.payments_received(Date.today - 2.months)
+        payments_received << PaymentHeader.payments_received(Date.today - 1.months)
+        payments_received << PaymentHeader.payments_received(Date.today - 0.months)
+        result['payments_received'] = payments_received
+        invoices_raised = []
+        invoices_raised << InvoiceHeader.invoices_raised(Date.today - 2.months)
+        invoices_raised << InvoiceHeader.invoices_raised(Date.today - 1.months)
+        invoices_raised << InvoiceHeader.invoices_raised(Date.today - 0.months)
+        result['invoices_raised'] = invoices_raised
+      end
       render json: result
     end
 
     def bench_costs_by_skill_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       result = {}
       labels = []
       datasets = []
@@ -203,7 +239,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data = []
       Skill.all.order('name').each do |s|
         labels << s.name
-        data << AdminUser.bench_cost_for_skill(Date.today.to_s, s.id)
+        if formatted.upcase == 'NO'
+          data << currency_as_amount(AdminUser.bench_cost_for_skill(Date.today.to_s, s.id))
+        else
+          data << AdminUser.bench_cost_for_skill(Date.today.to_s, s.id)
+        end
       end
       detail['data'] = data
       datasets << detail
@@ -213,6 +253,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     end
 
     def bench_costs_by_designation_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       result = {}
       labels = []
       datasets = []
@@ -222,7 +263,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data = []
       Designation.all.order('name').each do |d|
         labels << d.name
-        data << AdminUser.bench_cost_for_designation(Date.today.to_s, d.id)
+        if formatted.upcase == 'NO'
+          data << currency_as_amount(AdminUser.bench_cost_for_designation(Date.today.to_s, d.id))
+        else
+          data << AdminUser.bench_cost_for_designation(Date.today.to_s, d.id)
+        end
       end
       detail['data'] = data
       datasets << detail
@@ -232,6 +277,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     end
 
     def gross_profit_by_business_unit_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       result = {}
       labels = []
       datasets = []
@@ -241,7 +287,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data = []
       BusinessUnit.all.order(:name).each do |bu|
         labels << bu.name
-        data << Project.gross_profit_for_business_unit(bu.id, Date.today.to_s)
+        if formatted.upcase == 'NO'
+          data << currency_as_amount(Project.gross_profit_for_business_unit(bu.id, Date.today.to_s))
+        else
+          data << Project.gross_profit_for_business_unit(bu.id, Date.today.to_s)
+        end
       end
       detail['data'] = data
       datasets << detail
@@ -251,6 +301,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     end
 
     def gross_profit_versus_indirect_cost_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       result = {}
       labels = []
       labels << I18n.t('label.gross_profit')
@@ -269,8 +320,13 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       backgroundColor << "#FFCE56"
       detail['backgroundColor'] = backgroundColor
       data = []
-      data << Project.gross_profit(Date.today.to_s)
-      data << Project.total_indirect_cost_share_for_all_projects(Date.today.to_s)
+      if formatted.upcase == 'NO'
+        data << currency_as_amount(Project.gross_profit(Date.today.to_s))
+        data << currency_as_amount(Project.total_indirect_cost_share_for_all_projects(Date.today.to_s))
+      else
+        data << Project.gross_profit(Date.today.to_s)
+        data << Project.total_indirect_cost_share_for_all_projects(Date.today.to_s)
+      end
       detail['data'] = data
       datasets << detail
       result['datasets'] = datasets
@@ -334,6 +390,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     end
 
     def pipeline_by_business_unit_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       result = {}
       datasets = []
       labels = []
@@ -352,7 +409,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         bu_pipeline.each do |bup|
           bu_pipeline_value += currency_as_amount(bup[Date.today.to_s]['total_pipeline'])
         end
-        data << format_currency(bu_pipeline_value)
+        if formatted.upcase == 'NO'
+          data << currency_as_amount(format_currency(bu_pipeline_value))
+        else
+          data << format_currency(bu_pipeline_value)
+        end
         i += 1
       end
       detail['hoverBackgroundColor'] = hoverBackgroundColor
