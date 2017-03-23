@@ -230,6 +230,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     def bench_costs_by_skill_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
       labels = []
       datasets = []
@@ -240,9 +241,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       Skill.all.order('name').each do |s|
         labels << s.name
         if formatted.upcase == 'NO'
-          data << currency_as_amount(AdminUser.bench_cost_for_skill(Date.today.to_s, s.id))
+          data << currency_as_amount(AdminUser.bench_cost_for_skill(as_on, s.id))
         else
-          data << AdminUser.bench_cost_for_skill(Date.today.to_s, s.id)
+          data << AdminUser.bench_cost_for_skill(as_on, s.id)
         end
       end
       detail['data'] = data
@@ -254,6 +255,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     def bench_costs_by_designation_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
       labels = []
       datasets = []
@@ -264,9 +266,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       Designation.all.order('name').each do |d|
         labels << d.name
         if formatted.upcase == 'NO'
-          data << currency_as_amount(AdminUser.bench_cost_for_designation(Date.today.to_s, d.id))
+          data << currency_as_amount(AdminUser.bench_cost_for_designation(as_on, d.id))
         else
-          data << AdminUser.bench_cost_for_designation(Date.today.to_s, d.id)
+          data << AdminUser.bench_cost_for_designation(as_on, d.id)
         end
       end
       detail['data'] = data
@@ -278,6 +280,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     def gross_profit_by_business_unit_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
       labels = []
       datasets = []
@@ -288,9 +291,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       BusinessUnit.all.order(:name).each do |bu|
         labels << bu.name
         if formatted.upcase == 'NO'
-          data << currency_as_amount(Project.gross_profit_for_business_unit(bu.id, Date.today.to_s))
+          data << currency_as_amount(Project.gross_profit_for_business_unit(bu.id, as_on))
         else
-          data << Project.gross_profit_for_business_unit(bu.id, Date.today.to_s)
+          data << Project.gross_profit_for_business_unit(bu.id, as_on)
         end
       end
       detail['data'] = data
@@ -302,6 +305,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     def gross_profit_versus_indirect_cost_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
       labels = []
       labels << I18n.t('label.gross_profit')
@@ -321,11 +325,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       detail['backgroundColor'] = backgroundColor
       data = []
       if formatted.upcase == 'NO'
-        data << currency_as_amount(Project.gross_profit(Date.today.to_s))
-        data << currency_as_amount(Project.total_indirect_cost_share_for_all_projects(Date.today.to_s))
+        data << currency_as_amount(Project.gross_profit(as_on))
+        data << currency_as_amount(Project.total_indirect_cost_share_for_all_projects(as_on))
       else
-        data << Project.gross_profit(Date.today.to_s)
-        data << Project.total_indirect_cost_share_for_all_projects(Date.today.to_s)
+        data << Project.gross_profit(as_on)
+        data << Project.total_indirect_cost_share_for_all_projects(as_on)
       end
       detail['data'] = data
       datasets << detail
@@ -334,8 +338,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     end
 
     def delivery_health_panel_data
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
-      delivery_health = Project.delivery_health(Date.today.to_s)
+      delivery_health = Project.delivery_health(as_on)
       color_code = []
       project_count = []
       project_ids = []
@@ -352,6 +357,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
 
     def bench_counts_by_skill_panel_data
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
       labels = []
       datasets = []
@@ -361,7 +367,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data = []
       Skill.all.order('name').each do |s|
         labels << s.name
-        data << AdminUser.bench_count_for_skill(Date.today.to_s, s.id)
+        data << AdminUser.bench_count_for_skill(as_on, s.id)
       end
       detail['data'] = data
       datasets << detail
@@ -371,6 +377,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     end
 
     def bench_counts_by_designation_panel_data
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
       labels = []
       datasets = []
@@ -380,7 +387,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data = []
       Designation.all.order('name').each do |d|
         labels << d.name
-        data << AdminUser.bench_count_for_designation(Date.today.to_s, d.id)
+        data << AdminUser.bench_count_for_designation(as_on, d.id)
       end
       detail['data'] = data
       datasets << detail
@@ -391,6 +398,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     def pipeline_by_business_unit_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
       datasets = []
       labels = []
@@ -404,10 +412,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         labels << bu.name
         hoverBackgroundColor << color_master[i]
         backgroundColor << color_master[color_master.size - 1 - i]
-        bu_pipeline = Pipeline.pipeline_for_all_statuses(Date.today.to_s, 0, 0, bu.id)
+        bu_pipeline = Pipeline.pipeline_for_all_statuses(as_on, 0, 0, bu.id)
         bu_pipeline_value = 0
         bu_pipeline.each do |bup|
-          bu_pipeline_value += currency_as_amount(bup[Date.today.to_s]['total_pipeline'])
+          bu_pipeline_value += currency_as_amount(bup[as_on]['total_pipeline'])
         end
         if formatted.upcase == 'NO'
           data << currency_as_amount(format_currency(bu_pipeline_value))
