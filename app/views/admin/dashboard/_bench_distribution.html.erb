@@ -4,7 +4,8 @@
 <script type="text/javascript">
 var config = {
     type: "bar",
-    data: ajax_call("http://beta.json-generator.com/api/json/get/Vk7mTVMqG"),
+    data: ajax_call("/admin/api/resource_distribution_panel_data"),
+    format:"",
     options: {
     scales: {
       xAxes: [{stacked: false}],
@@ -20,7 +21,7 @@ var config = {
 
 
 $(function () {
-    var myRadar = new Chart(document.getElementById("resource_cost_chart"), config);
+    var myRadar = new Chart(document.getElementById("resource_cost_chart"), config,"unformated");
     document.getElementById("resource_cost_chart").onclick = function(evt){
         var activePoints = myRadar.getElementsAtEvent(evt);
         var firstPoint = activePoints[0];
@@ -29,24 +30,27 @@ $(function () {
           // alert(firstPoint._model["label"])
           // alert(firstPoint._model["datasetLabel"])
           $(".popup").show();
-         mark_and_display("http://beta.json-generator.com/api/json/get/4y29kFP5f","bar")
+          var fullDate = new Date()
+          var months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+          as_on = fullDate.getFullYear()+"-"+months.indexOf(firstPoint._model["label"])+"-01"
+         mark_and_display("/admin/api/bench_counts_by_skill_panel_data?as_on="+as_on,"bar","unformated")
      $(".ajax_content_container").find('span').remove()
-     $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Skill</span>|<span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Designation</span>')
+     $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Skill</span><span>|</span><span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Designation</span>')
     $(".ajax_content_container").css("max-height","700px")
     $(".popup_details").on('click',function(){
       if($(this).html().replace(" ","") == "Beanch Distribution By Skill" ){
         $(".popup_details").css('font-size','small')
         $(this).css('font-size','large')
-        mark_and_display("http://beta.json-generator.com/api/json/get/4y29kFP5f","bar")
+        mark_and_display("/admin/api/bench_counts_by_skill_panel_data?as_on="+as_on,"bar","unformated")
       }else{
         $(".popup_details").css('font-size','small')
         $(this).css('font-size','large')
-        mark_and_display("http://beta.json-generator.com/api/json/get/4k-x4FP9z","bar")
+        mark_and_display("/admin/api/bench_counts_by_designation_panel_data?as_on="+as_on,"bar","unformated")
       }
     })
      };
 });
-function mark_and_display(url,type){
+function mark_and_display(url,type,format){
 var popup_one_config = {
     type: type,
     data: ajax_call(url),
@@ -65,7 +69,7 @@ var popup_one_config = {
 
      $(".ajax_content_container").find(".canvas_conatiner").html("")
      $(".ajax_content_container").find(".canvas_conatiner").html('<canvas id="popup_one" style="width: 920px; height: 460px;" width="827" height="413"></canvas>')
-new Chart(document.getElementById("popup_one"), popup_one_config);
+new Chart(document.getElementById("popup_one"), popup_one_config,format);
      // new Chart(document.getElementById("popup_two"), config1);
     $(".ajax_content_container").css("max-height","700px")
     $(".popup-inner").css("max-height","700px")

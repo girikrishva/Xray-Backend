@@ -7,6 +7,7 @@
 var config1 = {
     type: 'bar',
     data: ajax_call("/admin/api/resource_costs_panel_data"),
+    format:currencyFormat,
     options: {
     scales: {
   		xAxes: [{stacked: false}],
@@ -27,8 +28,12 @@ $(function () {
         var activePoints = myRadar.getElementsAtEvent(evt);
         var firstPoint = activePoints[0];
         if (firstPoint !== undefined)
+          // alert(firstPoint._model["datasetLabel"])
         	$(".popup").show();
-     mark_and_display("http://beta.json-generator.com/api/json/get/4y29kFP5f","bar")
+          var fullDate = new Date()
+          var months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+          as_on = fullDate.getFullYear()+"-"+months.indexOf(firstPoint._model["label"])+"-01"
+     mark_and_display("/admin/api/bench_costs_by_skill_panel_data?as_on="+as_on,"bar")
      $(".ajax_content_container").find('span').remove()
      $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Skill</span><span>|</span><span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Designation</span>')
     // $(".ajax_content_container").css("max-height","700px")
@@ -36,11 +41,11 @@ $(function () {
       if($(this).html().replace(" ","") == "Beanch Distribution By Skill" ){
         $(".popup_details").css('font-size','small')
         $(this).css('font-size','large')
-        mark_and_display("http://beta.json-generator.com/api/json/get/4y29kFP5f","bar")
+        mark_and_display("/admin/api/bench_costs_by_skill_panel_data?as_on="+as_on,"bar")
       }else{
         $(".popup_details").css('font-size','small')
         $(this).css('font-size','large')
-        mark_and_display("http://beta.json-generator.com/api/json/get/4k-x4FP9z","bar")
+        mark_and_display("/admin/api/bench_costs_by_designation_panel_data?as_on="+as_on,"bar")
       }
     })
      };

@@ -44,7 +44,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       end
 
       column do
-       panel "Recent Posts" do
+       panel "Pipeline" do
          render partial: "pipe_line"
         end
       end

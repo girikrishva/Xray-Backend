@@ -28,7 +28,10 @@ var currencyFormat = "";
 		previous = root.Chart;
 
 	//Occupy the global variable of Chart, and create a simple base class
-	var Chart = function(context, config) {
+	var Chart = function(context, config,format) {
+		if (format == "unformated"){
+			currencyFormat = ""
+		}
 		var chart = this;
 		this.config = config;
 
@@ -1475,6 +1478,7 @@ var currencyFormat = "";
 			}, this);
 
 			// Finally draw the tooltip
+			
 			this.tooltip.transition(easingDecimal).draw();
 		},
 
@@ -2067,7 +2071,9 @@ var currencyFormat = "";
 			});
 		},
 		update: function() {
-
+			if (this._chart.config.format != undefined){
+				currencyFormat = this._chart.config.format
+			}
 			var ctx = this._chart.ctx;
 
 			switch (this._options.hover.mode) {
@@ -2200,7 +2206,7 @@ var currencyFormat = "";
 			return this;
 		},
 		draw: function() {
-
+			
 			var ctx = this._chart.ctx;
 			var vm = this._view;
 
