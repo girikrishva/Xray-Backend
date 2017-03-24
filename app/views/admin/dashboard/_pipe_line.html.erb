@@ -23,7 +23,7 @@ $(function () {
           // var months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
           // as_on = fullDate.getFullYear()+"-"+months.indexOf(firstPoint._model["label"])+"-01"
             $(".popup").show();
-        mark_and_display("/admin/api/pipeline_by_stage_panel_data?as_on="+as_on,"bar")
+        mark_and_display("/admin/api/pipeline_by_stage_panel_data?as_on=","bar")
         $(".ajax_content_container").find('span').remove()
      };
 });

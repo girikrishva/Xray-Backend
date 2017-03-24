@@ -8,7 +8,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     columns do 
     columns do
       column do
-        panel "Resource Cost" do
+        panel "Resource Cost" do 
          render partial: "bench_cost.html.erb"
          div class:"popup","data-popup": "popup-1" do
       div class:"popup-inner" do
@@ -49,8 +49,12 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         end
       end
     end
+  column do 
+    panel "Financial Performance" do
+      render partial:"financial_performance"
+    end
   end
-
+  end
   end # content
 
 
