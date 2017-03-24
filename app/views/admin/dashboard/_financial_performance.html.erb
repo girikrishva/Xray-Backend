@@ -1,0 +1,115 @@
+<%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
+<div id="initial_table"></div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		html_value = ""
+		  responce  = ajax_call("/admin/api/financial_performance_panel_data")
+    var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
+    data = []
+	keys = []
+	var len = 0
+	$.each(responce, function(key, value) {
+	      keys.push(key)
+	      len = value.length
+	});
+	for(var i = 0; i < len; i++) {
+	k = {}
+	$.each(keys, function(key, value) {
+	k[value] = responce[value][i]
+	})
+	data.push(k)
+	}
+    // html_value += convert_ajax_to_htm(data)
+    $.each( data, function( index, value ){
+       if (index  ==  0){
+                  html_value += convert_ajax_to_htm(value).replace("</table>","")
+                }
+                else{
+                  html_value += return_only_t_data(value)
+                }
+    })
+		$("#initial_table").html(html_value) 
+      $("#initial_table").find('table').first().addClass("semi-transparent-table")
+      $(".semi-transparent-table").find(".table-row-header").first().attr('style', 'background-color: #23457d !important; color: #FFF !important');
+      sorting_table($("#initial_table").find('table'))
+	})
+	function ajax_call(url) {
+	    var responce = ""
+	 $.ajax({
+	        async: false,
+	        url: url,
+	          dataType: 'json',
+	        success: function (data) {
+	           responce =  data;
+	        }
+	    })
+	 return responce;
+	}
+		 function return_only_t_data(responce){
+             var ajax_content_value = "</tr><tr>"
+             $.each(responce, function(key, value) {
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr>"
+           return ajax_content_value
+          }
+
+          function convert_ajax_to_htm(responce){
+   var ajax_content_value = "<table class = 'table table-striped'><tr class ='table-row-header'>"
+           $.each(responce, function(key, value) {
+           	console.log(key)
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  });
+           ajax_content_value += "</tr><tr>"
+             $.each(responce, function(key, value) {
+
+                  ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
+                  });
+           ajax_content_value +="</tr></table>"
+           return ajax_content_value
+          }
+</script>
+<style type="text/css">
+	.table {
+	    width: 100%;
+	    max-width: 100%;
+	    margin-bottom: 20px;
+	}
+	table {
+	    background-color: transparent;
+	}
+	table {
+	    border-spacing: 0;
+	    border-collapse: collapse;
+	}
+
+	.table-striped>tbody>tr:nth-of-type(odd) {
+	    background-color: #E2E2E2;
+	}
+	.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+	    padding: 10px;
+	    line-height: 1.42857143;
+	    vertical-align: top;
+	    border-top: 1px solid #ddd;
+	}
+	.table .table-row-header {
+		background:#636363 !important;
+		color:#FFF;
+	}
+	td, th {
+	    padding: 0;
+	}
+	.table th , .table td{
+	    font-size: 12px;
+	}
+	.table th {
+		font-weight: 700;
+	}
+	 #title_bar{
+    padding: 0px;
+    padding-left: 10px;
+  }
+  td.current_month{
+  	 background-color: rgba(95, 158, 160, 0.46);;
+  }
+</style>
