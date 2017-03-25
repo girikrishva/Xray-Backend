@@ -175,4 +175,5 @@ Rails.application.routes.draw do
   match '/admin/api/bench_counts_by_skill_panel_data' => 'admin/dashboard#bench_counts_by_skill_panel_data', via: [:get]
   match '/admin/api/bench_counts_by_designation_panel_data' => 'admin/dashboard#bench_counts_by_designation_panel_data', via: [:get]
   match '/admin/api/pipeline_by_business_unit_panel_data' => 'admin/dashboard#pipeline_by_business_unit_panel_data', via: [:get]
+  match '/admin/api/pipeline_for_business_unit_panel_data' => 'admin/dashboard#pipeline_for_business_unit_panel_data', via: [:get]
 end
