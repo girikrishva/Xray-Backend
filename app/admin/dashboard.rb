@@ -287,7 +287,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       labels = []
       datasets = []
       detail = {}
-      detail['label'] = I18n.t('label.bench_cost')
+      detail['label'] = I18n.t('label.assigned_cost')
       detail['borderColor'] = '#F29220'
       data = []
       i = 0
@@ -409,6 +409,25 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: result
     end
 
+    def assigned_counts_by_skill_panel_data
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.assigned_count')
+      detail['borderColor'] = '#F29220'
+      data = []
+      Skill.all.order('name').each do |s|
+        labels << s.name
+        data << Resource.latest_for_skill(as_on, s.id).count - AdminUser.bench_count_for_skill(as_on, s.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
 
     def bench_counts_by_skill_panel_data
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
