@@ -420,7 +420,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data = []
       Skill.all.order('name').each do |s|
         labels << s.name
-        data << Resource.latest_for_skill(as_on, s.id).count - AdminUser.bench_count_for_skill(as_on, s.id)
+        data << AdminUser.assigned_count_for_skill(as_on, s.id)
       end
       detail['data'] = data
       datasets << detail
@@ -441,6 +441,26 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       Skill.all.order('name').each do |s|
         labels << s.name
         data << AdminUser.bench_count_for_skill(as_on, s.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
+
+    def assigned_counts_by_designation_panel_data
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.assigned_count')
+      detail['borderColor'] = '#F29220'
+      data = []
+      Designation.all.order('name').each do |d|
+        labels << d.name
+        data << AdminUser.assigned_count_for_designation(as_on, d.id)
       end
       detail['data'] = data
       datasets << detail
