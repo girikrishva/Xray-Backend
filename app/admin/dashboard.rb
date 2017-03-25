@@ -228,6 +228,33 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: result
     end
 
+    def assigned_costs_by_skill_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.assigned_cost')
+      detail['borderColor'] = '#F29220'
+      data = []
+      i = 0
+      Skill.all.order('name').each do |s|
+        labels << s.name
+        if formatted.upcase == 'NO'
+          data << currency_as_amount(AdminUser.total_resource_cost((Date.today - i.months).at_end_of_month)) - currency_as_amount(AdminUser.bench_cost_for_skill(as_on, s.id))
+        else
+          data << format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - i.months).at_end_of_month)) - currency_as_amount(AdminUser.bench_cost_for_skill(as_on, s.id)))
+        end
+        i += 1
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
+
     def bench_costs_by_skill_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
@@ -245,6 +272,33 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         else
           data << AdminUser.bench_cost_for_skill(as_on, s.id)
         end
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
+
+    def assigned_costs_by_designation_panel_data
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.assigned_cost')
+      detail['borderColor'] = '#F29220'
+      data = []
+      i = 0
+      Designation.all.order('name').each do |d|
+        labels << d.name
+        if formatted.upcase == 'NO'
+          data << currency_as_amount(AdminUser.total_resource_cost((Date.today - i.months).at_end_of_month)) - currency_as_amount(AdminUser.bench_cost_for_designation(as_on, d.id))
+        else
+          data << format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - i.months).at_end_of_month)) - currency_as_amount(AdminUser.bench_cost_for_designation(as_on, d.id)))
+        end
+        i += 1
       end
       detail['data'] = data
       datasets << detail
@@ -355,6 +409,25 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: result
     end
 
+    def assigned_counts_by_skill_panel_data
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.assigned_count')
+      detail['borderColor'] = '#F29220'
+      data = []
+      Skill.all.order('name').each do |s|
+        labels << s.name
+        data << AdminUser.assigned_count_for_skill(as_on, s.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
 
     def bench_counts_by_skill_panel_data
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
@@ -368,6 +441,26 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       Skill.all.order('name').each do |s|
         labels << s.name
         data << AdminUser.bench_count_for_skill(as_on, s.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
+      render json: result
+    end
+
+    def assigned_counts_by_designation_panel_data
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      result = {}
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.assigned_count')
+      detail['borderColor'] = '#F29220'
+      data = []
+      Designation.all.order('name').each do |d|
+        labels << d.name
+        data << AdminUser.assigned_count_for_designation(as_on, d.id)
       end
       detail['data'] = data
       datasets << detail
