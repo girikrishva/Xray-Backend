@@ -1,5 +1,5 @@
 <div class="datepicker-input-container">
-<label>As On:</label>
+<label>As On:</label><br>
  <input type="text" id="datepicker" style="text-align:center;width: 90px;">
 <i class="fa fa-calendar" class="datepicker-icon"></i>
 </div>
@@ -16,11 +16,11 @@
 
 <div class="select-container"><label>Project Type Option</label><br><%= select_tag("project_type_option", options_for_select(ProjectTypeCode.pluck('name','id').push(['All',-1]).reverse),class:"filters") %></div>
 <div class="select-container"><label>Manager</label><br><%= select_tag("manager_id", options_for_select(AdminUser.order('name desc').pluck("name",'id').push(["All",-1]).reverse),class:"filters") %></div>
-  <span class="pull-left mr20 checkbox-group">
+  <span class="pull-left mr20 checkbox-group mt22">
     <input type="checkbox" value="1" class="filter_opt" id="show_project_details" name="" />
     <label for="show_project_details">Project Details</label>
   </span>
-  <span class="pull-left checkbox-group">
+  <span class="pull-left checkbox-group mt22">
     <input type="checkbox" value="1" class="filter_opt" id="show_financial_details" name="" />
     <label for="show_financial_details">Financial Details</label>
   </span>

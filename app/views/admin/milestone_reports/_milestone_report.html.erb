@@ -1,13 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-    <head>
-   <p> <div class="datepicker-input-container">
-<label>As On:</label> <input type="text" id="datepickerfrom" class="onchange" style="text-align:center;width: 90px;margin-right: 90px;">
+
+  <div class="datepicker-input-container">
+<label>As On:</label> <br><input type="text" id="datepickerfrom" class="onchange" >
 <i class="fa fa-calendar" class="datepicker-icon"></i>
 </div>
 <div class="select-container"><label>Due Status </label></br><%= select_tag("due_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %></div>
 <div class="select-container"><label>Completion Status</label></br> <%= select_tag("completion_status", options_for_select([["All","all"],["Complete","complete"],["Incomplete","incomplete"]])) %></div>
 <!-- <a href="#" id= "clikc_search" class="table_tools_button">Search </a> -->
-</div></p>
+</div>
 <%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
         <script type="text/javascript" src="https://tympanus.net/Tutorials/FancySlidingForm/sliding.form.js"></script>
     </head>
@@ -42,9 +41,7 @@
     border-radius: 5px;
 }
     </style>
-    <body>
-        <div>
-           
+    
         <div id="content1">
             <div id="wrapper1">
                <div id="navigation" style="display:none;">
@@ -80,8 +77,7 @@
              
             </div>
         </div>
-    </body>
-</html>
+ 
 <style type="text/css">
     *{
     margin:0px;
@@ -99,6 +95,7 @@ body{
     width:1400px;
     position:relative;
     height:100%;
+    margin-top: 3%;
 }
 #wrapper1{
     border-radius: 0;

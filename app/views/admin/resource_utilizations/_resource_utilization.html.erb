@@ -1,6 +1,15 @@
-<p><div class="datepicker-input-container">
-<label>From: <input type="text" id="datepickerfrom" class="onchange" style="text-align:center;width: 90px;margin-right: 20px;"></label></div><div class="datepicker-input-container">
-<label> To: <input type="text" id="datepickerto" class="onchange" style="text-align:center;width: 90px;margin-right: 20px;"><!-- <a href="#" id= "clikc_search" class="table_tools_button">Search </a> --></label></div></p>
+
+<div class="datepicker-input-container">
+<label>As On:</label> <br>
+<input type="text" id="datepickerfrom" class="onchange">
+<i class="fa fa-calendar" class="datepicker-icon"></i>
+</div>
+
+<div class="datepicker-input-container">
+<label>As On:</label> <br>
+<input type="text" id="datepickerto" class="onchange">
+<i class="fa fa-calendar" class="datepicker-icon"></i>
+</div>
 <!-- 
 Business Unit <%= select_tag("business_unit", options_for_select(BusinessUnit.pluck('name','id'))) %>
 <a href="#" id= "clikc_search" class="table_tools_button">Search </a></div></p>
@@ -135,6 +144,7 @@ body{
     width:1400px;
     position:relative;
     height:100%;
+    margin-top: 3%;
 }
 #wrapper1{
     border-radius: 0;

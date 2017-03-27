@@ -1,8 +1,14 @@
+<div class='full_width_container'>
 <div class="datepicker-input-container">
-<label>As On:</label> <input type="text" id="datepicker" style="text-align:center;width: 90px;margin-right: 90px;"> 
+<label>As On:</label><br> <input type="text" id="datepicker"> 
 <i class="fa fa-calendar" class="datepicker-icon"></i>
 </div>
-<span style="color: #094891;">Period:<b></span><span class="period" ></span></b>
+<div style="float:left;margin-top: 25px;">
+  <span style="color: #FFF;">Period:</span>
+  <b style="color: #FFF;" ><span class="period" ></span></b>
+</div>
+</div>
+
   <%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
 
 <%@pipeline_status=PipelineStatus.pluck('name','id')%>
