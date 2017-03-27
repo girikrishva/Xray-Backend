@@ -97,8 +97,7 @@
       })
 
       $("#initial_table").html(html_value) 
-      $("#initial_table").find('table').first().addClass("semi-transparent-table")
-  $(".semi-transparent-table").find(".table-row-header").first().attr('style', 'background-color: #23457d !important; color: #FFF !important');
+
   
       sorting_table($("#initial_table").find('table'))
 
@@ -205,6 +204,8 @@
               }
             
 		$(".ajax_content").html(html_value)
+    $("#initial_table").find('table').first().addClass("semi-transparent-table")
+  $(".semi-transparent-table").find(".table-row-header").first().attr('style', 'background-color: #23457d !important; color: #FFF !important');
     sorting_table($(".ajax_content").find('table'))
 		$(".created_at,.updated_at,.deleted_at,.comments,.data,.staffing_required_details,.staffing_fulfilled_details,.deployable_resources_details,.id,.admin_user_id").hide()
 	
