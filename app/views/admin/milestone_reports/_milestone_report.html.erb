@@ -609,6 +609,8 @@ $(document).ready(function() {
 function return_only_t_data(responce){
              var ajax_content_value = "</tr><tr>"
              $.each(responce, function(key, value) {
+              value = (value == null) ? "" : value
+
                   ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
                   });
            ajax_content_value +="</tr>"
@@ -618,12 +620,16 @@ function return_only_t_data(responce){
 
 
           function convert_ajax_to_htm(responce){
+
    var ajax_content_value = "<table class = 'table table-striped'><tr class= 'table-row-header'>"
            $.each(responce, function(key, value) {
+
                   ajax_content_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {
+              value = (value == null) ? "" : value
+              
                   ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
                   });
            ajax_content_value +="</tr></table>"

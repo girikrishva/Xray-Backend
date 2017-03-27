@@ -115,6 +115,7 @@ $(document).ready(function() {
 	      function return_only_t_data(responce){
              var ajax_content_value = "</tr><tr>"
              $.each(responce, function(key, value) {
+              value = (value == null) ? "" : value
                   ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
                   });
            ajax_content_value +="</tr>"
@@ -128,6 +129,7 @@ $(document).ready(function() {
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {
+              value = (value == null) ? "" : value
                   ajax_content_value +="<td class='"+key.replace(" ", "_")+"'style = 'border: 1px solid #ddd;' >"+value+"</td>" 
                   });
            ajax_content_value +="</tr></table>"
