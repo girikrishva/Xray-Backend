@@ -107,6 +107,17 @@ class Resource < ActiveRecord::Base
     Resource.where('id in (?)', resource_ids)
   end
 
+  def self.latest_for_skill(as_on = Date.today, skill_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    resource_ids = []
+    Resource.all.each do |resource|
+      if resource.is_latest(as_on) and resource.skill_id == skill_id
+        resource_ids << resource.id
+      end
+    end
+    Resource.where('id in (?)', resource_ids)
+  end
+
   def self.not_latest
     resource_ids = []
     Resource.all.each do |resource|
