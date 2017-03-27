@@ -1,5 +1,8 @@
-<p >As On: <input type="text" id="datepicker" style="text-align:center;width: 90px;margin-right: 90px;"> 
-<span style="color: #094891;">Period:<b></span><span class="period" ></span></b></p>
+<div class="datepicker-input-container">
+<label>As On:</label> <input type="text" id="datepicker" style="text-align:center;width: 90px;margin-right: 90px;"> 
+<i class="fa fa-calendar" class="datepicker-icon"></i>
+</div>
+<span style="color: #094891;">Period:<b></span><span class="period" ></span></b>
   <%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
 
 <%@pipeline_status=PipelineStatus.pluck('name','id')%>
@@ -8,44 +11,43 @@
 <%end%>
 <div id="initial_table"></div>
 <style type="text/css">
+	
 	.table {
-	    width: 100%;
-	    max-width: 100%;
-	    margin-bottom: 20px;
-	}
-	table {
-	    background-color: transparent;
-	}
-	table {
-	    border-spacing: 0;
-	    border-collapse: collapse;
-	}
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+  }
+  table {
+      background-color: transparent;
+  }
+  table {
+      border-spacing: 0;
+      border-collapse: collapse;
+  }
 
-	.table-striped>tbody>tr:nth-of-type(odd) {
-	    background-color: #E2E2E2;
-	}
-	.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-	    padding: 10px;
-	    line-height: 1.42857143;
-	    vertical-align: top;
-	    border-top: 1px solid #ddd;
-	}
-	.table .table-row-header {
-		background:#636363 !important;
-		color:#FFF;
-	}
-	td, th {
-	    padding: 0;
-	}
-	.table th , .table td{
-	    font-size: 12px;
-	}
-	.table th {
-		font-weight: 700;
-	}
-	 #title_bar{
-    padding: 0px;
-    padding-left: 10px;
+  .table-striped>tbody>tr:nth-of-type(odd) {
+      background-color: #E2E2E2;
+  }
+
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      padding: 10px;
+      line-height: 1.42857143;
+      vertical-align: top;
+      border-top: 1px solid #ddd;
+  }
+  .table .table-row-header {
+    background:#636363;
+  }
+  td, th {
+      padding: 0;
+  }
+  
+  .table td{
+      font-size: 14px;
+  }
+  .table th {
+    font-size: 13px;
+    font-weight: 700;
   }
   td.current_month{
   	 background-color: rgba(95, 158, 160, 0.46);;

@@ -29,6 +29,9 @@ $(document).ready(function() {
 
       })
       $("#initial_table").html(html_value) 
+      $("#initial_table").find('table').first().addClass("semi-transparent-table")
+  $(".semi-transparent-table").find(".table-row-header").first().attr('style', 'background-color: #23457d !important; color: #FFF !important');
+  
             sorting_table($("#initial_table").find('table'))
 
   $(".skill_id,.designation_id,.business_unit_id,.breadcrumb").hide()

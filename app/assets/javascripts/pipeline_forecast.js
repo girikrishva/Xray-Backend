@@ -35,6 +35,8 @@ $(document).ready(function() {
   html_value = ""
   $("#datepicker").val(currentDate)
   $("#initial_table").html(table_view(responce,html_value))
+      $("#initial_table").find('table').first().addClass("semi-transparent-table")
+  $(".semi-transparent-table").find(".table-row-header").first().attr('style', 'background-color: #23457d !important; color: #FFF !important');
   sorting_table($("#initial_table").find('table'))
   $(".period").text($(".table tbody tr th:nth-child(2)").html()+" to "+$(".table tbody tr th:last").html())
   $(".text_link").on('click',function(){
