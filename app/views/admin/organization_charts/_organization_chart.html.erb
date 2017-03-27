@@ -24,11 +24,9 @@
 </html>
 <style type="text/css">
 .chart_expander{
-   /*position: fixed;*/
-    margin-right: 20px;
-    float: right;
+    margin-left: 20px;
     margin-top: 12px;
-}
+    float: left;}
     .table {
       width: 100%;
       max-width: 100%;
@@ -70,8 +68,9 @@
   }
   .oc-export-btn{
     /*top: 422px !important;*/
-    float: right;
-    margin-left: 10px;
+        float: left !important;
+        margin-left: 10px;
+    position: inherit;
   }
 </style>
 <script type="text/javascript">
@@ -195,6 +194,8 @@ $(".orgchart").css("display","flex")
 $(".orgchart").css('background-size','0')
 $("#chart-container").css("border",'.2px dotted #aaa')
 $("#chart-container").css("height",'100%')
+$("#chart-container").css("overflow",'hidden')
+
 $(".title").attr("title","Click For More Details")
 // $(".orgchart").first().hide()
 </script>
