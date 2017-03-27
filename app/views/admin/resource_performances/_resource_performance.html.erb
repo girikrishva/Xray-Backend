@@ -1,8 +1,10 @@
-<p> <div style="margin-left: 23px;">As On: <input type="text" id="datepickerfrom" class="onchange" style="text-align:center;width: 90px;margin-right: 20px;">
-Active <%= select_tag("active", options_for_select([["All","all"],["Yes","yes"],["No","no"]])) %>
-Display  <%= select_tag("display", options_for_select([["Inflow","inflow"],["Outflow","outflow"],["Netflow","netflow"]])) %>
-Business Unit<%= select_tag("bu_dropdown", options_for_select(BusinessUnit.order('name desc').pluck('name','id').push(['All',"All"]).reverse),class:"filters") %>
-</p>
+<div class="datepicker-input-container">
+<label>As On:</label> <input type="text" id="datepickerfrom" class="onchange" style="text-align:center;width: 90px;margin-right: 20px;">
+<i class="fa fa-calendar" class="datepicker-icon"></i>
+</div>
+<div class="select-container"><label>Active </label><br><%= select_tag("active", options_for_select([["All","all"],["Yes","yes"],["No","no"]])) %></div>
+<div class="select-container"><label>Display  </label><br><%= select_tag("display", options_for_select([["Inflow","inflow"],["Outflow","outflow"],["Netflow","netflow"]])) %></div>
+<div class="select-container"><label>Business Unit</label><br><%= select_tag("bu_dropdown", options_for_select(BusinessUnit.order('name desc').pluck('name','id').push(['All',"All"]).reverse),class:"filters") %></div>
 
 <div id="initial_table"></div>
 <%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
@@ -291,6 +293,9 @@ $.each($("#initial_table").find('table.initial_table_disp').find("td"), function
 
      })
      $(".user_total").hide()
+  $("#initial_table").find('table').first().addClass("semi-transparent-table")
+  $(".semi-transparent-table").find(".table-row-header").first().attr('style', 'background-color: #23457d !important; color: #FFF !important');
+  sorting_table($("#initial_table").find('table'))
  sorting_table($("#initial_table").find('table.initial_table_disp'))
 
  }
