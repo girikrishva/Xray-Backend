@@ -33,8 +33,25 @@ $(function () {
           var fullDate = new Date()
           var months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
           as_on = fullDate.getFullYear()+"-"+months.indexOf(firstPoint._model["label"])+"-01"
-         mark_and_display("/admin/api/bench_counts_by_skill_panel_data?as_on="+as_on,"bar","unformated")
      $(".ajax_content_container").find('span').remove()
+          if(data_set == "Assigned Count"){
+          mark_and_display("/admin/api/assigned_counts_by_skill_panel_data?as_on="+as_on,"bar","unformated")
+              $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Assigned Distribution By Skill</span><span>|</span><span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Assigned Distribution By Designation</span>')
+             $(".ajax_content_container").css("max-height","700px")
+             $(".popup_details").on('click',function(){
+               if($(this).html().replace(" ","") == "Assigned Distribution By Skill" ){
+                 $(".popup_details").css('font-size','small')
+                 $(this).css('font-size','large')
+                 mark_and_display("/admin/api/assigned_counts_by_skill_panel_data?as_on="+as_on,"bar","unformated")
+               }else{
+                 $(".popup_details").css('font-size','small')
+                 $(this).css('font-size','large')
+                 mark_and_display("/admin/api/assigned_counts_by_designation_panel_data?as_on="+as_on,"bar","unformated")
+               }
+             })
+           }
+           else{
+            mark_and_display("/admin/api/bench_counts_by_skill_panel_data?as_on="+as_on,"bar","unformated")
      $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Skill</span><span>|</span><span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Designation</span>')
     $(".ajax_content_container").css("max-height","700px")
     $(".popup_details").on('click',function(){
@@ -48,6 +65,7 @@ $(function () {
         mark_and_display("/admin/api/bench_counts_by_designation_panel_data?as_on="+as_on,"bar","unformated")
       }
     })
+           }
      };
 });
 function mark_and_display(url,type,format){
