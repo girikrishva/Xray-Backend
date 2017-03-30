@@ -28,6 +28,8 @@
                   html_value += return_only_t_data(value)
                 }
     })
+    $("#initial_table").css("float", "none");
+
 		$("#initial_table").html(html_value) 
       $("#initial_table").find('table').first().addClass("semi-transparent-table")
       $(".semi-transparent-table").find(".table-row-header").first().attr('style', 'background-color: #23457d !important; color: #FFF !important');
