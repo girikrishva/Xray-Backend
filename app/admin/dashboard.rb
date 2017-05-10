@@ -95,7 +95,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data << bench_costs[2]
       detail['data'] = data
       detail['label'] = I18n.t('label.bench_cost')
-      detail['borderColor'] = '#33A2FF'
+      detail['backgroundColor'] = '#6495ED'
       datasets << detail
       detail = {}
       assigned_costs = []
@@ -113,7 +113,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data << assigned_costs[2]
       detail['data'] = data
       detail['label'] = I18n.t('label.assigned_cost')
-      detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#D2691E'
       datasets << detail
       result['datasets'] = datasets
       render json: result
