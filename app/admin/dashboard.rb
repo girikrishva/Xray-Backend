@@ -282,7 +282,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       datasets = []
       detail = {}
       detail['label'] = I18n.t('label.bench_cost')
-      detail['borderColor'] = '#F29220'
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#6495ED'
       data = []
       Skill.all.order('name').each do |s|
         labels << s.name
