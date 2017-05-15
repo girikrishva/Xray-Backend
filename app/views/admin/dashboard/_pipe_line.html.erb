@@ -1,12 +1,25 @@
 
-    
+
    <canvas id="pipeline_chart" width="400" height="100"></canvas>
 
 <script type="text/javascript">
+ 
+
 var pipeline_config = {
-    type: 'line',
+    type: 'bar',
     data: ajax_call("/admin/api/pipeline_by_business_unit_panel_data"),
-    format:"",
+    format:currencyFormat,
+    options: {
+        scales: {
+            xAxes: [{stacked: false}],
+            yAxes: [{
+                stacked: false,
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
 };
 
 
