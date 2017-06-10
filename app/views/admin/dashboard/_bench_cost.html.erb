@@ -1,85 +1,211 @@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<SCRIPT>
+    data_array1 = []
+    data_array2 = []
+    mydata3 = {}
+    opt3 = {}
+    graph_type= ""
+    graph_month= ""
+    $(document).ready(function () {
+        $.ajax({
+            url: "/admin/api/resource_costs_panel_data",
+            context: document.body
+        }).done(function (data) {
+            $.each(data.datasets[0].data, function (index, value) {
+                data_array1[index] = value
+            });
+            $.each(data.datasets[1].data, function (index, value) {
+                data_array2[index] = value
+            });
+        });
+    });
 
-    <%= javascript_include_tag 'charts', 'data-turbolinks-track' => true %>
-   <canvas id="resource_distribution_chart" width="400" height="100"></canvas>
-
-<script type="text/javascript">
-// alert("<%=format_currency(70000)%>")
-var config1 = {
-    type: 'bar',
-    data: ajax_call("/admin/api/resource_costs_panel_data"),
-    format:currencyFormat,
-    options: {
-    scales: {
-  		xAxes: [{stacked: false}],
-    	yAxes: [{
-      	stacked: false,
-      	ticks: {
-        	beginAtZero: true 
-         }
-      }]
+    function setColor(area,data,config,i,j,animPct,value)
+    {
+        if(value > 35)return("rgba(220,0,0,"+animPct);
+        else return("rgba(0,220,0,"+animPct);
     }
-  }
-};
 
+    var charJSPersonnalDefaultOptions = { decimalSeparator : "," , thousandSeparator : ".", roundNumber : "none", graphTitleFontSize: 2 };
+    defCanvasWidth=600;
+    defCanvasHeight=400;
 
-$(function () {
-    var myRadar = new Chart(document.getElementById("resource_distribution_chart"), config1);
-    document.getElementById("resource_distribution_chart").onclick = function(evt){
-        var activePoints = myRadar.getElementsAtEvent(evt);
-        var firstPoint = activePoints[0];
-        if (firstPoint !== undefined)
-          var data_set = firstPoint._model["datasetLabel"]
-          // alert(firstPoint._model["datasetLabel"])
-        	$(".popup").show();
-          var fullDate = new Date()
-          var months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-          as_on = fullDate.getFullYear()+"-"+months.indexOf(firstPoint._model["label"])+"-01"
-     $(".ajax_content_container").find('span').remove()
-     if(data_set == "Assigned Cost"){
-     mark_and_display("/admin/api/assigned_costs_by_skill_panel_data?as_on="+as_on,"bar")
-     $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Assigned Distribution By Skill</span><span>|</span><span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Assigned Distribution By Designation</span>')
-    // $(".ajax_content_container").css("max-height","700px")
-    $(".popup_details").on('click',function(){
-      if($(this).html().replace(" ","") == "Assigned Distribution By Skill" ){
-        $(".popup_details").css('font-size','small')
-        $(this).css('font-size','large')
-        mark_and_display("/admin/api/assigned_costs_by_skill_panel_data?as_on="+as_on,"bar")
-      }else{
-        $(".popup_details").css('font-size','small')
-        $(this).css('font-size','large')
-        mark_and_display("/admin/api/assigned_costs_by_designation_panel_data?as_on="+as_on,"bar")
-      }
-    })
-     }
-     else{
-     mark_and_display("/admin/api/bench_costs_by_skill_panel_data?as_on="+as_on,"bar")
-      $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Skill</span><span>|</span><span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Designation</span>')
-    // $(".ajax_content_container").css("max-height","700px")
-    $(".popup_details").on('click',function(){
-      if($(this).html().replace(" ","") == "Beanch Distribution By Skill" ){
-        $(".popup_details").css('font-size','small')
-        $(this).css('font-size','large')
-        mark_and_display("/admin/api/bench_costs_by_skill_panel_data?as_on="+as_on,"bar")
-      }else{
-        $(".popup_details").css('font-size','small')
-        $(this).css('font-size','large')
-        mark_and_display("/admin/api/bench_costs_by_designation_panel_data?as_on="+as_on,"bar")
-      }
-    })
-     }
-     };
-}); 
-    
- function ajax_call(url) {
-        var responce = ""
-     $.ajax({
-            async: false,
-            url: url,
-              dataType: 'json',
-            success: function (data) {
-               responce =  data;
+    var mydata1 = {
+        labels : ["April","May","June"],
+        datasets : [
+            {
+                fillColor : "#23457d",
+                strokeColor : "rgba(220,220,220,1)",
+                pointColor : "rgba(220,220,220,1)",
+                pointstrokeColor : "yellow",
+                data : data_array1,
+                title : "Bench Costs"
+            },
+            {
+                fillColor : "#D2691E",
+                strokeColor : "rgba(151,187,205,1)",
+                pointColor : "green",
+                pointstrokeColor : "yellow",
+                data : data_array2,
+                title : "Assigned Resource Costs"
             }
-        })
-     return responce;
+        ]
     }
+
+
+    function fctMouseDownLeft(event,ctx,config,data,other)
+    {
+        var cost_s_url= ""
+        var cost_d_url= ""
+        $("#dialog" ).dialog();
+        graph_type=data.datasets[other.v11].title
+        graph_month=data.labels[other.v12]
+        vv=graph_type+" Details for the month of "+graph_month
+        $("#dialog1" ).dialog({ title: vv });
+
+        console.log(JSON.stringify(data.datasets[other.v11].title))
+        console.log(JSON.stringify(data.labels[other.v12]))
+        if (data.datasets[other.v11].title=="Assigned Resource Costs") {
+           cost_s_url = "/admin/api/assigned_costs_by_skill_panel_data?as_on="
+           cost_d_url = "/admin/api/assigned_costs_by_designation_panel_data?as_on="
+        }
+        if (data.datasets[other.v11].title=="Bench Costs") {
+           cost_s_url = "/admin/api/bench_costs_by_skill_panel_data?as_on="
+           cost_d_url = "/admin/api/bench_costs_by_designation_panel_data?as_on="
+        }
+        as_on='2017-06-10'
+        $.ajax({
+            url: cost_s_url+as_on,
+            context: document.body
+        }).done(function (data) {
+             mydata3 = {
+                labels :  data.labels,
+                datasets : [
+                    {
+                        fillColor : data.datasets[0].backgroundColor,
+                        strokeColor : "rgba(220,220,220,1)",
+                        data : data.datasets[0].data,
+                        axis : 1,
+                        title : "2012"
+                    }
+                ]
+            }
+            var i,j;
+            var decal=0.00;
+            mydata1.shapesInChart=[];
+             opt3 = {
+                canvasBorders : true,
+                //graphTitle : data.datasets[0].label,
+                graphTitle : graph_type+" Details by Skill",
+                legend : true,
+                inGraphDataShow : false,
+                annotateDisplay : true,
+                graphTitleFontSize: 18,
+                 barValueSpacing   : 40
+
+            }
+            var myStackedBar = new Chart(document.getElementById("canvas_Bar3").getContext("2d")).StackedBar(mydata3,opt3);
+        });
+
+        $.ajax({
+            url: cost_d_url+as_on,
+            context: document.body
+        }).done(function (data) {
+            dis_data = {
+                labels :  data.labels,
+                datasets : [
+                    {
+                        fillColor : data.datasets[0].backgroundColor,
+                        strokeColor : "rgba(220,220,220,1)",
+                        data : data.datasets[0].data,
+                        axis : 1,
+                        title : "2012"
+                    }
+                ]
+            }
+            var i,j;
+            var decal=0.00;
+            mydata1.shapesInChart=[];
+            dis_opt = {
+                canvasBorders : true,
+                //graphTitle : data.datasets[0].label,
+                graphTitle : graph_type+" Details by Designation",
+                legend : true,
+                inGraphDataShow : false,
+                annotateDisplay : true,
+                graphTitleFontSize: 18,
+                barValueSpacing   : 40
+
+            }
+            var myStackedBar = new Chart(document.getElementById("canvas_Bar4").getContext("2d")).StackedBar(dis_data,dis_opt);
+        });
+    }
+
+
+    var startWithDataset =1;
+    var startWithData =1;
+
+    var opt1 = {
+        animationStartWithDataset : startWithDataset,
+        animationStartWithData : startWithData,
+        animationSteps : 200,
+        canvasBorders : true,
+        canvasBordersWidth : 3,
+        canvasBordersColor : "black",
+        graphTitle : "Resource Cost",
+        legend : true,
+        inGraphDataShow : true,
+        annotateDisplay : true,
+        graphTitleFontSize: 18,
+        barValueSpacing   : 40,
+        mouseDownLeft : fctMouseDownLeft
+    }
+
+</SCRIPT>
+
+<html>
+
+
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<body>
+<script>
+    document.write("<canvas id=\"canvas_StackedBar1\" height=\""+defCanvasHeight+"\" width=\""+defCanvasWidth+"\"></canvas>");
+    window.onload = function() {
+        var myStackedBar = new Chart(document.getElementById("canvas_StackedBar1").getContext("2d")).StackedBar(mydata1,opt1);
+    }
+
 </script>
+</body>
+
+<div id="dialog1" >
+  <div class="modal-content " style="width:100%;">
+    <div style="float:left; width:40%;">
+     <canvas id="canvas_Bar3" height="400" width="600"></canvas>
+    </div>
+
+    <div style="float:right; width:40%;">
+     <canvas id="canvas_Bar4" height="400" width="600"></canvas>
+    </div>
+  </div>
+</div>
+
+<style>
+    .ui-dialog {
+        position: absolute;
+        height: auto;
+        width: 80% !important;
+        top: 20%;
+        left: 10%;
+        display: block;
+    }
+</style>
+
+</div>
+</html>
+
+
+<SCRIPT>
+
+
+</SCRIPT>
+

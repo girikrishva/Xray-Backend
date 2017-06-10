@@ -11,6 +11,7 @@ Rails.application.config.assets.precompile += %w( resource_utilization.js )
 Rails.application.config.assets.precompile += %w( html_to_canvas.js )
 Rails.application.config.assets.precompile += %w( sorting.js )
 Rails.application.config.assets.precompile += %w( charts.js )
+Rails.application.config.assets.precompile += %w( ChartNew.js )
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path
 
