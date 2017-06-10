@@ -193,6 +193,7 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
 var startWithDataset = 1;
 var startWithData = 1;
 var opt1 = {
+    graphMin : 0,
     animationStartWithDataset: startWithDataset,
     animationStartWithData: startWithData,
     animationSteps: 200,
