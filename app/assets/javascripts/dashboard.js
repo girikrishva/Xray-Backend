@@ -97,7 +97,11 @@ var bench_dest_data = {
 function fctMouseDownLeft(event, ctx, config, data, other) {
     var cost_s_url = ""
     var cost_d_url = ""
-    $("#dialog1").dialog('open');
+    if(other != null){
+        $("#dialog1").dialog('open');
+    }
+
+    console.log("========"+JSON.stringify(data.datasets))
     graph_type = data.datasets[other.v11].title
     graph_month = data.labels[other.v12]
     vv = graph_type + " Details for the month of " + graph_month
@@ -107,9 +111,17 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
         cost_s_url = "/admin/api/assigned_costs_by_skill_panel_data?as_on="
         cost_d_url = "/admin/api/assigned_costs_by_designation_panel_data?as_on="
     }
-    if (data.datasets[other.v11].title == "Bench Costs") {
+    else if (data.datasets[other.v11].title == "Bench Costs") {
         cost_s_url = "/admin/api/bench_costs_by_skill_panel_data?as_on="
         cost_d_url = "/admin/api/bench_costs_by_designation_panel_data?as_on="
+    }
+    else if (data.datasets[other.v11].title == "Assigned Resources") {
+        cost_s_url ="/admin/api/assigned_counts_by_skill_panel_data?as_on="
+        cost_d_url ="/admin/api/assigned_counts_by_designation_panel_data?as_on="
+    }
+    else if (data.datasets[other.v11].title == "Bench Resources") {
+        cost_s_url ="/admin/api/bench_counts_by_skill_panel_data?as_on="
+        cost_d_url ="/admin/api/bench_counts_by_designation_panel_data?as_on="
     }
     as_on = '2017-06-10'
     $.ajax({
