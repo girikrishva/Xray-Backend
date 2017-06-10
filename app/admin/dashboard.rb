@@ -238,7 +238,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       detail = {}
       detail['label'] = I18n.t('label.assigned_cost')
       #detail['borderColor'] = '#F29220'
-      detail['backgroundColor'] = '#6495ED'
+      detail['backgroundColor'] = '#D2691E'
       data = []
       i = 0
       Skill.all.order('name').each do |s|
@@ -291,7 +291,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       datasets = []
       detail = {}
       detail['label'] = I18n.t('label.assigned_cost')
-      detail['borderColor'] = '#F29220'
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#D2691E'
       data = []
       i = 0
       Designation.all.order('name').each do |d|
@@ -318,7 +319,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       datasets = []
       detail = {}
       detail['label'] = I18n.t('label.bench_cost')
-      detail['borderColor'] = '#F29220'
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#6495ED'
       data = []
       Designation.all.order('name').each do |d|
         labels << d.name
@@ -419,7 +421,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       datasets = []
       detail = {}
       detail['label'] = I18n.t('label.assigned_count')
-      detail['borderColor'] = '#F29220'
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#D2691E'
       data = []
       Skill.all.order('name').each do |s|
         labels << s.name
@@ -439,7 +442,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       datasets = []
       detail = {}
       detail['label'] = I18n.t('label.bench_count')
-      detail['borderColor'] = '#F29220'
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#6495ED'
       data = []
       Skill.all.order('name').each do |s|
         labels << s.name
@@ -459,7 +463,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       datasets = []
       detail = {}
       detail['label'] = I18n.t('label.assigned_count')
-      detail['borderColor'] = '#F29220'
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#D2691E'
       data = []
       Designation.all.order('name').each do |d|
         labels << d.name
@@ -479,7 +484,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       datasets = []
       detail = {}
       detail['label'] = I18n.t('label.bench_count')
-      detail['borderColor'] = '#F29220'
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#6495ED'
       data = []
       Designation.all.order('name').each do |d|
         labels << d.name
