@@ -10,23 +10,6 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       column do
         panel "Resource Cost" do 
          render partial: "bench_cost.html.erb"
-         div class:"popup","data-popup": "popup-1" do
-      div class:"popup-inner" do
-          div class:"modal-header" do 
-            a class:"popup-close","data-popup-close":"popup-1","href":"#" do
-              "X"
-            end
-          end
-        div class:"ajax_content_container" do 
-          div class:"canvas_conatiner" do
-         canvas id:"popup_one",:style => "width:358;height=89" do
-         end
-       end
-         # canvas id:"popup_two",:style => "width:358;height=89" do
-         # end
-        end
-      end
-    end
         end
       end
 
