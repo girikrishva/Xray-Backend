@@ -12,6 +12,8 @@ graph_month = ""
 resource_data1=[]
 resource_data2=[]
 
+mydata1={}
+bench_dest_data = {}
 $(document).ready(function () {
     $.ajax({
         url: "/admin/api/resource_costs_panel_data",
@@ -23,6 +25,28 @@ $(document).ready(function () {
         $.each(data.datasets[1].data, function (index, value) {
             data_array2[index] = value
         });
+          mydata1 = {
+            labels: ["April", "May", "June"],
+            datasets: [
+                {
+                    fillColor: "#23457d",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointstrokeColor: "yellow",
+                    data: data_array1,
+                    title: "Bench Costs"
+                },
+                {
+                    fillColor: "#D2691E",
+                    strokeColor: "rgba(151,187,205,1)",
+                    pointColor: "green",
+                    pointstrokeColor: "yellow",
+                    data: data_array2,
+                    title: "Assigned Resource Costs"
+                }
+            ]
+        }
+        new Chart(document.getElementById("canvas_StackedBar1").getContext("2d")).StackedBar(mydata1, opt1);
     });
 
 
@@ -38,6 +62,31 @@ $(document).ready(function () {
         $.each(data.datasets[1].data, function (index, value) {
             resource_data2[index] = value
         });
+
+          bench_dest_data = {
+            labels:  ["April", "May", "June"],
+            datasets: [
+                {
+                    fillColor: "#23457d",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointstrokeColor: "yellow",
+                    data: resource_data1,
+                    title: "Bench Resources"
+                },
+                {
+                    fillColor: "#D2691E",
+                    strokeColor: "rgba(151,187,205,1)",
+                    pointColor: "green",
+                    pointstrokeColor: "yellow",
+                    data: resource_data2,
+                    title: "Assigned Resources"
+                }
+            ]
+        }
+
+        new Chart(document.getElementById("bench_dest_graph").getContext("2d")).StackedBar(bench_dest_data, opt1);
+
     });
 
 
@@ -49,49 +98,8 @@ function setColor(area, data, config, i, j, animPct, value) {
     else return("rgba(0,220,0," + animPct);
 }
 
-var mydata1 = {
-    labels: ["April", "May", "June"],
-    datasets: [
-        {
-            fillColor: "#23457d",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointstrokeColor: "yellow",
-            data: data_array1,
-            title: "Bench Costs"
-        },
-        {
-            fillColor: "#D2691E",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "green",
-            pointstrokeColor: "yellow",
-            data: data_array2,
-            title: "Assigned Resource Costs"
-        }
-    ]
-}
 
-var bench_dest_data = {
-    labels:  ["April", "May", "June"],
-    datasets: [
-        {
-            fillColor: "#23457d",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointstrokeColor: "yellow",
-            data: resource_data1,
-            title: "Bench Resources"
-        },
-        {
-            fillColor: "#D2691E",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "green",
-            pointstrokeColor: "yellow",
-            data: resource_data2,
-            title: "Assigned Resources"
-        }
-    ]
-}
+
 
 
 function fctMouseDownLeft(event, ctx, config, data, other) {
@@ -101,7 +109,6 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
         $("#dialog1").dialog('open');
     }
 
-    console.log("========"+JSON.stringify(data.datasets))
     graph_type = data.datasets[other.v11].title
     graph_month = data.labels[other.v12]
     vv = graph_type + " Details for the month of " + graph_month
@@ -212,8 +219,6 @@ var opt1 = {
 
 
 window.onload = function () {
-    new Chart(document.getElementById("canvas_StackedBar1").getContext("2d")).StackedBar(mydata1, opt1);
-    new Chart(document.getElementById("bench_dest_graph").getContext("2d")).StackedBar(bench_dest_data, opt1);
 
     $("#dialog1").dialog({
         modal: true,
