@@ -348,9 +348,10 @@ class AdminUser < ActiveRecord::Base
     total_resource_cost = 0
     total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
     users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
-    users_universe.each do |uu|
-      total_resource_cost += total_working_hours * uu.cost_rate
-    end
+    # users_universe.each do |uu|
+    #   total_resource_cost += total_working_hours * uu.cost_rate
+    # end
+    total_resource_cost=users_universe.collect{|uu| total_working_hours * uu.cost_rate}.inject(:+)
     format_currency(total_resource_cost)
   end
 

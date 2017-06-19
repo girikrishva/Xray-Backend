@@ -1,25 +1,12 @@
 
-    
-   <canvas id="pipeline_chart" width="400" height="100"></canvas>
+<html>
 
-<script type="text/javascript">
-var pipeline_config = {
-    type: 'line',
-    data: ajax_call("/admin/api/pipeline_by_business_unit_panel_data"),
-    format:"",
-};
+<body>
+<canvas id="pipeline_chart" height="400" width="600"></canvas>
+
+</body>
+
+</html>
 
 
-$(function () {
-    var myRadar = new Chart(document.getElementById("pipeline_chart"), pipeline_config);
-    document.getElementById("pipeline_chart").onclick = function(evt){
-        var activePoints = myRadar.getElementsAtEvent(evt);
-        var firstPoint = activePoints[0];
-       if (firstPoint !== undefined)
-            $(".popup").show();
-        mark_and_display("/admin/api/pipeline_by_stage_panel_data?bu_name="+firstPoint._chart.config.data.labels[firstPoint._index],"bar")
-        $(".ajax_content_container").find('span').remove()
-     };
-});
 
-</script>

@@ -1,128 +1,14 @@
 
-    
-   <canvas id="resource_cost_chart" width="400" height="100"></canvas>
-<script type="text/javascript">
-var config = {
-    type: "bar",
-    data: ajax_call("/admin/api/resource_distribution_panel_data"),
-    format:"",
-    options: {
-    scales: {
-      xAxes: [{stacked: false}],
-      yAxes: [{
-        stacked: false,
-        ticks: {
-          beginAtZero: true 
-         }
-      }]
-    }
-  }
-};
+
+<html>
+
+<body>
+<canvas id="bench_dest_graph" height="400" width="600"></canvas>
+
+</body>
+
+</html>
 
 
-$(function () {
-    var myRadar = new Chart(document.getElementById("resource_cost_chart"), config,"unformated");
-    document.getElementById("resource_cost_chart").onclick = function(evt){
-        var activePoints = myRadar.getElementsAtEvent(evt);
-        var firstPoint = activePoints[0];
-        if (firstPoint !== undefined)
-          console.log(activePoints[0])
-          // alert(firstPoint._model["label"])
-          // alert(firstPoint._model["datasetLabel"])
-          $(".popup").show();
-          var fullDate = new Date()
-          var months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-          as_on = fullDate.getFullYear()+"-"+months.indexOf(firstPoint._model["label"])+"-01"
-     $(".ajax_content_container").find('span').remove()
-          if(data_set == "Assigned Count"){
-          mark_and_display("/admin/api/assigned_counts_by_skill_panel_data?as_on="+as_on,"bar","unformated")
-              $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Assigned Distribution By Skill</span><span>|</span><span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Assigned Distribution By Designation</span>')
-             $(".ajax_content_container").css("max-height","700px")
-             $(".popup_details").on('click',function(){
-               if($(this).html().replace(" ","") == "Assigned Distribution By Skill" ){
-                 $(".popup_details").css('font-size','small')
-                 $(this).css('font-size','large')
-                 mark_and_display("/admin/api/assigned_counts_by_skill_panel_data?as_on="+as_on,"bar","unformated")
-               }else{
-                 $(".popup_details").css('font-size','small')
-                 $(this).css('font-size','large')
-                 mark_and_display("/admin/api/assigned_counts_by_designation_panel_data?as_on="+as_on,"bar","unformated")
-               }
-             })
-           }
-           else{
-            mark_and_display("/admin/api/bench_counts_by_skill_panel_data?as_on="+as_on,"bar","unformated")
-     $(".ajax_content_container").prepend('<span style=" margin: 90px;font-size: large;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Skill</span><span>|</span><span  style=" margin: 90px;font-family: monospace;font-style: italic; cursor: pointer;" class="popup_details"> Beanch Distribution By Designation</span>')
-    $(".ajax_content_container").css("max-height","700px")
-    $(".popup_details").on('click',function(){
-      if($(this).html().replace(" ","") == "Beanch Distribution By Skill" ){
-        $(".popup_details").css('font-size','small')
-        $(this).css('font-size','large')
-        mark_and_display("/admin/api/bench_counts_by_skill_panel_data?as_on="+as_on,"bar","unformated")
-      }else{
-        $(".popup_details").css('font-size','small')
-        $(this).css('font-size','large')
-        mark_and_display("/admin/api/bench_counts_by_designation_panel_data?as_on="+as_on,"bar","unformated")
-      }
-    })
-           }
-     };
-});
-function mark_and_display(url,type,format){
-var popup_one_config = {
-    type: type,
-    data: ajax_call(url),
-    options: {
-    scales: {
-      xAxes: [{stacked: true}],
-      yAxes: [{
-        stacked: true,
-        ticks: {
-          beginAtZero: true 
-         }
-      }]
-    }
-  }
-};
 
-     $(".ajax_content_container").find(".canvas_conatiner").html("")
-     $(".ajax_content_container").find(".canvas_conatiner").html('<canvas id="popup_one" style="width: 920px; height: 460px;" width="827" height="413"></canvas>')
-new Chart(document.getElementById("popup_one"), popup_one_config,format);
-     // new Chart(document.getElementById("popup_two"), config1);
-    $(".ajax_content_container").css("max-height","700px")
-    $(".popup-inner").css("max-height","700px")
-    $(".ajax_content").html($("#resource_distribution_chart").first().html())
-    $(".popup-inner").find("canvas").height("70%")
-    $(".popup-inner").find("canvas").width("90%")
-    $('[data-popup-close]').on('click', function(e)  {
-        var targeted_popup_class = jQuery(this).attr('data-popup-close');
-        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
-        $(".dropdown_menu").toggle()
-        e.preventDefault();
-    });
 
-}
-function mark_and_display_pai(url,type){
-var popup_one_config = {
-    type: type,
-    data: ajax_call(url)
-};
-
-     $(".ajax_content_container").find(".canvas_conatiner").html("")
-     $(".ajax_content_container").find(".canvas_conatiner").html('<canvas id="popup_one" style="width: 920px; height: 460px;" width="827" height="413"></canvas>')
-new Chart(document.getElementById("popup_one"), popup_one_config);
-     // new Chart(document.getElementById("popup_two"), config1);
-    $(".ajax_content_container").css("max-height","700px")
-    $(".popup-inner").css("max-height","700px")
-    $(".ajax_content").html($("#resource_distribution_chart").first().html())
-    $(".popup-inner").find("canvas").height("70%")
-    $(".popup-inner").find("canvas").width("90%")
-    $('[data-popup-close]').on('click', function(e)  {
-        var targeted_popup_class = jQuery(this).attr('data-popup-close');
-        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(10);
-        $(".dropdown_menu").toggle()
-        e.preventDefault();
-    });
-
-}
-</script>

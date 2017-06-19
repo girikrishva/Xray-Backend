@@ -7,3 +7,6 @@
 //= require vacations.coffee
 //= require pipelines.coffee
 //= require resources.coffee
+//= require ChartNew.js
+//= require jquery.modal.js
+//= require dashboard.js
