@@ -575,7 +575,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     def pipeline_by_business_unit_trend
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      as_on = params.has_key?(:as_on) ? params[:as_on] : (Date.today - 6.months).to_s
       result = {}
       months = []
       months << (as_on.to_date - 2.months)
