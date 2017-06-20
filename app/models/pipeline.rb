@@ -147,7 +147,7 @@ class Pipeline < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
-    result['total_pipeline'] = format_currency(total_pipeline)
+    result['total_pipeline'] = total_pipeline # format_currency(total_pipeline)
     if with_details
       result['data'] = data
     end
