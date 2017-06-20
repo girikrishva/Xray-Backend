@@ -586,7 +586,19 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       labels << months[1].strftime("%B")
       labels << months[2].strftime("%B")
       result["labels"] = labels
-      color_master = ["#FF6384", "#36A2EB", "#FFCE56","#FE6384", "#37B2EB", "#FCCE33"]
+      color_master = ["#6495ED", "#D2691E", "#FFC200","#FE6384", "#37B2EB", "#FCCE33"]
+      datasets = []
+      i = 0
+      BusinessUnit.all.order('name').each do |bu|
+        details = {}
+        details["label"] = bu.name
+        details["backgroundColor"] = color_master[i]
+        data = []
+        details["data"] = data
+        datasets << details
+        i += 1
+      end
+      result["datasets"] = datasets
       render json: result
     end
   end
