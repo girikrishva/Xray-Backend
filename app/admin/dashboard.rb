@@ -596,6 +596,14 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         data = []
         details["data"] = data
         datasets << details
+        months.each do |month|
+          bu_pipeline = Pipeline.pipeline_for_all_statuses(month, 0, 0, bu.id)
+          bu_pipeline_value = 0
+          bu_pipeline.each do |bup|
+            bu_pipeline_value += (bup[month]['total_pipeline'] rescue 0)
+          end
+          data << bu_pipeline_value
+        end
         i += 1
       end
       result["datasets"] = datasets
