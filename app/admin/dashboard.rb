@@ -572,5 +572,22 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       result['labels'] = labels
       render json: result
     end
+
+    def pipeline_by_business_unit_trend
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      result = {}
+      months = []
+      months << (as_on.to_date - 2.months)
+      months << (as_on.to_date - 1.months)
+      months << (as_on.to_date - 0.months)
+      labels = []
+      labels << months[0].strftime("%B")
+      labels << months[1].strftime("%B")
+      labels << months[2].strftime("%B")
+      result["labels"] = labels
+      color_master = ["#FF6384", "#36A2EB", "#FFCE56","#FE6384", "#37B2EB", "#FCCE33"]
+      render json: result
+    end
   end
 end
