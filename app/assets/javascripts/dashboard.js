@@ -111,43 +111,35 @@ $(document).ready(function () {
 
 
     $.ajax({
-        url: "/admin/api/pipeline_by_business_unit_panel_data",
+        url: "/admin/api/pipeline_by_business_unit_trend",
         context: document.body
     }).done(function (data) {
-        console.log("pipeline===="+JSON.stringify(data))
-//        $.each(data.datasets[0].data, function (index, value) {
-//            resource_data1[index] = value
-//        });
-//        $.each(data.datasets[1].data, function (index, value) {
-//            resource_data2[index] = value
-//        });
-
         bench_dest_data = {
-            labels:  ["April", "May", "June"],
+            labels:  data.labels ,
             datasets: [
                 {
-                    fillColor: "#23457d",
+                    fillColor: data.datasets[0].backgroundColor,
                     strokeColor: "rgba(220,220,220,1)",
                     pointColor: "rgba(220,220,220,1)",
                     pointstrokeColor: "yellow",
-                    data: [20,30,40],
-                    title: "CCI"
+                    data: data.datasets[0].data,
+                    title: data.datasets[0].label
                 },
                 {
-                    fillColor: "#D2691E",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "green",
+                    fillColor: data.datasets[1].backgroundColor,
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
                     pointstrokeColor: "yellow",
-                    data: [20,30,40],
-                    title: "CCS"
+                    data: data.datasets[1].data,
+                    title: data.datasets[1].label
                 },
                 {
-                    fillColor: "#FFC200",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "green",
+                    fillColor: data.datasets[2].backgroundColor,
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
                     pointstrokeColor: "yellow",
-                    data: [20,30,40],
-                    title: "CCUS"
+                    data: data.datasets[2].data,
+                    title: data.datasets[2].label
                 }
             ]
         }
@@ -201,7 +193,7 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
         cost_s_url ="/admin/api/gross_profit_by_business_unit_panel_data?as_on="
         cost_d_url ="/admin/api/gross_profit_versus_indirect_cost_panel_data?as_on="
     }else if(["CCI","CCS","CCUS"].indexOf(data.datasets[other.v11].title)){
-
+        cost_s_url="/admin/api/pipeline_by_business_unit_trend?as_on="+data.datasets[other.v11].title
     }
     as_on = '2017-06-10'
     $.ajax({
@@ -292,8 +284,32 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
                 }
             ]
         }
-            if (graph_type == "Gross Profit"){
+        if (graph_type == "Gross Profit"){
             var myStackedBar = new Chart(document.getElementById("canvas_Bar4").getContext("2d")).Pie(gp_pie_data, dis_opt);
+            $.ajax({
+                url: "/admin/api/overall_delivery_health?as_on="+"2017-03-14",
+                context: document.body
+            }).done(function (data) {
+                $("#myTable").remove()
+                d_h={}
+                tab=""
+                jQuery.each(data, function (name, value) {
+                    if (d_h[value.delivery_health] == undefined) {
+                        d_h[value.delivery_health] = 1
+                    }else {
+                        d_h[value.delivery_health] = d_h[value.delivery_health] + 1
+                    }
+                });
+                tab="<table id='myTable'><thead><th>Sl No</th><th>Project Health</th><th>Count of Projects</th></thead><tbody>"
+                i=0
+                jQuery.each(d_h, function (name, value) {
+                    i=i+1
+                    tab=tab+"<tr><td>"+i+"</td><td>"+name+"</td><td>"+value+"</td></tr> "
+                });
+                tab=tab+"</tbody></table>"
+                $("#dialog1").append(tab)
+            })
+
         }else{
             var myStackedBar = new Chart(document.getElementById("canvas_Bar4").getContext("2d")).StackedBar(dis_data, dis_opt);
         }
