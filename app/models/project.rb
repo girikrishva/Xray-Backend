@@ -149,7 +149,7 @@ class Project < ActiveRecord::Base
         end
       end
     end
-    if delivery_health.upcase != 'ALL'
+    if !delivery_health.nil? and delivery_health.upcase != 'ALL'
       result.keys.each do |r|
         if result[r]['delivery_health'].upcase != delivery_health.upcase
           result.delete(r)
