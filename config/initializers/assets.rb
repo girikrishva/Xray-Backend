@@ -14,6 +14,7 @@ Rails.application.config.assets.precompile += %w( jquery.modal.js )
 Rails.application.config.assets.precompile += %w( charts.js )
 Rails.application.config.assets.precompile += %w( ChartNew.js )
 Rails.application.config.assets.precompile += %w( dashboard.js )
+Rails.application.config.assets.precompile += %w( pipeline_dashboard.js )
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path
 

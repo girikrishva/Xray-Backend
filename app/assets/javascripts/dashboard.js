@@ -110,43 +110,7 @@ $(document).ready(function () {
     });
 
 
-    $.ajax({
-        url: "/admin/api/pipeline_by_business_unit_trend",
-        context: document.body
-    }).done(function (data) {
-        bench_dest_data = {
-            labels:  data.labels ,
-            datasets: [
-                {
-                    fillColor: data.datasets[0].backgroundColor,
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointstrokeColor: "yellow",
-                    data: data.datasets[0].data,
-                    title: data.datasets[0].label
-                },
-                {
-                    fillColor: data.datasets[1].backgroundColor,
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointstrokeColor: "yellow",
-                    data: data.datasets[1].data,
-                    title: data.datasets[1].label
-                },
-                {
-                    fillColor: data.datasets[2].backgroundColor,
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointstrokeColor: "yellow",
-                    data: data.datasets[2].data,
-                    title: data.datasets[2].label
-                }
-            ]
-        }
 
-        new Chart(document.getElementById("pipeline_chart").getContext("2d")).StackedBar(bench_dest_data, opt1);
-
-    });
 
 });
 
@@ -192,10 +156,12 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
     else if (data.datasets[other.v11].title == "Gross Profit") {
         cost_s_url ="/admin/api/gross_profit_by_business_unit_panel_data?as_on="
         cost_d_url ="/admin/api/gross_profit_versus_indirect_cost_panel_data?as_on="
-    }else if(["CCI","CCS","CCUS"].indexOf(data.datasets[other.v11].title)){
-        cost_s_url="/admin/api/pipeline_by_business_unit_trend?as_on="+data.datasets[other.v11].title
     }
     as_on = '2017-06-10'
+
+
+
+
     $.ajax({
         url: cost_s_url + as_on,
         context: document.body
@@ -310,7 +276,8 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
                 $("#dialog1").append(tab)
             })
 
-        }else{
+        }
+        else{
             var myStackedBar = new Chart(document.getElementById("canvas_Bar4").getContext("2d")).StackedBar(dis_data, dis_opt);
         }
     });
@@ -365,4 +332,10 @@ window.onload = function () {
         modal: true,
         autoOpen: false
     });
+
+    $("#dialog2").dialog({
+        modal: true,
+        autoOpen: false
+    });
+
 }
