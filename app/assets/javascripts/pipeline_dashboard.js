@@ -75,6 +75,8 @@ function setColor(area, data, config, i, j, animPct, value) {
 var graph_type1 = ""
 var graph_month1 =""
 
+
+
 function fctMouseDownLeft1(event, ctx, config, data, other) {
 
     if(other != null){
@@ -86,14 +88,14 @@ function fctMouseDownLeft1(event, ctx, config, data, other) {
     var vv1 = graph_type1 + " Details for the month of " + graph_month1
     $("#dialog2").dialog({ title: vv1 });
 
-    as_on = '2017-06-10'
+    as_on = '2017-03-10'
 
 
         $.ajax({
-            url: "/admin/api/pipeline_by_stage_panel_data?bu_name="+data.datasets[other.v11].title,
+            url: "/admin/api/pipeline_by_stage_panel_data?bu_name="+data.datasets[other.v11].title+"&as_on="+as_on,
             context: document.body
         }).done(function (data) {
-            console.log("PIEEEEEEEE"+JSON.stringify(data))
+
 
             dis_opt = {
                 canvasBorders: true,
@@ -104,21 +106,24 @@ function fctMouseDownLeft1(event, ctx, config, data, other) {
                 graphTitleFontSize: 18,
                 inGraphDataShow : true
             }
+             cc=[]
 
+
+            $.each(data.datasets[0].data, function (index, value) {
+                cc.push({ data: [value],fillColor: "#D2691E",title: ""})
+            });
+
+            $.each(data.labels, function (index, value) {
+                cc[index].title=value
+            });
+            $.each(["#D2691E","#FFFF00","#808000","#00FFFF","#000080","#C0392B","#117864","#979A9A"], function (index, value) {
+                cc[index].fillColor=value
+            });
+            console.log("cc'''''")
+            console.log(cc)
             var gp_pie_data = {
                 labels: [""],
-                datasets: [
-                    {
-                        data: [30],
-                        fillColor: "#D2691E",
-                        title: "New"
-                    },
-                    {
-                        data: [20],
-                        fillColor: "#6495ED",
-                        title: "Discussion"
-                    }
-                ]
+                datasets:  cc
             }
 
             new Chart(document.getElementById("canvas_Bar8").getContext("2d")).Pie(gp_pie_data, dis_opt);
