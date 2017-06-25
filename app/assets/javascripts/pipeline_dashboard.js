@@ -106,7 +106,7 @@ function fctMouseDownLeft1(event, ctx, config, data, other) {
                 graphTitleFontSize: 18,
                 inGraphDataShow : true
             }
-             cc=[]
+            var cc=[]
 
 
             $.each(data.datasets[0].data, function (index, value) {

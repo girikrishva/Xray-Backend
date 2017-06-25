@@ -296,7 +296,7 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
             }).done(function (data) {
 
                 d_h={}
-                tab=""
+                var tab="<h2>Project Status</h2></br>"
                 jQuery.each(data, function (name, value) {
                     if (d_h[value.delivery_health] == undefined) {
                         d_h[value.delivery_health] = 1
@@ -304,11 +304,11 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
                         d_h[value.delivery_health] = d_h[value.delivery_health] + 1
                     }
                 });
-                tab="<table id='myTable'><thead><th>Sl No</th><th>Project Health</th><th>Count of Projects</th></thead><tbody>"
+                tab="<table id='myTable' style='width: 48%; margin-left: 23%;'><thead><th>Sl No</th><th>Project Health</th><th>Count of Projects</th></thead><tbody>"
                 i=0
                 jQuery.each(d_h, function (name, value) {
                     i=i+1
-                    tab=tab+"<tr><td>"+i+"</td><td>"+name+"</td><td>"+value+"</td></tr> "
+                    tab=tab+"<tr><td>"+i+"</td><td>"+name+"</td><td><a href='/admin/delivery_healths'>"+value+"</a></td></tr> "
                 });
                 tab=tab+"</tbody></table>"
                 $("#dialog1").append(tab)
