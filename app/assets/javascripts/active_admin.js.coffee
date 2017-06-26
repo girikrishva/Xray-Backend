@@ -10,3 +10,4 @@
 //= require ChartNew.js
 //= require jquery.modal.js
 //= require dashboard.js
+//= require pipeline_dashboard.js

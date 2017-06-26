@@ -3,14 +3,29 @@
  */
 
 
-data_array1 = []
-data_array2 = []
-mydata3 = {}
-opt3 = {}
-graph_type = ""
-graph_month = ""
-resource_data1=[]
-resource_data2=[]
+var data_array1 = []
+var data_array2 = []
+var mydata3 = {}
+var opt3 = {}
+var graph_type = ""
+var graph_month = ""
+var resource_data1=[]
+var resource_data2=[]
+var as_on = ""
+var monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+];
 
 mydata1={}
 bench_dest_data = {}
@@ -110,51 +125,7 @@ $(document).ready(function () {
     });
 
 
-    $.ajax({
-        url: "/admin/api/pipeline_by_business_unit_panel_data",
-        context: document.body
-    }).done(function (data) {
-        console.log("pipeline===="+JSON.stringify(data))
-//        $.each(data.datasets[0].data, function (index, value) {
-//            resource_data1[index] = value
-//        });
-//        $.each(data.datasets[1].data, function (index, value) {
-//            resource_data2[index] = value
-//        });
 
-        bench_dest_data = {
-            labels:  ["April", "May", "June"],
-            datasets: [
-                {
-                    fillColor: "#23457d",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointstrokeColor: "yellow",
-                    data: [20,30,40],
-                    title: "CCI"
-                },
-                {
-                    fillColor: "#D2691E",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "green",
-                    pointstrokeColor: "yellow",
-                    data: [20,30,40],
-                    title: "CCS"
-                },
-                {
-                    fillColor: "#FFC200",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "green",
-                    pointstrokeColor: "yellow",
-                    data: [20,30,40],
-                    title: "CCUS"
-                }
-            ]
-        }
-
-        new Chart(document.getElementById("pipeline_chart").getContext("2d")).StackedBar(bench_dest_data, opt1);
-
-    });
 
 });
 
@@ -164,7 +135,21 @@ function setColor(area, data, config, i, j, animPct, value) {
 }
 
 
+function LastDayOfMonth(Year, Month) {
+    return new Date( (new Date(Year, Month,1))-1 );
+}
 
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
 
 
 function fctMouseDownLeft(event, ctx, config, data, other) {
@@ -174,10 +159,19 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
         $("#dialog1").dialog('open');
     }
 
-    console.log("=========data.datasets[other.v11].title===="+data.datasets[other.v11].title)
-
+    $("#myTable").empty()
     graph_type = data.datasets[other.v11].title
     graph_month = data.labels[other.v12]
+
+    if (monthNames.indexOf(graph_month)+1 == new Date().getMonth()){
+        as_on = formatDate(new Date())
+    }
+    else{
+       var currentTime = new Date();
+        var yyear=[11,12].indexOf(monthNames.indexOf(graph_month)+1) > 0 ? currentTime.getFullYear()-1 :currentTime.getFullYear()
+        as_on=formatDate(LastDayOfMonth(yyear,monthNames.indexOf(graph_month)+1))
+    }
+
     vv = graph_type + " Details for the month of " + graph_month
     $("#dialog1").dialog({ title: vv });
 
@@ -200,10 +194,12 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
     else if (data.datasets[other.v11].title == "Gross Profit") {
         cost_s_url ="/admin/api/gross_profit_by_business_unit_panel_data?as_on="
         cost_d_url ="/admin/api/gross_profit_versus_indirect_cost_panel_data?as_on="
-    }else if(["CCI","CCS","CCUS"].indexOf(data.datasets[other.v11].title)){
-
     }
-    as_on = '2017-06-10'
+
+
+
+
+
     $.ajax({
         url: cost_s_url + as_on,
         context: document.body
@@ -292,9 +288,34 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
                 }
             ]
         }
-            if (graph_type == "Gross Profit"){
+        if (graph_type == "Gross Profit"){
             var myStackedBar = new Chart(document.getElementById("canvas_Bar4").getContext("2d")).Pie(gp_pie_data, dis_opt);
-        }else{
+            $.ajax({
+                url: "/admin/api/overall_delivery_health?as_on="+as_on,
+                context: document.body
+            }).done(function (data) {
+
+                d_h={}
+                var tab="<h2>Project Status</h2></br>"
+                jQuery.each(data, function (name, value) {
+                    if (d_h[value.delivery_health] == undefined) {
+                        d_h[value.delivery_health] = 1
+                    }else {
+                        d_h[value.delivery_health] = d_h[value.delivery_health] + 1
+                    }
+                });
+                tab="<table id='myTable' style='width: 48%; margin-left: 23%;'><thead><th>Sl No</th><th>Project Health</th><th>Count of Projects</th></thead><tbody>"
+                i=0
+                jQuery.each(d_h, function (name, value) {
+                    i=i+1
+                    tab=tab+"<tr><td>"+i+"</td><td>"+name+"</td><td><a href='/admin/delivery_healths'>"+value+"</a></td></tr> "
+                });
+                tab=tab+"</tbody></table>"
+                $("#dialog1").append(tab)
+            })
+
+        }
+        else{
             var myStackedBar = new Chart(document.getElementById("canvas_Bar4").getContext("2d")).StackedBar(dis_data, dis_opt);
         }
     });
@@ -349,4 +370,10 @@ window.onload = function () {
         modal: true,
         autoOpen: false
     });
+
+    $("#dialog2").dialog({
+        modal: true,
+        autoOpen: false
+    });
+
 }

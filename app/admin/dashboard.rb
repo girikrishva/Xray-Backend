@@ -345,7 +345,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       datasets = []
       detail = {}
       detail['label'] = I18n.t('label.gross_profit')
-      detail['borderColor'] = '#F29220'
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#6495ED'
       data = []
       BusinessUnit.all.order(:name).each do |bu|
         labels << bu.name
