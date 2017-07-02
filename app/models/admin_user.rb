@@ -361,6 +361,17 @@ class AdminUser < ActiveRecord::Base
     total_assignment_cost
   end
 
+  def self.assignment_cost_for_skill(as_on, skill_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
+    resource_ids = Resource.where('admin_user_id in (?) and skill_id = ?', admin_user_ids.keys, skill_id).pluck(:id)
+    assignment_cost_for_skill = 0
+    AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
+      assignment_cost_for_skill += ar.assignment_cost(as_on)
+    end
+    assignment_cost_for_skill
+  end
+
   def self.bench_cost_for_skill(as_on, skill_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     bench_cost_for_skill = 0
