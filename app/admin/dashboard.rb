@@ -62,38 +62,40 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       labels << Date::MONTHNAMES[(Date.today - 0.months).month]
       result['labels'] = labels
       datasets = []
-      detail = {}
       bench_costs = []
-      bench_costs[0] = AdminUser.total_bench_cost((Date.today - 2.months).at_end_of_month)
-      bench_costs[1] = AdminUser.total_bench_cost((Date.today - 1.months).at_end_of_month)
-      bench_costs[2] = AdminUser.total_bench_cost((Date.today - 0.months).at_end_of_month)
-      if formatted.upcase == 'NO'
-        bench_costs[0] = currency_as_amount(bench_costs[0])
-        bench_costs[1] = currency_as_amount(bench_costs[1])
-        bench_costs[2] = currency_as_amount(bench_costs[2])
+      bench_costs[0] = currency_as_amount(AdminUser.total_bench_cost((Date.today - 2.months).at_end_of_month))
+      bench_costs[1] = currency_as_amount(AdminUser.total_bench_cost((Date.today - 1.months).at_end_of_month))
+      bench_costs[2] = currency_as_amount(AdminUser.total_bench_cost((Date.today - 0.months).at_end_of_month))
+      total_resource_costs = []
+      total_resource_costs[0] = currency_as_amount(AdminUser.total_resource_cost((Date.today - 2.months).at_end_of_month))
+      total_resource_costs[1] = currency_as_amount(AdminUser.total_resource_cost((Date.today - 1.months).at_end_of_month))
+      total_resource_costs[2] = currency_as_amount(AdminUser.total_resource_cost((Date.today - 0.months).at_end_of_month))
+      assigned_costs = []
+      assigned_costs[0] = total_resource_costs[0] - bench_costs[0]
+      assigned_costs[1] = total_resource_costs[1] - bench_costs[1]
+      assigned_costs[2] = total_resource_costs[2] - bench_costs[2]
+      if formatted.upcase == 'YES'
+        bench_costs[0] = format_currency(bench_costs[0])
+        bench_costs[1] = format_currency(bench_costs[1])
+        bench_costs[2] = format_currency(bench_costs[2])
+        assigned_costs[0] = format_currency(assigned_costs[0])
+        assigned_costs[1] = format_currency(assigned_costs[1])
+        assigned_costs[2] = format_currency(assigned_costs[2])
       end
       data = []
       data << bench_costs[0]
       data << bench_costs[1]
       data << bench_costs[2]
+      detail = {}
       detail['data'] = data
       detail['label'] = I18n.t('label.bench_cost')
       detail['backgroundColor'] = '#6495ED'
       datasets << detail
-      detail = {}
-      assigned_costs = []
-      assigned_costs[0] = format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - 2.months).at_end_of_month)) - currency_as_amount(bench_costs[0]))
-      assigned_costs[1] = format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - 1.months).at_end_of_month)) - currency_as_amount(bench_costs[1]))
-      assigned_costs[2] = format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - 0.months).at_end_of_month)) - currency_as_amount(bench_costs[2]))
-      if formatted.upcase == 'NO'
-        assigned_costs[0] = currency_as_amount(assigned_costs[0])
-        assigned_costs[1] = currency_as_amount(assigned_costs[1])
-        assigned_costs[2] = currency_as_amount(assigned_costs[2])
-      end
       data = []
       data << assigned_costs[0]
       data << assigned_costs[1]
       data << assigned_costs[2]
+      detail = {}
       detail['data'] = data
       detail['label'] = I18n.t('label.assigned_cost')
       detail['backgroundColor'] = '#D2691E'
