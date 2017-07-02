@@ -345,22 +345,20 @@ class AdminUser < ActiveRecord::Base
 
   def self.total_resource_cost(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    total_resource_cost = 0
-    total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
-    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
-    # users_universe.each do |uu|
-    #   total_resource_cost += total_working_hours * uu.cost_rate
-    # end
-    total_resource_cost=users_universe.collect{|uu| total_working_hours * uu.cost_rate}.inject(:+)
-    format_currency(total_resource_cost)
+    cost_rates = AdminUsersAudit.where('id in (?)', AdminUsersAudit.where('created_at <= ?', '2017-03-08').group('admin_user_id').maximum('id').values).pluck('cost_rate')
+    total_resource_cost = cost_rates.map {|cr| cr * Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month}
+    format_currency(total_resource_cost.sum)
   end
 
   def self.total_bench_cost(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     total_bench_cost = 0
-    Skill.all.each do |s|
-      total_bench_cost += currency_as_amount(AdminUser.bench_cost_for_skill(as_on, s.id))
+    AdminUsersAudit.all_latest(as_on).pluck('admin_user_id').each do |aua_id|
+
     end
+    # Skill.all.each do |s|
+    #   total_bench_cost += currency_as_amount(AdminUser.bench_cost_for_skill(as_on, s.id))
+    # end
     format_currency(total_bench_cost)
   end
 
