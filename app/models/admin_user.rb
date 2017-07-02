@@ -361,12 +361,6 @@ class AdminUser < ActiveRecord::Base
     total_assignment_cost
   end
 
-  def self.total_bench_cost(as_on)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    total_bench_cost = AdminUser.total_resource_cost(as_on) - AdminUser.total_assignment_cost(as_on)
-    total_bench_cost
-  end
-
   def self.bench_cost_for_skill(as_on, skill_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     bench_cost_for_skill = 0
