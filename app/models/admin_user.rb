@@ -345,7 +345,7 @@ class AdminUser < ActiveRecord::Base
 
   def self.total_resource_cost(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    cost_rates = AdminUsersAudit.where('id in (?)', AdminUsersAudit.where('created_at <= ?', '2017-03-08').group('admin_user_id').maximum('id').values).pluck('cost_rate')
+    cost_rates = AdminUsersAudit.where('id in (?)', AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id').values).pluck('cost_rate')
     total_resource_cost = cost_rates.map {|cr| cr * Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month}
     format_currency(total_resource_cost.sum)
   end
