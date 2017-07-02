@@ -350,6 +350,17 @@ class AdminUser < ActiveRecord::Base
     format_currency(total_resource_cost.sum)
   end
 
+  def self.total_assignment_cost(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
+    resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
+    total_assignment_cost = 0
+    AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
+      total_assignment_cost += ar.assignment_cost(as_on)
+    end
+    format_currency(total_assignment_cost)
+  end
+
   def self.total_bench_cost(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     total_bench_cost = 0

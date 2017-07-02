@@ -100,7 +100,9 @@ class AssignedResource < ActiveRecord::Base
     working_hours
   end
 
-  def assignment_hours(as_on)
+  def
+
+  assignment_hours(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     lower_date = (self.start_date < as_on) ? self.start_date : as_on
     upper_date = (as_on > self.end_date) ? self.end_date : as_on
