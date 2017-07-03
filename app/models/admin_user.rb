@@ -345,9 +345,10 @@ class AdminUser < ActiveRecord::Base
 
   def self.total_resource_cost(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    cost_rates = AdminUsersAudit.where('id in (?)', AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id').values).pluck('cost_rate')
-    total_resource_cost = cost_rates.map {|cr| cr * Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month}
-    total_resource_cost.sum
+    x = Resource.where('as_on <= ? and primary_skill is true', as_on).group('admin_user_id').maximum('as_on')
+    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').sum('cost_rate')
+    total_resource_cost = y.values.sum * Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
+    total_resource_cost
   end
 
   def self.total_assignment_cost(as_on)
@@ -363,7 +364,14 @@ class AdminUser < ActiveRecord::Base
 
   def self.resource_cost_for_skill(as_on, skill_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    0
+    x = Resource.where('as_on <= ? and primary_skill is true', as_on).group('admin_user_id').maximum('as_on')
+    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').sum('cost_rate')
+    if y.has_key?(skill_id)
+      resource_cost_for_skill = y[skill_id] * Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
+    else
+      resource_cost_for_skill = 0
+    end
+    resource_cost_for_skill
   end
 
   def self.assignment_cost_for_skill(as_on, skill_id)
