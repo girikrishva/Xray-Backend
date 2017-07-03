@@ -361,6 +361,11 @@ class AdminUser < ActiveRecord::Base
     total_assignment_cost
   end
 
+  def self.resource_cost_for_skill(as_on, skill_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    0
+  end
+
   def self.assignment_cost_for_skill(as_on, skill_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
@@ -374,17 +379,8 @@ class AdminUser < ActiveRecord::Base
 
   def self.bench_cost_for_skill(as_on, skill_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    bench_cost_for_skill = 0
-    total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
-    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
-    users_universe.each do |uu|
-      resource = Resource.latest_for(uu.id, as_on)
-      if !resource.nil? and resource.skill_id == skill_id
-        assigned_hours = AssignedResource.assigned_hours_by_skill(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month, skill_id) rescue 0
-        bench_cost_for_skill += ((total_working_hours - assigned_hours) * uu.cost_rate)
-      end
-    end
-    format_currency(bench_cost_for_skill)
+    bench_cost_for_skill = AdminUser.resource_cost_for_skill(as_on, skill_id) - AdminUser.assignment_cost_for_skill(as_on, skill_id)
+    bench_cost_for_skill
   end
 
   def self.bench_cost_for_designation(as_on, designation_id)
