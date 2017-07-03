@@ -406,7 +406,7 @@ class AdminUser < ActiveRecord::Base
   def self.assignment_cost_for_designation(as_on, designation_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
-    resource_ids = Resource.where('admin_user_id in (?) and designation_id = ?', admin_user_ids.keys, designation_id).pluck(:id)
+    resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).joins(:admin_user).where('designation_id = ?', designation_id).pluck(:id)
     assignment_cost_for_designation = 0
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
       assignment_cost_for_designation += ar.assignment_cost(as_on)
