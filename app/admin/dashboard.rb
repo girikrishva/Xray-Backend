@@ -137,39 +137,43 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     def resource_distribution_panel_data
       result = {}
-      # labels = []
-      # labels << Date::MONTHNAMES[(Date.today - 2.months).month]
-      # labels << Date::MONTHNAMES[(Date.today - 1.months).month]
-      # labels << Date::MONTHNAMES[(Date.today - 0.months).month]
-      # result['labels'] = labels
-      # datasets = []
-      # detail = {}
-      # bench_counts = []
-      # bench_counts[0] = AdminUser.total_bench_count((Date.today - 2.months).at_end_of_month)
-      # bench_counts[1] = AdminUser.total_bench_count((Date.today - 1.months).at_end_of_month)
-      # bench_counts[2] = AdminUser.total_bench_count((Date.today - 0.months).at_end_of_month)
-      # data = []
-      # data << bench_counts[0]
-      # data << bench_counts[1]
-      # data << bench_counts[2]
-      # detail['data'] = data
-      # detail['label'] = I18n.t('label.bench_count')
-      # detail['borderColor'] = '#33A2FF'
-      # datasets << detail
-      # detail = {}
-      # assigned_counts = []
-      # assigned_counts[0] = AdminUser.total_resource_count((Date.today - 2.months).at_end_of_month) - bench_counts[0]
-      # assigned_counts[1] = AdminUser.total_resource_count((Date.today - 1.months).at_end_of_month) - bench_counts[1]
-      # assigned_counts[2] = AdminUser.total_resource_count((Date.today - 0.months).at_end_of_month) - bench_counts[2]
-      # data = []
-      # data << assigned_counts[0]
-      # data << assigned_counts[1]
-      # data << assigned_counts[2]
-      # detail['data'] = data
-      # detail['label'] = I18n.t('label.assigned_count')
-      # detail['borderColor'] = '#F29220'
-      # datasets << detail
-      # result['datasets'] = datasets
+      labels = []
+      labels << Date::MONTHNAMES[(Date.today - 2.months).month]
+      labels << Date::MONTHNAMES[(Date.today - 1.months).month]
+      labels << Date::MONTHNAMES[(Date.today - 0.months).month]
+      result['labels'] = labels
+      total_resource_counts = []
+      total_resource_counts[0] = AdminUser.total_resource_count((Date.today - 2.months).at_end_of_month)
+      total_resource_counts[1] = AdminUser.total_resource_count((Date.today - 1.months).at_end_of_month)
+      total_resource_counts[2] = AdminUser.total_resource_count((Date.today - 0.months).at_end_of_month)
+      total_assignment_counts = []
+      total_assignment_counts[0] = AdminUser.total_assignment_count((Date.today - 2.months).at_end_of_month)
+      total_assignment_counts[1] = AdminUser.total_assignment_count((Date.today - 1.months).at_end_of_month)
+      total_assignment_counts[2] = AdminUser.total_assignment_count((Date.today - 0.months).at_end_of_month)
+      total_bench_counts = []
+      total_bench_counts[0] = total_resource_counts[0] - total_assignment_counts[0]
+      total_bench_counts[1] = total_resource_counts[1] - total_assignment_counts[1]
+      total_bench_counts[2] = total_resource_counts[2] - total_assignment_counts[2]
+      datasets = []
+      detail = {}
+      data = []
+      data << total_assignment_counts[0]
+      data << total_assignment_counts[1]
+      data << total_assignment_counts[2]
+      detail['data'] = data
+      detail['label'] = I18n.t('label.assigned_count')
+      detail['borderColor'] = '#F29220'
+      datasets << detail
+      detail = {}
+      data = []
+      data << total_bench_counts[0]
+      data << total_bench_counts[1]
+      data << total_bench_counts[2]
+      detail['data'] = data
+      detail['label'] = I18n.t('label.bench_count')
+      detail['borderColor'] = '#33A2FF'
+      datasets << detail
+      result['datasets'] = datasets
       render json: result
     end
 
