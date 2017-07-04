@@ -526,9 +526,40 @@ class AdminUser < ActiveRecord::Base
     assignment_count_for_skill
   end
 
+  def self.resource_count_for_designation(as_on, designation_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    x = Resource.where('as_on <= ? and primary_skill is true', as_on).group('admin_user_id').maximum('as_on')
+    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).joins(:admin_user).order('designation_id').group('designation_id').count('distinct admin_user_id')
+    if y.has_key?(designation_id)
+      resource_count_for_designation = y[designation_id]
+    else
+      resource_count_for_designation = 0
+    end
+    resource_count_for_designation
+  end
+
+  def self.assignment_count_for_designation(as_on, designation_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
+    resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).joins(:admin_user).where('designation_id = ?', designation_id).pluck(:id)
+    assignment_count_for_designation = 0
+    AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
+      if ar.resource.admin_user.designation.id == designation_id
+        assignment_count_for_designation += 1
+      end
+    end
+    assignment_count_for_designation
+  end
+
   def self.bench_count_for_skill(as_on, skill_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     bench_count_for_skill = AdminUser.resource_count_for_skill(as_on, skill_id) - AdminUser.assignment_count_for_skill(as_on, skill_id)
     bench_count_for_skill
+  end
+
+  def self.bench_count_for_designation(as_on, designation_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    bench_count_for_designation = AdminUser.resource_count_for_designation(as_on, designation_id) - AdminUser.assignment_count_for_designation(as_on, designation_id)
+    bench_count_for_designation
   end
 end
