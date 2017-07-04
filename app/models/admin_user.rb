@@ -426,23 +426,6 @@ class AdminUser < ActiveRecord::Base
     bench_cost_for_designation
   end
 
-  def self.bench_count_for_skill(as_on, skill_id)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    bench_count_for_skill = 0
-    total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
-    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
-    users_universe.each do |uu|
-      resource = Resource.latest_for(uu.id, as_on)
-      if !resource.nil? and resource.skill_id == skill_id
-        assigned_hours = AssignedResource.assigned_hours_by_skill(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month, skill_id) rescue 0
-        if (assigned_hours / total_working_hours) * 100 < Rails.configuration.bench_threshold
-          bench_count_for_skill += 1
-        end
-      end
-    end
-    bench_count_for_skill
-  end
-
   def self.assigned_count_for_skill(as_on, skill_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     bench_count_for_skill = 0
@@ -496,20 +479,56 @@ class AdminUser < ActiveRecord::Base
 
   def self.total_resource_count(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    total_resource_count = 0
-    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
-    users_universe.each do |uu|
-      total_resource_count += 1
-    end
+    x = Resource.where('as_on <= ? and primary_skill is true', as_on).group('admin_user_id').maximum('as_on')
+    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').count('distinct admin_user_id')
+    total_resource_count = y.values.sum
     total_resource_count
+  end
+
+
+  def self.total_assignment_count(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
+    resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
+    x = AssignedResource.where('resource_id in (?)', resource_ids).joins(:resource).group('skill_id').count('distinct admin_user_id')
+    total_assignment_count = x.values.sum
+    total_assignment_count
   end
 
   def self.total_bench_count(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    total_bench_count = 0
-    Skill.all.each do |s|
-      total_bench_count += AdminUser.bench_count_for_skill(as_on, s.id)
-    end
+    total_bench_count = AdminUser.total_resource_count(as_on) - AdminUser.total_assignment_count(as_on)
     total_bench_count
+  end
+
+  def self.resource_count_for_skill(as_on, skill_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    x = Resource.where('as_on <= ? and primary_skill is true', as_on).group('admin_user_id').maximum('as_on')
+    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').count('distinct admin_user_id')
+    if y.has_key?(skill_id)
+    resource_count_for_skill = y[skill_id]
+    else
+      resource_count_for_skill = 0
+    end
+    resource_count_for_skill
+  end
+
+  def self.assignment_count_for_skill(as_on, skill_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
+    resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
+    x = AssignedResource.where('resource_id in (?)', resource_ids).joins(:resource).group('skill_id').count('distinct admin_user_id')
+    if x.has_key?(skill_id)
+      assignment_count_for_skill = x[skill_id]
+    else
+      assignment_count_for_skill = 0
+    end
+    assignment_count_for_skill
+  end
+
+  def self.bench_count_for_skill(as_on, skill_id)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    bench_count_for_skill = AdminUser.resource_count_for_skill(as_on, skill_id) - AdminUser.assignment_count_for_skill(as_on, skill_id)
+    bench_count_for_skill
   end
 end
