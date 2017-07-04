@@ -22,7 +22,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
      columns do
       column do
         panel "Resource Distribution" do
-          # render partial: "bench_distribution"
+          render partial: "bench_distribution"
         end
       end
 
@@ -265,25 +265,25 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
-      # labels = []
-      # datasets = []
-      # detail = {}
-      # detail['label'] = I18n.t('label.bench_cost')
-      # #detail['borderColor'] = '#F29220'
-      # detail['backgroundColor'] = '#6495ED'
-      # data = []
-      # Skill.all.order('name').each do |s|
-      #   labels << s.name
-      #   if formatted.upcase == 'NO'
-      #     data << currency_as_amount(AdminUser.bench_cost_for_skill(as_on, s.id))
-      #   else
-      #     data << AdminUser.bench_cost_for_skill(as_on, s.id)
-      #   end
-      # end
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.bench_cost')
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#6495ED'
+      data = []
+      Skill.all.order('name').each do |s|
+        labels << s.name
+        if formatted.upcase == 'YES'
+          data << format_currency(AdminUser.bench_cost_for_skill(as_on, s.id))
+        else
+          data << AdminUser.bench_cost_for_skill(as_on, s.id)
+        end
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
       render json: result
     end
 
@@ -291,27 +291,25 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
-      # labels = []
-      # datasets = []
-      # detail = {}
-      # detail['label'] = I18n.t('label.assigned_cost')
-      # #detail['borderColor'] = '#F29220'
-      # detail['backgroundColor'] = '#D2691E'
-      # data = []
-      # i = 0
-      # Designation.all.order('name').each do |d|
-      #   labels << d.name
-      #   if formatted.upcase == 'NO'
-      #     data << currency_as_amount(AdminUser.total_resource_cost((Date.today - i.months).at_end_of_month)) - currency_as_amount(AdminUser.bench_cost_for_designation(as_on, d.id))
-      #   else
-      #     data << format_currency(currency_as_amount(AdminUser.total_resource_cost((Date.today - i.months).at_end_of_month)) - currency_as_amount(AdminUser.bench_cost_for_designation(as_on, d.id)))
-      #   end
-      #   i += 1
-      # end
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.assigned_cost')
+      detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#D2691E'
+      data = []
+      Designation.all.order('name').each do |d|
+        labels << d.name
+        if formatted.upcase == 'YES'
+          data << format_currency(AdminUser.bench_cost_for_designation(as_on, d.id))
+        else
+          data << AdminUser.bench_cost_for_designation(as_on, d.id)
+        end
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
       render json: result
     end
 
@@ -319,25 +317,25 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
-      # labels = []
-      # datasets = []
-      # detail = {}
-      # detail['label'] = I18n.t('label.bench_cost')
-      # #detail['borderColor'] = '#F29220'
-      # detail['backgroundColor'] = '#6495ED'
-      # data = []
-      # Designation.all.order('name').each do |d|
-      #   labels << d.name
-      #   if formatted.upcase == 'NO'
-      #     data << currency_as_amount(AdminUser.bench_cost_for_designation(as_on, d.id))
-      #   else
-      #     data << AdminUser.bench_cost_for_designation(as_on, d.id)
-      #   end
-      # end
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.bench_cost')
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#6495ED'
+      data = []
+      Designation.all.order('name').each do |d|
+        labels << d.name
+        if formatted.upcase == 'YES'
+          data << format_currency(AdminUser.bench_cost_for_designation(as_on, d.id))
+        else
+          data << AdminUser.bench_cost_for_designation(as_on, d.id)
+        end
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
       render json: result
     end
 
