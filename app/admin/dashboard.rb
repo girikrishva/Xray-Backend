@@ -3,7 +3,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
   content title: proc{ I18n.t("active_admin.dashboard") } do
 
-    # Here is an example of a simple dashboard with columns and panels
+    # Here is an example of a simple dashboard with columns and panels.
     #
     columns do 
     columns do
