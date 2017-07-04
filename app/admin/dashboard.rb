@@ -420,84 +420,84 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     def assigned_counts_by_skill_panel_data
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
-      # labels = []
-      # datasets = []
-      # detail = {}
-      # detail['label'] = I18n.t('label.assigned_count')
-      # #detail['borderColor'] = '#F29220'
-      # detail['backgroundColor'] = '#D2691E'
-      # data = []
-      # Skill.all.order('name').each do |s|
-      #   labels << s.name
-      #   data << AdminUser.assigned_count_for_skill(as_on, s.id)
-      # end
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.assigned_count')
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#D2691E'
+      data = []
+      Skill.all.order('name').each do |s|
+        labels << s.name
+        data << AdminUser.assigned_count_for_skill(as_on, s.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
       render json: result
     end
 
     def bench_counts_by_skill_panel_data
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
-      # labels = []
-      # datasets = []
-      # detail = {}
-      # detail['label'] = I18n.t('label.bench_count')
-      # #detail['borderColor'] = '#F29220'
-      # detail['backgroundColor'] = '#6495ED'
-      # data = []
-      # Skill.all.order('name').each do |s|
-      #   labels << s.name
-      #   data << AdminUser.bench_count_for_skill(as_on, s.id)
-      # end
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.bench_count')
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#6495ED'
+      data = []
+      Skill.all.order('name').each do |s|
+        labels << s.name
+        data << AdminUser.bench_count_for_skill(as_on, s.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
       render json: result
     end
 
     def assigned_counts_by_designation_panel_data
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
-      # labels = []
-      # datasets = []
-      # detail = {}
-      # detail['label'] = I18n.t('label.assigned_count')
-      # #detail['borderColor'] = '#F29220'
-      # detail['backgroundColor'] = '#D2691E'
-      # data = []
-      # Designation.all.order('name').each do |d|
-      #   labels << d.name
-      #   data << AdminUser.assigned_count_for_designation(as_on, d.id)
-      # end
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.assigned_count')
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#D2691E'
+      data = []
+      Designation.all.order('name').each do |d|
+        labels << d.name
+        data << AdminUser.assigned_count_for_designation(as_on, d.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
       render json: result
     end
 
     def bench_counts_by_designation_panel_data
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
-      # labels = []
-      # datasets = []
-      # detail = {}
-      # detail['label'] = I18n.t('label.bench_count')
-      # #detail['borderColor'] = '#F29220'
-      # detail['backgroundColor'] = '#6495ED'
-      # data = []
-      # Designation.all.order('name').each do |d|
-      #   labels << d.name
-      #   data << AdminUser.bench_count_for_designation(as_on, d.id)
-      # end
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.bench_count')
+      #detail['borderColor'] = '#F29220'
+      detail['backgroundColor'] = '#6495ED'
+      data = []
+      Designation.all.order('name').each do |d|
+        labels << d.name
+        data << AdminUser.bench_count_for_designation(as_on, d.id)
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
       render json: result
     end
 
