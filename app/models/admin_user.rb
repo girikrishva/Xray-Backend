@@ -484,7 +484,7 @@ class AdminUser < ActiveRecord::Base
   def self.total_resource_count(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     x = Resource.where('as_on <= ?', as_on).group('admin_user_id').maximum('as_on')
-    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').count('distinct admin_user_id')
+    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').count('admin_user_id')
     total_resource_count = y.values.sum
     total_resource_count
   end
@@ -521,7 +521,7 @@ class AdminUser < ActiveRecord::Base
   def self.resource_count_for_skill(as_on, skill_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     x = Resource.where('as_on <= ?', as_on).group('admin_user_id').maximum('as_on')
-    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').count('distinct admin_user_id')
+    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').count('admin_user_id')
     if y.has_key?(skill_id)
     resource_count_for_skill = y[skill_id]
     else
@@ -555,7 +555,7 @@ class AdminUser < ActiveRecord::Base
   def self.resource_count_for_designation(as_on, designation_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     x = Resource.where('as_on <= ?', as_on).group('admin_user_id').maximum('as_on')
-    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).joins(:admin_user).order('designation_id').group('designation_id').count('distinct admin_user_id')
+    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).joins(:admin_user).order('designation_id').group('designation_id').count('admin_user_id')
     if y.has_key?(designation_id)
       resource_count_for_designation = y[designation_id]
     else
