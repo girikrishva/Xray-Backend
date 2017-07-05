@@ -111,7 +111,7 @@ class AssignedResource < ActiveRecord::Base
   end
 
   def assignment_cost(as_on)
-    self.assignment_hours(as_on) * self.cost_rate
+    self.assignment_hours(as_on) * AdminUser.find(self.resource.admin_user.id).cost_rate
   end
 
   private
