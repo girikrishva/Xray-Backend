@@ -490,8 +490,21 @@ class AdminUser < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
     resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
-    x = AssignedResource.where('resource_id in (?)', resource_ids).joins(:resource).group('skill_id').count('distinct admin_user_id')
-    total_assignment_count = x.values.sum
+    assigned_hours = {}
+    AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
+      admin_user_id = ar.resource.admin_user.id
+      if assigned_hours.has_key?(admin_user_id)
+        assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+      else
+        assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+      end
+    end
+    total_assignment_count = 0
+    assigned_hours.keys.each do |admin_user_id|
+      if (assigned_hours[admin_user_id] * 100 / (Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month)) >= Rails.configuration.bench_threshold
+        total_assignment_count += 1
+      end
+    end
     total_assignment_count
   end
 
@@ -516,12 +529,21 @@ class AdminUser < ActiveRecord::Base
   def self.assignment_count_for_skill(as_on, skill_id)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
-    resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
-    x = AssignedResource.where('resource_id in (?)', resource_ids).joins(:resource).group('skill_id').count('distinct admin_user_id')
-    if x.has_key?(skill_id)
-      assignment_count_for_skill = x[skill_id]
-    else
-      assignment_count_for_skill = 0
+    resource_ids = Resource.where('admin_user_id in (?) and skill_id = ?', admin_user_ids.keys, skill_id).pluck(:id)
+    assigned_hours = {}
+    AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
+      admin_user_id = ar.resource.admin_user.id
+      if assigned_hours.has_key?(admin_user_id)
+        assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+      else
+        assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+      end
+    end
+    assignment_count_for_skill = 0
+    assigned_hours.keys.each do |admin_user_id|
+      if (assigned_hours[admin_user_id] * 100 / (Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month)) >= Rails.configuration.bench_threshold
+        assignment_count_for_skill += 1
+      end
     end
     assignment_count_for_skill
   end
@@ -542,9 +564,18 @@ class AdminUser < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
     resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).joins(:admin_user).where('designation_id = ?', designation_id).pluck(:id)
-    assignment_count_for_designation = 0
+    assigned_hours = {}
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
-      if ar.resource.admin_user.designation.id == designation_id
+      admin_user_id = ar.resource.admin_user.id
+      if assigned_hours.has_key?(admin_user_id)
+        assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+      else
+        assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+      end
+    end
+    assignment_count_for_designation = 0
+    assigned_hours.keys.each do |admin_user_id|
+      if (assigned_hours[admin_user_id] * 100 / (Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month)) >= Rails.configuration.bench_threshold
         assignment_count_for_designation += 1
       end
     end
