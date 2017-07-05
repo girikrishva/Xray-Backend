@@ -179,20 +179,21 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     def pipeline_by_stage_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? Date.parse(params[:as_on]) : Date.today.to_s
       result = {}
       labels = []
       datasets = []
       detail = {}
       detail['label'] = I18n.t('label.pipeline_amount')
       detail['borderColor'] = '#F29220'
-      pipeline_for_all_statuses = Pipeline.pipeline_for_all_statuses(Date.today.at_end_of_month, 0, 0)
+      pipeline_for_all_statuses = Pipeline.pipeline_for_all_statuses(as_on.at_end_of_month, 0, 0)
       data = []
       pipeline_for_all_statuses.each do |p|
         labels << p['pipeline_status']
-        if formatted.upcase == 'NO'
-          data << currency_as_amount(p[Date.today.at_end_of_month.to_s]['total_pipeline'])
+        if formatted.upcase == 'YES'
+          data << format_currency(p[as_on.at_end_of_month.to_s]['total_pipeline'])
         else
-          data << p[Date.today.at_end_of_month.to_s]['total_pipeline']
+          data << p[as_on.at_end_of_month.to_s]['total_pipeline']
         end
       end
       detail['data'] = data
