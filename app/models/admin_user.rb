@@ -463,22 +463,23 @@ class AdminUser < ActiveRecord::Base
   #   bench_count_for_designation
   # end
 
-  def self.bench_count_for_designation(as_on, designation_id)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    bench_count_for_designation = 0
-    total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
-    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
-    users_universe.each do |uu|
-      resource = Resource.latest_for(uu.id, as_on)
-      if !resource.nil? and resource.admin_user.designation_id == designation_id
-        assigned_hours = AssignedResource.assigned_hours_by_designation(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month, designation_id) rescue 0
-        if (assigned_hours / total_working_hours) * 100 < Rails.configuration.bench_threshold
-          bench_count_for_designation += 1
-        end
-      end
-    end
-    bench_count_for_designation
-  end
+  # DEFUNCT
+  # def self.bench_count_for_designation(as_on, designation_id)
+  #   as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+  #   bench_count_for_designation = 0
+  #   total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
+  #   users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
+  #   users_universe.each do |uu|
+  #     resource = Resource.latest_for(uu.id, as_on)
+  #     if !resource.nil? and resource.admin_user.designation_id == designation_id
+  #       assigned_hours = AssignedResource.assigned_hours_by_designation(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month, designation_id) rescue 0
+  #       if (assigned_hours / total_working_hours) * 100 < Rails.configuration.bench_threshold
+  #         bench_count_for_designation += 1
+  #       end
+  #     end
+  #   end
+  #   bench_count_for_designation
+  # end
 
   def self.total_resource_count(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
