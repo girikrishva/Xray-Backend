@@ -28,7 +28,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
       column do
        panel "Pipeline" do
-         # render partial: "pipe_line"
+         render partial: "pipe_line"
         end
       end
     end
@@ -180,25 +180,25 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     def pipeline_by_stage_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       result = {}
-      # labels = []
-      # datasets = []
-      # detail = {}
-      # detail['label'] = I18n.t('label.pipeline_amount')
-      # detail['borderColor'] = '#F29220'
-      # pipeline_for_all_statuses = Pipeline.pipeline_for_all_statuses(Date.today.at_end_of_month, 0, 0)
-      # data = []
-      # pipeline_for_all_statuses.each do |p|
-      #   labels << p['pipeline_status']
-      #   if formatted.upcase == 'NO'
-      #     data << currency_as_amount(p[Date.today.at_end_of_month.to_s]['total_pipeline'])
-      #   else
-      #     data << p[Date.today.at_end_of_month.to_s]['total_pipeline']
-      #   end
-      # end
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
+      labels = []
+      datasets = []
+      detail = {}
+      detail['label'] = I18n.t('label.pipeline_amount')
+      detail['borderColor'] = '#F29220'
+      pipeline_for_all_statuses = Pipeline.pipeline_for_all_statuses(Date.today.at_end_of_month, 0, 0)
+      data = []
+      pipeline_for_all_statuses.each do |p|
+        labels << p['pipeline_status']
+        if formatted.upcase == 'NO'
+          data << currency_as_amount(p[Date.today.at_end_of_month.to_s]['total_pipeline'])
+        else
+          data << p[Date.today.at_end_of_month.to_s]['total_pipeline']
+        end
+      end
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
       render json: result
     end
 
@@ -505,111 +505,112 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
-      # datasets = []
-      # labels = []
-      # color_master = ["#FF6384", "#36A2EB", "#FFCE56","#FE6384", "#37B2EB", "#FCCE33"]
-      # detail = {}
-      # hoverBackgroundColor = []
-      # backgroundColor = []
-      # data = []
-      # i = 0
-      # BusinessUnit.all.order('name').each do |bu|
-      #   labels << bu.name
-      #   hoverBackgroundColor << color_master[i]
-      #   backgroundColor << color_master[color_master.size - 1 - i]
-      #   bu_pipeline = Pipeline.pipeline_for_all_statuses(as_on, 0, 0, bu.id)
-      #   bu_pipeline_value = 0
-      #   bu_pipeline.each do |bup|
-      #     bu_pipeline_value += currency_as_amount(bup[as_on]['total_pipeline'])
-      #   end
-      #   if formatted.upcase == 'NO'
-      #     data << currency_as_amount(format_currency(bu_pipeline_value))
-      #   else
-      #     data << format_currency(bu_pipeline_value)
-      #   end
-      #   i += 1
-      # end
-      # detail['hoverBackgroundColor'] = hoverBackgroundColor
-      # detail['backgroundColor'] = backgroundColor
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
+      datasets = []
+      labels = []
+      color_master = ["#FF6384", "#36A2EB", "#FFCE56","#FE6384", "#37B2EB", "#FCCE33"]
+      detail = {}
+      hoverBackgroundColor = []
+      backgroundColor = []
+      data = []
+      i = 0
+      BusinessUnit.all.order('name').each do |bu|
+        labels << bu.name
+        hoverBackgroundColor << color_master[i]
+        backgroundColor << color_master[color_master.size - 1 - i]
+        bu_pipeline = Pipeline.pipeline_for_all_statuses(as_on, 0, 0, bu.id)
+        bu_pipeline_value = 0
+        bu_pipeline.each do |bup|
+          bu_pipeline_value += bup[as_on]['total_pipeline']
+        end
+        if formatted.upcase == 'YES'
+          data << format_currency(bu_pipeline_value)
+        else
+          data << bu_pipeline_value
+        end
+        i += 1
+      end
+      detail['hoverBackgroundColor'] = hoverBackgroundColor
+      detail['backgroundColor'] = backgroundColor
+      detail['data'] = data
+      datasets << detail
+      result['datasets'] = datasets
+      result['labels'] = labels
       render json: result
     end
 
-    def pipeline_for_business_unit_panel_data
-      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      bu_name = params.has_key?(:bu_name) ? params[:bu_name] : nil
-      result = {}
-      # datasets = []
-      # labels = []
-      # color_master = ["#FF6384", "#36A2EB", "#FFCE56","#FE6384", "#37B2EB", "#FCCE33"]
-      # detail = {}
-      # hoverBackgroundColor = []
-      # backgroundColor = []
-      # data = []
-      # i = 0
-      # BusinessUnit.where('name = ?', bu_name) .each do |bu|
-      #   labels << bu.name
-      #   hoverBackgroundColor << color_master[i]
-      #   backgroundColor << color_master[color_master.size - 1 - i]
-      #   bu_pipeline = Pipeline.pipeline_for_all_statuses(as_on, 0, 0, bu.id)
-      #   bu_pipeline_value = 0
-      #   bu_pipeline.each do |bup|
-      #     bu_pipeline_value += currency_as_amount(bup[as_on]['total_pipeline'])
-      #   end
-      #   if formatted.upcase == 'NO'
-      #     data << currency_as_amount(format_currency(bu_pipeline_value))
-      #   else
-      #     data << format_currency(bu_pipeline_value)
-      #   end
-      #   i += 1
-      # end
-      # detail['hoverBackgroundColor'] = hoverBackgroundColor
-      # detail['backgroundColor'] = backgroundColor
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
-      render json: result
-    end
+    # DEFUNCT
+    # def pipeline_for_business_unit_panel_data
+    #   formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+    #   as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+    #   bu_name = params.has_key?(:bu_name) ? params[:bu_name] : nil
+    #   result = {}
+    #   datasets = []
+    #   labels = []
+    #   color_master = ["#FF6384", "#36A2EB", "#FFCE56","#FE6384", "#37B2EB", "#FCCE33"]
+    #   detail = {}
+    #   hoverBackgroundColor = []
+    #   backgroundColor = []
+    #   data = []
+    #   i = 0
+    #   BusinessUnit.where('name = ?', bu_name) .each do |bu|
+    #     labels << bu.name
+    #     hoverBackgroundColor << color_master[i]
+    #     backgroundColor << color_master[color_master.size - 1 - i]
+    #     bu_pipeline = Pipeline.pipeline_for_all_statuses(as_on, 0, 0, bu.id)
+    #     bu_pipeline_value = 0
+    #     bu_pipeline.each do |bup|
+    #       bu_pipeline_value += currency_as_amount(bup[as_on]['total_pipeline'])
+    #     end
+    #     if formatted.upcase == 'NO'
+    #       data << currency_as_amount(format_currency(bu_pipeline_value))
+    #     else
+    #       data << format_currency(bu_pipeline_value)
+    #     end
+    #     i += 1
+    #   end
+    #   detail['hoverBackgroundColor'] = hoverBackgroundColor
+    #   detail['backgroundColor'] = backgroundColor
+    #   detail['data'] = data
+    #   datasets << detail
+    #   result['datasets'] = datasets
+    #   result['labels'] = labels
+    #   render json: result
+    # end
 
     def pipeline_by_business_unit_trend
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
       result = {}
-      # months = []
-      # months << (as_on.to_date - 2.months)
-      # months << (as_on.to_date - 1.months)
-      # months << (as_on.to_date - 0.months)
-      # labels = []
-      # labels << months[0].strftime("%B")
-      # labels << months[1].strftime("%B")
-      # labels << months[2].strftime("%B")
-      # result["labels"] = labels
-      # color_master = ["#6495ED", "#D2691E", "#FFC200","#FE6384", "#37B2EB", "#FCCE33"]
-      # datasets = []
-      # i = 0
-      # BusinessUnit.all.order('name').each do |bu|
-      #   details = {}
-      #   details["label"] = bu.name
-      #   details["backgroundColor"] = color_master[i]
-      #   data = []
-      #   details["data"] = data
-      #   datasets << details
-      #   months.each do |month|
-      #     bu_pipeline = Pipeline.pipeline_for_all_statuses(month, 0, 0, bu.id)
-      #     bu_pipeline_value = 0
-      #     bu_pipeline.each do |bup|
-      #       bu_pipeline_value += (bup[month.to_s]['total_pipeline'])
-      #     end
-      #     data << bu_pipeline_value
-      #   end
-      #   i += 1
-      # end
-      # result["datasets"] = datasets
+      months = []
+      months << (as_on.to_date - 2.months)
+      months << (as_on.to_date - 1.months)
+      months << (as_on.to_date - 0.months)
+      labels = []
+      labels << months[0].strftime("%B")
+      labels << months[1].strftime("%B")
+      labels << months[2].strftime("%B")
+      result["labels"] = labels
+      color_master = ["#6495ED", "#D2691E", "#FFC200","#FE6384", "#37B2EB", "#FCCE33"]
+      datasets = []
+      i = 0
+      BusinessUnit.all.order('name').each do |bu|
+        details = {}
+        details["label"] = bu.name
+        details["backgroundColor"] = color_master[i]
+        data = []
+        details["data"] = data
+        datasets << details
+        months.each do |month|
+          bu_pipeline = Pipeline.pipeline_for_all_statuses(month, 0, 0, bu.id)
+          bu_pipeline_value = 0
+          bu_pipeline.each do |bup|
+            bu_pipeline_value += (bup[month.to_s]['total_pipeline'])
+          end
+          data << bu_pipeline_value
+        end
+        i += 1
+      end
+      result["datasets"] = datasets
       render json: result
     end
   end
