@@ -15,7 +15,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
       column do
         panel "Gross Profit" do
-         # render partial: "gross_profit"
+         render partial: "gross_profit"
        end
       end
     end
@@ -118,10 +118,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       gross_profits[0] = Project.gross_profit((Date.today - 2.months).at_end_of_month)
       gross_profits[1] = Project.gross_profit((Date.today - 1.months).at_end_of_month)
       gross_profits[2] = Project.gross_profit((Date.today - 0.months).at_end_of_month)
-      if formatted.upcase == 'NO'
-        gross_profits[0] = currency_as_amount(gross_profits[0])
-        gross_profits[1] = currency_as_amount(gross_profits[1])
-        gross_profits[2] = currency_as_amount(gross_profits[2])
+      if formatted.upcase == 'YES'
+        gross_profits[0] = format_currency(gross_profits[0])
+        gross_profits[1] = format_currency(gross_profits[1])
+        gross_profits[2] = format_currency(gross_profits[2])
       end
       data = []
       data << gross_profits[0]

@@ -516,7 +516,7 @@ class Project < ActiveRecord::Base
     Project.where('business_unit_id = ?', business_unit_id).each do |p|
       gross_profit += p.gross_profit(as_on.at_end_of_month)
     end
-    format_currency(gross_profit)
+    gross_profit
   end
 
   def self.gross_profit(as_on)
