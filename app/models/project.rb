@@ -459,9 +459,9 @@ class Project < ActiveRecord::Base
     with_details = (with_details.to_s == 'true') ? true : false
     data = []
     total_revenue = 0
-    InvoiceLine.where('project_id = ?', self.id).each do |il|
-      if il.invoice_header.invoice_date <= as_on
-        if with_details
+    if with_details
+      InvoiceLine.where('project_id = ?', self.id).each do |il|
+        if il.invoice_header.invoice_date <= as_on
           details = {}
           invoice_line = il.as_json
           invoice_line['line_amount'] = format_currency(invoice_line['line_amount'])
@@ -472,9 +472,11 @@ class Project < ActiveRecord::Base
           details['client'] = il.invoice_header.client.name
           details['business_unit'] = il.invoice_header.client.business_unit.name
           data << details
+          total_revenue += il.line_amount
         end
-        total_revenue += il.line_amount
       end
+    else
+      total_revenue = InvoiceLine.where('project_id = ?', self.id).joins(:invoice_header).where('invoice_date <= ?', as_on).sum(:line_amount)
     end
     result = {}
     result['total_revenue'] = format_currency(total_revenue)
@@ -503,8 +505,8 @@ class Project < ActiveRecord::Base
   def gross_profit(as_on)
     result = {}
     total_revenue = currency_as_amount(total_revenue(as_on, false)['total_revenue'])
-    total_cost = currency_as_amount(total_cost(as_on)['total_cost'])
-    result = total_revenue - total_cost
+    # total_cost = currency_as_amount(total_cost(as_on)['total_cost'])
+    # result = total_revenue - total_cost
     result
   end
 
