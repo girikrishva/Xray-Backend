@@ -279,14 +279,14 @@ class Project < ActiveRecord::Base
       if with_details
         details = {}
         assigned_resource = ar.as_json
-        assigned_resource['bill_rate'] = format_currency(assigned_resource['bill_rate'])
-        assigned_resource['cost_rate'] = format_currency(assigned_resource['cost_rate'])
+        assigned_resource['bill_rate'] = assigned_resource['bill_rate']
+        assigned_resource['cost_rate'] = assigned_resource['cost_rate']
         details['assigned_resource'] = assigned_resource
         details['skill'] = ar.resource.skill.name
         details['user'] = ar.resource.admin_user.name
         details['designation'] = ar.resource.admin_user.designation.name
         details['assignment_hours'] = ar.assignment_hours(as_on)
-        details['direct_resource_cost'] = format_currency(ar.assignment_cost(as_on))
+        details['direct_resource_cost'] = ar.assignment_cost(as_on)
         data << details
       end
       count += 1
@@ -294,7 +294,7 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
-    result['total_direct_resource_cost'] = format_currency(total_direct_resource_cost)
+    result['total_direct_resource_cost'] = total_direct_resource_cost
     if with_details
       result['data'] = data
     end
@@ -332,8 +332,8 @@ class Project < ActiveRecord::Base
   def total_direct_cost(as_on)
     result = {}
     direct_resource_cost = direct_resource_cost(as_on, false)
-    direct_overhead_cost = direct_overhead_cost(as_on, false)
-    result['total_direct_cost'] = currency_as_amount(direct_resource_cost['total_direct_resource_cost']) + currency_as_amount(direct_overhead_cost['total_direct_overhead_cost'])
+    # direct_overhead_cost = direct_overhead_cost(as_on, false)
+    result['total_direct_cost'] = direct_resource_cost['total_direct_resource_cost'] + 0 # direct_overhead_cost['total_direct_overhead_cost']
     result
   end
 
@@ -449,8 +449,8 @@ class Project < ActiveRecord::Base
   def total_cost(as_on)
     result = {}
     total_direct_cost = total_direct_cost(as_on)
-    total_indirect_cost_share = total_indirect_cost_share(as_on)
-    result['total_cost'] = currency_as_amount(total_direct_cost['total_direct_cost']) rescue 0 + currency_as_amount(total_indirect_cost_share['total_indirect_cost_share']) rescue 0
+    # total_indirect_cost_share = total_indirect_cost_share(as_on)
+    result['total_cost'] = total_direct_cost['total_direct_cost']  + 0 # total_indirect_cost_share['total_indirect_cost_share']
     result
   end
 
@@ -505,8 +505,8 @@ class Project < ActiveRecord::Base
   def gross_profit(as_on)
     result = {}
     total_revenue = total_revenue(as_on, false)['total_revenue']
-    # total_cost = currency_as_amount(total_cost(as_on)['total_cost'])
-    result = total_revenue - 0 # total_cost
+    total_cost = total_cost(as_on)['total_cost']
+    result = total_revenue - total_cost
     result
   end
 
