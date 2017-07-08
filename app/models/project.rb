@@ -275,7 +275,7 @@ class Project < ActiveRecord::Base
     data = []
     count = 0
     total_direct_resource_cost = 0
-    AssignedResource.where('project_id = ? and ? between start_date and end_date', self.id, as_on).order('start_date, end_date').each do |ar|
+    AssignedResource.where('project_id = ?', self.id).order('start_date, end_date').each do |ar|
       if with_details
         details = {}
         assigned_resource = ar.as_json
@@ -340,7 +340,15 @@ class Project < ActiveRecord::Base
   def total_indirect_resource_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
-    total_direct_resource_cost_for_project = currency_as_amount(self.direct_resource_cost(as_on, false)['total_direct_resource_cost'])
+    lower_date = [self.start_date, as_on.beginning_of_month].max
+    upper_date = [self.end_date, as_on.end_of_month].min
+    Project.
+
+
+
+    total_direct_resource_cost_for_project = self.direct_resource_cost(as_on, false)['total_direct_resource_cost']
+
+
     total_direct_resource_cost_for_all_projects = 0
     Project.where('project_status_id = ?', ProjectStatus.id_for_status(I18n.t('label.delivery'))).each do |p|
       total_direct_resource_cost_for_all_projects += currency_as_amount(p.direct_resource_cost(as_on, false)['total_direct_resource_cost'])
