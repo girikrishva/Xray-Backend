@@ -332,8 +332,8 @@ class Project < ActiveRecord::Base
   def total_direct_cost(as_on)
     result = {}
     direct_resource_cost = direct_resource_cost(as_on, false)
-    # direct_overhead_cost = direct_overhead_cost(as_on, false)
-    result['total_direct_cost'] = direct_resource_cost['total_direct_resource_cost'] + 0 # direct_overhead_cost['total_direct_overhead_cost']
+    direct_overhead_cost = direct_overhead_cost(as_on, false)
+    result['total_direct_cost'] = direct_resource_cost['total_direct_resource_cost'] + direct_overhead_cost['total_direct_overhead_cost']
     result
   end
 
@@ -347,6 +347,14 @@ class Project < ActiveRecord::Base
       end
       drc = p.direct_resource_cost(as_on, with_details)
       x[p.id] += drc['total_direct_resource_cost']
+    end
+    if x.has_key?(self.id)
+      project_direct_resource_cost = x[self.id]
+      total_direct_resource_cost = x.values.sum
+      total_bench_cost = AdminUser.total_bench_cost(as_on)
+      total_indirect_resource_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * total_bench_cost
+    else
+      total_indirect_resource_cost_share = 0
     end
 
     # lower_date = [self.start_date, as_on.beginning_of_month].max
@@ -395,7 +403,7 @@ class Project < ActiveRecord::Base
     #   result['data'] = data
     # end
     # result
-    x.values.sum
+    total_indirect_resource_cost_share
   end
 
   def total_indirect_overhead_cost_share(as_on, with_details)
