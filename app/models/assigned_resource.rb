@@ -104,7 +104,7 @@ class AssignedResource < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     lower_date = (self.start_date < as_on) ? self.start_date : as_on
     upper_date = (as_on > self.end_date) ? self.end_date : as_on
-    if upper_date == lower_date
+    if upper_date == lower_date # Else days between will always come as 0.
       upper_date += 1
     end
     days_assigned = lower_date.weekdays_until(upper_date)

@@ -340,53 +340,62 @@ class Project < ActiveRecord::Base
   def total_indirect_resource_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
-    lower_date = [self.start_date, as_on.beginning_of_month].max
-    upper_date = [self.end_date, as_on.end_of_month].min
-    Project.
-
-
-
-    total_direct_resource_cost_for_project = self.direct_resource_cost(as_on, false)['total_direct_resource_cost']
-
-
-    total_direct_resource_cost_for_all_projects = 0
-    Project.where('project_status_id = ?', ProjectStatus.id_for_status(I18n.t('label.delivery'))).each do |p|
-      total_direct_resource_cost_for_all_projects += currency_as_amount(p.direct_resource_cost(as_on, false)['total_direct_resource_cost'])
-    end
-    if total_direct_resource_cost_for_all_projects > 0
-      total_indirect_resource_cost_share = 0
-      data = []
-      count = 0
-      lower_date = self.start_date
-      upper_date = [self.end_date, as_on].min
-      working_hours = (lower_date.weekdays_until(upper_date) * Rails.configuration.max_work_hours_per_day)
-      Resource.latest(as_on).each do |r|
-        resource_cost_share = (total_direct_resource_cost_for_project / total_direct_resource_cost_for_all_projects) * (working_hours * r.cost_rate)
-        if with_details
-          details = {}
-          resource = r.as_json
-          resource['bill_rate'] = format_currency(resource['bill_rate'])
-          resource['cost_rate'] = format_currency(resource['cost_rate'])
-          details['resource'] = resource
-          details['user'] = r.admin_user.name
-          details['skill'] = r.skill.name
-          details['working_hours'] = working_hours
-          details['resource_cost_share'] = format_currency(resource_cost_share)
-          data << details
-        end
-        count += 1
-        total_indirect_resource_cost_share += resource_cost_share
+    x = {}
+    Project.where('? between start_date and end_date', as_on).each do |p|
+      if !x.has_key?(p.id)
+        x[p.id] = 0
       end
+      drc = p.direct_resource_cost(as_on, with_details)
+      x[p.id] += drc['total_direct_resource_cost']
     end
-    result = {}
-    result['count'] = count
-    result['total_direct_resource_cost_for_project'] = format_currency(total_direct_resource_cost_for_project)
-    result['total_direct_resource_cost_for_all_projects'] = format_currency(total_direct_resource_cost_for_all_projects)
-    result['total_indirect_resource_cost_share'] = format_currency(total_indirect_resource_cost_share)
-    if with_details
-      result['data'] = data
-    end
-    result
+
+    # lower_date = [self.start_date, as_on.beginning_of_month].max
+    # upper_date = [self.end_date, as_on.end_of_month].min
+    # Project.
+    #
+    #
+    #     total_direct_resource_cost_for_project = self.direct_resource_cost(as_on, false)['total_direct_resource_cost']
+    #
+    #
+    # total_direct_resource_cost_for_all_projects = 0
+    # Project.where('project_status_id = ?', ProjectStatus.id_for_status(I18n.t('label.delivery'))).each do |p|
+    #   total_direct_resource_cost_for_all_projects += currency_as_amount(p.direct_resource_cost(as_on, false)['total_direct_resource_cost'])
+    # end
+    # if total_direct_resource_cost_for_all_projects > 0
+    #   total_indirect_resource_cost_share = 0
+    #   data = []
+    #   count = 0
+    #   lower_date = self.start_date
+    #   upper_date = [self.end_date, as_on].min
+    #   working_hours = (lower_date.weekdays_until(upper_date) * Rails.configuration.max_work_hours_per_day)
+    #   Resource.latest(as_on).each do |r|
+    #     resource_cost_share = (total_direct_resource_cost_for_project / total_direct_resource_cost_for_all_projects) * (working_hours * r.cost_rate)
+    #     if with_details
+    #       details = {}
+    #       resource = r.as_json
+    #       resource['bill_rate'] = format_currency(resource['bill_rate'])
+    #       resource['cost_rate'] = format_currency(resource['cost_rate'])
+    #       details['resource'] = resource
+    #       details['user'] = r.admin_user.name
+    #       details['skill'] = r.skill.name
+    #       details['working_hours'] = working_hours
+    #       details['resource_cost_share'] = format_currency(resource_cost_share)
+    #       data << details
+    #     end
+    #     count += 1
+    #     total_indirect_resource_cost_share += resource_cost_share
+    #   end
+    # end
+    # result = {}
+    # result['count'] = count
+    # result['total_direct_resource_cost_for_project'] = format_currency(total_direct_resource_cost_for_project)
+    # result['total_direct_resource_cost_for_all_projects'] = format_currency(total_direct_resource_cost_for_all_projects)
+    # result['total_indirect_resource_cost_share'] = format_currency(total_indirect_resource_cost_share)
+    # if with_details
+    #   result['data'] = data
+    # end
+    # result
+    x.values.sum
   end
 
   def total_indirect_overhead_cost_share(as_on, with_details)
@@ -434,8 +443,8 @@ class Project < ActiveRecord::Base
   def total_indirect_cost_share(as_on)
     result = {}
     total_indirect_resource_cost_share = total_indirect_resource_cost_share(as_on, false)
-    total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
-    result['total_indirect_cost_share'] = currency_as_amount(total_indirect_resource_cost_share['total_indirect_resource_cost_share']) + currency_as_amount(total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']) rescue 0
+    total_indirect_overhead_cost_share = 0 # total_indirect_overhead_cost_share(as_on, false)
+    result['total_indirect_cost_share'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']
     result
   end
 
@@ -457,8 +466,8 @@ class Project < ActiveRecord::Base
   def total_cost(as_on)
     result = {}
     total_direct_cost = total_direct_cost(as_on)
-    # total_indirect_cost_share = total_indirect_cost_share(as_on)
-    result['total_cost'] = total_direct_cost['total_direct_cost']  + 0 # total_indirect_cost_share['total_indirect_cost_share']
+    total_indirect_cost_share = total_indirect_cost_share(as_on)
+    result['total_cost'] = total_direct_cost['total_direct_cost'] + total_indirect_cost_share['total_indirect_cost_share']
     result
   end
 
