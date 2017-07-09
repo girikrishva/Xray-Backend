@@ -179,19 +179,21 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     def pipeline_by_stage_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-      as_on = params.has_key?(:as_on) ? Date.parse(params[:as_on]) : Date.today.to_s
+      as_on = params.has_key?(:as_on) ? Date.parse(params[:as_on]) : Date.today
+      bu_name = params.has_key?(:bu_name) ? params[:bu_name] : nil
+      business_unit_id = BusinessUnit.where('name = ?', bu_name).first.id rescue -1
       result = {}
       labels = []
       datasets = []
       detail = {}
       detail['label'] = I18n.t('label.pipeline_amount')
       detail['borderColor'] = '#F29220'
-      pipeline_for_all_statuses = Pipeline.pipeline_for_all_statuses(as_on.at_end_of_month, 0, 0)
+      pipeline_for_all_statuses = Pipeline.pipeline_for_all_statuses(as_on.end_of_month, 0, 0, business_unit_id)
       data = []
       pipeline_for_all_statuses.each do |p|
         labels << p['pipeline_status']
         if formatted.upcase == 'YES'
-          data << format_currency(p[as_on.at_end_of_month.to_s]['total_pipeline'])
+          data << format_currency(p[as_on.end_of_month.to_s]['total_pipeline'])
         else
           data << p[as_on.at_end_of_month.to_s]['total_pipeline']
         end
@@ -430,7 +432,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data = []
       Skill.all.order('name').each do |s|
         labels << s.name
-        data << AdminUser.assigned_count_for_skill(as_on, s.id)
+        data << AdminUser.assignment_count_for_skill(as_on, s.id)
       end
       detail['data'] = data
       datasets << detail
