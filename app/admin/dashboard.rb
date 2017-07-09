@@ -304,9 +304,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       Designation.all.order('name').each do |d|
         labels << d.name
         if formatted.upcase == 'YES'
-          data << format_currency(AdminUser.bench_cost_for_designation(as_on, d.id))
+          data << format_currency(AdminUser.assignment_cost_for_designation(as_on, d.id))
         else
-          data << AdminUser.bench_cost_for_designation(as_on, d.id)
+          data << AdminUser.assignment_cost_for_designation(as_on, d.id)
         end
       end
       detail['data'] = data
