@@ -34,7 +34,7 @@ $(document).ready(function () {
         url: "/admin/api/resource_costs_panel_data",
         context: document.body
     }).done(function (data) {
-        console.log("RC===="+JSON.stringify(data))
+        console.log("RC===="+JSON.stringify(data.labels))
         $.each(data.datasets[0].data, function (index, value) {
             data_array1[index] = value
         });
@@ -42,7 +42,7 @@ $(document).ready(function () {
             data_array2[index] = value
         });
           mydata1 = {
-            labels: ["April", "May", "June"],
+            labels: data.labels,
             datasets: [
                 {
                     fillColor: "#23457d",
@@ -78,14 +78,14 @@ $(document).ready(function () {
         });
 
           bench_dest_data = {
-            labels:  ["April", "May", "June"],
+            labels:  data.labels,
             datasets: [
                 {
                     fillColor: "#23457d",
                     strokeColor: "rgba(220,220,220,1)",
                     pointColor: "rgba(220,220,220,1)",
                     pointstrokeColor: "yellow",
-                    data: resource_data1,
+                    data: resource_data2,
                     title: "Bench Resources"
                 },
                 {
@@ -93,7 +93,7 @@ $(document).ready(function () {
                     strokeColor: "rgba(151,187,205,1)",
                     pointColor: "green",
                     pointstrokeColor: "yellow",
-                    data: resource_data2,
+                    data: resource_data1,
                     title: "Assigned Resources"
                 }
             ]
