@@ -320,17 +320,18 @@ class AdminUser < ActiveRecord::Base
     return sorted_user_list.reverse
   end
 
-  def self.bench_cost(as_on)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    bench_cost = 0
-    total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
-    users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
-    users_universe.each do |uu|
-      assigned_hours = AssignedResource.assigned_hours(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month) rescue 0
-      bench_cost += (total_working_hours - assigned_hours) * uu.cost_rate
-    end
-    format_currency(bench_cost)
-  end
+  # DEFUNCT
+  # def self.bench_cost(as_on)
+  #   as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+  #   bench_cost = 0
+  #   total_working_hours = Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
+  #   users_universe = AdminUser.where('date_of_leaving is null or date_of_leaving > ?', as_on).order('name')
+  #   users_universe.each do |uu|
+  #     assigned_hours = AssignedResource.assigned_hours(uu.id, as_on.at_beginning_of_month, as_on.at_end_of_month) rescue 0
+  #     bench_cost += (total_working_hours - assigned_hours) * uu.cost_rate
+  #   end
+  #   format_currency(bench_cost)
+  # end
 
   # DEFUNCT
   # def self.assigned_cost(as_on)
@@ -367,6 +368,13 @@ class AdminUser < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     total_bench_cost = AdminUser.total_resource_cost(as_on) - AdminUser.total_assignment_cost(as_on)
     total_bench_cost
+  end
+
+  def self.total_resource_cost_with_details(as_on)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    x = Resource.where('as_on <= ? and primary_skill is true', as_on).group('admin_user_id').maximum('as_on')
+    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).joins(:admin_user).order(:name)
+
   end
 
   def self.resource_cost_for_skill(as_on, skill_id)

@@ -354,11 +354,11 @@ class Project < ActiveRecord::Base
       total_bench_cost = AdminUser.total_bench_cost(as_on)
       total_indirect_resource_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * total_bench_cost
     else
+      project_direct_resource_cost = 0
+      total_direct_resource_cost = 0
+      total_bench_cost = AdminUser.total_bench_cost(as_on)
       total_indirect_resource_cost_share = 0
     end
-
-    # lower_date = [self.start_date, as_on.beginning_of_month].max
-    # upper_date = [self.end_date, as_on.end_of_month].min
     # Project.
     #
     #
@@ -394,16 +394,16 @@ class Project < ActiveRecord::Base
     #     total_indirect_resource_cost_share += resource_cost_share
     #   end
     # end
-    # result = {}
+    result = {}
     # result['count'] = count
-    # result['total_direct_resource_cost_for_project'] = format_currency(total_direct_resource_cost_for_project)
-    # result['total_direct_resource_cost_for_all_projects'] = format_currency(total_direct_resource_cost_for_all_projects)
-    # result['total_indirect_resource_cost_share'] = format_currency(total_indirect_resource_cost_share)
+    result['project_direct_resource_cost'] = project_direct_resource_cost
+    result['total_direct_resource_cost'] = total_direct_resource_cost
+    result['total_bench_cost'] = total_bench_cost
+    result['total_indirect_resource_cost_share'] = total_indirect_resource_cost_share
     # if with_details
     #   result['data'] = data
     # end
-    # result
-    total_indirect_resource_cost_share
+    result
   end
 
   def total_indirect_overhead_cost_share(as_on, with_details)
