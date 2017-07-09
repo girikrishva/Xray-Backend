@@ -311,10 +311,10 @@ class Project < ActiveRecord::Base
       if with_details
         details = {}
         project_overhead = po.as_json
-        project_overhead['amount'] = format_currency(project_overhead['amount'])
+        project_overhead['amount'] = project_overhead['amount']
         details['project_overhead'] = project_overhead
         details['cost_adder_type'] = po.cost_adder_type.name
-        details['direct_overhead_cost'] = format_currency(po.amount)
+        details['direct_overhead_cost'] = po.amount
         data << details
       end
       count += 1
@@ -322,7 +322,7 @@ class Project < ActiveRecord::Base
     end
     result = {}
     result['count'] = count
-    result['total_direct_overhead_cost'] = format_currency(total_direct_overhead_cost)
+    result['total_direct_overhead_cost'] = total_direct_overhead_cost
     if with_details
       result['data'] = data
     end
