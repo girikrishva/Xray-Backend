@@ -3,7 +3,7 @@
  */
 
 var bench_dest_data = {}
-var as_on =""
+var as_on1 =""
 
 $(document).ready(function () {
     $.ajax({
@@ -88,11 +88,21 @@ function fctMouseDownLeft1(event, ctx, config, data, other) {
     var vv1 = graph_type1 + " Details for the month of " + graph_month1
     $("#dialog2").dialog({ title: vv1 });
 
-    as_on = '2017-03-10'
+    console.log("====monthNames.indexOf(graph_month1)+1 == new Date().getMonth()"+monthNames.indexOf(graph_month1)+1 == new Date().getMonth())
+    if (monthNames.indexOf(graph_month1) == new Date().getMonth()){
+        console.log("inside 1st if")
+        as_on1 = formatDate(new Date())
+    }
+    else{
+        var currentTime = new Date();
+        var yyear=[11,12].indexOf(monthNames.indexOf(graph_month1)+1) > 0 ? currentTime.getFullYear()+1 :currentTime.getFullYear()
+        as_on1=formatDate(LastDayOfMonth(yyear,monthNames.indexOf(graph_month1)+1))
+        console.log("inside 1st else"+as_on1)
+    }
 
-
+    console.log("inside 1st elseee"+as_on1)
         $.ajax({
-            url: "/admin/api/pipeline_by_stage_panel_data?bu_name="+data.datasets[other.v11].title+"&as_on="+as_on,
+            url: "/admin/api/pipeline_by_stage_panel_data?bu_name="+data.datasets[other.v11].title+"&as_on="+as_on1,
             context: document.body
         }).done(function (data) {
 

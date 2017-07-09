@@ -159,7 +159,7 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
         $("#dialog1").dialog('open');
     }
 
-    $("#myTable").empty()
+    $("#myTable").remove()
     graph_type = data.datasets[other.v11].title
     graph_month = data.labels[other.v12]
 
@@ -294,9 +294,9 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
                 url: "/admin/api/overall_delivery_health?as_on="+as_on,
                 context: document.body
             }).done(function (data) {
-
+                $("#myTable").remove()
                 d_h={}
-                var tab="<h2>Project Status</h2></br>"
+                var tab=""
                 jQuery.each(data, function (name, value) {
                     if (d_h[value.delivery_health] == undefined) {
                         d_h[value.delivery_health] = 1
