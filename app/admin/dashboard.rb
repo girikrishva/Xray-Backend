@@ -474,7 +474,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       data = []
       Designation.all.order('name').each do |d|
         labels << d.name
-        data << AdminUser.assigned_count_for_designation(as_on, d.id)
+        data << AdminUser.assignment_count_for_designation(as_on, d.id)
       end
       detail['data'] = data
       datasets << detail
