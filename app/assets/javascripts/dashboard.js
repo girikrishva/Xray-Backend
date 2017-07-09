@@ -66,8 +66,6 @@ $(document).ready(function () {
     });
 
 
-
-
     $.ajax({
         url: "/admin/api/resource_distribution_panel_data",
         context: document.body
@@ -320,7 +318,6 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
         }
     });
 }
-
 
 var startWithDataset = 1;
 var startWithData = 1;
