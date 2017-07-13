@@ -337,22 +337,45 @@ class Project < ActiveRecord::Base
     result
   end
 
+  @@cached_x = {}
+  def self.cached_x(as_on, with_details)
+    if @@cached_x.empty?
+      x = {}
+      Project.where('? between start_date and end_date', as_on).each do |p|
+        if !x.has_key?(p.id)
+          x[p.id] = 0
+        end
+        drc = p.direct_resource_cost(as_on, with_details)
+        x[p.id] += drc['total_direct_resource_cost']
+      end
+      @@cached_x[as_on] = x
+    else
+      @@cached_x[as_on]
+    end
+  end
+
+  @@cached_y = {}
+  def self.cached_y(as_on)
+    if @@cached_y.empty?
+      @@cached_y[as_on] = AdminUser.total_bench_cost(as_on)
+    else
+      if @@cached_y.has_key?(as_on)
+        @@cached_y[as_on]
+      else
+        0
+      end
+    end
+  end
+
   def total_indirect_resource_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
-    x = {}
-    Project.where('? between start_date and end_date', as_on).each do |p|
-      if !x.has_key?(p.id)
-        x[p.id] = 0
-      end
-      drc = p.direct_resource_cost(as_on, with_details)
-      x[p.id] += drc['total_direct_resource_cost']
-    end
-    total_bench_cost = AdminUser.total_bench_cost(as_on)
-    if x.has_key?(self.id)
+    x = Project.cached_x(as_on, with_details)
+    y = Project.cached_y(as_on)
+    if !x.nil? and x.has_key?(self.id)
       project_direct_resource_cost = x[self.id]
       total_direct_resource_cost = x.values.sum
-      total_indirect_resource_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * total_bench_cost
+      total_indirect_resource_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * y
     else
       project_direct_resource_cost = 0
       total_direct_resource_cost = 0
@@ -397,7 +420,7 @@ class Project < ActiveRecord::Base
     # result['count'] = count
     result['project_direct_resource_cost'] = project_direct_resource_cost
     result['total_direct_resource_cost'] = total_direct_resource_cost
-    result['total_bench_cost'] = total_bench_cost
+    result['total_bench_cost'] = y
     result['total_indirect_resource_cost_share'] = total_indirect_resource_cost_share
     # if with_details
     #   result['data'] = data
@@ -405,24 +428,31 @@ class Project < ActiveRecord::Base
     result
   end
 
+  @@cached_z = {}
+  def self.cached_z(as_on, lwoer_date, upper_date)
+    if @@cached_z.empty?
+      @@cached_z[as_on] = Overhead.where('business_unit_id = ? and amount_date between ? and ?', self.delivery_manager.business_unit_id, lower_date, upper_date).sum('amount')
+    else
+      if @@cached_z.has_key?(as_on)
+        @@cached_z[as_on]
+      else
+        0
+      end
+    end
+  end
+
   def total_indirect_overhead_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
-    x = {}
-    Project.where('? between start_date and end_date', as_on).each do |p|
-      if !x.has_key?(p.id)
-        x[p.id] = 0
-      end
-      drc = p.direct_resource_cost(as_on, with_details)
-      x[p.id] += drc['total_direct_resource_cost']
-    end
+    x = Project.cached_x(as_on, with_details)
+    y = Project.cached_y(as_on)
     lower_date = [self.start_date, as_on].max
     upper_date = [self.end_date, as_on].min
-    total_indirect_overhead_cost = Overhead.where('business_unit_id = ? and amount_date between ? and ?', self.delivery_manager.business_unit_id, lower_date, upper_date).sum('amount')
-    if x.has_key?(self.id)
+    z = Project.cached_z(as_on, lower_date, upper_date)
+    if !x.nil? and x.has_key?(self.id)
       project_direct_resource_cost = x[self.id]
       total_direct_resource_cost = x.values.sum
-      total_indirect_resource_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * total_indirect_overhead_cost
+      total_indirect_resource_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * z
     else
       project_direct_resource_cost = 0
       total_direct_resource_cost = 0
@@ -469,10 +499,11 @@ class Project < ActiveRecord::Base
   end
 
   def total_indirect_cost_share(as_on)
+    # bozo = see how to introduce a global variable for x to prevent recompute for every project instance invocation...need internet to examine how to do this in ruby.
     result = {}
     total_indirect_resource_cost_share = total_indirect_resource_cost_share(as_on, false)
-    total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
-    result['total_indirect_cost_share'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']
+    # total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
+    result['total_indirect_cost_share'] = total_indirect_resource_cost_share['total_indirect_resource_cost_share'] # + total_indirect_overhead_cost_share['total_indirect_overhead_cost_share']
     result
   end
 
@@ -495,7 +526,7 @@ class Project < ActiveRecord::Base
     result = {}
     total_direct_cost = total_direct_cost(as_on)
     total_indirect_cost_share = total_indirect_cost_share(as_on)
-    result['total_cost'] = total_direct_cost['total_direct_cost'] # + total_indirect_cost_share['total_indirect_cost_share']
+    result['total_cost'] = total_direct_cost['total_direct_cost'] # + total_indirect_cost_share['total_indirect_cost_share'] # bozo
     result
   end
 
