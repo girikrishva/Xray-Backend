@@ -139,42 +139,46 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: result
     end
 
+    @@cache_resource_distribution_panel_data = {}
     def resource_distribution_panel_data
-      result = {}
-      labels = []
-      labels << Date::MONTHNAMES[(Date.today - 2.months).month]
-      labels << Date::MONTHNAMES[(Date.today - 1.months).month]
-      labels << Date::MONTHNAMES[(Date.today - 0.months).month]
-      result['labels'] = labels
-      total_assignment_counts = []
-      total_assignment_counts[0] = AdminUser.total_assignment_count((Date.today - 2.months).at_end_of_month)
-      total_assignment_counts[1] = AdminUser.total_assignment_count((Date.today - 1.months).at_end_of_month)
-      total_assignment_counts[2] = AdminUser.total_assignment_count((Date.today - 0.months).at_end_of_month)
-      total_bench_counts = []
-      total_bench_counts[0] = AdminUser.total_bench_count((Date.today - 2.months).at_end_of_month)
-      total_bench_counts[1] = AdminUser.total_bench_count((Date.today - 1.months).at_end_of_month)
-      total_bench_counts[2] = AdminUser.total_bench_count((Date.today - 0.months).at_end_of_month)
-      datasets = []
-      detail = {}
-      data = []
-      data << total_assignment_counts[0]
-      data << total_assignment_counts[1]
-      data << total_assignment_counts[2]
-      detail['data'] = data
-      detail['label'] = I18n.t('label.assigned_count')
-      detail['borderColor'] = '#F29220'
-      datasets << detail
-      detail = {}
-      data = []
-      data << total_bench_counts[0]
-      data << total_bench_counts[1]
-      data << total_bench_counts[2]
-      detail['data'] = data
-      detail['label'] = I18n.t('label.bench_count')
-      detail['borderColor'] = '#33A2FF'
-      datasets << detail
-      result['datasets'] = datasets
-      render json: result
+      if @@cache_resource_distribution_panel_data.empty?
+        result = {}
+        labels = []
+        labels << Date::MONTHNAMES[(Date.today - 2.months).month]
+        labels << Date::MONTHNAMES[(Date.today - 1.months).month]
+        labels << Date::MONTHNAMES[(Date.today - 0.months).month]
+        result['labels'] = labels
+        total_assignment_counts = []
+        total_assignment_counts[0] = AdminUser.total_assignment_count((Date.today - 2.months).at_end_of_month)
+        total_assignment_counts[1] = AdminUser.total_assignment_count((Date.today - 1.months).at_end_of_month)
+        total_assignment_counts[2] = AdminUser.total_assignment_count((Date.today - 0.months).at_end_of_month)
+        total_bench_counts = []
+        total_bench_counts[0] = AdminUser.total_bench_count((Date.today - 2.months).at_end_of_month)
+        total_bench_counts[1] = AdminUser.total_bench_count((Date.today - 1.months).at_end_of_month)
+        total_bench_counts[2] = AdminUser.total_bench_count((Date.today - 0.months).at_end_of_month)
+        datasets = []
+        detail = {}
+        data = []
+        data << total_assignment_counts[0]
+        data << total_assignment_counts[1]
+        data << total_assignment_counts[2]
+        detail['data'] = data
+        detail['label'] = I18n.t('label.assigned_count')
+        detail['borderColor'] = '#F29220'
+        datasets << detail
+        detail = {}
+        data = []
+        data << total_bench_counts[0]
+        data << total_bench_counts[1]
+        data << total_bench_counts[2]
+        detail['data'] = data
+        detail['label'] = I18n.t('label.bench_count')
+        detail['borderColor'] = '#33A2FF'
+        datasets << detail
+        result['datasets'] = datasets
+        @@cache_resource_distribution_panel_data = result
+      end
+      render json: @@cache_resource_distribution_panel_data
     end
 
     def pipeline_by_stage_panel_data
