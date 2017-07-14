@@ -53,55 +53,59 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
      render json:{'format':Money.new(1,"INR").symbol,'en-type':'en-IN'}
     end
 
+    @@cache_resource_costs_panel_data = {}
     def resource_costs_panel_data
-      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-      result = {}
-      labels = []
-      labels << Date::MONTHNAMES[(Date.today - 2.months).month]
-      labels << Date::MONTHNAMES[(Date.today - 1.months).month]
-      labels << Date::MONTHNAMES[(Date.today - 0.months).month]
-      result['labels'] = labels
-      datasets = []
-      total_resource_costs = []
-      total_resource_costs[0] = AdminUser.total_resource_cost((Date.today - 2.months).at_end_of_month)
-      total_resource_costs[1] = AdminUser.total_resource_cost((Date.today - 1.months).at_end_of_month)
-      total_resource_costs[2] = AdminUser.total_resource_cost((Date.today - 0.months).at_end_of_month)
-      total_assignment_costs = []
-      total_assignment_costs[0] = AdminUser.total_assignment_cost((Date.today - 2.months).at_end_of_month)
-      total_assignment_costs[1] = AdminUser.total_assignment_cost((Date.today - 1.months).at_end_of_month)
-      total_assignment_costs[2] = AdminUser.total_assignment_cost((Date.today - 0.months).at_end_of_month)
-      total_bench_costs = []
-      total_bench_costs[0] = total_resource_costs[0] - total_assignment_costs[0]
-      total_bench_costs[1] = total_resource_costs[1] - total_assignment_costs[1]
-      total_bench_costs[2] = total_resource_costs[2] - total_assignment_costs[2]
-      if formatted.upcase == 'YES'
-        total_bench_costs[0] = format_currency(total_bench_costs[0])
-        total_bench_costs[1] = format_currency(total_bench_costs[1])
-        total_bench_costs[2] = format_currency(total_bench_costs[2])
-        total_assignment_costs[0] = format_currency(total_assignment_costs[0])
-        total_assignment_costs[1] = format_currency(total_assignment_costs[1])
-        total_assignment_costs[2] = format_currency(total_assignment_costs[2])
+      if @@cache_resource_costs_panel_data.empty?
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        result = {}
+        labels = []
+        labels << Date::MONTHNAMES[(Date.today - 2.months).month]
+        labels << Date::MONTHNAMES[(Date.today - 1.months).month]
+        labels << Date::MONTHNAMES[(Date.today - 0.months).month]
+        result['labels'] = labels
+        datasets = []
+        total_resource_costs = []
+        total_resource_costs[0] = AdminUser.total_resource_cost((Date.today - 2.months).at_end_of_month)
+        total_resource_costs[1] = AdminUser.total_resource_cost((Date.today - 1.months).at_end_of_month)
+        total_resource_costs[2] = AdminUser.total_resource_cost((Date.today - 0.months).at_end_of_month)
+        total_assignment_costs = []
+        total_assignment_costs[0] = AdminUser.total_assignment_cost((Date.today - 2.months).at_end_of_month)
+        total_assignment_costs[1] = AdminUser.total_assignment_cost((Date.today - 1.months).at_end_of_month)
+        total_assignment_costs[2] = AdminUser.total_assignment_cost((Date.today - 0.months).at_end_of_month)
+        total_bench_costs = []
+        total_bench_costs[0] = total_resource_costs[0] - total_assignment_costs[0]
+        total_bench_costs[1] = total_resource_costs[1] - total_assignment_costs[1]
+        total_bench_costs[2] = total_resource_costs[2] - total_assignment_costs[2]
+        if formatted.upcase == 'YES'
+          total_bench_costs[0] = format_currency(total_bench_costs[0])
+          total_bench_costs[1] = format_currency(total_bench_costs[1])
+          total_bench_costs[2] = format_currency(total_bench_costs[2])
+          total_assignment_costs[0] = format_currency(total_assignment_costs[0])
+          total_assignment_costs[1] = format_currency(total_assignment_costs[1])
+          total_assignment_costs[2] = format_currency(total_assignment_costs[2])
+        end
+        data = []
+        data << total_bench_costs[0]
+        data << total_bench_costs[1]
+        data << total_bench_costs[2]
+        detail = {}
+        detail['data'] = data
+        detail['label'] = I18n.t('label.bench_cost')
+        detail['backgroundColor'] = '#6495ED'
+        datasets << detail
+        data = []
+        data << total_assignment_costs[0]
+        data << total_assignment_costs[1]
+        data << total_assignment_costs[2]
+        detail = {}
+        detail['data'] = data
+        detail['label'] = I18n.t('label.assigned_cost')
+        detail['backgroundColor'] = '#D2691E'
+        datasets << detail
+        result['datasets'] = datasets
+        @@cache_resource_costs_panel_data = result
       end
-      data = []
-      data << total_bench_costs[0]
-      data << total_bench_costs[1]
-      data << total_bench_costs[2]
-      detail = {}
-      detail['data'] = data
-      detail['label'] = I18n.t('label.bench_cost')
-      detail['backgroundColor'] = '#6495ED'
-      datasets << detail
-      data = []
-      data << total_assignment_costs[0]
-      data << total_assignment_costs[1]
-      data << total_assignment_costs[2]
-      detail = {}
-      detail['data'] = data
-      detail['label'] = I18n.t('label.assigned_cost')
-      detail['backgroundColor'] = '#D2691E'
-      datasets << detail
-      result['datasets'] = datasets
-      render json: result
+      render json: @@cache_resource_costs_panel_data
     end
 
     def gross_profit_panel_data

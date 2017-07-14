@@ -345,55 +345,27 @@ class AdminUser < ActiveRecord::Base
   #   format_currency(assigned_cost)
   # end
 
-  @@cached_total_resource_cost = {}
+
   def self.total_resource_cost(as_on)
-    if @@cached_total_resource_cost.empty?
       as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
       x = Resource.where('as_on <= ? and primary_skill is true', as_on).group('admin_user_id').maximum('as_on')
       y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').sum('cost_rate')
-      @@cached_total_resource_cost[as_on] = y.values.sum * Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
-    else
-      if @@cached_total_resource_cost.has_key?(as_on)
-        @@cached_total_resource_cost[as_on]
-      else
-        0
-      end
-    end
+      total_resource_cost = y.values.sum * Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
   end
 
-
-  @@cached_total_assignment_cost = {}
   def self.total_assignment_cost(as_on)
-    if @@cached_total_assignment_cost.empty?
-      as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-      admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
-      resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
-      total_assignment_cost = 0
-      AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
-        total_assignment_cost += (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
-      end
-      @@cached_total_assignment_cost[as_on] = total_assignment_cost
-    else
-      if @@cached_total_assignment_cost.has_key?(as_on)
-        @@cached_total_assignment_cost[as_on]
-      else
-        0
-      end
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
+    resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
+    total_assignment_cost = 0
+    AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
+      total_assignment_cost += (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
     end
   end
 
-  @@cached_total_bench_cost = {}
   def self.total_bench_cost(as_on)
-    if @@cached_total_bench_cost.empty?
-      as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-      @@cached_total_bench_cost = AdminUser.total_resource_cost(as_on) - AdminUser.total_assignment_cost(as_on)
-    else
-      if @@cached_total_bench_cost.has_key?(as_on)
-        @@cached_total_bench_cost[as_on]
-      else
-        0
-      end
-    end
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    total_bench_cost = AdminUser.total_resource_cost(as_on) - AdminUser.total_assignment_cost(as_on)
   end
 
   def self.total_resource_cost_with_details(as_on)
