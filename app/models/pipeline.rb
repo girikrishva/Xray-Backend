@@ -154,18 +154,37 @@ class Pipeline < ActiveRecord::Base
     result
   end
 
+  @@cached_pipeline_for_all_statuses = {}
   def self.pipeline_for_all_statuses(as_on, months_prior = -6, months_after = 5, business_unit_id = -1)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    result = []
-    PipelineStatus.order('rank').each do |ps|
-      pipeline_status_detail = {}
-      pipeline_status_detail['pipeline_status'] = ps.name
-      (months_prior..months_after).each do |month_offset|
-        year_month = as_on + month_offset.month
-        pipeline_status_detail[year_month.to_s] = Pipeline.pipeline_for_status(ps.id, year_month, false, business_unit_id)
+    key = as_on.to_s + business_unit_id.to_s
+    if @@cached_pipeline_for_all_statuses.empty?
+      as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+      result = []
+      PipelineStatus.order('rank').each do |ps|
+        pipeline_status_detail = {}
+        pipeline_status_detail['pipeline_status'] = ps.name
+        (months_prior..months_after).each do |month_offset|
+          year_month = as_on + month_offset.month
+          pipeline_status_detail[year_month.to_s] = Pipeline.pipeline_for_status(ps.id, year_month, false, business_unit_id)
+        end
+        result << pipeline_status_detail
       end
-      result << pipeline_status_detail
+      @@cached_pipeline_for_all_statuses[key] = result
+    elsif !@@cached_pipeline_for_all_statuses.has_key?(key)
+      as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+      result = []
+      PipelineStatus.order('rank').each do |ps|
+        pipeline_status_detail = {}
+        pipeline_status_detail['pipeline_status'] = ps.name
+        (months_prior..months_after).each do |month_offset|
+          year_month = as_on + month_offset.month
+          pipeline_status_detail[year_month.to_s] = Pipeline.pipeline_for_status(ps.id, year_month, false, business_unit_id)
+        end
+        result << pipeline_status_detail
+      end
+      @@cached_pipeline_for_all_statuses[key] = result
+    else
+      @@cached_pipeline_for_all_statuses[key]
     end
-    result
   end
 end
