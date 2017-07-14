@@ -73,9 +73,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         total_assignment_costs[1] = AdminUser.total_assignment_cost((Date.today - 1.months).at_end_of_month)
         total_assignment_costs[2] = AdminUser.total_assignment_cost((Date.today - 0.months).at_end_of_month)
         total_bench_costs = []
-        total_bench_costs[0] = total_resource_costs[0] - total_assignment_costs[0]
-        total_bench_costs[1] = total_resource_costs[1] - total_assignment_costs[1]
-        total_bench_costs[2] = total_resource_costs[2] - total_assignment_costs[2]
+        total_bench_costs[0] = AdminUser.total_bench_cost((Date.today - 2.months).at_end_of_month)
+        total_bench_costs[1] = AdminUser.total_bench_cost((Date.today - 1.months).at_end_of_month)
+        total_bench_costs[2] = AdminUser.total_bench_cost((Date.today - 0.months).at_end_of_month)
         if formatted.upcase == 'YES'
           total_bench_costs[0] = format_currency(total_bench_costs[0])
           total_bench_costs[1] = format_currency(total_bench_costs[1])
