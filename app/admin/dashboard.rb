@@ -142,18 +142,14 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       labels << Date::MONTHNAMES[(Date.today - 1.months).month]
       labels << Date::MONTHNAMES[(Date.today - 0.months).month]
       result['labels'] = labels
-      total_resource_counts = []
-      total_resource_counts[0] = AdminUser.total_resource_count((Date.today - 2.months).at_end_of_month)
-      total_resource_counts[1] = AdminUser.total_resource_count((Date.today - 1.months).at_end_of_month)
-      total_resource_counts[2] = AdminUser.total_resource_count((Date.today - 0.months).at_end_of_month)
       total_assignment_counts = []
       total_assignment_counts[0] = AdminUser.total_assignment_count((Date.today - 2.months).at_end_of_month)
       total_assignment_counts[1] = AdminUser.total_assignment_count((Date.today - 1.months).at_end_of_month)
       total_assignment_counts[2] = AdminUser.total_assignment_count((Date.today - 0.months).at_end_of_month)
       total_bench_counts = []
-      total_bench_counts[0] = total_resource_counts[0] - total_assignment_counts[0]
-      total_bench_counts[1] = total_resource_counts[1] - total_assignment_counts[1]
-      total_bench_counts[2] = total_resource_counts[2] - total_assignment_counts[2]
+      total_bench_counts[0] = AdminUser.total_bench_count((Date.today - 2.months).at_end_of_month)
+      total_bench_counts[1] = AdminUser.total_bench_count((Date.today - 1.months).at_end_of_month)
+      total_bench_counts[2] = AdminUser.total_bench_count((Date.today - 0.months).at_end_of_month)
       datasets = []
       detail = {}
       data = []

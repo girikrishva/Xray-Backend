@@ -515,41 +515,64 @@ class AdminUser < ActiveRecord::Base
   #   bench_count_for_designation
   # end
 
+  @@cached_total_resource_count = {}
   def self.total_resource_count(as_on)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    x = Resource.where('as_on <= ?', as_on).group('admin_user_id').maximum('as_on')
-    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').count('admin_user_id')
-    total_resource_count = y.values.sum
-    total_resource_count
-  end
-
-
-  def self.total_assignment_count(as_on)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
-    resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
-    assigned_hours = {}
-    AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
-      admin_user_id = ar.resource.admin_user.id
-      if assigned_hours.has_key?(admin_user_id)
-        assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+    if @@cached_total_resource_count.empty?
+      as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+      x = Resource.where('as_on <= ?', as_on).group('admin_user_id').maximum('as_on')
+      y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').count('admin_user_id')
+      @@cached_total_resource_count[as_on] = y.values.sum
+    else
+      if @@cached_total_resource_count.has_key?(as_on)
+        @@cached_total_resource_count
       else
-        assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        0
       end
     end
-    total_assignment_count = 0
-    assigned_hours.keys.each do |admin_user_id|
-      if (assigned_hours[admin_user_id] * 100 / (Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month)) >= Rails.configuration.bench_threshold
-        total_assignment_count += 1
-      end
-    end
-    total_assignment_count
   end
 
+  @@cached_total_assignment_count = {}
+  def self.total_assignment_count(as_on)
+    if @@cached_total_assignment_count.empty?
+      as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+      admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
+      resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
+      assigned_hours = {}
+      AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
+        admin_user_id = ar.resource.admin_user.id
+        if assigned_hours.has_key?(admin_user_id)
+          assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        else
+          assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        end
+      end
+      @@cached_total_assignment_count[as_on] = 0
+      assigned_hours.keys.each do |admin_user_id|
+        if (assigned_hours[admin_user_id] * 100 / (Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month)) >= Rails.configuration.bench_threshold
+          @@cached_total_assignment_count[as_on] += 1
+        end
+      end
+    else
+      if @@cached_total_assignment_count.has_key?(as_on)
+        @@cached_total_assignment_count[as_on]
+      else
+        0
+      end
+    end
+  end
+
+  @@cached_total_bench_count = {}
   def self.total_bench_count(as_on)
-    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    total_bench_count = AdminUser.total_resource_count(as_on) - AdminUser.total_assignment_count(as_on)
-    total_bench_count
+    if @@cached_total_bench_count.empty?
+      as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+      @@cached_total_bench_count[as_on] = AdminUser.total_resource_count(as_on) - AdminUser.total_assignment_count(as_on)
+    else
+      if @@cached_total_bench_count.has_key?(as_on)
+        @@cached_total_bench_count[as_on]
+      else
+        0
+      end
+    end
   end
 
   def self.resource_count_for_skill(as_on, skill_id)
