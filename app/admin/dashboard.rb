@@ -108,9 +108,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_resource_costs_panel_data
     end
 
-    @cache_gross_profit_panel_data = {}
+    @@cache_gross_profit_panel_data = nil
     def gross_profit_panel_data
-      if @@cache_gross_profit_panel_data.empty?
+      if @@cache_gross_profit_panel_data.nil?
         formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
         result = {}
         labels = []
@@ -588,41 +588,45 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     #   render json: result
     # end
 
+    @@cache_pipeline_by_business_unit_trend = nil
     def pipeline_by_business_unit_trend
-      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      result = {}
-      months = []
-      months << (as_on.to_date - 2.months)
-      months << (as_on.to_date - 1.months)
-      months << (as_on.to_date - 0.months)
-      labels = []
-      labels << months[0].strftime("%B")
-      labels << months[1].strftime("%B")
-      labels << months[2].strftime("%B")
-      result["labels"] = labels
-      color_master = ["#6495ED", "#D2691E", "#FFC200","#FE6384", "#37B2EB", "#FCCE33"]
-      datasets = []
-      i = 0
-      BusinessUnit.all.order('name').each do |bu|
-        details = {}
-        details["label"] = bu.name
-        details["backgroundColor"] = color_master[i]
-        data = []
-        details["data"] = data
-        datasets << details
-        months.each do |month|
-          bu_pipeline = Pipeline.pipeline_for_all_statuses(month, 0, 0, bu.id)
-          bu_pipeline_value = 0
-          bu_pipeline.each do |bup|
-            bu_pipeline_value += (bup[month.to_s]['total_pipeline'])
+      if @@cache_pipeline_by_business_unit_trend.nil?
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+        result = {}
+        months = []
+        months << (as_on.to_date - 2.months)
+        months << (as_on.to_date - 1.months)
+        months << (as_on.to_date - 0.months)
+        labels = []
+        labels << months[0].strftime("%B")
+        labels << months[1].strftime("%B")
+        labels << months[2].strftime("%B")
+        result["labels"] = labels
+        color_master = ["#6495ED", "#D2691E", "#FFC200", "#FE6384", "#37B2EB", "#FCCE33"]
+        datasets = []
+        i = 0
+        BusinessUnit.all.order('name').each do |bu|
+          details = {}
+          details["label"] = bu.name
+          details["backgroundColor"] = color_master[i]
+          data = []
+          details["data"] = data
+          datasets << details
+          months.each do |month|
+            bu_pipeline = Pipeline.pipeline_for_all_statuses(month, 0, 0, bu.id)
+            bu_pipeline_value = 0
+            bu_pipeline.each do |bup|
+              bu_pipeline_value += (bup[month.to_s]['total_pipeline'])
+            end
+            data << bu_pipeline_value
           end
-          data << bu_pipeline_value
+          i += 1
         end
-        i += 1
+        result["datasets"] = datasets
+        @@cache_pipeline_by_business_unit_trend = result
       end
-      result["datasets"] = datasets
-      render json: result
+      render json: @@cache_pipeline_by_business_unit_trend
     end
   end
 end
