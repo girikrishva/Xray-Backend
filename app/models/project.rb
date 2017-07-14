@@ -526,7 +526,7 @@ class Project < ActiveRecord::Base
     result = {}
     total_direct_cost = total_direct_cost(as_on)
     total_indirect_cost_share = total_indirect_cost_share(as_on)
-    result['total_cost'] = total_direct_cost['total_direct_cost'] # + total_indirect_cost_share['total_indirect_cost_share'] # bozo
+    result['total_cost'] = total_direct_cost['total_direct_cost']  + total_indirect_cost_share['total_indirect_cost_share'] # bozo
     result
   end
 

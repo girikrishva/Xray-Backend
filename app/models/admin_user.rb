@@ -347,10 +347,11 @@ class AdminUser < ActiveRecord::Base
 
 
   def self.total_resource_cost(as_on)
-      as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-      x = Resource.where('as_on <= ? and primary_skill is true', as_on).group('admin_user_id').maximum('as_on')
-      y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').sum('cost_rate')
-      total_resource_cost = y.values.sum * Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    x = Resource.where('as_on <= ? and primary_skill is true', as_on).group('admin_user_id').maximum('as_on')
+    y = Resource.where('admin_user_id in (?)', x.keys).where('as_on in (?)', x.values).order('skill_id').group('skill_id').sum('cost_rate')
+    total_resource_cost = y.values.sum * Rails.configuration.max_work_hours_per_day * Rails.configuration.max_work_days_per_month
+    total_resource_cost
   end
 
   def self.total_assignment_cost(as_on)
@@ -361,11 +362,13 @@ class AdminUser < ActiveRecord::Base
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
       total_assignment_cost += (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
     end
+    total_assignment_cost
   end
 
   def self.total_bench_cost(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     total_bench_cost = AdminUser.total_resource_cost(as_on) - AdminUser.total_assignment_cost(as_on)
+    total_bench_cost
   end
 
   def self.total_resource_cost_with_details(as_on)
@@ -513,6 +516,7 @@ class AdminUser < ActiveRecord::Base
         total_assignment_count += 1
       end
     end
+    total_assignment_count
   end
 
   def self.total_bench_count(as_on)

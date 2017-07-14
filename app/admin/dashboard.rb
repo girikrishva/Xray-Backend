@@ -108,35 +108,39 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_resource_costs_panel_data
     end
 
+    @cache_gross_profit_panel_data = {}
     def gross_profit_panel_data
-      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-      result = {}
-      labels = []
-      labels << Date::MONTHNAMES[(Date.today - 2.months).month]
-      labels << Date::MONTHNAMES[(Date.today - 1.months).month]
-      labels << Date::MONTHNAMES[(Date.today - 0.months).month]
-      result['labels'] = labels
-      datasets = []
-      detail = {}
-      gross_profits = []
-      gross_profits[0] = Project.gross_profit((Date.today - 2.months).at_end_of_month)
-      gross_profits[1] = Project.gross_profit((Date.today - 1.months).at_end_of_month)
-      gross_profits[2] = Project.gross_profit((Date.today - 0.months).at_end_of_month)
-      if formatted.upcase == 'YES'
-        gross_profits[0] = format_currency(gross_profits[0])
-        gross_profits[1] = format_currency(gross_profits[1])
-        gross_profits[2] = format_currency(gross_profits[2])
+      if @@cache_gross_profit_panel_data.empty?
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        result = {}
+        labels = []
+        labels << Date::MONTHNAMES[(Date.today - 2.months).month]
+        labels << Date::MONTHNAMES[(Date.today - 1.months).month]
+        labels << Date::MONTHNAMES[(Date.today - 0.months).month]
+        result['labels'] = labels
+        datasets = []
+        detail = {}
+        gross_profits = []
+        gross_profits[0] = Project.gross_profit((Date.today - 2.months).at_end_of_month)
+        gross_profits[1] = Project.gross_profit((Date.today - 1.months).at_end_of_month)
+        gross_profits[2] = Project.gross_profit((Date.today - 0.months).at_end_of_month)
+        if formatted.upcase == 'YES'
+          gross_profits[0] = format_currency(gross_profits[0])
+          gross_profits[1] = format_currency(gross_profits[1])
+          gross_profits[2] = format_currency(gross_profits[2])
+        end
+        data = []
+        data << gross_profits[0]
+        data << gross_profits[1]
+        data << gross_profits[2]
+        detail['data'] = data
+        detail['label'] = I18n.t('label.gross_profit')
+        detail['borderColor'] = '#33A2FF'
+        datasets << detail
+        result['datasets'] = datasets
+        @@cache_gross_profit_panel_data = result
       end
-      data = []
-      data << gross_profits[0]
-      data << gross_profits[1]
-      data << gross_profits[2]
-      detail['data'] = data
-      detail['label'] = I18n.t('label.gross_profit')
-      detail['borderColor'] = '#33A2FF'
-      datasets << detail
-      result['datasets'] = datasets
-      render json: result
+      render json: @@cache_gross_profit_panel_data
     end
 
     @@cache_resource_distribution_panel_data = {}
