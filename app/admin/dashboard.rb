@@ -310,56 +310,64 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_bench_costs_by_skill_panel_data
     end
 
+    @@cache_assigned_costs_by_designation_panel_data = nil
     def assigned_costs_by_designation_panel_data
-      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      result = {}
-      labels = []
-      datasets = []
-      detail = {}
-      detail['label'] = I18n.t('label.assigned_cost')
-      detail['borderColor'] = '#F29220'
-      detail['backgroundColor'] = '#D2691E'
-      data = []
-      Designation.all.order('name').each do |d|
-        labels << d.name
-        if formatted.upcase == 'YES'
-          data << format_currency(AdminUser.assignment_cost_for_designation(as_on, d.id))
-        else
-          data << AdminUser.assignment_cost_for_designation(as_on, d.id)
+      if @@cache_assigned_costs_by_designation_panel_data.nil?
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+        result = {}
+        labels = []
+        datasets = []
+        detail = {}
+        detail['label'] = I18n.t('label.assigned_cost')
+        detail['borderColor'] = '#F29220'
+        detail['backgroundColor'] = '#D2691E'
+        data = []
+        Designation.all.order('name').each do |d|
+          labels << d.name
+          if formatted.upcase == 'YES'
+            data << format_currency(AdminUser.assignment_cost_for_designation(as_on, d.id))
+          else
+            data << AdminUser.assignment_cost_for_designation(as_on, d.id)
+          end
         end
+        detail['data'] = data
+        datasets << detail
+        result['datasets'] = datasets
+        result['labels'] = labels
+        @@cache_assigned_costs_by_designation_panel_data = result
       end
-      detail['data'] = data
-      datasets << detail
-      result['datasets'] = datasets
-      result['labels'] = labels
-      render json: result
+      render json: @@cache_assigned_costs_by_designation_panel_data
     end
 
+    @@cache_bench_costs_by_designation_panel_data = nil
     def bench_costs_by_designation_panel_data
-      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      result = {}
-      labels = []
-      datasets = []
-      detail = {}
-      detail['label'] = I18n.t('label.bench_cost')
-      #detail['borderColor'] = '#F29220'
-      detail['backgroundColor'] = '#6495ED'
-      data = []
-      Designation.all.order('name').each do |d|
-        labels << d.name
-        if formatted.upcase == 'YES'
-          data << format_currency(AdminUser.bench_cost_for_designation(as_on, d.id))
-        else
-          data << AdminUser.bench_cost_for_designation(as_on, d.id)
+      if @@cache_bench_costs_by_designation_panel_data.nil?
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+        result = {}
+        labels = []
+        datasets = []
+        detail = {}
+        detail['label'] = I18n.t('label.bench_cost')
+        #detail['borderColor'] = '#F29220'
+        detail['backgroundColor'] = '#6495ED'
+        data = []
+        Designation.all.order('name').each do |d|
+          labels << d.name
+          if formatted.upcase == 'YES'
+            data << format_currency(AdminUser.bench_cost_for_designation(as_on, d.id))
+          else
+            data << AdminUser.bench_cost_for_designation(as_on, d.id)
+          end
         end
+        detail['data'] = data
+        datasets << detail
+        result['datasets'] = datasets
+        result['labels'] = labels
+        @@cache_bench_costs_by_designation_panel_data = result
       end
-      detail['data'] = data
-      datasets << detail
-      result['datasets'] = datasets
-      result['labels'] = labels
-      render json: result
+      render json: @@cache_bench_costs_by_designation_panel_data
     end
 
     def gross_profit_by_business_unit_panel_data
