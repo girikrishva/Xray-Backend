@@ -250,11 +250,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_financial_performance_panel_data
     end
 
-    @@cache_assigned_costs_by_skill_panel_data = nil
+    @@cache_assigned_costs_by_skill_panel_data = {}
     def assigned_costs_by_skill_panel_data
-      if @@cache_assigned_costs_by_skill_panel_data.nil?
-        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      if @@cache_assigned_costs_by_skill_panel_data.empty? || !@@cache_assigned_costs_by_skill_panel_data.has_key?(as_on)
         result = {}
         labels = []
         datasets = []
@@ -275,16 +275,16 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         datasets << detail
         result['datasets'] = datasets
         result['labels'] = labels
-        @@cache_assigned_costs_by_skill_panel_data = result
+        @@cache_assigned_costs_by_skill_panel_data[as_on] = result
       end
-      render json: @@cache_assigned_costs_by_skill_panel_data
+      render json: @@cache_assigned_costs_by_skill_panel_data[as_on]
     end
 
-    @@cache_bench_costs_by_skill_panel_data = nil
+    @@cache_bench_costs_by_skill_panel_data = {}
     def bench_costs_by_skill_panel_data
-      if @@cache_bench_costs_by_skill_panel_data.nil?
-        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      if @@cache_bench_costs_by_skill_panel_data.empty? || !@@cache_bench_costs_by_skill_panel_data.has_key?(as_on)
         result = {}
         labels = []
         datasets = []
@@ -305,16 +305,16 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         datasets << detail
         result['datasets'] = datasets
         result['labels'] = labels
-        @@cache_bench_costs_by_skill_panel_data = result
+        @@cache_bench_costs_by_skill_panel_data[as_on] = result
       end
-      render json: @@cache_bench_costs_by_skill_panel_data
+      render json: @@cache_bench_costs_by_skill_panel_data[as_on]
     end
 
-    @@cache_assigned_costs_by_designation_panel_data = nil
+    @@cache_assigned_costs_by_designation_panel_data = {}
     def assigned_costs_by_designation_panel_data
-      if @@cache_assigned_costs_by_designation_panel_data.nil?
-        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      if @@cache_assigned_costs_by_designation_panel_data.empty? || !@@cache_assigned_costs_by_designation_panel_data.has_key?(as_on)
         result = {}
         labels = []
         datasets = []
@@ -335,16 +335,16 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         datasets << detail
         result['datasets'] = datasets
         result['labels'] = labels
-        @@cache_assigned_costs_by_designation_panel_data = result
+        @@cache_assigned_costs_by_designation_panel_data[as_on] = result
       end
-      render json: @@cache_assigned_costs_by_designation_panel_data
+      render json: @@cache_assigned_costs_by_designation_panel_data[as_on]
     end
 
-    @@cache_bench_costs_by_designation_panel_data = nil
+    @@cache_bench_costs_by_designation_panel_data = {}
     def bench_costs_by_designation_panel_data
-      if @@cache_bench_costs_by_designation_panel_data.nil?
-        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      if @@cache_bench_costs_by_designation_panel_data.empty? || !@@cache_bench_costs_by_designation_panel_data.has_key?(as_on)
         result = {}
         labels = []
         datasets = []
@@ -365,9 +365,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         datasets << detail
         result['datasets'] = datasets
         result['labels'] = labels
-        @@cache_bench_costs_by_designation_panel_data = result
+        @@cache_bench_costs_by_designation_panel_data[as_on] = result
       end
-      render json: @@cache_bench_costs_by_designation_panel_data
+      render json: @@cache_bench_costs_by_designation_panel_data[as_on]
     end
 
     def gross_profit_by_business_unit_panel_data
