@@ -375,30 +375,34 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_bench_costs_by_designation_panel_data[as_on]
     end
 
+    @@cache_gross_profit_by_business_unit_panel_data = {}
     def gross_profit_by_business_unit_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      result = {}
-      # labels = []
-      # datasets = []
-      # detail = {}
-      # detail['label'] = I18n.t('label.gross_profit')
-      # #detail['borderColor'] = '#F29220'
-      # detail['backgroundColor'] = '#6495ED'
-      # data = []
-      # BusinessUnit.all.order(:name).each do |bu|
-      #   labels << bu.name
-      #   if formatted.upcase == 'NO'
-      #     data << currency_as_amount(Project.gross_profit_for_business_unit(bu.id, as_on))
-      #   else
-      #     data << Project.gross_profit_for_business_unit(bu.id, as_on)
-      #   end
-      # end
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      # result['labels'] = labels
-      render json: result
+      if @@cache_gross_profit_by_business_unit_panel_data.empty? || !@@cache_gross_profit_by_business_unit_panel_data.has_key?(as_on)
+        result = {}
+        labels = []
+        datasets = []
+        detail = {}
+        detail['label'] = I18n.t('label.gross_profit')
+        #detail['borderColor'] = '#F29220'
+        detail['backgroundColor'] = '#6495ED'
+        data = []
+        BusinessUnit.all.order(:name).each do |bu|
+          labels << bu.name
+          if formatted.upcase == 'YES'
+            data << format_currency(Project.gross_profit_for_business_unit(bu.id, as_on))
+          else
+            data << Project.gross_profit_for_business_unit(bu.id, as_on)
+          end
+        end
+        detail['data'] = data
+        datasets << detail
+        result['datasets'] = datasets
+        result['labels'] = labels
+        @@cache_gross_profit_by_business_unit_panel_data[as_on] = result
+      end
+      render json: @@cache_gross_profit_by_business_unit_panel_data
     end
 
     def gross_profit_versus_indirect_cost_panel_data

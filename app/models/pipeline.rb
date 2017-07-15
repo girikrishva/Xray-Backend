@@ -73,6 +73,8 @@ class Pipeline < ActiveRecord::Base
     if !errors.empty?
       return false
     end
+    project1 = Project.new
+    project1.name = pipeline.name
     project = Project.new
     project.name = pipeline.name
     project.start_date = pipeline.expected_start
