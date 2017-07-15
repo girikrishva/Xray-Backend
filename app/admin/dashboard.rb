@@ -448,10 +448,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: result
     end
 
-    @@cache_assigned_counts_by_skill_panel_data = nil
+    @@cache_assigned_counts_by_skill_panel_data = {}
     def assigned_counts_by_skill_panel_data
-      if @@cache_assigned_counts_by_skill_panel_data.nil?
-        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      if @@cache_assigned_counts_by_skill_panel_data.empty? || !@@cache_assigned_counts_by_skill_panel_data.has_key?(as_on)
         result = {}
         labels = []
         datasets = []
@@ -468,15 +468,15 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         datasets << detail
         result['datasets'] = datasets
         result['labels'] = labels
-        @@cache_assigned_counts_by_skill_panel_data = result
+        @@cache_assigned_counts_by_skill_panel_data[as_on] = result
       end
-      render json: @@cache_assigned_counts_by_skill_panel_data
+      render json: @@cache_assigned_counts_by_skill_panel_data[as_on]
     end
 
-    @@cache_bench_counts_by_skill_panel_data = nil
+    @@cache_bench_counts_by_skill_panel_data = {}
     def bench_counts_by_skill_panel_data
-      if @@cache_bench_counts_by_skill_panel_data.nil?
-        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+      if @@cache_bench_counts_by_skill_panel_data.empty? || !@@cache_bench_counts_by_skill_panel_data.has_key?(as_on)
         result = {}
         labels = []
         datasets = []
@@ -493,51 +493,59 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         datasets << detail
         result['datasets'] = datasets
         result['labels'] = labels
-        @@cache_bench_counts_by_skill_panel_data = result
+        @@cache_bench_counts_by_skill_panel_data[as_on] = result
       end
-      render json: @@cache_bench_counts_by_skill_panel_data
+      render json: @@cache_bench_counts_by_skill_panel_data[as_on]
     end
 
+    @@assigned_counts_by_designation_panel_data = {}
     def assigned_counts_by_designation_panel_data
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      result = {}
-      labels = []
-      datasets = []
-      detail = {}
-      detail['label'] = I18n.t('label.assigned_count')
-      #detail['borderColor'] = '#F29220'
-      detail['backgroundColor'] = '#D2691E'
-      data = []
-      Designation.all.order('name').each do |d|
-        labels << d.name
-        data << AdminUser.assignment_count_for_designation(as_on, d.id)
+      if @@assigned_counts_by_designation_panel_data.empty? || !@@assigned_counts_by_designation_panel_data.has_key?(as_on)
+        result = {}
+        labels = []
+        datasets = []
+        detail = {}
+        detail['label'] = I18n.t('label.assigned_count')
+        #detail['borderColor'] = '#F29220'
+        detail['backgroundColor'] = '#D2691E'
+        data = []
+        Designation.all.order('name').each do |d|
+          labels << d.name
+          data << AdminUser.assignment_count_for_designation(as_on, d.id)
+        end
+        detail['data'] = data
+        datasets << detail
+        result['datasets'] = datasets
+        result['labels'] = labels
+        @@assigned_counts_by_designation_panel_data[as_on] = result
       end
-      detail['data'] = data
-      datasets << detail
-      result['datasets'] = datasets
-      result['labels'] = labels
-      render json: result
+      render json: @@assigned_counts_by_designation_panel_data[as_on]
     end
 
+    @@cache_bench_counts_by_designation_panel_data = {}
     def bench_counts_by_designation_panel_data
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      result = {}
-      labels = []
-      datasets = []
-      detail = {}
-      detail['label'] = I18n.t('label.bench_count')
-      #detail['borderColor'] = '#F29220'
-      detail['backgroundColor'] = '#6495ED'
-      data = []
-      Designation.all.order('name').each do |d|
-        labels << d.name
-        data << AdminUser.bench_count_for_designation(as_on, d.id)
+      if @@cache_bench_counts_by_designation_panel_data.empty? || !@@cache_bench_counts_by_designation_panel_data.has_key?(as_on)
+        result = {}
+        labels = []
+        datasets = []
+        detail = {}
+        detail['label'] = I18n.t('label.bench_count')
+        #detail['borderColor'] = '#F29220'
+        detail['backgroundColor'] = '#6495ED'
+        data = []
+        Designation.all.order('name').each do |d|
+          labels << d.name
+          data << AdminUser.bench_count_for_designation(as_on, d.id)
+        end
+        detail['data'] = data
+        datasets << detail
+        result['datasets'] = datasets
+        result['labels'] = labels
+        @@cache_bench_counts_by_designation_panel_data[as_on] = result
       end
-      detail['data'] = data
-      datasets << detail
-      result['datasets'] = datasets
-      result['labels'] = labels
-      render json: result
+      render json: @@cache_bench_counts_by_designation_panel_data[as_on]
     end
 
     def pipeline_by_business_unit_panel_data
