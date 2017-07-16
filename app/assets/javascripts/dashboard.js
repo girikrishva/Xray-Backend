@@ -308,7 +308,7 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
                 i=0
                 jQuery.each(d_h, function (name, value) {
                     i=i+1
-                    tab=tab+"<tr><td>"+i+"</td><td>"+name+"</td><td><a href='/admin/delivery_healths'>"+value+"</a></td></tr> "
+                    tab=tab+"<tr><td>"+i+"</td><td>"+name+"</td><td><a href=/admin/delivery_healths?name="+name +">"+value+"</a></td></tr> "
                 });
                 tab=tab+"</tbody></table>"
                 $("#dialog1").append(tab)
@@ -338,6 +338,7 @@ var opt1 = {
     annotateDisplay: true,
     graphTitleFontSize: 18,
     barValueSpacing: 40,
+    logarithmic : "fuzzy",
     mouseDownLeft: fctMouseDownLeft
 }
 
