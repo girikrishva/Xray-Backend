@@ -405,38 +405,42 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_gross_profit_by_business_unit_panel_data
     end
 
+    @@cache_gross_profit_versus_indirect_cost_panel_data = {}
     def gross_profit_versus_indirect_cost_panel_data
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      result = {}
-      # labels = []
-      # labels << I18n.t('label.gross_profit')
-      # labels << I18n.t('label.indirect_cost')
-      # result['labels'] = labels
-      # datasets = []
-      # detail = {}
-      # hoverBackgroundColor = []
-      # hoverBackgroundColor << "#FF6384"
-      # hoverBackgroundColor << "#36A2EB"
-      # hoverBackgroundColor << "#FFCE56"
-      # detail['hoverBackgroundColor'] = hoverBackgroundColor
-      # backgroundColor = []
-      # backgroundColor << "#FF6384"
-      # backgroundColor << "#36A2EB"
-      # backgroundColor << "#FFCE56"
-      # detail['backgroundColor'] = backgroundColor
-      # data = []
-      # if formatted.upcase == 'NO'
-      #   data << currency_as_amount(Project.gross_profit(as_on))
-      #   data << currency_as_amount(Project.total_indirect_cost_share_for_all_projects(as_on))
-      # else
-      #   data << Project.gross_profit(as_on)
-      #   data << Project.total_indirect_cost_share_for_all_projects(as_on)
-      # end
-      # detail['data'] = data
-      # datasets << detail
-      # result['datasets'] = datasets
-      render json: result
+      if @@cache_gross_profit_versus_indirect_cost_panel_data.empty? || !@@cache_gross_profit_versus_indirect_cost_panel_data.has_key?(as_on)
+        result = {}
+        labels = []
+        labels << I18n.t('label.gross_profit')
+        labels << I18n.t('label.indirect_cost')
+        result['labels'] = labels
+        datasets = []
+        detail = {}
+        hoverBackgroundColor = []
+        hoverBackgroundColor << "#FF6384"
+        hoverBackgroundColor << "#36A2EB"
+        hoverBackgroundColor << "#FFCE56"
+        detail['hoverBackgroundColor'] = hoverBackgroundColor
+        backgroundColor = []
+        backgroundColor << "#FF6384"
+        backgroundColor << "#36A2EB"
+        backgroundColor << "#FFCE56"
+        detail['backgroundColor'] = backgroundColor
+        data = []
+        if formatted.upcase == 'YES'
+          data << format_currency(Project.gross_profit(as_on))
+          data << format_currency(Project.total_indirect_cost_share_for_all_projects(as_on))
+        else
+          data << Project.gross_profit(as_on)
+          data << Project.total_indirect_cost_share_for_all_projects(as_on)
+        end
+        detail['data'] = data
+        datasets << detail
+        result['datasets'] = datasets
+        @@cache_gross_profit_versus_indirect_cost_panel_data = result
+      end
+      render json: @@cache_gross_profit_versus_indirect_cost_panel_data
     end
 
     def delivery_health_panel_data
