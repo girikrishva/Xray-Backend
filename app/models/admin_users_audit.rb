@@ -16,6 +16,14 @@ class AdminUsersAudit < ActiveRecord::Base
     AdminUsersAudit.where('admin_user_id = ? and created_at <= ?', admin_user_id, as_on).order('created_at').last
   end
 
+  def self.all_latest(as_on)
+    ids = []
+    AdminUsersAudit.where('created_at <= ?', as_on).each do |aua|
+      ids << AdminUsersAudit.latest(aua.admin_user_id, as_on).id
+    end
+    AdminUsersAudit.where('id in (?)', ids)
+  end
+
   def self.active_users(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     ids = []
