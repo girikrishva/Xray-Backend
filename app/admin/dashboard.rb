@@ -52,10 +52,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     def return_formated_value
      render json:{'format':Money.new(1,"INR").symbol,'en-type':'en-IN'}
     end
-
+    
     @@cache_resource_costs_panel_data = {}
     def resource_costs_panel_data
-      if @@cache_resource_costs_panel_data.empty?
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_resource_costs_panel_data.empty? || (cache_refresh == 'yes')
         formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
         result = {}
         labels = []
@@ -110,7 +111,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_gross_profit_panel_data = nil
     def gross_profit_panel_data
-      if @@cache_gross_profit_panel_data.nil?
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_gross_profit_panel_data.nil? || (cache_refresh == 'yes')
         formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
         result = {}
         labels = []
@@ -145,7 +147,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_resource_distribution_panel_data = {}
     def resource_distribution_panel_data
-      if @@cache_resource_distribution_panel_data.empty?
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_resource_distribution_panel_data.empty? || (cache_refresh == 'yes')
         result = {}
         labels = []
         labels << Date::MONTHNAMES[(Date.today - 2.months).month]
@@ -187,12 +190,13 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_pipeline_by_stage_panel_data = {}
     def pipeline_by_stage_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? Date.parse(params[:as_on]) : Date.today
       bu_name = params.has_key?(:bu_name) ? params[:bu_name] : nil
       business_unit_id = BusinessUnit.where('name = ?', bu_name).first.id rescue -1
       key = as_on.to_s + '-' + business_unit_id.to_s
-      if @@cache_pipeline_by_stage_panel_data.empty? || !@@cache_pipeline_by_stage_panel_data.has_key?(key)
+      if @@cache_pipeline_by_stage_panel_data.empty? || !@@cache_pipeline_by_stage_panel_data.has_key?(key) || (cache_refresh == 'yes')
         result = {}
         labels = []
         datasets = []
@@ -220,7 +224,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_financial_performance_panel_data = nil
     def financial_performance_panel_data
-      if @@cache_financial_performance_panel_data.nil?
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_financial_performance_panel_data.nil? || (cache_refresh == 'yes')
         formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
         result = {}
         labels = []
@@ -257,9 +262,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_assigned_costs_by_skill_panel_data = {}
     def assigned_costs_by_skill_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      if @@cache_assigned_costs_by_skill_panel_data.empty? || !@@cache_assigned_costs_by_skill_panel_data.has_key?(as_on)
+      if @@cache_assigned_costs_by_skill_panel_data.empty? || !@@cache_assigned_costs_by_skill_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
         result = {}
         labels = []
         datasets = []
@@ -287,9 +293,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_bench_costs_by_skill_panel_data = {}
     def bench_costs_by_skill_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      if @@cache_bench_costs_by_skill_panel_data.empty? || !@@cache_bench_costs_by_skill_panel_data.has_key?(as_on)
+      if @@cache_bench_costs_by_skill_panel_data.empty? || !@@cache_bench_costs_by_skill_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
         result = {}
         labels = []
         datasets = []
@@ -317,9 +324,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_assigned_costs_by_designation_panel_data = {}
     def assigned_costs_by_designation_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      if @@cache_assigned_costs_by_designation_panel_data.empty? || !@@cache_assigned_costs_by_designation_panel_data.has_key?(as_on)
+      if @@cache_assigned_costs_by_designation_panel_data.empty? || !@@cache_assigned_costs_by_designation_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
         result = {}
         labels = []
         datasets = []
@@ -347,9 +355,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_bench_costs_by_designation_panel_data = {}
     def bench_costs_by_designation_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      if @@cache_bench_costs_by_designation_panel_data.empty? || !@@cache_bench_costs_by_designation_panel_data.has_key?(as_on)
+      if @@cache_bench_costs_by_designation_panel_data.empty? || !@@cache_bench_costs_by_designation_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
         result = {}
         labels = []
         datasets = []
@@ -377,9 +386,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_gross_profit_by_business_unit_panel_data = {}
     def gross_profit_by_business_unit_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      if @@cache_gross_profit_by_business_unit_panel_data.empty? || !@@cache_gross_profit_by_business_unit_panel_data.has_key?(as_on)
+      if @@cache_gross_profit_by_business_unit_panel_data.empty? || !@@cache_gross_profit_by_business_unit_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
         result = {}
         labels = []
         datasets = []
@@ -407,9 +417,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_gross_profit_versus_indirect_cost_panel_data = {}
     def gross_profit_versus_indirect_cost_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      if @@cache_gross_profit_versus_indirect_cost_panel_data.empty? || !@@cache_gross_profit_versus_indirect_cost_panel_data.has_key?(as_on)
+      if @@cache_gross_profit_versus_indirect_cost_panel_data.empty? || !@@cache_gross_profit_versus_indirect_cost_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
         result = {}
         labels = []
         labels << I18n.t('label.gross_profit')
@@ -463,8 +474,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_assigned_counts_by_skill_panel_data = {}
     def assigned_counts_by_skill_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      if @@cache_assigned_counts_by_skill_panel_data.empty? || !@@cache_assigned_counts_by_skill_panel_data.has_key?(as_on)
+      if @@cache_assigned_counts_by_skill_panel_data.empty? || !@@cache_assigned_counts_by_skill_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
         result = {}
         labels = []
         datasets = []
@@ -488,8 +500,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_bench_counts_by_skill_panel_data = {}
     def bench_counts_by_skill_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      if @@cache_bench_counts_by_skill_panel_data.empty? || !@@cache_bench_counts_by_skill_panel_data.has_key?(as_on)
+      if @@cache_bench_counts_by_skill_panel_data.empty? || !@@cache_bench_counts_by_skill_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
         result = {}
         labels = []
         datasets = []
@@ -513,8 +526,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@assigned_counts_by_designation_panel_data = {}
     def assigned_counts_by_designation_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      if @@assigned_counts_by_designation_panel_data.empty? || !@@assigned_counts_by_designation_panel_data.has_key?(as_on)
+      if @@assigned_counts_by_designation_panel_data.empty? || !@@assigned_counts_by_designation_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
         result = {}
         labels = []
         datasets = []
@@ -538,8 +552,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_bench_counts_by_designation_panel_data = {}
     def bench_counts_by_designation_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      if @@cache_bench_counts_by_designation_panel_data.empty? || !@@cache_bench_counts_by_designation_panel_data.has_key?(as_on)
+      if @@cache_bench_counts_by_designation_panel_data.empty? || !@@cache_bench_counts_by_designation_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
         result = {}
         labels = []
         datasets = []
@@ -640,7 +655,8 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     @@cache_pipeline_by_business_unit_trend = nil
     def pipeline_by_business_unit_trend
-      if @@cache_pipeline_by_business_unit_trend.nil?
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_pipeline_by_business_unit_trend.nil? || (cache_refresh == 'yes')
         formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
         as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
         result = {}
