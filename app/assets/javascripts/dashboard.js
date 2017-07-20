@@ -45,7 +45,7 @@ $(document).ready(function () {
             labels: data.labels,
             datasets: [
                 {
-                    fillColor: "#23457d",
+                    fillColor: "#ff4500",
                     strokeColor: "rgba(220,220,220,1)",
                     pointColor: "rgba(220,220,220,1)",
                     pointstrokeColor: "yellow",
@@ -53,7 +53,7 @@ $(document).ready(function () {
                     title: "Bench Costs"
                 },
                 {
-                    fillColor: "#D2691E",
+                    fillColor: "#32CD32",
                     strokeColor: "rgba(151,187,205,1)",
                     pointColor: "green",
                     pointstrokeColor: "yellow",
@@ -81,7 +81,7 @@ $(document).ready(function () {
             labels:  data.labels,
             datasets: [
                 {
-                    fillColor: "#23457d",
+                    fillColor: "#ff4500",
                     strokeColor: "rgba(220,220,220,1)",
                     pointColor: "rgba(220,220,220,1)",
                     pointstrokeColor: "yellow",
@@ -89,7 +89,7 @@ $(document).ready(function () {
                     title: "Bench Resources"
                 },
                 {
-                    fillColor: "#D2691E",
+                    fillColor: "#32CD32",
                     strokeColor: "rgba(151,187,205,1)",
                     pointColor: "green",
                     pointstrokeColor: "yellow",
@@ -203,7 +203,7 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
         context: document.body
     }).done(function (data) {
 
-        console.log("test data skill"+JSON.stringify(data))
+        console.log("test data skill 11111"+JSON.stringify(data))
         mydata3 = {
             labels: data.labels,
             datasets: [
@@ -236,7 +236,8 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
         url: cost_d_url + as_on,
         context: document.body
     }).done(function (data) {
-        console.log("test data datasets..........."+JSON.stringify(data.datasets[0].data))
+        console.log("test data datasets..........."+JSON.stringify(data))
+        //console.log("test data datasets..........."+JSON.stringify(data.datasets[0].data))
         var d_lable=''
         var d_show=false
         if (graph_type == "Gross Profit"){
@@ -267,8 +268,7 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
             legend: true,
             inGraphDataShow: false,
             annotateDisplay: true,
-            graphTitleFontSize: 18,
-            inGraphDataShow : true
+            graphTitleFontSize: 18
         }
 
         var gp_pie_data = {
@@ -306,7 +306,7 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
                 i=0
                 jQuery.each(d_h, function (name, value) {
                     i=i+1
-                    tab=tab+"<tr><td>"+i+"</td><td>"+name+"</td><td><a href='/admin/delivery_healths'>"+value+"</a></td></tr> "
+                    tab=tab+"<tr><td>"+i+"</td><td>"+name+"</td><td><a href=/admin/delivery_healths?name="+name +">"+value+"</a></td></tr> "
                 });
                 tab=tab+"</tbody></table>"
                 $("#dialog1").append(tab)
@@ -335,6 +335,8 @@ var opt1 = {
     annotateDisplay: true,
     graphTitleFontSize: 18,
     barValueSpacing: 40,
+    logarithmic : "fuzzy",
+    fontColor : "black",
     mouseDownLeft: fctMouseDownLeft
 }
 
