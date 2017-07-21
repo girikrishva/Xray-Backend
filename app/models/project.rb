@@ -185,7 +185,7 @@ class Project < ActiveRecord::Base
     result['estimator'] = self.estimator.name
     result['delivery_manager'] = self.delivery_manager.name
     result['engagement_manager'] = self.engagement_manager.name
-    result['pipeline_details'] = self.pipeline.name rescue nil
+    result['pipeline_details'] = self.pipeline.name
     result
   end
 
