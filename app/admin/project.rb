@@ -16,7 +16,7 @@ ActiveAdmin.register Project do
 
   permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id, :updated_at, :updated_by, :ip_address
 
-  # config.sort_order = 'updated_at_desc'
+  config.sort_order = 'updated_at_desc'
 
   config.clear_action_items!
   scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|

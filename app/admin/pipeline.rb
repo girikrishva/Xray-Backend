@@ -16,7 +16,7 @@ ActiveAdmin.register Pipeline do
 
   permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :updated_at, :updated_by, :ip_address
 
-  # config.sort_order = 'updated_at_desc'
+  config.sort_order = 'updated_at_desc'
 
   config.clear_action_items!
 
