@@ -454,22 +454,26 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_gross_profit_versus_indirect_cost_panel_data
     end
 
+    @@cache_delivery_health_panel_data ={}
     def delivery_health_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-      result = {}
-      # delivery_health = Project.delivery_health(as_on)
-      # color_code = []
-      # project_count = []
-      # project_ids = []
-      # delivery_health.keys.each do |key|
-      #   color_code << key
-      #   project_count << delivery_health[key].size
-      #   project_ids << delivery_health[key]
-      # end
-      # result['color_code'] = color_code
-      # result['project_count'] = project_count
-      # result['project_ids'] = project_ids
-      render json: result
+      if @@cache_delivery_health_panel_data.empty? || !@@cache_delivery_health_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
+        result = {}
+        delivery_health = Project.delivery_health(as_on)
+        color_code = []
+        project_count = []
+        project_ids = []
+        delivery_health.keys.each do |key|
+          color_code << key
+          project_count << delivery_health[key].size
+          project_ids << delivery_health[key]
+        end
+        result['color_code'] = color_code
+        result['project_count'] = project_count
+        result['project_ids'] = project_ids
+      end
+      render json: @@cache_delivery_health_panel_data[as_on]
     end
 
     @@cache_assigned_counts_by_skill_panel_data = {}
