@@ -35,6 +35,8 @@ class Pipeline < ActiveRecord::Base
   after_create :create_audit_record
   after_update :create_audit_record
 
+  default_scope { order(updated_at: :desc) }
+
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name
   end
@@ -73,8 +75,6 @@ class Pipeline < ActiveRecord::Base
     if !errors.empty?
       return false
     end
-    project1 = Project.new
-    project1.name = pipeline.name
     project = Project.new
     project.name = pipeline.name
     project.start_date = pipeline.expected_start

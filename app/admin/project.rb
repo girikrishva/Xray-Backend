@@ -16,7 +16,7 @@ ActiveAdmin.register Project do
 
   permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id, :updated_at, :updated_by, :ip_address
 
-  config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
+  # config.sort_order = 'updated_at_desc'
 
   config.clear_action_items!
   scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
@@ -53,6 +53,7 @@ ActiveAdmin.register Project do
     script :src => javascript_path('pop_up.js'), :type => "text/javascript"
     selectable_column
     column :id
+    column :business_unit
     column :client, sortable: 'clients.name' do |resource|
       resource.client.name
     end
