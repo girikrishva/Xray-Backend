@@ -189,6 +189,7 @@ ActiveAdmin.register AdminUser do
     end
   end
 
+  filter :id
   filter :business_unit
   filter :email
   filter :name

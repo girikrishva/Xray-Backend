@@ -78,6 +78,7 @@ ActiveAdmin.register DeliveryMilestone do
     end
   end
 
+  filter :id
   filter :name
   filter :description
   filter :due_date

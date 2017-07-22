@@ -79,6 +79,7 @@ ActiveAdmin.register AdminUsersSession do
     end
   end
 
+  filter :id
   filter :session_started
   filter :session_ended
   filter :from_ip_address

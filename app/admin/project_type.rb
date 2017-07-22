@@ -75,6 +75,7 @@ ActiveAdmin.register ProjectType do
     end
   end
 
+  filter :id
   filter :business_unit, collection:
                            proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
   filter :project_type_code, collection:

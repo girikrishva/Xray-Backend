@@ -163,6 +163,7 @@ ActiveAdmin.register AdminUsersAudit do
     end
   end
 
+  filter :id
   filter :name
   filter :associate_no
   filter :active

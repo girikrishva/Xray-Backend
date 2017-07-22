@@ -83,6 +83,7 @@ ActiveAdmin.register VacationPoliciesAudit do
     end
   end
 
+  filter :id
   filter :description
   filter :as_on
   filter :paid

@@ -103,6 +103,7 @@ ActiveAdmin.register InvoiceLine do
     end
   end
 
+  filter :id
   filter :project
   filter :invoicing_milestone
   filter :invoice_adder_type

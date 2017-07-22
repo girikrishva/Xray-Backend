@@ -59,6 +59,7 @@ ActiveAdmin.register StaffingRequirement, as: 'ProjectStaffingRequirement' do
     actions defaults: true, dropdown: true
   end
 
+  filter :id
   filter :skill
   filter :designation
   filter :number_required

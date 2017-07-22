@@ -73,6 +73,7 @@ ActiveAdmin.register HolidayCalendarsAudit do
     end
   end
 
+  filter :id
   filter :name
   filter :description
   filter :as_on

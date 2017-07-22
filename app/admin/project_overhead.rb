@@ -78,6 +78,7 @@ ActiveAdmin.register ProjectOverhead do
     end
   end
 
+  filter :id
   filter :cost_adder_type, collection: proc { CostAdderType.all.order(:name) }
   filter :amount_date
   filter :amount

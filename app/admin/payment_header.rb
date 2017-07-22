@@ -88,6 +88,7 @@ ActiveAdmin.register PaymentHeader do
     end
   end
 
+  filter :id
   filter :client, collection: proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}
   filter :narrative
   filter :payment_date

@@ -73,6 +73,7 @@ ActiveAdmin.register Role do
     end
   end
 
+  filter :id
   filter :name
   filter :description
   filter :super_admin

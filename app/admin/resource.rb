@@ -89,6 +89,7 @@ ActiveAdmin.register Resource do
     end
   end
 
+  filter :id
   filter :primary_skill
   filter :skill, collection:
                    proc { Lookup.lookups_for_name(I18n.t('models.skills')) }

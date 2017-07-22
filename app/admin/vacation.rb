@@ -147,6 +147,7 @@ ActiveAdmin.register Vacation do
     end
   end
 
+  filter :id
   filter :request_date
   filter :user, collection: proc { AdminUser.ordered_lookup_of_users_as_resource }
   filter :vacation_code, collection: Lookup.lookups_for_name(I18n.t('models.vacation_codes')).map { |a| [a.description, a.id] }

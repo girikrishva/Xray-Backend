@@ -74,6 +74,7 @@ ActiveAdmin.register ClientsAudit do
     end
   end
 
+  filter :id
   filter :business_unit
   filter :contact_name
   filter :contact_email

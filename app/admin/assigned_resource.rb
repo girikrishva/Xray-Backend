@@ -104,6 +104,7 @@ ActiveAdmin.register AssignedResource do
     end
   end
 
+  filter :id
   filter :staffing_requirement, collection: proc { StaffingRequirement.ordered_lookup(Project.find(session[:project_id]).pipeline_id) }
   filter :fulfilled
   filter :skill_code
