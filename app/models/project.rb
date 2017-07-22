@@ -41,8 +41,9 @@ class Project < ActiveRecord::Base
   before_create :date_check
   before_update :date_check
 
-  validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :client_id]
-  validates_uniqueness_of :client_id, scope: [:business_unit_id, :client_id]
+  validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :client_id, :name]
+  validates_uniqueness_of :client_id, scope: [:business_unit_id, :client_id, :name]
+  validates_uniqueness_of :name, scope: [:business_unit_id, :client_id, :name]
 
   after_create :create_audit_record
   after_update :create_audit_record
