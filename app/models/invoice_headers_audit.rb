@@ -14,6 +14,8 @@ class InvoiceHeadersAudit < ActiveRecord::Base
   validates :header_amount, presence: true
   validates :invoice_header_id, presence: true
 
+  default_scope { order(updated_at: :desc) }
+
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name
   end

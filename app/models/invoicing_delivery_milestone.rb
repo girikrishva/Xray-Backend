@@ -12,6 +12,8 @@ class InvoicingDeliveryMilestone < ActiveRecord::Base
   validates_uniqueness_of :delivery_milestone_id, scope: [:delivery_milestone_id,:invoicing_milestone_id]
   validates_uniqueness_of :invoicing_milestone_id, scope: [:delivery_milestone_id, :invoicing_milestone_id]
 
+  default_scope { order(updated_at: :desc) }
+
   def project_name
     self.invoicing_milestone.project.name
   end

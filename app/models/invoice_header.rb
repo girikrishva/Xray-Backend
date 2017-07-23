@@ -26,6 +26,8 @@ class InvoiceHeader < ActiveRecord::Base
   after_create :create_audit_record
   after_update :create_audit_record
 
+  default_scope { order(updated_at: :desc) }
+
   def populate_due_date
     invoice_term = InvoiceTerm.find(self.invoice_term.id)
     extra = JSON.parse(invoice_term.extra)

@@ -17,6 +17,8 @@ class Resource < ActiveRecord::Base
   validates_uniqueness_of :skill_id, scope: [:admin_user_id, :skill_id, :as_on]
   validates_uniqueness_of :as_on, scope: [:admin_user_id, :skill_id, :as_on]
 
+  default_scope { order(updated_at: :desc) }
+
   def skill_name
     Skill.find(self.skill_id).name
   end

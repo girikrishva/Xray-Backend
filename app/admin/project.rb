@@ -49,7 +49,7 @@ ActiveAdmin.register Project do
     link_to I18n.t('label.back'), admin_projects_path
   end
 
-  index do #as: :grouped_table, group_by_attribute: :business_unit_name do
+  index as: :grouped_table, group_by_attribute: :business_unit_name do
     script :src => javascript_path('pop_up.js'), :type => "text/javascript"
     selectable_column
     column :id
