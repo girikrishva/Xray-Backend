@@ -5,7 +5,7 @@
 </div>
 
   <%= javascript_include_tag 'sorting', 'data-turbolinks-track' => true %>
-
+<input type='hidden' name='dh_name' id="dh_id" value="<%= params[:name] %>"/>
 <!-- <input type="checkbox"  id="show_project_details">Project Details
 <input type="checkbox"  id="show_financial_details">Financial Details -->
 <div class="select-container"><label>Delivery Health</label><br><%= select_tag("delivery_health", options_for_select([["All","all"],["Red","red"],["Orange","orange"],["Yellow","yellow"],["Green","green"]]),class:"filters") %></div>
@@ -179,7 +179,13 @@
   	
 	})
 	function intial_content(currentDate){
-    delivery_health= $("#delivery_health").val()
+    delivery_health=""
+    if ($("#dh_id").val() == ""){
+        delivery_health= $("#delivery_health").val()
+    }else{
+        $("#delivery_health").val($("#dh_id").val().toLowerCase());
+        delivery_health=$("#dh_id").val()
+    }
     contribution = $("#contribution").val()
     gross_profit = $("#gross_profit").val()
     project_status = $("#project_status").val()

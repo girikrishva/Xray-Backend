@@ -202,8 +202,9 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
         url: cost_s_url + as_on,
         context: document.body
     }).done(function (data) {
-
-        console.log("test data skill 11111"+JSON.stringify(data))
+       if (graph_type == "Gross Profit") {
+            data = data[Object.keys(data)[0]]
+        }
         mydata3 = {
             labels: data.labels,
             datasets: [
