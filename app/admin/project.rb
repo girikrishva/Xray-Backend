@@ -86,6 +86,9 @@ ActiveAdmin.register Project do
         number_with_precision element.unpaid_amount, precision: 0, delimiter: ','
       end
     end
+    column I18n.t('label.pipeline'), :pipeline do |resource|
+      resource.pipeline.name rescue nil
+    end
     if params[:scope] == 'deleted'
       actions defaults: false, dropdown: true do |resource|
         item I18n.t('actions.restore'), admin_api_restore_project_path(id: resource.id), method: :post
@@ -132,6 +135,7 @@ ActiveAdmin.register Project do
   filter :delivery_manager, label: I18n.t('label.delivery_by'), collection:
                               proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
   filter :comments
+  filter :pipeline
 
   show do |r|
     attributes_table_for r do
