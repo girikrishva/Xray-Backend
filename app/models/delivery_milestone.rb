@@ -13,6 +13,8 @@ class DeliveryMilestone < ActiveRecord::Base
   validates_uniqueness_of :name, scope: [:project_id, :name, :due_date]
   validates_uniqueness_of :due_date, scope: [:project_id, :name, :due_date]
 
+  default_scope { order(updated_at: :desc) }
+
   def delivery_milestone_name
     '[' + self.id.to_s + '] [' + self.name + '] due on [' + self.due_date.to_s + ']'
   end

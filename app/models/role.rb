@@ -16,6 +16,8 @@ class Role < ActiveRecord::Base
   before_update :cannot_have_more_than_one_super_admin, :populate_parent_name
   before_destroy :cannot_destroy_last_super_admin
 
+  default_scope { order(updated_at: :desc) }
+
 
   def self.generate_next_rank
     Role.all.order(:rank).last.rank + 1

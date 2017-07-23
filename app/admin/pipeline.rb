@@ -54,7 +54,7 @@ ActiveAdmin.register Pipeline do
     redirect_to admin_pipelines_path
   end
 
-  index do # as: :grouped_table, group_by_attribute: :business_unit_name do
+  index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
     column :id
     column :business_unit

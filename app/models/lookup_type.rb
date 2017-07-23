@@ -5,4 +5,6 @@ class LookupType < ActiveRecord::Base
 
   validates :name, presence: true
   validates_uniqueness_of :name
+
+  default_scope { order(updated_at: :desc) }
 end

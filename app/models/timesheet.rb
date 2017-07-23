@@ -15,6 +15,8 @@ class Timesheet < ActiveRecord::Base
   before_create :date_check
   before_update :date_check
 
+  default_scope { order(updated_at: :desc) }
+
   def date_check
     if self.timesheet_date < self.assigned_resource.start_date or self.timesheet_date > self.assigned_resource.end_date
       errors.add(:base, I18n.t('errors.timesheet_outside_assignment_date_range'))

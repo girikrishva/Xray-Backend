@@ -10,6 +10,8 @@ class VacationPoliciesAudit < ActiveRecord::Base
   validates :days_allowed, presence: true
   validates :vacation_policy_id, presence: true
 
+  default_scope { order(updated_at: :desc) }
+
   def business_unit_name
     self.business_unit.name
   end

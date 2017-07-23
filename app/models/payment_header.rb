@@ -20,6 +20,8 @@ class PaymentHeader < ActiveRecord::Base
   after_create :create_audit_record
   after_update :create_audit_record
 
+  default_scope { order(updated_at: :desc) }
+
   def payment_header_name
     'Id: [' + self.id.to_s + '], Narrative: [' + self.narrative + '], Client: [' + self.client.name + '], Dated: [' + self.payment_date.to_s + '], Amount: [' + header_amount.to_s + '], Unreconciled: [' + self.unreconciled_amount.to_s + ']'
   end
