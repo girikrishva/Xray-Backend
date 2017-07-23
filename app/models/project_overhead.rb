@@ -13,7 +13,7 @@ class ProjectOverhead < ActiveRecord::Base
   validates_uniqueness_of :cost_adder_type_id, scope: [:project_id, :cost_adder_type_id, :amount_date]
   validates_uniqueness_of :amount_date, scope: [:project_id, :cost_adder_type_id, :amount_date]
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 
   def project_name
     self.project.name

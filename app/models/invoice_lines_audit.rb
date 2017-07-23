@@ -12,7 +12,7 @@ class InvoiceLinesAudit < ActiveRecord::Base
   validates :narrative, presence: true
   validates :line_amount, presence: true
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name

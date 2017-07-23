@@ -8,7 +8,7 @@ class HolidayCalendarsAudit < ActiveRecord::Base
   validates :business_unit_id, presence: true
   validates :holiday_calendar_id, presence: true
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 
   def business_unit_name
     self.business_unit.name

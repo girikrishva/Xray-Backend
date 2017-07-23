@@ -4,5 +4,5 @@ class CostAdderType < ActiveRecord::Base
   has_many :overheads, class_name: 'Overhead'
   has_many :project_overheads, class_name: 'ProjectOverhead'
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 end

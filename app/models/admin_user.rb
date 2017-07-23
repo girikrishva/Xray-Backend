@@ -33,7 +33,7 @@ class AdminUser < ActiveRecord::Base
   before_create :check_reporting_loop
   before_update :check_reporting_loop
 
-  default_scope { order(updated_at: :desc) }
+# # default_scope { order(updated_at: :desc) }
 
   def at_least_one_user_must_be_super_admin
     role_id_for_super_admin = Role.where(super_admin: true).first.id

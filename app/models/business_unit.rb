@@ -11,7 +11,7 @@ class BusinessUnit < ActiveRecord::Base
   has_many :projects, class_name: 'Project'
   has_many :vacation_policies_audits, class_name: 'VacationPoliciesAudit'
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 
   def self.fiscal_year_start_date(business_unit_id, year = Date.today.year)
     business_unit = BusinessUnit.find(business_unit_id)

@@ -28,7 +28,7 @@ class InvoiceLine < ActiveRecord::Base
   after_create :create_audit_record
   after_update :create_audit_record
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 
   def name
     self.invoice_line_name

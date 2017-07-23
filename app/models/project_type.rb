@@ -10,7 +10,7 @@ class ProjectType < ActiveRecord::Base
   validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :project_type_code_id]
   validates_uniqueness_of :project_type_code_id, scope: [:business_unit_id, :project_type_code_id]
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 
   def business_unit_name
     self.business_unit.name

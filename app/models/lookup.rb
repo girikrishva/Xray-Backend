@@ -11,7 +11,7 @@ class Lookup < ActiveRecord::Base
   validates_uniqueness_of :name, scope: [:lookup_type_id]
   validates_uniqueness_of :rank, scope: [:lookup_type_id]
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 
   def lookup_type_name
     self.lookup_type.name

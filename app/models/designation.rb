@@ -6,5 +6,5 @@ class Designation < ActiveRecord::Base
   has_many :staffing_requirements, class_name: 'StaffingRequirement'
   has_many :assigned_resources, class_name: 'AssignedResource'
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 end

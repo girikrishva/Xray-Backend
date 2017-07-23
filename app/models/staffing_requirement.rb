@@ -20,7 +20,7 @@ class StaffingRequirement < ActiveRecord::Base
   before_create :date_check, :hours_check
   before_update :date_check, :hours_check
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 
   def skill_name
     Skill.find(self.skill_id).name

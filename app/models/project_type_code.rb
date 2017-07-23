@@ -6,5 +6,5 @@ class ProjectTypeCode < ActiveRecord::Base
   has_many :pipelines_audits, class_name: 'PipelinesAudit'
   has_many :projects, class_name: 'Project'
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 end

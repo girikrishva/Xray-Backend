@@ -22,7 +22,7 @@ class PipelinesAudit < ActiveRecord::Base
   validates :sales_person_id, presence: true
   validates :estimator_id, presence: true
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name

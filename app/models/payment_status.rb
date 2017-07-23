@@ -3,5 +3,5 @@ class PaymentStatus < ActiveRecord::Base
 
   has_many :payment_headers, class_name: 'PaymentHeader'
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 end

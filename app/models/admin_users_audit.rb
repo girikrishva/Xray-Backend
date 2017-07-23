@@ -8,7 +8,7 @@ class AdminUsersAudit < ActiveRecord::Base
   belongs_to :admin_user, class_name: 'AdminUser', foreign_key: :admin_user_id
   belongs_to :manager, class_name: 'AdminUser', foreign_key: :manager_id
 
-  default_scope { order(updated_at: :desc) }
+# default_scope { order(updated_at: :desc) }
 
   def audit_details
     I18n.t('label.updated_at') + ': ['+ datetime_as_string(self.updated_at) + '], ' + I18n.t('label.updated_by') + ': [' + self.updated_by + '], ' + I18n.t('label.ip_address') + ': [' + self.ip_address + ']' rescue nil
