@@ -23,6 +23,8 @@ class AssignedResource < ActiveRecord::Base
 
   after_save :over_assignment_check
 
+# default_scope { order(updated_at: :desc) }
+
   def skill_name
     Skill.find(self.skill_id).name
   end

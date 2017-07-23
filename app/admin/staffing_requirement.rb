@@ -91,6 +91,7 @@ ActiveAdmin.register StaffingRequirement do
     end
   end
 
+  filter :id
   filter :skill
   filter :designation
   filter :number_required

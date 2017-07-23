@@ -16,6 +16,8 @@ class Overhead < ActiveRecord::Base
   validates_uniqueness_of :cost_adder_type_id, scope: [:business_unit_id, :department_id, :cost_adder_type_id, :amount_date]
   validates_uniqueness_of :amount_date, scope: [:business_unit_id, :department_id, :cost_adder_type_id, :amount_date]
 
+# default_scope { order(updated_at: :desc) }
+
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name
   end

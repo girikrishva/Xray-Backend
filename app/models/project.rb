@@ -41,11 +41,14 @@ class Project < ActiveRecord::Base
   before_create :date_check
   before_update :date_check
 
-  validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :client_id]
-  validates_uniqueness_of :client_id, scope: [:business_unit_id, :client_id]
+  validates_uniqueness_of :business_unit_id, scope: [:business_unit_id, :client_id, :name]
+  validates_uniqueness_of :client_id, scope: [:business_unit_id, :client_id, :name]
+  validates_uniqueness_of :name, scope: [:business_unit_id, :client_id, :name]
 
   after_create :create_audit_record
   after_update :create_audit_record
+
+  default_scope { order(updated_at: :desc) }
 
   def business_unit_name
     BusinessUnit.find(self.business_unit_id).name
@@ -185,7 +188,7 @@ class Project < ActiveRecord::Base
     result['estimator'] = self.estimator.name
     result['delivery_manager'] = self.delivery_manager.name
     result['engagement_manager'] = self.engagement_manager.name
-    result['pipeline_details'] = self.pipeline.name
+    result['pipeline_details'] = self.pipeline.name rescue nil
     result
   end
 

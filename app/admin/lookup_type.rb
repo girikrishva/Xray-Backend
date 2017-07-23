@@ -72,6 +72,7 @@ ActiveAdmin.register LookupType do
     end
   end
 
+  filter :id
   filter :name
   filter :description
   filter :comments

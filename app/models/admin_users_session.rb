@@ -3,6 +3,8 @@ class AdminUsersSession < ActiveRecord::Base
 
   belongs_to :admin_user, class_name: 'AdminUser', foreign_key: :admin_user_id
 
+# default_scope { order(updated_at: :desc) }
+
   def admin_user_details
     'User: [' + self.admin_user.name + '], Email: [' + self.admin_user.email + ']'
   end

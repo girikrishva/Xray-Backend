@@ -143,6 +143,7 @@ ActiveAdmin.register Lookup do
     end
   end
 
+  filter :id
   filter :name
   filter :description
   filter :rank

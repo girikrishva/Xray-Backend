@@ -17,6 +17,8 @@ class VacationPolicy < ActiveRecord::Base
   after_create :create_audit_record
   after_update :create_audit_record
 
+# default_scope { order(updated_at: :desc) }
+
   def create_audit_record
     audit_record = VacationPoliciesAudit.new
     audit_record.vacation_code_id = self.vacation_code_id

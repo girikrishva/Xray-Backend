@@ -16,7 +16,7 @@ ActiveAdmin.register Pipeline do
 
   permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :pipeline_status_id, :expected_start, :expected_end, :expected_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :updated_at, :updated_by, :ip_address
 
-  config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
+  config.sort_order = 'updated_at_desc'
 
   config.clear_action_items!
 
@@ -57,6 +57,7 @@ ActiveAdmin.register Pipeline do
   index as: :grouped_table, group_by_attribute: :business_unit_name do
     selectable_column
     column :id
+    column :business_unit
     column :client, sortable: 'clients.name' do |resource|
       resource.client.name
     end
@@ -88,9 +89,10 @@ ActiveAdmin.register Pipeline do
     end
   end
 
+  filter :id
   filter :business_unit, collection:
                            proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
-  filter :client, collection:  proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}
+  filter :client, collection: proc { Client.ordered_lookup.map { |a| [a.client_name, a.id] } }
   filter :name, label: I18n.t('label.project')
   filter :expected_start, label: I18n.t('label.start')
   filter :expected_end, label: I18n.t('label.end')

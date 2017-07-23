@@ -8,6 +8,8 @@ class ClientsAudit < ActiveRecord::Base
   validates :name, presence: true
   validates :client_id, presence: true
 
+# default_scope { order(updated_at: :desc) }
+
   def business_unit_name
     self.business_unit.name
   end

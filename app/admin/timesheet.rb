@@ -134,6 +134,7 @@ ActiveAdmin.register Timesheet do
     end
   end
 
+  filter :id
   filter :assigned_resource, label: I18n.t('label.assignment'), collection: AssignedResource.ordered_lookup.map { |a| [a.assigned_resource_name, a.id] }
   filter :timesheet_date
   filter :hours

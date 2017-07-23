@@ -79,6 +79,7 @@ ActiveAdmin.register DeliveryInvoicingMilestone do
     end
   end
 
+  filter :id
   filter :invoicing_milestone, collection: proc { InvoicingMilestone.ordered_lookup(session[:project_id]).map { |a| [a.invoicing_milestone_name, a.id] } }
   filter :comments
 

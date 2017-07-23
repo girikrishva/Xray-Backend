@@ -17,6 +17,8 @@ class Client < ActiveRecord::Base
   after_create :create_audit_record
   before_update :create_audit_record
 
+# default_scope { order(updated_at: :desc) }
+
   def create_audit_record
     audit_record = ClientsAudit.new
     audit_record.business_unit = self.business_unit

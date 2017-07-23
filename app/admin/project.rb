@@ -16,7 +16,7 @@ ActiveAdmin.register Project do
 
   permit_params :business_unit_id, :client_id, :name, :project_type_code_id, :project_status_id, :start_date, :end_date, :booking_value, :comments, :sales_person_id, :estimator_id, :engagement_manager_id, :delivery_manager_id, :pipeline_id, :updated_at, :updated_by, :ip_address
 
-  config.sort_order = 'business_units.name_asc_and_clients.name_asc_and_name_asc'
+  config.sort_order = 'updated_at_desc'
 
   config.clear_action_items!
   scope I18n.t('label.deleted'), if: proc { current_admin_user.role.super_admin }, default: false do |resources|
@@ -49,10 +49,11 @@ ActiveAdmin.register Project do
     link_to I18n.t('label.back'), admin_projects_path
   end
 
-  index do #as: :grouped_table, group_by_attribute: :business_unit_name do
+  index as: :grouped_table, group_by_attribute: :business_unit_name do
     script :src => javascript_path('pop_up.js'), :type => "text/javascript"
     selectable_column
     column :id
+    column :business_unit
     column :client, sortable: 'clients.name' do |resource|
       resource.client.name
     end
@@ -85,6 +86,9 @@ ActiveAdmin.register Project do
         number_with_precision element.unpaid_amount, precision: 0, delimiter: ','
       end
     end
+    column I18n.t('label.pipeline'), :pipeline do |resource|
+      resource.pipeline.name rescue nil
+    end
     if params[:scope] == 'deleted'
       actions defaults: false, dropdown: true do |resource|
         item I18n.t('actions.restore'), admin_api_restore_project_path(id: resource.id), method: :post
@@ -111,6 +115,7 @@ ActiveAdmin.register Project do
     end
   end
 
+  filter :id
   filter :business_unit, collection:
                            proc { Lookup.lookups_for_name(I18n.t('models.business_units')) }
   filter :client, collection: proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}
@@ -130,6 +135,7 @@ ActiveAdmin.register Project do
   filter :delivery_manager, label: I18n.t('label.delivery_by'), collection:
                               proc { AdminUser.ordered_lookup }, if: proc { !params.has_key?('scope') || params[:scope] == 'delivery_view' }
   filter :comments
+  filter :pipeline
 
   show do |r|
     attributes_table_for r do

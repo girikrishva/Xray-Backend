@@ -88,6 +88,7 @@ ActiveAdmin.register InvoicingMilestone do
     end
   end
 
+  filter :id
   filter :name
   filter :description
   filter :amount

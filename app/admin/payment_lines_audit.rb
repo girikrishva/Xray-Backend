@@ -78,6 +78,7 @@ ActiveAdmin.register PaymentLinesAudit do
     end
   end
 
+  filter :id
   filter :invoice_header
   filter :invoice_line
   filter :narrative
