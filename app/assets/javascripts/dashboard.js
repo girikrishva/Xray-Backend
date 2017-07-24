@@ -303,7 +303,7 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
                         d_h[value.delivery_health] = d_h[value.delivery_health] + 1
                     }
                 });
-                tab="<table id='myTable' style='width: 48%; margin-left: 23%;'><thead><th>Sl No</th><th>Project Health</th><th>Count of Projects</th></thead><tbody>"
+                tab="<table id='myTable' style='width: 48%; margin-left: 23%;' class='table table-striped'><thead><th>Sl No</th><th>Project Health</th><th>Count of Projects</th></thead><tbody>"
                 i=0
                 jQuery.each(d_h, function (name, value) {
                     i=i+1

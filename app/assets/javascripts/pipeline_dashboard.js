@@ -81,6 +81,7 @@ function fctMouseDownLeft1(event, ctx, config, data, other) {
 
     if(other != null){
         $("#dialog2").dialog('open');
+        jQuery('div[aria-describedby*="dialog2"]').attr('style','z-index: 101;  left: 30%; top: 60%;width:46% !important');
     }
 
     graph_type1 = data.datasets[other.v11].title
