@@ -451,8 +451,8 @@ class Project < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
     x = Project.cached_project_direct_resource_cost(as_on, with_details)
-    lower_date = [self.start_date, as_on].max
-    upper_date = [self.end_date, as_on].min
+    lower_date = [self.start_date, as_on.beginning_of_month].max
+    upper_date = [self.end_date, as_on.end_of_month].min
     total_indirect_overhead_cost = Project.cached_total_indirect_overhead_cost(as_on, lower_date, upper_date, self.delivery_manager.business_unit.id)
     if !x.nil? and x.has_key?(self.id)
       project_direct_resource_cost = x[self.id]
@@ -504,7 +504,6 @@ class Project < ActiveRecord::Base
   end
 
   def total_indirect_cost_share(as_on)
-
     result = {}
     total_indirect_resource_cost_share = total_indirect_resource_cost_share(as_on, false)
     total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
