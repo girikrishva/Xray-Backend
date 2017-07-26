@@ -346,10 +346,13 @@ class Project < ActiveRecord::Base
       x = {}
       Project.where('? between start_date and end_date', as_on).each do |p|
         if !x.has_key?(p.id)
-          @@cached_project_direct_resource_cost[p.id] = 0
+          x[p.id] = 0 # @@cached_project_direct_resource_cost[p.id] = 0
         end
         drc = p.direct_resource_cost(as_on, with_details)
-        @@cached_project_direct_resource_cost[p.id] += drc['total_direct_resource_cost']
+        x[p.id] += drc['total_direct_resource_cost'] # @@cached_project_direct_resource_cost[p.id] += drc['total_direct_resource_cost']
+        if with_details
+          x[p.id] = drc['data']
+        end
       end
       @@cached_project_direct_resource_cost[as_on] = x
     else
