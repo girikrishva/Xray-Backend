@@ -388,6 +388,12 @@ ActiveAdmin.register Project do
       result = Project.find(project_id).delivery_health(as_on)
       render json: result
     end
+
+    def tester
+      p = Project.find(13)
+      result = p.direct_resource_cost('2017-04-23', true)
+      render json: result
+    end
   end
 
   form do |f|
