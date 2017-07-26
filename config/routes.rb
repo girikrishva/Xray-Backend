@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   get '/admin/get_team' => 'admin/organization_charts#get_users'
   get '/admin/user_detail' => 'admin/organization_charts#user_detail'
   match '/admin/api/get_formated_value' => 'admin/dashboard#return_formated_value', via: [:get]
+
+
+  match '/admin/api/tester' => 'admin/assigned_resources#tester', via: [:get]
   
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

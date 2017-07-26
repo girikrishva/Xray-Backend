@@ -241,6 +241,15 @@ ActiveAdmin.register AssignedResource do
       AssignedResource.restore(params[:id])
       redirect_to admin_assigned_resources_path(project_id: session[:project_id])
     end
+
+    def tester
+      a = AssignedResource.where(project_id: 5)
+      x = []
+      a.all.each do |r|
+        x << r.assignment_hours('2016-11-23')
+      end
+      render json: x
+    end
   end
 
   form do |f|

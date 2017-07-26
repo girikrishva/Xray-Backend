@@ -104,12 +104,9 @@ class AssignedResource < ActiveRecord::Base
 
   def assignment_hours(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    lower_date = [self.start_date, as_on].max
-    upper_date = [self.end_date, as_on].min
-    if upper_date == lower_date # Else days between will always come as 0.
-      upper_date += 1
-    end
-    days_assigned = lower_date.weekdays_until(upper_date)
+    lower_date = [self.start_date, as_on.beginning_of_month].max
+    upper_date = [self.end_date, as_on.end_of_month].min
+    days_assigned = lower_date.weekdays_until(upper_date) + 1 # weekdays_until ignores upper bound day itself, hence adding 1
     days_assigned -= holidays_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)
     days_assigned -= unpaid_vacation_between(self.resource.admin_user.business_unit_id, self.resource.admin_user.id, lower_date, upper_date)
     hours_assigned = days_assigned * self.hours_per_day
