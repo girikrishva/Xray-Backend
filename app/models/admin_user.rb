@@ -356,13 +356,13 @@ class AdminUser < ActiveRecord::Base
     total_resource_cost
   end
 
-  def self.total_assignment_cost(as_on)
+  def self. total_assignment_cost(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
     resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
     total_assignment_cost = 0
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
-      total_assignment_cost += (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
+      total_assignment_cost += ar.assignment_cost(as_on) # (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
     end
     total_assignment_cost
   end
@@ -410,7 +410,7 @@ class AdminUser < ActiveRecord::Base
     resource_ids = Resource.where('admin_user_id in (?) and skill_id = ?', admin_user_ids.keys, skill_id).pluck(:id)
     assignment_cost_for_skill = 0
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
-      assignment_cost_for_skill += (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
+      assignment_cost_for_skill += ar.assignment_cost(as_on) # (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
     end
     assignment_cost_for_skill
   end
@@ -421,7 +421,7 @@ class AdminUser < ActiveRecord::Base
     resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).joins(:admin_user).where('designation_id = ?', designation_id).pluck(:id)
     assignment_cost_for_designation = 0
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
-      assignment_cost_for_designation += (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
+      assignment_cost_for_designation += ar.assignment_cost(as_on) # (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
     end
     assignment_cost_for_designation
   end
@@ -507,9 +507,9 @@ class AdminUser < ActiveRecord::Base
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
       admin_user_id = ar.resource.admin_user.id
       if assigned_hours.has_key?(admin_user_id)
-        assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] += ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       else
-        assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] = ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       end
     end
     total_assignment_count = 0
@@ -546,9 +546,9 @@ class AdminUser < ActiveRecord::Base
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
       admin_user_id = ar.resource.admin_user.id
       if assigned_hours.has_key?(admin_user_id)
-        assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] += ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       else
-        assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] = ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       end
     end
     assignment_count_for_skill = 0
@@ -580,9 +580,9 @@ class AdminUser < ActiveRecord::Base
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
       admin_user_id = ar.resource.admin_user.id
       if assigned_hours.has_key?(admin_user_id)
-        assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] += ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       else
-        assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] = ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       end
     end
     assignment_count_for_designation = 0
