@@ -390,8 +390,8 @@ ActiveAdmin.register Project do
     end
 
     def tester
-      p = Project.find(5)
-      result = p.direct_resource_cost('2016-12-01', true)
+      p = Project.find(11)
+      result = p.direct_overhead_cost('2017-04-22', true)
       render json: result
     end
   end
