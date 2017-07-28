@@ -356,7 +356,7 @@ class AdminUser < ActiveRecord::Base
     total_resource_cost
   end
 
-  def self. total_assignment_cost(as_on)
+  def self.total_assignment_cost(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     admin_user_ids = AdminUsersAudit.where('created_at <= ?', as_on).group('admin_user_id').maximum('id')
     resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)

@@ -541,7 +541,7 @@ class Project < ActiveRecord::Base
     total_revenue = 0
     if with_details
       InvoiceLine.where('project_id = ?', self.id).each do |il|
-        if il.invoice_header.invoice_date <= as_on
+        if il.invoice_header.invoice_date >= as_on.beginning_of_month and il.invoice_header.invoice_date <= as_on.end_of_month
           details = {}
           invoice_line = il.as_json
           invoice_line['line_amount'] = format_currency(invoice_line['line_amount'])
@@ -556,7 +556,7 @@ class Project < ActiveRecord::Base
         end
       end
     else
-      total_revenue = InvoiceLine.where('project_id = ?', self.id).joins(:invoice_header).where('invoice_date <= ?', as_on).sum(:line_amount)
+      total_revenue = InvoiceLine.where('project_id = ?', self.id).joins(:invoice_header).where('invoice_date between ? and ?', as_on.beginning_of_month, as_on.end_of_month).sum(:line_amount)
     end
     result = {}
     result['total_revenue'] = total_revenue
@@ -594,7 +594,7 @@ class Project < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     gross_profit = 0
     Project.where('business_unit_id = ?', business_unit_id).each do |p|
-      gross_profit += p.gross_profit(as_on.at_end_of_month)
+      gross_profit += p.gross_profit(as_on)
     end
     gross_profit
   end

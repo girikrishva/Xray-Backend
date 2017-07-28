@@ -698,5 +698,10 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       end
       render json: @@cache_pipeline_by_business_unit_trend
     end
+
+    def tester
+      result = Project.gross_profit((Date.today - 0.months).at_end_of_month)
+      render json: result
+    end
   end
 end
