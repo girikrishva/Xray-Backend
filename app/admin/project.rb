@@ -391,7 +391,7 @@ ActiveAdmin.register Project do
 
     def tester
       p = Project.find(5)
-      result = p.direct_resource_cost('2016-11-23', true)
+      result = p.direct_resource_cost('2016-12-01', true)
       render json: result
     end
   end
