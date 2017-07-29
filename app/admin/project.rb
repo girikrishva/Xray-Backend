@@ -394,7 +394,7 @@ ActiveAdmin.register Project do
       Project.all.each do |p|
         y = {}
         y['pid'] = p.id
-        y['tircs'] = p.total_indirect_resource_cost_share('2017-05-22', true)
+        y['tircs'] = p.total_indirect_overhead_cost_share('2017-05-22', true)
         x << y
       end
       # p = Project.find(10)
