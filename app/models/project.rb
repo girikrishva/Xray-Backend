@@ -311,7 +311,7 @@ class Project < ActiveRecord::Base
     data = []
     count = 0
     total_direct_overhead_cost = 0
-    ProjectOverhead.where('project_id = ? and amount_date <= ?', self.id, as_on).joins(:cost_adder_type).order('amount_date').each do |po|
+    ProjectOverhead.where('project_id = ? and amount_date between ? and ?', self.id, as_on.beginning_of_month, as_on.end_of_month).joins(:cost_adder_type).order('amount_date').each do |po|
       if with_details
         details = {}
         project_overhead = po.as_json
