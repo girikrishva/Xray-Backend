@@ -123,9 +123,9 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         datasets = []
         detail = {}
         gross_profits = []
-        gross_profits[0] = Project.gross_profit((Date.today - 2.months).at_end_of_month)
-        gross_profits[1] = Project.gross_profit((Date.today - 1.months).at_end_of_month)
-        gross_profits[2] = Project.gross_profit((Date.today - 0.months).at_end_of_month)
+        gross_profits[0] = Project.gross_profit((Date.today - 2.months))
+        gross_profits[1] = Project.gross_profit((Date.today - 1.months))
+        gross_profits[2] = Project.gross_profit((Date.today - 0.months))
         if formatted.upcase == 'YES'
           gross_profits[0] = format_currency(gross_profits[0])
           gross_profits[1] = format_currency(gross_profits[1])
