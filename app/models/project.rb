@@ -438,7 +438,7 @@ class Project < ActiveRecord::Base
   @@cached_total_indirect_overhead_cost = {}
   def self.cached_total_indirect_overhead_cost(as_on, lower_date, upper_date, business_unit_id)
     if @@cached_total_indirect_overhead_cost.empty?
-      @@cached_total_indirect_overhead_cost[as_on] = Overhead.where('business_unit_id = ? and amount_date between ? and ?', business_unit_id, lower_date, upper_date).sum('amount')
+      @@cached_total_indirect_overhead_cost[as_on] = Overhead.where('amount_date between ? and ?', lower_date, upper_date).sum('amount') # Overhead.where('business_unit_id = ? and amount_date between ? and ?', business_unit_id, lower_date, upper_date).sum('amount')
     else
       if @@cached_total_indirect_overhead_cost.has_key?(as_on)
         @@cached_total_indirect_overhead_cost[as_on]
@@ -452,8 +452,8 @@ class Project < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     # with_details = (with_details.to_s == 'true') ? true : false
     x = Project.cached_project_direct_resource_cost(as_on, true)
-    lower_date = [self.start_date, as_on.beginning_of_month].max
-    upper_date = [self.end_date, as_on.end_of_month].min
+    lower_date = as_on.beginning_of_month # [self.start_date, as_on.beginning_of_month].max
+    upper_date = as_on.end_of_month # [self.end_date, as_on.end_of_month].min
     total_indirect_overhead_cost = Project.cached_total_indirect_overhead_cost(as_on, lower_date, upper_date, self.delivery_manager.business_unit.id)
     if !x.nil? and x.has_key?(self.id)
       project_direct_resource_cost = x[self.id].map { |e| e['direct_resource_cost'] }.sum
