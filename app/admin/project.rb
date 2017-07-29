@@ -391,14 +391,21 @@ ActiveAdmin.register Project do
 
     def tester
       x = []
-      Project.all.each do |p|
-        y = {}
-        y['pid'] = p.id
-        y['gp'] = p.gross_profit('2017-07-22')
-        x << y
-      end
+      # Project.all.each do |p|
+      #   y = {}
+      #   y['pid'] = p.id
+      #   y['gp'] = p.gross_profit('2017-07-22')
+      #   x << y
+      # end
       # p = Project.find(10)
       # x = p.gross_profit('2017-05-22')
+      # BusinessUnit.all.each do |bu|
+      #   y = {}
+      #   y['bu'] = bu.id
+      #   y['gp'] = Project.gross_profit_for_business_unit(bu.id, '2017-07-23')
+      #   x << y
+      # end
+      x = Project.gross_profit('2017-07-24')
       render json: x
     end
   end

@@ -584,7 +584,7 @@ class Project < ActiveRecord::Base
   end
 
   def gross_profit(as_on)
-    result = 0
+    # result = 0
     total_revenue = total_revenue(as_on, false)['total_revenue']
     total_cost = total_cost(as_on)['total_cost']
     result = total_revenue - total_cost
