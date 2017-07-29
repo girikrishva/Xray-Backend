@@ -279,6 +279,7 @@ class Project < ActiveRecord::Base
     count = 0
     total_direct_resource_cost = 0
     AssignedResource.where('project_id = ?', self.id).order('start_date, end_date').each do |ar|
+      assignment_cost = ar.assignment_cost(as_on)
       if with_details
         details = {}
         assigned_resource = ar.as_json
@@ -289,11 +290,11 @@ class Project < ActiveRecord::Base
         details['user'] = ar.resource.admin_user.name
         details['designation'] = ar.resource.admin_user.designation.name
         details['assignment_hours'] = ar.assignment_hours(as_on)
-        details['direct_resource_cost'] = ar.assignment_cost(as_on)
+        details['direct_resource_cost'] = assignment_cost
         data << details
       end
       count += 1
-      total_direct_resource_cost += ar.assignment_cost(as_on)
+      total_direct_resource_cost += assignment_cost
     end
     result = {}
     result['count'] = count
@@ -375,13 +376,13 @@ class Project < ActiveRecord::Base
 
   def total_indirect_resource_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    with_details = (with_details.to_s == 'true') ? true : false
-    x = Project.cached_project_direct_resource_cost(as_on, with_details)
+    # with_details = (with_details.to_s == 'true') ? true : false
+    x = Project.cached_project_direct_resource_cost(as_on, true)
     y = Project.cached_total_bench_cost(as_on)
     if !x.nil? and x.has_key?(self.id)
-      project_direct_resource_cost = x[self.id]
-      total_direct_resource_cost = x.values.sum
-      total_indirect_resource_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * y
+      project_direct_resource_cost = x[self.id].map { |e| e['direct_resource_cost'] }.sum
+      total_direct_resource_cost = x.values.map { |e| e.map { |f| f['direct_resource_cost'] }.sum}.sum
+      total_indirect_resource_cost_share = total_direct_resource_cost > 0 ? (project_direct_resource_cost / total_direct_resource_cost) * y : 0
     else
       project_direct_resource_cost = 0
       total_direct_resource_cost = 0

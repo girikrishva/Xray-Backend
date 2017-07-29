@@ -390,9 +390,16 @@ ActiveAdmin.register Project do
     end
 
     def tester
-      p = Project.find(11)
-      result = p.direct_overhead_cost('2017-04-22', true)
-      render json: result
+      x = []
+      Project.all.each do |p|
+        y = {}
+        y['pid'] = p.id
+        y['tircs'] = p.total_indirect_resource_cost_share('2017-05-22', true)
+        x << y
+      end
+      # p = Project.find(10)
+      # x = p.direct_resource_cost('2017-05-22', true)
+      render json: x
     end
   end
 
