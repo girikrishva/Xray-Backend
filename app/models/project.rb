@@ -356,6 +356,19 @@ class Project < ActiveRecord::Base
         end
       end
       @@cached_project_direct_resource_cost[as_on] = x
+    elsif !@@cached_project_direct_resource_cost.has_key?(as_on)
+    x = {}
+      Project.where('? between start_date and end_date', as_on).each do |p|
+        if !x.has_key?(p.id)
+          x[p.id] = 0 # @@cached_project_direct_resource_cost[p.id] = 0
+        end
+        drc = p.direct_resource_cost(as_on, with_details)
+        x[p.id] += drc['total_direct_resource_cost'] # @@cached_project_direct_resource_cost[p.id] += drc['total_direct_resource_cost']
+        if with_details
+          x[p.id] = drc['data']
+        end
+      end
+      @@cached_project_direct_resource_cost[as_on] = x
     else
       @@cached_project_direct_resource_cost[as_on]
     end
@@ -365,12 +378,10 @@ class Project < ActiveRecord::Base
   def self.cached_total_bench_cost(as_on)
     if @@cached_total_bench_cost.empty?
       @@cached_total_bench_cost[as_on] = AdminUser.total_bench_cost(as_on)
+    elsif !@@cached_total_bench_cost.has_key?(as_on)
+      @@cached_total_bench_cost[as_on] = AdminUser.total_bench_cost(as_on)
     else
-      if @@cached_total_bench_cost.has_key?(as_on)
-        @@cached_total_bench_cost[as_on]
-      else
-        0
-      end
+      @@cached_total_bench_cost[as_on]
     end
   end
 
@@ -584,7 +595,7 @@ class Project < ActiveRecord::Base
   end
 
   def gross_profit(as_on)
-    # result = 0
+    result = 0
     total_revenue = total_revenue(as_on, false)['total_revenue']
     total_cost = total_cost(as_on)['total_cost']
     result = total_revenue - total_cost
