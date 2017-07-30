@@ -446,17 +446,8 @@ class Project < ActiveRecord::Base
     result
   end
 
-  @@cached_total_indirect_overhead_cost = {}
-  def self.cached_total_indirect_overhead_cost(as_on, lower_date, upper_date, business_unit_id)
-    if @@cached_total_indirect_overhead_cost.empty?
-      @@cached_total_indirect_overhead_cost[as_on] = Overhead.where('amount_date between ? and ?', lower_date, upper_date).sum('amount') # Overhead.where('business_unit_id = ? and amount_date between ? and ?', business_unit_id, lower_date, upper_date).sum('amount')
-    else
-      if @@cached_total_indirect_overhead_cost.has_key?(as_on)
-        @@cached_total_indirect_overhead_cost[as_on]
-      else
-        0
-      end
-    end
+  def self.total_indirect_overhead_cost(as_on, lower_date, upper_date, business_unit_id)
+    Overhead.where('amount_date between ? and ?', lower_date, upper_date).sum('amount')
   end
 
   def total_indirect_overhead_cost_share(as_on, with_details)
@@ -465,15 +456,15 @@ class Project < ActiveRecord::Base
     x = Project.cached_project_direct_resource_cost(as_on, true)
     lower_date = as_on.beginning_of_month # [self.start_date, as_on.beginning_of_month].max
     upper_date = as_on.end_of_month # [self.end_date, as_on.end_of_month].min
-    total_indirect_overhead_cost = Project.cached_total_indirect_overhead_cost(as_on, lower_date, upper_date, self.delivery_manager.business_unit.id)
+    total_indirect_overhead_cost = Project.total_indirect_overhead_cost(as_on, lower_date, upper_date, self.delivery_manager.business_unit.id)
     if !x.nil? and x.has_key?(self.id)
       project_direct_resource_cost = x[self.id].map { |e| e['direct_resource_cost'] }.sum
       total_direct_resource_cost = x.values.map { |e| e.map { |f| f['direct_resource_cost'] }.sum}.sum
-      total_indirect_resource_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * total_indirect_overhead_cost
+      total_indirect_overhead_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * total_indirect_overhead_cost
     else
       project_direct_resource_cost = 0
       total_direct_resource_cost = 0
-      total_indirect_resource_cost_share = 0
+      total_indirect_overhead_cost_share = 0
     end
 
     # total_direct_resource_cost_for_project = currency_as_amount(self.direct_resource_cost(as_on, false)['total_direct_resource_cost'])
@@ -508,7 +499,7 @@ class Project < ActiveRecord::Base
     result['project_direct_resource_cost'] = project_direct_resource_cost
     result['total_direct_resource_cost'] = total_direct_resource_cost
     result['total_indirect_overhead_cost'] = total_indirect_overhead_cost
-    result['total_indirect_overhead_cost_share'] = total_indirect_resource_cost_share
+    result['total_indirect_overhead_cost_share'] = total_indirect_overhead_cost_share
     # if with_details
     #   result['data'] = data
     # end
