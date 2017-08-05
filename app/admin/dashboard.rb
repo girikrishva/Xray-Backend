@@ -699,6 +699,35 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_pipeline_by_business_unit_trend
     end
 
+    @@cache_utilization_by_business_units = {}
+    def utilization_by_business_units_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_utilization_by_business_units.nil? || (cache_refresh == 'yes')
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+        result = {}
+        months = []
+        months << (as_on.to_date - 2.months)
+        months << (as_on.to_date - 1.months)
+        months << (as_on.to_date - 0.months)
+        labels = []
+        labels << months[0].strftime("%B")
+        labels << months[1].strftime("%B")
+        labels << months[2].strftime("%B")
+        color_master = ["#6495ED", "#D2691E", "#FFC200", "#FE6384", "#37B2EB", "#FCCE33"]
+        i = 0
+        months.each do |month|
+          result[labels[i]] = {}
+          BusinessUnit.all.order('name').each do |bu|
+            result[labels[i]][bu.name] = AdminUser.business_unit_efficiency(bu.id, month.beginning_of_month.to_s, month.end_of_month.to_s, false)['data']['business_unit_utilization_percentage']
+          end
+          i += 1
+        end
+        @@cache_utilization_by_business_units = result
+      end
+      render json: @@cache_utilization_by_business_units
+    end
+
     def tester
       result = []
       result << Project.gross_profit((Date.today - 2.months).to_s)

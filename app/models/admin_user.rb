@@ -209,11 +209,11 @@ class AdminUser < ActiveRecord::Base
     admin_user_id = admin_user.admin_user_id
     assigned_hours = AssignedResource.assigned_hours(admin_user_id, from_date, to_date)
     working_hours = AssignedResource.working_hours(admin_user_id, from_date, to_date)
-    assigned_percentage = (assigned_hours / working_hours) * 100 rescue 0
-    clocked_hours = Timesheet.clocked_hours(admin_user_id, from_date, to_date)
-    clocked_percentage = (clocked_hours / assigned_hours) * 100 rescue 0
-    utilization_percentage = (clocked_hours / working_hours) * 100 rescue 0
-    bill_rate = Resource.latest_for(admin_user_id, to_date).bill_rate rescue AdminUser.find(admin_user_id).bill_rate
+    assigned_percentage = working_hours > 0 ? (assigned_hours / working_hours) * 100 : 0
+    clocked_hours =  Timesheet.clocked_hours(admin_user_id, from_date, to_date)
+    clocked_percentage = assigned_hours > 0 ? (clocked_hours / assigned_hours) * 100 : 0
+    utilization_percentage = working_hours > 0 ? (clocked_hours / working_hours) * 100 : 0
+    bill_rate = AdminUser.find(admin_user_id).bill_rate # Resource.latest_for(admin_user_id, to_date).bill_rate rescue AdminUser.find(admin_user_id).bill_rate
     details['business_unit'] = admin_user.business_unit.name
     details['admin_user_id'] = admin_user.admin_user_id
     details['admin_user_name'] = admin_user.name
