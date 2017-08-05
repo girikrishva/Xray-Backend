@@ -64,6 +64,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
               end
             end
           end
+          column do
+            panel "Project Health across Months" do
+              render partial:"project_health_across_months"
+            end
+          end
       end
     end
   end # content
