@@ -5,39 +5,67 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
 
     # Here is an example of a simple dashboard with columns and panels.
     #
-    columns do 
     columns do
-      column do
-        panel "Resource Cost" do 
-         render partial: "bench_cost.html.erb"
-        end
-      end
+      if current_admin_user.designation.name== "CEO"
+        columns do
+          column do
+            panel "Resource Cost" do
+             render partial: "bench_cost.html.erb"
+            end
+          end
 
-      column do
-        panel "Gross Profit" do
-         render partial: "gross_profit"
-       end
-      end
-    end
-     columns do
-      column do
-        panel "Resource Distribution" do
-          render partial: "bench_distribution"
+          column do
+            panel "Gross Profit" do
+             render partial: "gross_profit"
+           end
+          end
         end
-      end
+        columns do
+          column do
+            panel "Resource Distribution" do
+              render partial: "bench_distribution"
+            end
+          end
 
-      column do
-       panel "Pipeline" do
-         render partial: "pipe_line"
+          column do
+           panel "Pipeline" do
+             render partial: "pipe_line"
+            end
+          end
         end
+        column do
+         panel "Financial Performance" do
+          render partial:"financial_performance"
+         end
+        end
+      else
+          columns do
+            column do
+              panel "Resource Cost" do
+                render partial: "bench_cost.html.erb"
+              end
+            end
+
+            column do
+              panel "Utilisation Levels by BU" do
+                render partial: "utilisation_levels.html.erb"
+              end
+            end
+          end
+          columns do
+            column do
+              panel "Resource Distribution" do
+                render partial: "bench_distribution"
+              end
+            end
+            column do
+              panel "Project Health View" do
+                render partial: "project_health_view"
+              end
+            end
+          end
       end
     end
-  column do 
-    panel "Financial Performance" do
-      render partial:"financial_performance"
-    end
-  end
-  end
   end # content
 
 
