@@ -610,9 +610,17 @@ class AdminUser < ActiveRecord::Base
 
   def self.business_unit_by_skill_efficiency(business_unit_id, from_date, to_date, with_details)
     with_details = (with_details.to_s == 'true') ? true : false
-    result = []
+    result = {}
     AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
-      result << AdminUser.resource_efficiency(au, from_date, to_date, with_details)
+      resource_efficiency = AdminUser.resource_efficiency(au, from_date, to_date, with_details)
+      if !result.has_key?(resource_efficiency['skill'])
+        result[resource_efficiency['skill']] = []
+      end
+      result[resource_efficiency['skill']] << resource_efficiency['utilization_percentage']
+    end
+    transformed_result = {}
+    result.keys.each do |skill|
+      result[skill] = (result[skill].sum / result[skill].size).round(2)
     end
     result
   end
