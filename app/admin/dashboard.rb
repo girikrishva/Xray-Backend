@@ -728,6 +728,18 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_utilization_by_business_units
     end
 
+    @@cache_project_health_view_panel_data = {}
+    def project_health_view_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_project_health_view_panel_data.nil? || (cache_refresh == 'yes')
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+        result = {}
+        @@cache_project_health_view_panel_data = result
+      end
+      render json: @@cache_utilization_by_business_units
+    end
+
     def tester
       result = []
       result << Project.gross_profit((Date.today - 2.months).to_s)

@@ -48,7 +48,7 @@ class AssignedResource < ActiveRecord::Base
   end
 
   def assigned_resource_name
-    'Id: [' + self.id.to_s + '], Client: [' + self.project.pipeline.client.name + '], Project: [' + self.project.name + '], Resource: [' + self.resource.resource_name + '], Skill: [' + resource.skill_name + '], Start Date: [' + self.start_date.to_s + '], End Date: [' + self.end_date.to_s + '], Hours Per Day: [' + self.hours_per_day.to_s + ']' rescue nil
+    'Id: [' + self.id.to_s + '], B|C|P: [' + self.project.pipeline.client.business_unit.name + '|' + self.project.pipeline.client.name + '|' + self.project.name + '], R|S: [' + self.resource.resource_name + '|' + resource.skill_name + '], S|E|H: [' + self.start_date.to_s + '|' + self.end_date.to_s + '|' + self.hours_per_day.to_s + ']' rescue nil
   end
 
   def over_assignment_check
@@ -65,7 +65,7 @@ class AssignedResource < ActiveRecord::Base
   end
 
   def self.ordered_lookup
-    AssignedResource.all.order(:start_date)
+    AssignedResource.all.order('start_date desc')
   end
 
   def self.assigned_hours(admin_user_id, from_date, to_date)
