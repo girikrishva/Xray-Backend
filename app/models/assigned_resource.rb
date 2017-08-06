@@ -65,7 +65,7 @@ class AssignedResource < ActiveRecord::Base
   end
 
   def self.ordered_lookup
-    AssignedResource.all.order('start_date desc')
+    AssignedResource.all.order('start_date desc, end_date desc')
   end
 
   def self.assigned_hours(admin_user_id, from_date, to_date)
