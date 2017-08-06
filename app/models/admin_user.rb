@@ -168,7 +168,7 @@ class AdminUser < ActiveRecord::Base
     with_details = (with_details.to_s == 'true') ? true : false
     result = {}
     admin_user = AdminUser.find(admin_user_id)
-    result['data'] = AdminUser.resource_efficiency_details(admin_user, from_date, to_date, with_details)
+    result = AdminUser.resource_efficiency_details(admin_user, from_date, to_date, with_details)
     result
   end
 
@@ -612,7 +612,7 @@ class AdminUser < ActiveRecord::Base
     with_details = (with_details.to_s == 'true') ? true : false
     result = []
     AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
-      result << AdminUser.resource_efficiency(au, from_date, to_date, with_details)['data']['utilization_percentage']
+      result << AdminUser.resource_efficiency(au, from_date, to_date, with_details)
     end
     result
   end

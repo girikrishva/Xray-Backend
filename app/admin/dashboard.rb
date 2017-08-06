@@ -746,10 +746,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         color_master = ["#6495ED", "#D2691E", "#FFC200", "#FE6384", "#37B2EB", "#FCCE33"]
         result = {}
         result['labels'] = labels
+        result['data'] = []
         months.each do |month|
           from_date = month.beginning_of_month
           to_date = month.end_of_month
-          result[bu.name] << AdminUser.business_unit_by_skill_efficiency(bu.id, from_date, to_date, false)
+          result['data'] << AdminUser.business_unit_by_skill_efficiency(bu_id, from_date, to_date, false)
         end
         @@cache_utilization_by_skills_for_business_unit_panel_data = result
       end
