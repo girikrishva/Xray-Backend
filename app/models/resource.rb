@@ -185,4 +185,9 @@ class Resource < ActiveRecord::Base
     end
     result
   end
+
+  def self.latest_resource_for_user(admin_user_id, as_on = nil)
+    as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
+    Resource.where('admin_user_id = ? and as_on <= ?', admin_user_id, as_on).order('as_on').last
+  end
 end

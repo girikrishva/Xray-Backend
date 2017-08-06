@@ -188,6 +188,7 @@ en:
     cancel_timesheet: "Cancel"
     revert_timesheet: "Revert"
     restore: "Restore"
+    other: "Other"
   models:
     business_units: "Business Units"
     departments: "Departments"

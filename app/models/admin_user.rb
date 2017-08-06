@@ -163,11 +163,11 @@ class AdminUser < ActiveRecord::Base
   end
 
   def self.resource_efficiency(admin_user_id, from_date, to_date, with_details)
-    from_date = Date.parse(from_date)
-    to_date = Date.parse(to_date)
+    from_date = Date.parse(from_date.to_s)
+    to_date = Date.parse(to_date.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
     result = {}
-    admin_user = AdminUser.find(admin_user_id).latest_snapshot(to_date)
+    admin_user = AdminUser.find(admin_user_id)
     result['data'] = AdminUser.resource_efficiency_details(admin_user, from_date, to_date, with_details)
     result
   end
@@ -206,7 +206,7 @@ class AdminUser < ActiveRecord::Base
 
   def self.resource_efficiency_details(admin_user, from_date, to_date, with_details)
     details = {}
-    admin_user_id = admin_user.admin_user_id
+    admin_user_id = admin_user.id
     assigned_hours = AssignedResource.assigned_hours(admin_user_id, from_date, to_date)
     working_hours = AssignedResource.working_hours(admin_user_id, from_date, to_date)
     assigned_percentage = working_hours > 0 ? (assigned_hours / working_hours) * 100 : 0
@@ -215,9 +215,11 @@ class AdminUser < ActiveRecord::Base
     utilization_percentage = working_hours > 0 ? (clocked_hours / working_hours) * 100 : 0
     bill_rate = AdminUser.find(admin_user_id).bill_rate # Resource.latest_for(admin_user_id, to_date).bill_rate rescue AdminUser.find(admin_user_id).bill_rate
     details['business_unit'] = admin_user.business_unit.name
-    details['admin_user_id'] = admin_user.admin_user_id
+    details['admin_user_id'] = admin_user.id
     details['admin_user_name'] = admin_user.name
     details['active'] = admin_user.active
+    resource = Resource.latest_resource_for_user(admin_user_id, to_date.to_s)
+    details['skill'] = (resource.nil? == true) ? I18n.t('label.other') : resource.skill.name
     details['designation'] = admin_user.designation.name
     details['associate_no'] = admin_user.associate_no
     details['manager'] = AdminUser.find(admin_user.manager_id).name rescue nil
@@ -604,5 +606,14 @@ class AdminUser < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     bench_count_for_designation = AdminUser.resource_count_for_designation(as_on, designation_id) - AdminUser.assignment_count_for_designation(as_on, designation_id)
     bench_count_for_designation
+  end
+
+  def self.business_unit_by_skill_efficiency(business_unit_id, from_date, to_date, with_details)
+    with_details = (with_details.to_s == 'true') ? true : false
+    result = []
+    AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
+      result << AdminUser.resource_efficiency(au, from_date, to_date, with_details)['data']['utilization_percentage']
+    end
+    result
   end
 end
