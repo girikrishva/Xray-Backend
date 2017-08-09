@@ -743,6 +743,21 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_utilization_by_skills_for_business_unit_panel_data
     end
 
+    @@cache_utilization_by_designations_for_business_unit_panel_data = {}
+    def utilization_by_designations_for_business_unit_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_utilization_by_designations_for_business_unit_panel_data.nil? || (cache_refresh == 'yes')
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        as_on = params.has_key?(:as_on) ? Date.parse(params[:as_on]) : Date.today
+        bu_id = params.has_key?(:bu_id) ? params[:bu_id] : -1
+        color_master = ["#6495ED", "#D2691E", "#FFC200", "#FE6384", "#37B2EB", "#FCCE33"]
+        from_date = as_on.beginning_of_month
+        to_date = as_on.end_of_month
+        @@cache_utilization_by_designations_for_business_unit_panel_data = AdminUser.business_unit_by_designation_efficiency(bu_id, from_date, to_date, false)
+      end
+      render json: @@cache_utilization_by_designations_for_business_unit_panel_data
+    end
+
     @@cache_project_health_view_panel_data = {}
     def project_health_view_panel_data
       cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'

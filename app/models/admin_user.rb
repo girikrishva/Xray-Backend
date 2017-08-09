@@ -624,4 +624,21 @@ class AdminUser < ActiveRecord::Base
     end
     result
   end
+
+  def self.business_unit_by_designation_efficiency(business_unit_id, from_date, to_date, with_details)
+    with_details = (with_details.to_s == 'true') ? true : false
+    result = {}
+    AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
+      resource_efficiency = AdminUser.resource_efficiency(au, from_date, to_date, with_details)
+      if !result.has_key?(resource_efficiency['designation'])
+        result[resource_efficiency['designation']] = []
+      end
+      result[resource_efficiency['designation']] << resource_efficiency['utilization_percentage']
+    end
+    transformed_result = {}
+    result.keys.each do |designation|
+      result[designation] = (result[designation].sum / result[designation].size).round(2)
+    end
+    result
+  end
 end
