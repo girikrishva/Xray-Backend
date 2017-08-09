@@ -733,26 +733,12 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
       if @@cache_utilization_by_skills_for_business_unit_panel_data.nil? || (cache_refresh == 'yes')
         formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today
+        as_on = params.has_key?(:as_on) ? Date.parse(params[:as_on]) : Date.today
         bu_id = params.has_key?(:bu_id) ? params[:bu_id] : -1
-        months = []
-        months << (as_on.to_date - 2.months)
-        months << (as_on.to_date - 1.months)
-        months << (as_on.to_date - 0.months)
-        labels = []
-        labels << months[0].strftime("%B")
-        labels << months[1].strftime("%B")
-        labels << months[2].strftime("%B")
         color_master = ["#6495ED", "#D2691E", "#FFC200", "#FE6384", "#37B2EB", "#FCCE33"]
-        result = {}
-        result['labels'] = labels
-        result['data'] = []
-        months.each do |month|
-          from_date = month.beginning_of_month
-          to_date = month.end_of_month
-          result['data'] << AdminUser.business_unit_by_skill_efficiency(bu_id, from_date, to_date, false)
-        end
-        @@cache_utilization_by_skills_for_business_unit_panel_data = result
+        from_date = as_on.beginning_of_month
+        to_date = as_on.end_of_month
+        @@cache_utilization_by_skills_for_business_unit_panel_data = AdminUser.business_unit_by_skill_efficiency(bu_id, from_date, to_date, false)
       end
       render json: @@cache_utilization_by_skills_for_business_unit_panel_data
     end

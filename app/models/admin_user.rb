@@ -240,10 +240,10 @@ class AdminUser < ActiveRecord::Base
     details = {}
     resource_efficiency_details = []
     AdminUser.joins(:business_unit).where('business_unit_id = ?', business_unit_id).order('business_units.name, admin_users.name').each do |au|
-      admin_user = au.latest_snapshot(to_date) rescue au
-      if !admin_user.nil? and !admin_user.blank?
-        resource_efficiency_details << AdminUser.resource_efficiency_details(admin_user, from_date, to_date, with_details)
-      end
+      # admin_user = au.latest_snapshot(to_date).admin_user_id rescue au
+      # if !admin_user.nil? and !admin_user.blank?
+        resource_efficiency_details << AdminUser.resource_efficiency_details(au, from_date, to_date, with_details)
+      # end
     end
     details['business_unit'] = BusinessUnit.find(business_unit_id).name
     business_unit_assigned_percentage = (resource_efficiency_details.map { |y| y['assigned_percentage'] }.sum / resource_efficiency_details.size).round(2) rescue 0
