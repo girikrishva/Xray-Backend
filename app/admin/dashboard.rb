@@ -767,7 +767,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
          delivery_health = Project.delivery_health(as_on)
          result = {}
          delivery_health.keys.each do |key|
-           result[key] = delivery_health[key].size
+           result[key] = delivery_health[key]
          end
          @@cache_project_health_view_panel_data[as_on] = result
       end
