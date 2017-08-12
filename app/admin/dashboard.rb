@@ -774,6 +774,34 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       render json: @@cache_project_health_view_panel_data[as_on]
     end
 
+    @@cache_project_health_across_months_panel_data = {}
+    def project_health_across_months_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      as_on = Date.today.end_of_month.to_s
+      months = []
+      months << (as_on.to_date - 2.months)
+      months << (as_on.to_date - 1.months)
+      months << (as_on.to_date - 0.months)
+      labels = []
+      labels << months[0].strftime("%B")
+      labels << months[1].strftime("%B")
+      labels << months[2].strftime("%B")
+      if @@cache_project_health_across_months_panel_data.empty? || !@@cache_project_health_across_months_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
+        result = {}
+        i = 0
+        months.each do |month|
+          result[labels[i]] = {}
+          delivery_health = Project.delivery_health(month.end_of_month.to_s)
+          delivery_health.keys.each do |key|
+            result[labels[i]][key] = delivery_health[key]
+          end
+          i += 1
+        end
+        @@cache_project_health_across_months_panel_data[as_on] = result
+      end
+      render json: @@cache_project_health_across_months_panel_data[as_on]
+    end
+
     def tester
       result = []
       result << Project.gross_profit((Date.today - 2.months).to_s)

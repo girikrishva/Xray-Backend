@@ -189,4 +189,5 @@ Rails.application.routes.draw do
   match '/admin/api/utilization_by_skills_for_business_unit_panel_data' => 'admin/dashboard#utilization_by_skills_for_business_unit_panel_data', via: [:get]
   match '/admin/api/utilization_by_designations_for_business_unit_panel_data' => 'admin/dashboard#utilization_by_designations_for_business_unit_panel_data', via: [:get]
   match '/admin/api/project_health_view_panel_data' => 'admin/dashboard#project_health_view_panel_data', via: [:get]
+  match '/admin/api/project_health_across_months_panel_data' => 'admin/dashboard#project_health_across_months_panel_data', via: [:get]
 end
