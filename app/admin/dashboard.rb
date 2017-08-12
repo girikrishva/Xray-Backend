@@ -472,6 +472,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         result['color_code'] = color_code
         result['project_count'] = project_count
         result['project_ids'] = project_ids
+        @@cache_delivery_health_panel_data[as_on] = result
       end
       render json: @@cache_delivery_health_panel_data[as_on]
     end
@@ -761,13 +762,16 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
     @@cache_project_health_view_panel_data = {}
     def project_health_view_panel_data
       cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
-      if @@cache_project_health_view_panel_data.nil? || (cache_refresh == 'yes')
-        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
-        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
-        result = {}
-        @@cache_project_health_view_panel_data = result
+      as_on = Date.today.end_of_month.to_s
+      if @@cache_project_health_view_panel_data.empty? || !@@cache_project_health_view_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
+         delivery_health = Project.delivery_health(as_on)
+         result = {}
+         delivery_health.keys.each do |key|
+           result[key] = delivery_health[key].size
+         end
+         @@cache_project_health_view_panel_data[as_on] = result
       end
-      render json: @@cache_utilization_by_business_units
+      render json: @@cache_project_health_view_panel_data[as_on]
     end
 
     def tester
