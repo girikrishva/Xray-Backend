@@ -69,6 +69,7 @@ en:
     define_users: "Define Users"
     reports: "Reports"
     security: "Security"
+    refresh: "Refresh"
     clients: "Clients"
     masters: "Masters"
     dashboard: "Dashboard"

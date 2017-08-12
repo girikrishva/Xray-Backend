@@ -6,65 +6,73 @@ var bench_dest_data = {}
 var as_on1 =""
 
 $(document).ready(function () {
-    $.ajax({
-        url: "/admin/api/pipeline_by_business_unit_trend",
-        context: document.body
-    }).done(function (data) {
-       var bench_dest_data1 = {
-            labels:  data.labels ,
-            datasets: [
-                {
-                    fillColor: data.datasets[0].backgroundColor,
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointstrokeColor: "yellow",
-                    data: data.datasets[0].data,
-                    title: data.datasets[0].label
-                },
-                {
-                    fillColor: data.datasets[1].backgroundColor,
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointstrokeColor: "yellow",
-                    data: data.datasets[1].data,
-                    title: data.datasets[1].label
-                },
-                {
-                    fillColor: data.datasets[2].backgroundColor,
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointstrokeColor: "yellow",
-                    data: data.datasets[2].data,
-                    title: data.datasets[2].label
-                }
-            ]
-        }
-
-
-        var startWithDataset = 1;
-        var startWithData = 1;
-        var gp_struct1 = {
-            graphMin : 0,
-            animationStartWithDataset: startWithDataset,
-            animationStartWithData: startWithData,
-            animationSteps: 200,
-            canvasBorders: true,
-            canvasBordersWidth: 3,
-            canvasBordersColor: "black",
-            graphTitle: "",
-            legend: true,
-            inGraphDataShow: true,
-            annotateDisplay: true,
-            graphTitleFontSize: 18,
-            barValueSpacing: 40,
-            mouseDownLeft: fctMouseDownLeft1
-        }
-
-        new Chart(document.getElementById("pipeline_chart").getContext("2d")).StackedBar(bench_dest_data1, gp_struct1);
-
+    load_pipeline("cache_load")
+    $( "#refresh" ).click(function() {
+        load_pipeline("db_load")
     });
+  function load_pipeline(load) {
+      $.ajax({
+          url: pipeline_by_business_unit_trend,
+          context: document.body
+      }).done(function (data) {
+          var bench_dest_data1 = {
+              labels: data.labels,
+              datasets: [
+                  {
+                      fillColor: data.datasets[0].backgroundColor,
+                      strokeColor: "rgba(220,220,220,1)",
+                      pointColor: "rgba(220,220,220,1)",
+                      pointstrokeColor: "yellow",
+                      data: data.datasets[0].data,
+                      title: data.datasets[0].label
+                  },
+                  {
+                      fillColor: data.datasets[1].backgroundColor,
+                      strokeColor: "rgba(220,220,220,1)",
+                      pointColor: "rgba(220,220,220,1)",
+                      pointstrokeColor: "yellow",
+                      data: data.datasets[1].data,
+                      title: data.datasets[1].label
+                  },
+                  {
+                      fillColor: data.datasets[2].backgroundColor,
+                      strokeColor: "rgba(220,220,220,1)",
+                      pointColor: "rgba(220,220,220,1)",
+                      pointstrokeColor: "yellow",
+                      data: data.datasets[2].data,
+                      title: data.datasets[2].label
+                  }
+              ]
+          }
+
+
+          var startWithDataset = 1;
+          var startWithData = 1;
+          var gp_struct1 = {
+              graphMin: 0,
+              animationStartWithDataset: startWithDataset,
+              animationStartWithData: startWithData,
+              animationSteps: 200,
+              canvasBorders: true,
+              canvasBordersWidth: 3,
+              canvasBordersColor: "black",
+              graphTitle: "",
+              legend: true,
+              inGraphDataShow: true,
+              annotateDisplay: true,
+              graphTitleFontSize: 18,
+              barValueSpacing: 40,
+              mouseDownLeft: fctMouseDownLeft1
+          }
+
+          new Chart(document.getElementById("pipeline_chart").getContext("2d")).StackedBar(bench_dest_data1, gp_struct1);
+
+      });
+  }
 
 });
+
+
 
 function setColor(area, data, config, i, j, animPct, value) {
     if (value > 35)return("rgba(220,0,0," + animPct);

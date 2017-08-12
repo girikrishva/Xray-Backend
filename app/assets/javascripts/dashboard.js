@@ -30,101 +30,122 @@ var monthNames = [
 mydata1={}
 bench_dest_data = {}
 $(document).ready(function () {
-    $.ajax({
-        url: "/admin/api/resource_costs_panel_data",
-        context: document.body
-    }).done(function (data) {
-        console.log("RC===="+JSON.stringify(data.labels))
-        $.each(data.datasets[0].data, function (index, value) {
-            data_array1[index] = value
-        });
-        $.each(data.datasets[1].data, function (index, value) {
-            data_array2[index] = value
-        });
-          mydata1 = {
-            labels: data.labels,
-            datasets: [
-                {
-                    fillColor: "#ff4500",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointstrokeColor: "yellow",
-                    data: data_array1,
-                    title: "Bench Costs"
-                },
-                {
-                    fillColor: "#32CD32",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "green",
-                    pointstrokeColor: "yellow",
-                    data: data_array2,
-                    title: "Assigned Resource Costs"
-                }
-            ]
-        }
-        new Chart(document.getElementById("canvas_StackedBar1").getContext("2d")).StackedBar(mydata1, opt1);
+    resource_costs_panel_data=""
+    resource_distribution_panel_data=""
+    gross_profit_panel_data=""
+    pipeline_by_business_unit_trend=""
+    load_page("cache_load")
+    $( "#refresh" ).click(function() {
+        load_page("db_load")
     });
+   function load_page(load) {
+       console.log("====="+load)
+       if (load == "db_load"){
+           resource_costs_panel_data="/admin/api/resource_costs_panel_data?cache_refresh=yes"
+           resource_distribution_panel_data="/admin/api/resource_distribution_panel_data?cache_refresh=yes"
+           gross_profit_panel_data="/admin/api/gross_profit_panel_data?cache_refresh=yes"
+           pipeline_by_business_unit_trend="/admin/api/pipeline_by_business_unit_trend?cache_refresh=yes"
+       }else{
+           resource_costs_panel_data="/admin/api/resource_costs_panel_data"
+           resource_distribution_panel_data="/admin/api/resource_distribution_panel_data"
+           gross_profit_panel_data="/admin/api/gross_profit_panel_data"
+           pipeline_by_business_unit_trend="/admin/api/pipeline_by_business_unit_trend"
+       }
 
 
-    $.ajax({
-        url: "/admin/api/resource_distribution_panel_data",
-        context: document.body
-    }).done(function (data) {
-        $.each(data.datasets[0].data, function (index, value) {
-            resource_data1[index] = value
-        });
-        $.each(data.datasets[1].data, function (index, value) {
-            resource_data2[index] = value
-        });
-
-          bench_dest_data = {
-            labels:  data.labels,
-            datasets: [
-                {
-                    fillColor: "#ff4500",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointstrokeColor: "yellow",
-                    data: resource_data2,
-                    title: "Bench Resources"
-                },
-                {
-                    fillColor: "#32CD32",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "green",
-                    pointstrokeColor: "yellow",
-                    data: resource_data1,
-                    title: "Assigned Resources"
-                }
-            ]
-        }
-
-        new Chart(document.getElementById("bench_dest_graph").getContext("2d")).StackedBar(bench_dest_data, opt1);
-
-    });
-
-    $.ajax({
-        url: "/admin/api/gross_profit_panel_data",
-        context: document.body
-    }).done(function (data) {
-        var gross_p_data = {
-            labels : data.labels,
-            datasets : [
-                {
-                    pointColor : "#6495ED",
-                    strokeColor : "#6495ED",
-                    pointStrokeColor : "#6495ED",
-                    data : data.datasets[0].data,
-                    title : "Gross Profit"
-                }
-            ]
-        }
-        new Chart(document.getElementById("grass_profit_panel").getContext("2d")).Line(gross_p_data,gp_struct);
-    });
+       $.ajax({
+           url: resource_costs_panel_data ,
+           context: document.body
+       }).done(function (data) {
+           $.each(data.datasets[0].data, function (index, value) {
+               data_array1[index] = value
+           });
+           $.each(data.datasets[1].data, function (index, value) {
+               data_array2[index] = value
+           });
+           mydata1 = {
+               labels: data.labels,
+               datasets: [
+                   {
+                       fillColor: "#ff4500",
+                       strokeColor: "rgba(220,220,220,1)",
+                       pointColor: "rgba(220,220,220,1)",
+                       pointstrokeColor: "yellow",
+                       data: data_array1,
+                       title: "Bench Costs"
+                   },
+                   {
+                       fillColor: "#32CD32",
+                       strokeColor: "rgba(151,187,205,1)",
+                       pointColor: "green",
+                       pointstrokeColor: "yellow",
+                       data: data_array2,
+                       title: "Assigned Resource Costs"
+                   }
+               ]
+           }
+           new Chart(document.getElementById("canvas_StackedBar1").getContext("2d")).StackedBar(mydata1, opt1);
+       });
 
 
+       $.ajax({
+           url:resource_distribution_panel_data ,
+           context: document.body
+       }).done(function (data) {
+           $.each(data.datasets[0].data, function (index, value) {
+               resource_data1[index] = value
+           });
+           $.each(data.datasets[1].data, function (index, value) {
+               resource_data2[index] = value
+           });
+
+           bench_dest_data = {
+               labels: data.labels,
+               datasets: [
+                   {
+                       fillColor: "#ff4500",
+                       strokeColor: "rgba(220,220,220,1)",
+                       pointColor: "rgba(220,220,220,1)",
+                       pointstrokeColor: "yellow",
+                       data: resource_data2,
+                       title: "Bench Resources"
+                   },
+                   {
+                       fillColor: "#32CD32",
+                       strokeColor: "rgba(151,187,205,1)",
+                       pointColor: "green",
+                       pointstrokeColor: "yellow",
+                       data: resource_data1,
+                       title: "Assigned Resources"
+                   }
+               ]
+           }
+
+           new Chart(document.getElementById("bench_dest_graph").getContext("2d")).StackedBar(bench_dest_data, opt1);
+
+       });
+
+       $.ajax({
+           url: gross_profit_panel_data,
+           context: document.body
+       }).done(function (data) {
+           var gross_p_data = {
+               labels: data.labels,
+               datasets: [
+                   {
+                       pointColor: "#6495ED",
+                       strokeColor: "#6495ED",
+                       pointStrokeColor: "#6495ED",
+                       data: data.datasets[0].data,
+                       title: "Gross Profit"
+                   }
+               ]
+           }
+           new Chart(document.getElementById("grass_profit_panel").getContext("2d")).Line(gross_p_data, gp_struct);
+       });
 
 
+   }
 });
 
 function setColor(area, data, config, i, j, animPct, value) {

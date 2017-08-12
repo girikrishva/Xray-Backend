@@ -3,7 +3,19 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		html_value = ""
-		  responce  = ajax_call("/admin/api/financial_performance_panel_data")
+        responce =[]
+
+        financial_performance("cache_load")
+        $( "#refresh" ).click(function() {
+            financial_performance("db_load")
+        });
+        function financial_performance(load) {
+            if (load =="db_load" ){
+                responce = ajax_call("/admin/api/financial_performance_panel_data?cache_refresh=yes")
+            }else{
+                responce = ajax_call("/admin/api/financial_performance_panel_data")
+            }
+        }
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
     data = []
 	keys = []

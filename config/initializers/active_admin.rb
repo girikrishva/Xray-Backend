@@ -230,6 +230,7 @@ ActiveAdmin.setup do |config|
       menu.add label: I18n.t('menu.masters'), :priority => 80
       menu.add label: I18n.t('menu.setup'), :priority => 90
       menu.add label: I18n.t('menu.security'), :priority => 100
+      menu.add label: I18n.t('menu.refresh'), :priority => 110
     end
   end
 
