@@ -388,6 +388,36 @@ ActiveAdmin.register Project do
       result = Project.find(project_id).delivery_health(as_on)
       render json: result
     end
+
+    def tester
+      x = []
+      Project.all.each do |p|
+        d = params[:as_on]
+        y = {}
+        y['pid'] = p.id
+        y['gp'] = p.gross_profit(d)
+        y['revenue'] = p.total_revenue(d, true)
+        y['drc'] = p.direct_resource_cost(d, true)
+        y['doc'] = p.direct_overhead_cost(d, true)
+        y['tircs'] = p.total_indirect_resource_cost_share(d, true)
+        y['tiocs'] = p.total_indirect_overhead_cost_share(d, true)
+        x << y
+      end
+      # p = Project.find(10)
+      # x = p.total_revenue('2017-05-22')
+      # BusinessUnit.all.each do |bu|
+      #   y = {}
+      #   y['bu'] = bu.id
+      #   y['gp'] = Project.gross_profit_for_business_unit(bu.id, '2017-06-30')
+      #   x << y
+      # end
+      # x << Project.gross_profit(Date.today - 2.months)
+      # x << Project.gross_profit(Date.today - 1.months)
+      # x << Project.gross_profit(Date.today - 0.months)
+
+      # x = Project.gross_profit('2017-07-24')
+      render json: x
+    end
   end
 
   form do |f|

@@ -165,6 +165,7 @@ en:
     pipeline_amount: "Pipeline Amount"
     indirect_cost: "Indirect Cost"
     pipeline: "Pipeline"
+    other: "Other"
   actions:
     change_qualifiers: "Change Qualifiers"
     audit_trail: "Audit Trail"

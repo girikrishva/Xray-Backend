@@ -48,7 +48,7 @@ class AssignedResource < ActiveRecord::Base
   end
 
   def assigned_resource_name
-    'Id: [' + self.id.to_s + '], Client: [' + self.project.pipeline.client.name + '], Project: [' + self.project.name + '], Resource: [' + self.resource.resource_name + '], Skill: [' + resource.skill_name + '], Start Date: [' + self.start_date.to_s + '], End Date: [' + self.end_date.to_s + '], Hours Per Day: [' + self.hours_per_day.to_s + ']' rescue nil
+    'Id: [' + self.id.to_s + '], B|C|P: [' + self.project.pipeline.client.business_unit.name + '|' + self.project.pipeline.client.name + '|' + self.project.name + '], R|S: [' + self.resource.resource_name + '|' + resource.skill_name + '], S|E|H: [' + self.start_date.to_s + '|' + self.end_date.to_s + '|' + self.hours_per_day.to_s + ']' rescue nil
   end
 
   def over_assignment_check
@@ -65,7 +65,7 @@ class AssignedResource < ActiveRecord::Base
   end
 
   def self.ordered_lookup
-    AssignedResource.all.order(:start_date)
+    AssignedResource.all.order('start_date desc, end_date desc')
   end
 
   def self.assigned_hours(admin_user_id, from_date, to_date)
@@ -104,19 +104,16 @@ class AssignedResource < ActiveRecord::Base
 
   def assignment_hours(as_on)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    lower_date = (self.start_date < as_on) ? self.start_date : as_on
-    upper_date = (as_on > self.end_date) ? self.end_date : as_on
-    if upper_date == lower_date # Else days between will always come as 0.
-      upper_date += 1
-    end
-    days_assigned = lower_date.weekdays_until(upper_date)
+    lower_date = [self.start_date, as_on.beginning_of_month].max
+    upper_date = [self.end_date, as_on.end_of_month].min
+    days_assigned = lower_date.weekdays_until(upper_date + 1) # weekdays_until ignores upper bound day itself, hence adding 1
     days_assigned -= holidays_between(self.resource.admin_user.business_unit_id, lower_date, upper_date)
     days_assigned -= unpaid_vacation_between(self.resource.admin_user.business_unit_id, self.resource.admin_user.id, lower_date, upper_date)
     hours_assigned = days_assigned * self.hours_per_day
   end
 
   def assignment_cost(as_on)
-    self.assignment_hours(as_on) * AdminUser.find(self.resource.admin_user.id).cost_rate
+    self.assignment_hours(as_on) * self.cost_rate # AdminUser.find(self.resource.admin_user.id).cost_rate
   end
 
   private

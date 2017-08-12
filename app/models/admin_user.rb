@@ -163,12 +163,12 @@ class AdminUser < ActiveRecord::Base
   end
 
   def self.resource_efficiency(admin_user_id, from_date, to_date, with_details)
-    from_date = Date.parse(from_date)
-    to_date = Date.parse(to_date)
+    from_date = Date.parse(from_date.to_s)
+    to_date = Date.parse(to_date.to_s)
     with_details = (with_details.to_s == 'true') ? true : false
     result = {}
-    admin_user = AdminUser.find(admin_user_id).latest_snapshot(to_date)
-    result['data'] = AdminUser.resource_efficiency_details(admin_user, from_date, to_date, with_details)
+    admin_user = AdminUser.find(admin_user_id)
+    result = AdminUser.resource_efficiency_details(admin_user, from_date, to_date, with_details)
     result
   end
 
@@ -206,18 +206,20 @@ class AdminUser < ActiveRecord::Base
 
   def self.resource_efficiency_details(admin_user, from_date, to_date, with_details)
     details = {}
-    admin_user_id = admin_user.admin_user_id
+    admin_user_id = admin_user.id
     assigned_hours = AssignedResource.assigned_hours(admin_user_id, from_date, to_date)
     working_hours = AssignedResource.working_hours(admin_user_id, from_date, to_date)
-    assigned_percentage = (assigned_hours / working_hours) * 100 rescue 0
-    clocked_hours = Timesheet.clocked_hours(admin_user_id, from_date, to_date)
-    clocked_percentage = (clocked_hours / assigned_hours) * 100 rescue 0
-    utilization_percentage = (clocked_hours / working_hours) * 100 rescue 0
-    bill_rate = Resource.latest_for(admin_user_id, to_date).bill_rate rescue AdminUser.find(admin_user_id).bill_rate
+    assigned_percentage = working_hours > 0 ? (assigned_hours / working_hours) * 100 : 0
+    clocked_hours =  Timesheet.clocked_hours(admin_user_id, from_date, to_date)
+    clocked_percentage = assigned_hours > 0 ? (clocked_hours / assigned_hours) * 100 : 0
+    utilization_percentage = working_hours > 0 ? (clocked_hours / working_hours) * 100 : 0
+    bill_rate = AdminUser.find(admin_user_id).bill_rate # Resource.latest_for(admin_user_id, to_date).bill_rate rescue AdminUser.find(admin_user_id).bill_rate
     details['business_unit'] = admin_user.business_unit.name
-    details['admin_user_id'] = admin_user.admin_user_id
+    details['admin_user_id'] = admin_user.id
     details['admin_user_name'] = admin_user.name
     details['active'] = admin_user.active
+    resource = Resource.latest_resource_for_user(admin_user_id, to_date.to_s)
+    details['skill'] = (resource.nil? == true) ? I18n.t('label.other') : resource.skill.name
     details['designation'] = admin_user.designation.name
     details['associate_no'] = admin_user.associate_no
     details['manager'] = AdminUser.find(admin_user.manager_id).name rescue nil
@@ -238,10 +240,10 @@ class AdminUser < ActiveRecord::Base
     details = {}
     resource_efficiency_details = []
     AdminUser.joins(:business_unit).where('business_unit_id = ?', business_unit_id).order('business_units.name, admin_users.name').each do |au|
-      admin_user = au.latest_snapshot(to_date) rescue au
-      if !admin_user.nil? and !admin_user.blank?
-        resource_efficiency_details << AdminUser.resource_efficiency_details(admin_user, from_date, to_date, with_details)
-      end
+      # admin_user = au.latest_snapshot(to_date).admin_user_id rescue au
+      # if !admin_user.nil? and !admin_user.blank?
+        resource_efficiency_details << AdminUser.resource_efficiency_details(au, from_date, to_date, with_details)
+      # end
     end
     details['business_unit'] = BusinessUnit.find(business_unit_id).name
     business_unit_assigned_percentage = (resource_efficiency_details.map { |y| y['assigned_percentage'] }.sum / resource_efficiency_details.size).round(2) rescue 0
@@ -362,7 +364,7 @@ class AdminUser < ActiveRecord::Base
     resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).pluck(:id)
     total_assignment_cost = 0
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
-      total_assignment_cost += (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
+      total_assignment_cost += ar.assignment_cost(as_on) # (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
     end
     total_assignment_cost
   end
@@ -410,7 +412,7 @@ class AdminUser < ActiveRecord::Base
     resource_ids = Resource.where('admin_user_id in (?) and skill_id = ?', admin_user_ids.keys, skill_id).pluck(:id)
     assignment_cost_for_skill = 0
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
-      assignment_cost_for_skill += (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
+      assignment_cost_for_skill += ar.assignment_cost(as_on) # (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
     end
     assignment_cost_for_skill
   end
@@ -421,7 +423,7 @@ class AdminUser < ActiveRecord::Base
     resource_ids = Resource.where('admin_user_id in (?)', admin_user_ids.keys).joins(:admin_user).where('designation_id = ?', designation_id).pluck(:id)
     assignment_cost_for_designation = 0
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
-      assignment_cost_for_designation += (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
+      assignment_cost_for_designation += ar.assignment_cost(as_on) # (ar.assignment_cost(as_on.end_of_month.to_s) - ar.assignment_cost(as_on.beginning_of_month.to_s))
     end
     assignment_cost_for_designation
   end
@@ -507,9 +509,9 @@ class AdminUser < ActiveRecord::Base
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
       admin_user_id = ar.resource.admin_user.id
       if assigned_hours.has_key?(admin_user_id)
-        assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] += ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       else
-        assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] = ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       end
     end
     total_assignment_count = 0
@@ -546,9 +548,9 @@ class AdminUser < ActiveRecord::Base
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
       admin_user_id = ar.resource.admin_user.id
       if assigned_hours.has_key?(admin_user_id)
-        assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] += ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       else
-        assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] = ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       end
     end
     assignment_count_for_skill = 0
@@ -580,9 +582,9 @@ class AdminUser < ActiveRecord::Base
     AssignedResource.where('resource_id in (?)', resource_ids).each do |ar|
       admin_user_id = ar.resource.admin_user.id
       if assigned_hours.has_key?(admin_user_id)
-        assigned_hours[admin_user_id] += (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] += ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       else
-        assigned_hours[admin_user_id] = (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
+        assigned_hours[admin_user_id] = ar.assignment_hours(as_on) # (ar.assignment_hours(as_on.end_of_month.to_s) - ar.assignment_hours(as_on.beginning_of_month.to_s))
       end
     end
     assignment_count_for_designation = 0
@@ -604,5 +606,39 @@ class AdminUser < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     bench_count_for_designation = AdminUser.resource_count_for_designation(as_on, designation_id) - AdminUser.assignment_count_for_designation(as_on, designation_id)
     bench_count_for_designation
+  end
+
+  def self.business_unit_by_skill_efficiency(business_unit_id, from_date, to_date, with_details)
+    with_details = (with_details.to_s == 'true') ? true : false
+    result = {}
+    AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
+      resource_efficiency = AdminUser.resource_efficiency(au, from_date, to_date, with_details)
+      if !result.has_key?(resource_efficiency['skill'])
+        result[resource_efficiency['skill']] = []
+      end
+      result[resource_efficiency['skill']] << resource_efficiency['utilization_percentage']
+    end
+    transformed_result = {}
+    result.keys.each do |skill|
+      result[skill] = (result[skill].sum / result[skill].size).round(2)
+    end
+    result
+  end
+
+  def self.business_unit_by_designation_efficiency(business_unit_id, from_date, to_date, with_details)
+    with_details = (with_details.to_s == 'true') ? true : false
+    result = {}
+    AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
+      resource_efficiency = AdminUser.resource_efficiency(au, from_date, to_date, with_details)
+      if !result.has_key?(resource_efficiency['designation'])
+        result[resource_efficiency['designation']] = []
+      end
+      result[resource_efficiency['designation']] << resource_efficiency['utilization_percentage']
+    end
+    transformed_result = {}
+    result.keys.each do |designation|
+      result[designation] = (result[designation].sum / result[designation].size).round(2)
+    end
+    result
   end
 end

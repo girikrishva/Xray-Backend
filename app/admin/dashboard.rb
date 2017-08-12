@@ -156,13 +156,13 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         datasets = []
         detail = {}
         gross_profits = []
-        gross_profits[0] = Project.gross_profit((Date.today - 2.months).at_end_of_month)
-        gross_profits[1] = Project.gross_profit((Date.today - 1.months).at_end_of_month)
-        gross_profits[2] = Project.gross_profit((Date.today - 0.months).at_end_of_month)
+        gross_profits << Project.gross_profit((Date.today - 2.months).to_s)
+        gross_profits << Project.gross_profit((Date.today - 1.months).to_s)
+        gross_profits << Project.gross_profit((Date.today - 0.months).to_s)
         if formatted.upcase == 'YES'
-          gross_profits[0] = format_currency(gross_profits[0])
-          gross_profits[1] = format_currency(gross_profits[1])
-          gross_profits[2] = format_currency(gross_profits[2])
+          gross_profits << format_currency(gross_profits[0])
+          gross_profits << format_currency(gross_profits[1])
+          gross_profits << format_currency(gross_profits[2])
         end
         data = []
         data << gross_profits[0]
@@ -505,6 +505,7 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         result['color_code'] = color_code
         result['project_count'] = project_count
         result['project_ids'] = project_ids
+        @@cache_delivery_health_panel_data[as_on] = result
       end
       render json: @@cache_delivery_health_panel_data[as_on]
     end
@@ -730,6 +731,116 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
         @@cache_pipeline_by_business_unit_trend = result
       end
       render json: @@cache_pipeline_by_business_unit_trend
+    end
+
+    @@cache_utilization_by_business_units = {}
+    def utilization_by_business_units_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_utilization_by_business_units.nil? || (cache_refresh == 'yes')
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        as_on = params.has_key?(:as_on) ? params[:as_on] : Date.today.to_s
+        result = {}
+        months = []
+        months << (as_on.to_date - 2.months)
+        months << (as_on.to_date - 1.months)
+        months << (as_on.to_date - 0.months)
+        labels = []
+        labels << months[0].strftime("%B")
+        labels << months[1].strftime("%B")
+        labels << months[2].strftime("%B")
+        color_master = ["#6495ED", "#D2691E", "#FFC200", "#FE6384", "#37B2EB", "#FCCE33"]
+        i = 0
+        months.each do |month|
+          result[labels[i]] = {}
+          BusinessUnit.all.order('name').each do |bu|
+            result[labels[i]][bu.name] = AdminUser.business_unit_efficiency(bu.id, month.beginning_of_month.to_s, month.end_of_month.to_s, false)['data']['business_unit_utilization_percentage']
+          end
+          i += 1
+        end
+        @@cache_utilization_by_business_units = result
+      end
+      render json: @@cache_utilization_by_business_units
+    end
+
+    @@cache_utilization_by_skills_for_business_unit_panel_data = {}
+    def utilization_by_skills_for_business_unit_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_utilization_by_skills_for_business_unit_panel_data.nil? || (cache_refresh == 'yes')
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        as_on = params.has_key?(:as_on) ? Date.parse(params[:as_on]) : Date.today
+        bu_id = params.has_key?(:bu_id) ? params[:bu_id] : -1
+        color_master = ["#6495ED", "#D2691E", "#FFC200", "#FE6384", "#37B2EB", "#FCCE33"]
+        from_date = as_on.beginning_of_month
+        to_date = as_on.end_of_month
+        @@cache_utilization_by_skills_for_business_unit_panel_data = AdminUser.business_unit_by_skill_efficiency(bu_id, from_date, to_date, false)
+      end
+      render json: @@cache_utilization_by_skills_for_business_unit_panel_data
+    end
+
+    @@cache_utilization_by_designations_for_business_unit_panel_data = {}
+    def utilization_by_designations_for_business_unit_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      if @@cache_utilization_by_designations_for_business_unit_panel_data.nil? || (cache_refresh == 'yes')
+        formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
+        as_on = params.has_key?(:as_on) ? Date.parse(params[:as_on]) : Date.today
+        bu_id = params.has_key?(:bu_id) ? params[:bu_id] : -1
+        color_master = ["#6495ED", "#D2691E", "#FFC200", "#FE6384", "#37B2EB", "#FCCE33"]
+        from_date = as_on.beginning_of_month
+        to_date = as_on.end_of_month
+        @@cache_utilization_by_designations_for_business_unit_panel_data = AdminUser.business_unit_by_designation_efficiency(bu_id, from_date, to_date, false)
+      end
+      render json: @@cache_utilization_by_designations_for_business_unit_panel_data
+    end
+
+    @@cache_project_health_view_panel_data = {}
+    def project_health_view_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      as_on = Date.today.end_of_month.to_s
+      if @@cache_project_health_view_panel_data.empty? || !@@cache_project_health_view_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
+         delivery_health = Project.delivery_health(as_on)
+         result = {}
+         delivery_health.keys.each do |key|
+           result[key] = delivery_health[key].size
+         end
+         @@cache_project_health_view_panel_data[as_on] = result
+      end
+      render json: @@cache_project_health_view_panel_data[as_on]
+    end
+
+    @@cache_project_health_across_months_panel_data = {}
+    def project_health_across_months_panel_data
+      cache_refresh = params.has_key?(:cache_refresh) ? params[:cache_refresh] : 'no'
+      as_on = Date.today.end_of_month.to_s
+      months = []
+      months << (as_on.to_date - 2.months)
+      months << (as_on.to_date - 1.months)
+      # months << (as_on.to_date - 0.months)
+      labels = []
+      labels << months[0].strftime("%B")
+      labels << months[1].strftime("%B")
+      # labels << months[2].strftime("%B")
+      if @@cache_project_health_across_months_panel_data.empty? || !@@cache_project_health_across_months_panel_data.has_key?(as_on) || (cache_refresh == 'yes')
+        result = {}
+        i = 0
+        months.each do |month|
+          result[labels[i]] = {}
+          delivery_health = Project.delivery_health(month.end_of_month.to_s)
+          delivery_health.keys.each do |key|
+            result[labels[i]][key] = delivery_health[key].size
+          end
+          i += 1
+        end
+        @@cache_project_health_across_months_panel_data[as_on] = result
+      end
+      render json: @@cache_project_health_across_months_panel_data[as_on]
+    end
+
+    def tester
+      result = []
+      result << Project.gross_profit((Date.today - 2.months).to_s)
+      result << Project.gross_profit((Date.today - 1.months).to_s)
+      result << Project.gross_profit((Date.today - 0.months).to_s)
+      render json: result
     end
   end
 end

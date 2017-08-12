@@ -279,6 +279,7 @@ class Project < ActiveRecord::Base
     count = 0
     total_direct_resource_cost = 0
     AssignedResource.where('project_id = ?', self.id).order('start_date, end_date').each do |ar|
+      assignment_cost = ar.assignment_cost(as_on)
       if with_details
         details = {}
         assigned_resource = ar.as_json
@@ -289,11 +290,11 @@ class Project < ActiveRecord::Base
         details['user'] = ar.resource.admin_user.name
         details['designation'] = ar.resource.admin_user.designation.name
         details['assignment_hours'] = ar.assignment_hours(as_on)
-        details['direct_resource_cost'] = ar.assignment_cost(as_on)
+        details['direct_resource_cost'] = assignment_cost
         data << details
       end
       count += 1
-      total_direct_resource_cost += ar.assignment_cost(as_on)
+      total_direct_resource_cost += assignment_cost
     end
     result = {}
     result['count'] = count
@@ -310,7 +311,7 @@ class Project < ActiveRecord::Base
     data = []
     count = 0
     total_direct_overhead_cost = 0
-    ProjectOverhead.where('project_id = ? and amount_date <= ?', self.id, as_on).joins(:cost_adder_type).order('amount_date').each do |po|
+    ProjectOverhead.where('project_id = ? and amount_date between ? and ?', self.id, as_on.beginning_of_month, as_on.end_of_month).joins(:cost_adder_type).order('amount_date').each do |po|
       if with_details
         details = {}
         project_overhead = po.as_json
@@ -346,10 +347,26 @@ class Project < ActiveRecord::Base
       x = {}
       Project.where('? between start_date and end_date', as_on).each do |p|
         if !x.has_key?(p.id)
-          @@cached_project_direct_resource_cost[p.id] = 0
+          x[p.id] = 0 # @@cached_project_direct_resource_cost[p.id] = 0
         end
         drc = p.direct_resource_cost(as_on, with_details)
-        @@cached_project_direct_resource_cost[p.id] += drc['total_direct_resource_cost']
+        x[p.id] += drc['total_direct_resource_cost'] # @@cached_project_direct_resource_cost[p.id] += drc['total_direct_resource_cost']
+        if with_details
+          x[p.id] = drc['data']
+        end
+      end
+      @@cached_project_direct_resource_cost[as_on] = x
+    elsif !@@cached_project_direct_resource_cost.has_key?(as_on)
+    x = {}
+      Project.where('? between start_date and end_date', as_on).each do |p|
+        if !x.has_key?(p.id)
+          x[p.id] = 0 # @@cached_project_direct_resource_cost[p.id] = 0
+        end
+        drc = p.direct_resource_cost(as_on, with_details)
+        x[p.id] += drc['total_direct_resource_cost'] # @@cached_project_direct_resource_cost[p.id] += drc['total_direct_resource_cost']
+        if with_details
+          x[p.id] = drc['data']
+        end
       end
       @@cached_project_direct_resource_cost[as_on] = x
     else
@@ -361,24 +378,22 @@ class Project < ActiveRecord::Base
   def self.cached_total_bench_cost(as_on)
     if @@cached_total_bench_cost.empty?
       @@cached_total_bench_cost[as_on] = AdminUser.total_bench_cost(as_on)
+    elsif !@@cached_total_bench_cost.has_key?(as_on)
+      @@cached_total_bench_cost[as_on] = AdminUser.total_bench_cost(as_on)
     else
-      if @@cached_total_bench_cost.has_key?(as_on)
-        @@cached_total_bench_cost[as_on]
-      else
-        0
-      end
+      @@cached_total_bench_cost[as_on]
     end
   end
 
   def total_indirect_resource_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    with_details = (with_details.to_s == 'true') ? true : false
-    x = Project.cached_project_direct_resource_cost(as_on, with_details)
+    # with_details = (with_details.to_s == 'true') ? true : false
+    x = Project.cached_project_direct_resource_cost(as_on, true)
     y = Project.cached_total_bench_cost(as_on)
     if !x.nil? and x.has_key?(self.id)
-      project_direct_resource_cost = x[self.id]
-      total_direct_resource_cost = x.values.sum
-      total_indirect_resource_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * y
+      project_direct_resource_cost = x[self.id].map { |e| e['direct_resource_cost'] }.sum
+      total_direct_resource_cost = x.values.map { |e| e.map { |f| f['direct_resource_cost'] }.sum}.sum
+      total_indirect_resource_cost_share = total_direct_resource_cost > 0 ? (project_direct_resource_cost / total_direct_resource_cost) * y : 0
     else
       project_direct_resource_cost = 0
       total_direct_resource_cost = 0
@@ -434,31 +449,30 @@ class Project < ActiveRecord::Base
   @@cached_total_indirect_overhead_cost = {}
   def self.cached_total_indirect_overhead_cost(as_on, lower_date, upper_date, business_unit_id)
     if @@cached_total_indirect_overhead_cost.empty?
-      @@cached_total_indirect_overhead_cost[as_on] = Overhead.where('business_unit_id = ? and amount_date between ? and ?', business_unit_id, lower_date, upper_date).sum('amount')
+      @@cached_total_indirect_overhead_cost[as_on] = Overhead.where('amount_date between ? and ?', lower_date, upper_date).sum('amount')
+    elsif !@@cached_total_indirect_overhead_cost.has_key?(as_on)
+      @@cached_total_indirect_overhead_cost[as_on] = Overhead.where('amount_date between ? and ?', lower_date, upper_date).sum('amount')
     else
-      if @@cached_total_indirect_overhead_cost.has_key?(as_on)
-        @@cached_total_indirect_overhead_cost[as_on]
-      else
-        0
-      end
+      @@cached_total_indirect_overhead_cost[as_on]
     end
+    # Overhead.where('amount_date between ? and ?', lower_date, upper_date).sum('amount')
   end
 
   def total_indirect_overhead_cost_share(as_on, with_details)
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
-    with_details = (with_details.to_s == 'true') ? true : false
-    x = Project.cached_project_direct_resource_cost(as_on, with_details)
-    lower_date = [self.start_date, as_on].max
-    upper_date = [self.end_date, as_on].min
+    # with_details = (with_details.to_s == 'true') ? true : false
+    x = Project.cached_project_direct_resource_cost(as_on, true)
+    lower_date = as_on.beginning_of_month # [self.start_date, as_on.beginning_of_month].max
+    upper_date = as_on.end_of_month # [self.end_date, as_on.end_of_month].min
     total_indirect_overhead_cost = Project.cached_total_indirect_overhead_cost(as_on, lower_date, upper_date, self.delivery_manager.business_unit.id)
     if !x.nil? and x.has_key?(self.id)
-      project_direct_resource_cost = x[self.id]
-      total_direct_resource_cost = x.values.sum
-      total_indirect_resource_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * total_indirect_overhead_cost
+      project_direct_resource_cost = x[self.id].map { |e| e['direct_resource_cost'] }.sum
+      total_direct_resource_cost = x.values.map { |e| e.map { |f| f['direct_resource_cost'] }.sum}.sum
+      total_indirect_overhead_cost_share = (project_direct_resource_cost / total_direct_resource_cost) * total_indirect_overhead_cost
     else
       project_direct_resource_cost = 0
       total_direct_resource_cost = 0
-      total_indirect_resource_cost_share = 0
+      total_indirect_overhead_cost_share = 0
     end
 
     # total_direct_resource_cost_for_project = currency_as_amount(self.direct_resource_cost(as_on, false)['total_direct_resource_cost'])
@@ -493,7 +507,7 @@ class Project < ActiveRecord::Base
     result['project_direct_resource_cost'] = project_direct_resource_cost
     result['total_direct_resource_cost'] = total_direct_resource_cost
     result['total_indirect_overhead_cost'] = total_indirect_overhead_cost
-    result['total_indirect_overhead_cost_share'] = total_indirect_resource_cost_share
+    result['total_indirect_overhead_cost_share'] = total_indirect_overhead_cost_share
     # if with_details
     #   result['data'] = data
     # end
@@ -501,7 +515,6 @@ class Project < ActiveRecord::Base
   end
 
   def total_indirect_cost_share(as_on)
-
     result = {}
     total_indirect_resource_cost_share = total_indirect_resource_cost_share(as_on, false)
     total_indirect_overhead_cost_share = total_indirect_overhead_cost_share(as_on, false)
@@ -539,7 +552,7 @@ class Project < ActiveRecord::Base
     total_revenue = 0
     if with_details
       InvoiceLine.where('project_id = ?', self.id).each do |il|
-        if il.invoice_header.invoice_date <= as_on
+        if il.invoice_header.invoice_date >= as_on.beginning_of_month and il.invoice_header.invoice_date <= as_on.end_of_month
           details = {}
           invoice_line = il.as_json
           invoice_line['line_amount'] = format_currency(invoice_line['line_amount'])
@@ -554,7 +567,7 @@ class Project < ActiveRecord::Base
         end
       end
     else
-      total_revenue = InvoiceLine.where('project_id = ?', self.id).joins(:invoice_header).where('invoice_date <= ?', as_on).sum(:line_amount)
+      total_revenue = InvoiceLine.where('project_id = ?', self.id).joins(:invoice_header).where('invoice_date between ? and ?', as_on.beginning_of_month, as_on.end_of_month).sum(:line_amount)
     end
     result = {}
     result['total_revenue'] = total_revenue
@@ -592,7 +605,7 @@ class Project < ActiveRecord::Base
     as_on = (as_on.nil?) ? Date.today : Date.parse(as_on.to_s)
     gross_profit = 0
     Project.where('business_unit_id = ?', business_unit_id).each do |p|
-      gross_profit += p.gross_profit(as_on.at_end_of_month)
+      gross_profit += p.gross_profit(as_on)
     end
     gross_profit
   end

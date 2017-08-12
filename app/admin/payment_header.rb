@@ -181,7 +181,8 @@ ActiveAdmin.register PaymentHeader do
       f.object.payment_date = Date.today
     end
     f.inputs do
-      f.input :client, required: true, as: :select, collection: proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}, include_blank: true
+      # f.input :client, required: true, as: :select, collection: proc {Client.ordered_lookup.map{|a| [a.client_name, a.id]}}, include_blank: true
+      f.input :client, required: true, as: :select, collection: Client.ordered_lookup.map{|a| [a.client_name, a.id]}, include_blank: true
       f.input :narrative
       f.input :payment_date, required: true, label: I18n.t('label.payment_date'), as: :datepicker
       f.input :payment_status

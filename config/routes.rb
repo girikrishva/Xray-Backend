@@ -4,12 +4,15 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-  # You can have the root of your site routed with "root"
+  # You can have the root of your site routed with "root".
   # root 'welcome#index'
   get '/admin/project_pop_up' => 'admin/projects#pop_up_view'
   get '/admin/get_team' => 'admin/organization_charts#get_users'
   get '/admin/user_detail' => 'admin/organization_charts#user_detail'
   match '/admin/api/get_formated_value' => 'admin/dashboard#return_formated_value', via: [:get]
+
+
+  match '/admin/api/tester' => 'admin/projects#tester', via: [:get]
   
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
@@ -182,4 +185,9 @@ Rails.application.routes.draw do
   match '/admin/api/assigned_counts_by_skill_panel_data' => 'admin/dashboard#assigned_counts_by_skill_panel_data', via: [:get]
   match '/admin/api/assigned_counts_by_designation_panel_data' => 'admin/dashboard#assigned_counts_by_designation_panel_data', via: [:get]
   match '/admin/api/pipeline_by_business_unit_trend' => 'admin/dashboard#pipeline_by_business_unit_trend', via: [:get]
+  match '/admin/api/utilization_by_business_units_panel_data' => 'admin/dashboard#utilization_by_business_units_panel_data', via: [:get]
+  match '/admin/api/utilization_by_skills_for_business_unit_panel_data' => 'admin/dashboard#utilization_by_skills_for_business_unit_panel_data', via: [:get]
+  match '/admin/api/utilization_by_designations_for_business_unit_panel_data' => 'admin/dashboard#utilization_by_designations_for_business_unit_panel_data', via: [:get]
+  match '/admin/api/project_health_view_panel_data' => 'admin/dashboard#project_health_view_panel_data', via: [:get]
+  match '/admin/api/project_health_across_months_panel_data' => 'admin/dashboard#project_health_across_months_panel_data', via: [:get]
 end
