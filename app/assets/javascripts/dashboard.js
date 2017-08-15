@@ -36,6 +36,7 @@ $(document).ready(function () {
     pipeline_by_business_unit_trend=""
     load_page("cache_load")
     $( "#refresh" ).click(function() {
+        location.reload();
         load_page("db_load")
     });
    function load_page(load) {
@@ -142,6 +143,7 @@ $(document).ready(function () {
                ]
            }
            new Chart(document.getElementById("grass_profit_panel").getContext("2d")).Line(gross_p_data, gp_struct);
+
        });
 
 
