@@ -36,11 +36,10 @@ $(document).ready(function () {
     pipeline_by_business_unit_trend=""
     load_page("cache_load")
     $( "#refresh" ).click(function() {
-        location.reload();
-        load_page("db_load")
+         $(".loader").show()
+         load_page("db_load")
     });
    function load_page(load) {
-       console.log("====="+load)
        if (load == "db_load"){
            resource_costs_panel_data="/admin/api/resource_costs_panel_data?cache_refresh=yes"
            resource_distribution_panel_data="/admin/api/resource_distribution_panel_data?cache_refresh=yes"
@@ -52,6 +51,7 @@ $(document).ready(function () {
            gross_profit_panel_data="/admin/api/gross_profit_panel_data"
            pipeline_by_business_unit_trend="/admin/api/pipeline_by_business_unit_trend"
        }
+
 
 
        $.ajax({
@@ -143,6 +143,7 @@ $(document).ready(function () {
                ]
            }
            new Chart(document.getElementById("grass_profit_panel").getContext("2d")).Line(gross_p_data, gp_struct);
+           $(".loader").hide()
 
        });
 

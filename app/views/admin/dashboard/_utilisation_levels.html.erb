@@ -1,8 +1,37 @@
 <html>
-
-<body>
-
-
-</body>
-
+    <body>
+       <canvas id="canvas_sb_ul" height="400" width="600"></canvas>
+    </body>
 </html>
+
+
+<script>
+    $(document).ready(function () {
+    bu_responce  = ajax_call("/admin/api/utilization_by_business_units_panel_data?cache_refresh=yes")
+    bu_data=[]
+    $.each(Object.keys(bu_responce), function( index, bu ) {
+        li={}
+        li.fillColor="red"
+        li.strokeColor="rgba(220,220,220,1)"
+        li.data=Object.values(bu_responce[bu])
+        li.axis = 1
+        li.title = Object.keys(bu_responce[bu])[index]
+        bu_data.push(li)
+    });
+    var utilisation_levels_opt = {
+        canvasBorders : true,
+        graphTitle : "",
+        legend : true,
+        inGraphDataShow : true,
+        annotateDisplay : true,
+        graphTitleFontSize: 10,
+        barValueSpacing:40
+    }
+
+    utilisation_levels_data={
+        labels : Object.keys(bu_responce),
+        datasets : bu_data
+    }
+    new Chart(document.getElementById("canvas_sb_ul").getContext("2d")).Bar(utilisation_levels_data,utilisation_levels_opt);
+    });
+</script>

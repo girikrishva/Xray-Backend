@@ -1,8 +1,48 @@
 <html>
-
 <body>
-
-
+    <canvas id="canvas_pro_hv" height="400" width="600"></canvas>
 </body>
-
 </html>
+
+
+<script>
+    $(document).ready(function () {
+        bu_hv  = ajax_call("/admin/api/project_health_view_panel_data?cache_refresh=yes")
+        bu_hv_data=[]
+        $.each(Object.keys(bu_hv), function( index, hv ) {
+            li={}
+            li.fillColor=hv
+            li.data=[bu_hv[hv]]
+            li.title =  hv
+            bu_hv_data.push(li)
+        });
+
+
+        var pro_hv_opt = {
+            animationStartWithDataset : startWithDataset,
+            animationStartWithData : startWithData,
+            animateRotate : true,
+            animateScale : false,
+            animationByData : false,
+            animationSteps : 50,
+            canvasBorders : true,
+            canvasBordersWidth : 3,
+            canvasBordersColor : "black",
+            graphTitle : " ",
+            legend : true,
+            inGraphDataShow : true,
+            animationEasing: "linear",
+            annotateDisplay : true,
+            spaceBetweenBar : 5,
+            graphTitleFontSize: 18
+
+        }
+
+
+        pro_hv_data={
+            labels : [""],
+            datasets : bu_hv_data
+        };
+        new Chart(document.getElementById("canvas_pro_hv").getContext("2d")).Pie(pro_hv_data,pro_hv_opt);
+    });
+</script>
