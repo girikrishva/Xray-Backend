@@ -3,23 +3,20 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		html_value = ""
-		  responce  = ajax_call("/admin/api/financial_performance_panel_data")
+		  responce  = ajax_call("/admin/api/project_health_across_months_panel_data?cache_refresh=yes")
     var html_value = "<span id='close' style='cursor:pointer' hidden></span>"
     data = []
 	keys = []
 	var len = 0
 	$.each(responce, function(key, value) {
-	      keys.push(key)
-	      len = value.length
+	    k={}
+        k.month=key
+        console.log("============="+JSON.stringify(value))
+        $.each(value, function(key1, value1) {
+            k[key1]=value1
+        })
+        data.push(k)
 	});
-	for(var i = 0; i < len; i++) {
-	k = {}
-	$.each(keys, function(key, value) {
-	k[value] = responce[value][i]
-	})
-	data.push(k)
-	}
-    // html_value += convert_ajax_to_htm(data)
     $.each( data, function( index, value ){
        if (index  ==  0){
                   html_value += convert_ajax_to_htm(value).replace("</table>","")
@@ -59,8 +56,7 @@
           function convert_ajax_to_htm(responce){
    var ajax_content_value = "<table class = 'table table-striped'><tr class ='table-row-header'>"
            $.each(responce, function(key, value) {
-           	console.log(key)
-                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>" 
+                  ajax_content_value +="<th class='"+key.replace(" ", "_")+" sort_up 'style = 'border: 1px solid #ddd;'>"+key.replace(/_/g," ").toUpperCase()+"</th>"
                   });
            ajax_content_value += "</tr><tr>"
              $.each(responce, function(key, value) {
