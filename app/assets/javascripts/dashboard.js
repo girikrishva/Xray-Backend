@@ -338,8 +338,6 @@ console.log(graph_month)
                 $("#dialog1").append(tab)
             })
 
-        }else if(graph_type == "CCI"){
-            //"/shareholder/listing_info?id="+idd+"&listing_type="+listing_type
         }
         else{
             var myStackedBar = new Chart(document.getElementById("canvas_Bar4").getContext("2d")).StackedBar(dis_data, dis_opt);

@@ -26,7 +26,7 @@
         annotateDisplay : true,
         graphTitleFontSize: 10,
         barValueSpacing:40,
-        mouseDownLeft: fctMouseDownLeft
+        mouseDownLeft: open_popup_data
     }
 
     utilisation_levels_data={
@@ -34,5 +34,73 @@
         datasets : bu_data
     }
     new Chart(document.getElementById("canvas_sb_ul").getContext("2d")).Bar(utilisation_levels_data,utilisation_levels_opt);
+
+        function open_popup_data(event, ctx, config, data, other) {
+            g_type = data.datasets[other.v11].title
+            g_month = data.labels[other.v12]
+            console.log("g_type"+g_type)
+            console.log("g_month"+g_month)
+            if(other != null){
+                $("#dialog1").dialog('open');
+            }
+              as_on="2017-08-12"
+              var bu_sbup  = ajax_call("/admin/api/utilization_by_skills_for_business_unit_panel_data?as_on="+as_on+"&bu_name="+g_type+"&cache_refresh="+"yes")
+              var bu_dbup  = ajax_call("/admin/api/utilization_by_designations_for_business_unit_panel_data?as_on="+as_on+"&bu_name="+g_type+"&cache_refresh="+"yes")
+              //bu_dbup  = ajax_call("/admin/api/utilization_by_designations_for_business_unit_panel_data?as_on='2017-05-02'&bu_name='CCI'&cache_refresh='yes'")
+
+
+            console.log(bu_sbup)
+            console.log(bu_dbup)
+            var bu_sbup_data= {
+                labels: Object.keys(bu_sbup),
+                datasets: [
+                    {
+                        fillColor: "blue",
+                        strokeColor: "rgba(220,220,220,1)",
+                        data: Object.values(bu_sbup),
+                        axis: 1,
+                        title: "2012"
+                    }
+                ]
+            }
+
+            var bu_dbup_data= {
+                labels: Object.keys(bu_dbup),
+                datasets: [
+                    {
+                        fillColor: "blue",
+                        strokeColor: "rgba(220,220,220,1)",
+                        data: Object.values(bu_dbup),
+                        axis: 1,
+                        title: "2012"
+                    }
+                ]
+            }
+
+            var  dis_opt1 = {
+                canvasBorders : true,
+                graphTitle : "Bench Distribution by Skill",
+                legend : true,
+                inGraphDataShow : true,
+                annotateDisplay : true,
+                graphTitleFontSize: 18
+
+            }
+
+            var  dis_opt2 = {
+                canvasBorders : true,
+                graphTitle : "Bench Distribution by Designation",
+                legend : true,
+                inGraphDataShow : true,
+                annotateDisplay : true,
+                graphTitleFontSize: 18
+
+            }
+
+            new Chart(document.getElementById("canvas_Bar3").getContext("2d")).Bar(bu_sbup_data,dis_opt1);
+            new Chart(document.getElementById("canvas_Bar4").getContext("2d")).Bar(bu_dbup_data, dis_opt2)
+
+
+        }
     });
 </script>
