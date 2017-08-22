@@ -220,7 +220,8 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
 
 
 
-
+console.log(graph_type)
+console.log(graph_month)
 
     $.ajax({
         url: cost_s_url + as_on,
@@ -337,6 +338,8 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
                 $("#dialog1").append(tab)
             })
 
+        }else if(graph_type == "CCI"){
+            //"/shareholder/listing_info?id="+idd+"&listing_type="+listing_type
         }
         else{
             var myStackedBar = new Chart(document.getElementById("canvas_Bar4").getContext("2d")).StackedBar(dis_data, dis_opt);
