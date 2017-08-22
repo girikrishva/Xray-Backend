@@ -608,9 +608,10 @@ class AdminUser < ActiveRecord::Base
     bench_count_for_designation
   end
 
-  def self.business_unit_by_skill_efficiency(business_unit_id, from_date, to_date, with_details)
+  def self.business_unit_by_skill_efficiency(business_unit_name, from_date, to_date, with_details)
     with_details = (with_details.to_s == 'true') ? true : false
     result = {}
+    business_unit_id = BusinessUnit.where('name = ?', business_unit_name).first
     AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
       resource_efficiency = AdminUser.resource_efficiency(au, from_date, to_date, with_details)
       if !result.has_key?(resource_efficiency['skill'])
@@ -625,9 +626,10 @@ class AdminUser < ActiveRecord::Base
     result
   end
 
-  def self.business_unit_by_designation_efficiency(business_unit_id, from_date, to_date, with_details)
+  def self.business_unit_by_designation_efficiency(business_unit_name, from_date, to_date, with_details)
     with_details = (with_details.to_s == 'true') ? true : false
     result = {}
+    business_unit_id = BusinessUnit.where('name = ?', business_unit_name).first
     AdminUser.where('business_unit_id = ?', business_unit_id).each do |au|
       resource_efficiency = AdminUser.resource_efficiency(au, from_date, to_date, with_details)
       if !result.has_key?(resource_efficiency['designation'])

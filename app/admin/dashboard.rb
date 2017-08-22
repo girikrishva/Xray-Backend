@@ -768,11 +768,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       if @@cache_utilization_by_skills_for_business_unit_panel_data.nil? || (cache_refresh == 'yes')
         formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
         as_on = params.has_key?(:as_on) ? Date.parse(params[:as_on]) : Date.today
-        bu_id = params.has_key?(:bu_id) ? params[:bu_id] : -1
+        bu_name = params.has_key?(:bu_name) ? params[:bu_name] : nil
         color_master = ["#6495ED", "#D2691E", "#FFC200", "#FE6384", "#37B2EB", "#FCCE33"]
         from_date = as_on.beginning_of_month
         to_date = as_on.end_of_month
-        @@cache_utilization_by_skills_for_business_unit_panel_data = AdminUser.business_unit_by_skill_efficiency(bu_id, from_date, to_date, false)
+        @@cache_utilization_by_skills_for_business_unit_panel_data = AdminUser.business_unit_by_skill_efficiency(bu_name, from_date, to_date, false)
       end
       render json: @@cache_utilization_by_skills_for_business_unit_panel_data
     end
@@ -783,11 +783,11 @@ ActiveAdmin.register_page I18n.t('menu.dashboard') do
       if @@cache_utilization_by_designations_for_business_unit_panel_data.nil? || (cache_refresh == 'yes')
         formatted = params.has_key?(:formatted) ? params[:formatted] : 'NO'
         as_on = params.has_key?(:as_on) ? Date.parse(params[:as_on]) : Date.today
-        bu_id = params.has_key?(:bu_id) ? params[:bu_id] : -1
+        bu_name = params.has_key?(:bu_name) ? params[:bu_name] : -1
         color_master = ["#6495ED", "#D2691E", "#FFC200", "#FE6384", "#37B2EB", "#FCCE33"]
         from_date = as_on.beginning_of_month
         to_date = as_on.end_of_month
-        @@cache_utilization_by_designations_for_business_unit_panel_data = AdminUser.business_unit_by_designation_efficiency(bu_id, from_date, to_date, false)
+        @@cache_utilization_by_designations_for_business_unit_panel_data = AdminUser.business_unit_by_designation_efficiency(bu_name, from_date, to_date, false)
       end
       render json: @@cache_utilization_by_designations_for_business_unit_panel_data
     end
