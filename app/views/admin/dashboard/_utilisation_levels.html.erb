@@ -38,12 +38,20 @@
         function open_popup_data(event, ctx, config, data, other) {
             g_type = data.datasets[other.v11].title
             g_month = data.labels[other.v12]
-            console.log("g_type"+g_type)
-            console.log("g_month"+g_month)
+
             if(other != null){
                 $("#dialog1").dialog('open');
             }
-              as_on="2017-08-12"
+            var as_on=""
+
+            if (monthNames.indexOf(g_month)+1 == new Date().getMonth()){
+                as_on = formatDate(new Date())
+            }
+            else{
+                var currentTime = new Date();
+                var yyear=[11,12].indexOf(monthNames.indexOf(g_month)+1) > 0 ? currentTime.getFullYear()-1 :currentTime.getFullYear()
+                as_on=formatDate(LastDayOfMonth(yyear,monthNames.indexOf(g_month)+1))
+            }
               var bu_sbup  = ajax_call("/admin/api/utilization_by_skills_for_business_unit_panel_data?as_on="+as_on+"&bu_name="+g_type+"&cache_refresh="+"yes")
               var bu_dbup  = ajax_call("/admin/api/utilization_by_designations_for_business_unit_panel_data?as_on="+as_on+"&bu_name="+g_type+"&cache_refresh="+"yes")
               //bu_dbup  = ajax_call("/admin/api/utilization_by_designations_for_business_unit_panel_data?as_on='2017-05-02'&bu_name='CCI'&cache_refresh='yes'")

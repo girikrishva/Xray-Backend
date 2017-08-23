@@ -34,7 +34,8 @@
             animationEasing: "linear",
             annotateDisplay : true,
             spaceBetweenBar : 5,
-            graphTitleFontSize: 18
+            graphTitleFontSize: 18,
+            mouseDownLeft: redirect_to_phv_page
 
         }
 
@@ -44,5 +45,12 @@
             datasets : bu_hv_data
         };
         new Chart(document.getElementById("canvas_pro_hv").getContext("2d")).Pie(pro_hv_data,pro_hv_opt);
+
+
+        function redirect_to_phv_page(event, ctx, config, data, other) {
+            g_type = data.datasets[other.v11].title
+            g_month = data.labels[other.v12]
+            window.location.href="/admin/delivery_healths?name="+g_type
+        }
     });
 </script>
