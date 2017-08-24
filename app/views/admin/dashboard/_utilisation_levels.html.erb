@@ -52,6 +52,7 @@
                 var yyear=[11,12].indexOf(monthNames.indexOf(g_month)+1) > 0 ? currentTime.getFullYear()-1 :currentTime.getFullYear()
                 as_on=formatDate(LastDayOfMonth(yyear,monthNames.indexOf(g_month)+1))
             }
+            console.log("====================================kkkkkk")
               var bu_sbup  = ajax_call("/admin/api/utilization_by_skills_for_business_unit_panel_data?as_on="+as_on+"&bu_name="+g_type+"&cache_refresh="+"yes")
               var bu_dbup  = ajax_call("/admin/api/utilization_by_designations_for_business_unit_panel_data?as_on="+as_on+"&bu_name="+g_type+"&cache_refresh="+"yes")
               //bu_dbup  = ajax_call("/admin/api/utilization_by_designations_for_business_unit_panel_data?as_on='2017-05-02'&bu_name='CCI'&cache_refresh='yes'")
@@ -87,7 +88,7 @@
 
             var  dis_opt1 = {
                 canvasBorders : true,
-                graphTitle : "Bench Distribution by Skill",
+                graphTitle : "Utilisation % across Skills",
                 legend : true,
                 inGraphDataShow : true,
                 annotateDisplay : true,
@@ -97,14 +98,14 @@
 
             var  dis_opt2 = {
                 canvasBorders : true,
-                graphTitle : "Bench Distribution by Designation",
+                graphTitle : "Utilisation Levels by Designations",
                 legend : true,
                 inGraphDataShow : true,
                 annotateDisplay : true,
                 graphTitleFontSize: 18
 
             }
-
+            $("#dialog1").dialog({ title: "Utilisation Levels" });
             new Chart(document.getElementById("canvas_Bar3").getContext("2d")).Bar(bu_sbup_data,dis_opt1);
             new Chart(document.getElementById("canvas_Bar4").getContext("2d")).Bar(bu_dbup_data, dis_opt2)
 
