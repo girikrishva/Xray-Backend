@@ -185,7 +185,9 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
     graph_type = data.datasets[other.v11].title
     graph_month = data.labels[other.v12]
 
-    if (monthNames.indexOf(graph_month)+1 == new Date().getMonth()){
+    console.log("graph_month========================>>>>>>"+graph_month)
+
+    if (monthNames.indexOf(graph_month)+1 == new Date().getMonth()+1){
         as_on = formatDate(new Date())
     }
     else{
@@ -193,6 +195,8 @@ function fctMouseDownLeft(event, ctx, config, data, other) {
         var yyear=[11,12].indexOf(monthNames.indexOf(graph_month)+1) > 0 ? currentTime.getFullYear()-1 :currentTime.getFullYear()
         as_on=formatDate(LastDayOfMonth(yyear,monthNames.indexOf(graph_month)+1))
     }
+
+    console.log("=================as_on>>>>>>>>>>>>>>>>>>>>>>?????"+as_on)
 
     vv = graph_type + " Details for the month of " + graph_month
     $("#dialog1").dialog({ title: vv });
@@ -238,7 +242,7 @@ console.log(graph_month)
                     strokeColor: "rgba(220,220,220,1)",
                     data: data.datasets[0].data,
                     axis: 1,
-                    title: "2012"
+                    title: ""
                 }
             ]
         }
@@ -281,7 +285,7 @@ console.log(graph_month)
                     strokeColor: "rgba(220,220,220,1)",
                     data: data.datasets[0].data,
                     axis: 1,
-                    title: "2012"
+                    title: ""
                 }
             ]
         }
